@@ -1,0 +1,9 @@
+<?php
+class Proacabados extends ActiveRecord {
+
+    public function initialize() {
+        //validaciones
+		$this->has_many('proprocesos');
+    }
+}
+?>
