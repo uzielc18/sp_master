@@ -1,0 +1,82 @@
+
+<div class="page-header"></div>
+<?php echo Html::linkAction("crear", 'Crear Unidad Medida','class="btn btn-primary"') ?>
+    <h1>Listado Unidades Medidas Santa Carmela</h1>
+
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div> 
+<table class="table table-bordered table-striped">
+  <tr>
+  	<td>Nº</td>
+    <td>Nombre</td>
+    <td>Simbolo</td> 
+    <td>Detalle</td>
+    <td>Estado</td>
+    <td>Acciones</td>
+  </tr>
+<?php $n=0;
+foreach($tesunidadesmedidasC->items as $item){ $n++;?>
+  <tr>
+  	<td><?php echo $n?></td>
+  <?php //echo $item->getAclempresas()->nombre?>
+    <td><?php echo $item->nombre?></td>
+    <td><?php echo $item->simbolo?></td>
+     <td><?php echo $item->detalle?></td>
+    <td>
+    <?php 
+	 if($item->activo=='0'){
+	 echo Html::linkAction('activar/'.$item->id,Html::img("figuras/circulo_rojo.png",'Editar','style="width: 20px;margin-left:2px;margin-right:2px;"'),'');
+	 }else{
+	 echo Html::linkAction("desactivar/$item->id",Html::img("figuras/circulo_verde.png",'Editar','style="width: 20px;margin-left:2px;margin-right:2px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');}?>
+    </td>
+    <td><?php echo Html::linkAction('editar/'.$item->id,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:2px;margin-right:2px;"'),'')?>
+    <?php echo Html::linkAction("eliminar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:2px;margin-right:2px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+<?php View::partial('paginators/extended', false, array('page' => $tesunidadesmedidasC ,'url' => Router::get('controller_path').'/index')); ?>
+<div class="form-actions">
+    <?php //echo Html::linkAction("crear", 'Crear Unidad Medida','class="btn btn-primary"') ?>
+</div>
+<h1>Listado Unidades Medidas Santa Patricia</h1>
+
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<table class="table table-bordered table-striped">
+  <tr>
+  	<td>Nº</td>
+    <td>Nombre</td>
+    <td>Simbolo</td> 
+    <td>Detalle</td>
+    <td>Estado</td>
+    <td>Acciones</td>
+  </tr>
+<?php $n=0;
+foreach($tesunidadesmedidasP->items as $item){ $n++;?>
+  <tr>
+  	<td><?php echo $n?></td>
+ 	    <?php //echo $item->getAclempresas()->nombre?>
+    <td><?php echo $item->nombre?></td>
+    <td><?php echo $item->simbolo?></td>
+     <td><?php echo $item->detalle?></td>
+    <<td>
+    <?php 
+	 if($item->activo=='0'){
+	 echo Html::linkAction('activar/'.$item->id,Html::img("figuras/circulo_rojo.png",'Editar','style="width: 20px;margin-left:2px;margin-right:2px;"'),'');
+	 }else{
+	 echo Html::linkAction("desactivar/$item->id",Html::img("figuras/circulo_verde.png",'Editar','style="width: 20px;margin-left:2px;margin-right:2px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');}?>
+    </td>
+    <td><?php echo Html::linkAction('editar/'.$item->id,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:2px;margin-right:2px;"'),'')?>
+    <?php echo Html::linkAction("eliminar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:2px;margin-right:2px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+<?php View::partial('paginators/extended', false, array('page' => $tesunidadesmedidasP ,'url' => Router::get('controller_path').'/index')); ?>
+<div class="form-actions">
+    
+</div>
+

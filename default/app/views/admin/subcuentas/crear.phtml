@@ -1,0 +1,25 @@
+<td colspan="7" align="center">
+<?php View::content() ?>
+<?php echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
+<?php echo Form::hidden('subcuentas.id') ?>
+<?php echo Form::hidden('subcuentas.cuentas_id','',$id) ?>
+<?php echo Form::hidden('subcuentas.subcuentas_id','',$subcuentas_id) ?>
+<div class="control-group">
+    <label for="cuentas_codigo">Codigo de la Cuenta* : </label>
+    <div class="controls">
+        <?php echo Form::text('codigo','readonly="readonly" size="3"',$subdetalle->codigo) ?><?php echo Form::text('codigon','size="3"') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label for="cuentas_descripcion">Descripcion* : </label>
+    <div class="controls">
+        <?php echo Form::text('subcuentas.descripcion') ?>
+    </div>
+</div>
+
+<div class="form-actions">
+    <?php echo Form::submit('Guardar Datos', 'class="btn btn-primary"') ?>
+    <?php echo Html::link('admin/cuentas/listado', 'Cancelar', 'class="btn"') ?>
+    </div>
+<?php echo Form::close() ?>
+</td>

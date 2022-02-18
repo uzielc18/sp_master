@@ -1,0 +1,23 @@
+
+<div class="page-header">
+    <h1>Listado de Acabados</h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div> 
+<div class="form-actions">
+    <?php echo Html::linkAction("crear", 'Ingresar Nuevo Acabado','class="btn btn-primary"') ?>
+</div>
+
+<?php
+Table::headers('id', 'Nombre de Acabado', 'Abreviatura', 'Detalle');
+Table::headers('Estado', 'Editar','Eliminar');
+Table::fields('id', 'nombre', 'abr', 'descripcion');
+Table::imgLink('figuras/circulo_verde.png|figuras/circulo_rojo.png', 'admin/proacabados/desactivar|admin/proacabados/activar', '', 'activo');
+Table::imgLink('figuras/editar.png', 'admin/proacabados/editar');
+Table::imgLinkConfirm('figuras/eliminar.png', 'admin/proacabados/eliminar', '', '¿Realmente desea Eliminar este Acabado?');
+echo Table::create($proacabados, 'class="table table-bordered table-striped"');
+?>
+<div class="form-actions">
+    <?php //echo Html::linkAction("crear", 'Crear un Nuevo Acabado','class="btn btn-primary"') ?>
+</div>

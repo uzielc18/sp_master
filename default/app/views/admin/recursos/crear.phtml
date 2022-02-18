@@ -1,0 +1,31 @@
+<div class="page-header">
+    <h1><?php eh($titulo) ?></h1>
+</div>
+<?php View::content() ?>
+<?php echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
+<?php echo Form::hidden('aclrecursos.id') ?>
+<div class="control-group">
+    <label for="recurso_modulo">Modulo : </label>
+        <?php echo Form::text('aclrecursos.modulo', 'class="span3"') ?>
+</div>
+<div class="control-group">
+    <label for="recurso_controlador">Controlador * :</label>
+        <?php echo Form::text('aclrecursos.controlador', 'class="span3"') ?>
+</div>
+<div class="control-group">
+    <label for="recurso_accion">Accion  : </label>
+        <?php echo Form::text('aclrecursos.accion', 'class="span3"') ?>
+</div>
+<div class="control-group">
+    <label for="recurso_descripcion">Descripcion * : </label>
+    <?php echo Form::textarea('aclrecursos.descripcion', 'class="span8"') ?>            
+</div>
+<div class="control-group">
+    <label for="menus_activo">Activo (Visible) : </label>
+    <?php echo Form::select('aclrecursos.activo', array('1' => 'Si', '0' => 'No')) ?>            
+</div>
+<div class="form-actions">
+    <?php echo Form::submit('Guardar Datos', 'class="btn btn-primary"') ?>
+    <?php echo Html::linkAction('','Cancelar','class="btn"') ?>
+</div>
+<?php echo Form::close() ?>

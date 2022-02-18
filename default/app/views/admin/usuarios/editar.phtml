@@ -1,0 +1,44 @@
+<div class="page-header">
+    <h1>
+        Edición del Usuario
+        <small><?php eh(strtoupper($usuario->login)) ?></small>
+    </h1>
+</div>
+<?php View::content() ?>
+<?php echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
+<?php echo Form::hidden('usuario.id') ?>
+<div class="control-group">
+    <label for="usuario_login">Nombre de Usuario (Login)* : </label>
+    <div class="controls">
+        <?php echo Form::text('usuario.usuario') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label for="usuario_aclroles_id">Rol del Usuario* : </label>
+    <div class="controls">
+        <?php echo Form::dbSelect('usuario.aclroles_id', 'rol',array('aclroles','find','conditions: activo=1')) ?>
+    </div>
+</div>
+<div class="control-group">
+    <label for="usuario_nombres">Nombres* : </label>
+    <div class="controls">
+        <?php echo Form::text('usuario.nombres') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label for="usuario_nombres">Correo Electronico* : </label>
+    <div class="controls">
+        <?php echo Form::text('datos.correo') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label for="usuario_activo">Activo : </label>
+    <div class="controls">
+        <?php echo Form::select('usuario.activo', array('1' => 'Si', '0' => 'No')) ?>
+    </div>
+</div>
+<div class="form-actions">
+    <?php echo Form::submit('Guardar Datos', 'class="btn btn-primary"') ?>
+    <?php echo Html::linkAction('', 'Cancelar', 'class="btn"') ?>
+    </div>
+<?php echo Form::close() ?>

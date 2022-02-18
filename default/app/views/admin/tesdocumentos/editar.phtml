@@ -1,0 +1,38 @@
+<div class="page-header">
+    <h1>
+        Edición de la Cuenta Corriente
+        <small><?php eh(strtoupper($tesdocumentos->login)) ?></small>
+    </h1>
+</div>      
+<?php View::content() ?>
+<?php echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
+<?php echo Form::hidden('tesdocumentos.id') ?>
+<div class="control-group">
+    <label for="tesdocumentos_aclempresas_id">Nombre de la Empresa* : </label>
+    <div class="controls">
+        <?php echo Form::dbSelect('tesdocumentos.aclempresas_id', 'nombre') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label for="tesdocumentos_nombre">Nombre del Documento* : </label>
+    <div class="controls">
+        <?php echo Form::dbSelect('tesdocumentos.nombre', 'nombre') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label for="tesdocumentos_codigo">Codigo* : </label>
+    <div class="controls">
+        <?php echo Form::text('tesdocumentos.codigo') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label for="tesdocumentos_abr">Abreviatura* : </label>
+    <div class="controls">
+        <?php echo Form::text('tesdocumentos.abr') ?>
+    </div>
+</div>
+<div class="form-actions">
+    <?php echo Form::submit('Guardar Datos', 'class="btn btn-primary"') ?>
+    <?php echo Html::linkAction('', 'Cancelar', 'class="btn"') ?>
+    </div>
+<?php echo Form::close() ?>

@@ -1,0 +1,59 @@
+<?php 
+$CLASES=array(
+"1"=>"CLASE 1: ACTIVO DISPONIBLE Y EXIGIBLE",
+"2"=>"CLASE 2: ACTIVO REALIZABLE (EXISTENCIAS)",
+"3"=>"CLASE 3: ACTIVO INMOVILIZADO (ACTIVO FIJO)",
+"4"=>"CLASE 4: PASIVOS",
+"5"=>"CLASE 5: PATRIMONIO",
+"6"=>"CLASE 6: GASTOS",
+"7"=>"CLASE 7: INGRESOS",
+"8"=>"CLASE 8: CUENTAS DE CIERRE",
+"9"=>"CLASE 9: CUENTAS ANALITICAS DE EXPLOTACION",
+)?>
+<div class="page-header">
+    <h1>Cuentas Principales del Plan Contable</h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="form-actions">
+    <?php echo Html::linkAction("crear", 'Crear Cuenta','class="btn btn-primary"') ?> <?php echo Html::linkAction("listado", 'Listado General de las cuentas','class="btn btn-primary"') ?>
+</div>
+<table class="table table-bordered table-striped">
+<?php
+$elemto=0;
+$cl=0;
+foreach($cuentas as $item){?>
+  <?php if($cl==0){
+	  $elemto++;
+	  ?>
+  <tr>
+  	<td colspan="4"><?php echo $CLASES[$elemto]?></td>
+  </tr>
+    <tr>
+    <td>Cuenta Principal</td>
+    <td>Descripcion</td>
+    <td>Estado</td>
+    <td>Acciones</td>
+  </tr>
+  <?php }
+  $cl++;
+ if(($item->codigo+1)%10==0){$cl=0;}
+ 	?>
+  <tr>
+    <td><?php echo $item->codigo?></td>
+    <td><?php echo $item->descripcion?></td>
+    <td>
+    <?php 
+	 if($item->activo=='0'){
+	 echo Html::linkAction('activar/'.$item->id,Html::img("figuras/circulo_rojo.png",'Editar','style="width: 20px;margin-left:2px;margin-right:2px;"'),'');
+	 }else{
+	 echo Html::linkAction("desactivar/$item->id",Html::img("figuras/circulo_verde.png",'Editar','style="width: 20px;margin-left:2px;margin-right:2px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');}?>
+    </td>
+    <td><?php echo Html::linkAction('editar/'.$item->id,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:2px;margin-right:2px;"'),'')?>
+    <?php echo Html::linkAction("eliminar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:2px;margin-right:2px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+  </td>
+  </tr>
+<?php }?>
+</table>
+

@@ -1,0 +1,98 @@
+<?php
+View::content();
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<script type="text/javascript">
+
+$(document).ready(function()
+{	   
+/*Busqueda del Proveedores*/
+$("#tesaplicacionfacturasadelantos_tesfacturasadelantos_id").tokenInput("<?php echo "/".$module_name."/reparar/buscar_fa"?>", 
+{
+	tokenLimit: 1,
+	minChars: 2,
+	onAdd: function(item){
+		$("#tesaplicacionfacturasadelantos_montototal").val(item.montototal);
+		$("#tesaplicacionfacturasadelantos_tesmonedas_id").val(item.moneda);
+		$("#tesaplicacionfacturasadelantos_serie").val(item.serie);
+		$("#tesaplicacionfacturasadelantos_numero").val(item.numero);
+		$("#tesaplicacionfacturasadelantos_aclempresas_id").val(item.empresa);
+		$("#dato").html(item.dato);
+	},
+	onDelete: function(item){
+		$("#dato").html('');
+	}
+});  
+});
+</script>
+<div class="page-header">
+<h1>Funciones para reparar <span>Tener cuidado al realizar cada accion</span></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="form-actions">
+	<?php echo Html::linkAction("",'Volver','class="btn btn-secondary"')?>
+</div>
+<div class="page">
+<h2>1.- Para Simular una entrega de pedidos</h2>
+<?Php echo Form::open();?>
+<?php echo Form::hidden("tesaplicacionfacturasadelantos.tesmonedas_id")?>
+<?php echo Form::hidden("tesaplicacionfacturasadelantos.estado",'','1')?>
+<?php echo Form::hidden("tesaplicacionfacturasadelantos.aclempresas_id")?>
+<?php echo Form::hidden("tesaplicacionfacturasadelantos.userid",'',Auth::get('id'))?>
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-boredered">
+   <caption>Buscar la factura para la entrega de mercaderia</caption>
+  <thead>
+  <tr>
+    <th width="9%">Factura Adelanto</th>
+    <th width="46%">Datos</th>
+    <th width="8%">Serie </th>
+    <th width="10%">Numero</th>
+    <th width="17%">Monto total</th>
+    <th width="10%">Acciones</th>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+    <td><?php echo Form::text("tesaplicacionfacturasadelantos.tesfacturasadelantos_id")?></td>
+    <td id="dato"></td>
+    <td><?php echo Form::text("tesaplicacionfacturasadelantos.serie")?></td>
+    <td><?php echo Form::text("tesaplicacionfacturasadelantos.numero")?></td>
+    <td><?php echo Form::text("tesaplicacionfacturasadelantos.montototal")?></td>
+    <td><?php echo Form::submit("GRABAR","class='btn btn-info'")?></td>
+  </tr>
+ </tbody>
+</table>
+<?Php echo Form::close();?>
+<h2>2.- Facturas Adelanto que estan para terminar</h2>
+<table width="98%" border="0" cellspacing="0" cellpadding="0" class="table-bordered" align="center">
+  <thead>
+  <tr>
+    <th width="6%" scope="col">Factura Adelanto</th>
+    <th width="22%" scope="col">Empresa</th>
+    <th width="5%" align="right" scope="col">Monto</th>
+    <th width="4%" align="right" scope="col">Suma</th>
+    <th width="59%" scope="col">Nº de App</th>
+    <th width="4%" scope="col">Accion</th>
+  </tr>
+  </thead>
+  <tbody>
+  <?php foreach($facturas as $fa):?>
+  <tr>
+    <td><?php echo $fa->numero?></td>
+    <td><?php echo $fa->getTessalidas()->getAclempresas()->nombre?></td>
+    <td align="right"><?Php echo $fa->getTessalidas()->getTesmonedas()->simbolo?><?php echo number_format($fa->montototal,2,'.','')?></td>
+    <td align="right"><?Php echo $fa->getTessalidas()->getTesmonedas()->simbolo?><?php echo number_format($fa->suma,2,'.','')?></td>
+    <td>&nbsp;<small><?php echo $fa->allapp?></small></td>
+    <td>
+    <?php 
+	$resta=number_format($fa->montototal,2,'.','')-number_format($fa->suma,2,'.','');
+	if($resta<1.00)echo Html::linkAction('cambiar_estado_fa/'.$fa->id,'Terminar' ,'class="btn-info"'); else echo $resta?>
+    </td>
+  </tr>
+  <?php endforeach;?>
+ </tbody>
+</table>
+
+</div>

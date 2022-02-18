@@ -1,0 +1,81 @@
+
+<div class="page-header">
+<?php echo Html::linkAction("crear", 'Crear Banco','class="btn btn-primary"') ?>
+    <h1>Listado de Bancos</h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<table class="table table-bordered table-striped">
+  <tr>
+  	<td>Nº</td>
+<!--    <td>Empresa</td>-->
+    <td>Nombre</td>
+    <td>Abreviatura</td>
+    <td>Estado</td>
+    <td>Acciones</td>
+  </tr>
+<?php $n=0;
+foreach($tesbancosC->items as $item){ $n++;?>
+  <tr>
+  	<td><?php echo $n?></td>
+ <?php /*?>   <td><?php echo $item->getAclempresas()->nombre?></td><?php */?>
+    <td><?php echo $item->nombre?></td>
+    <td><?php echo $item->abr?></td>
+    <td>
+    <?php 
+	 if($item->activo=='0'){
+	 echo Html::linkAction('activar/'.$item->id,Html::img("figuras/circulo_rojo.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'');
+	 }else{
+	 echo Html::linkAction("desactivar/$item->id",Html::img("figuras/circulo_verde.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');}?>
+    </td>
+    <td><?php echo Html::linkAction('editar/'.$item->id,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'')?>
+    <?php echo Html::linkAction("eliminar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+<?php View::partial('paginators/extended', false, array('page' => $tesbancosC ,'url' => Router::get('controller_path').'/index')); ?>
+<div class="form-actions">
+    <?php //echo Html::linkAction("crear", 'Crear Banco','class="btn btn-primary"') ?>
+</div>
+
+
+    <h1>Listado de Bancos</h1>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<table class="table table-bordered table-striped">
+  <tr>
+  	<td>Nº</td>
+  <!--  <td>Empresa</td>-->
+    <td>Nombre</td>
+    <td>Abreviatura</td>
+    <td>Estado</td>
+    <td>Acciones</td>
+  </tr>
+<?php $n=0;
+foreach($tesbancosP->items as $item){ $n++;?>
+  <tr>
+  	<td><?php echo $n?></td>
+<?php /*?>    <td><?php echo $item->getAclempresas()->nombre?></td><?php */?>
+    <td><?php echo $item->nombre?></td>
+    <td><?php echo $item->abr?></td>
+    <td>
+    <?php 
+	 if($item->activo=='0'){
+	 echo Html::linkAction('activar/'.$item->id,Html::img("figuras/circulo_rojo.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'');
+	 }else{
+	 echo Html::linkAction("desactivar/$item->id",Html::img("figuras/circulo_verde.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');}?>
+    </td>
+    <td><?php echo Html::linkAction('editar/'.$item->id,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'')?>
+    <?php echo Html::linkAction("eliminar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+<?php View::partial('paginators/extended', false, array('page' => $tesbancosP ,'url' => Router::get('controller_path').'/index')); ?>
+<div class="form-actions">
+
+</div>
+

@@ -1,0 +1,52 @@
+<div class="page-header">
+    <span class="icoprin-usuarios"></span><h1>Usuarios del Sistema</h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div> 
+<?php /*?><?php
+Table::headers('id', 'Usuario', 'Nombres', 'Correo Electronico');
+Table::headers('Rol que Posee', 'Estado', 'Editar');
+Table::fields('id', 'usuario', 'nombres', 'correo', 'rol');
+Table::imgLink('figuras/circulo_verde.png|figuras/circulo_rojo.png', 'admin/usuarios/desactivar|admin/usuarios/activar', '', 'activo');
+Table::imgLink('figuras/editar.png', 'admin/usuarios/editar');
+echo Table::create($usuarios, 'class="table table-bordered table-striped"');
+?>
+<div class="form-actions">
+    <?php echo Html::linkAction("crear", 'Crear Usuario','class="btn btn-primary"') ?>
+</div><?php */?>
+...
+<table class="table table-bordered table-striped">
+  <tr>
+  	<td>Nº</td>
+    <td>Usuario</td>
+    <td>Nombres</td>
+    <td>Correo Electronico</td>
+    <td>Rol que Posee</td>
+    <td>Acciones</td>
+  </tr>
+<?php $n=0;
+foreach($usuarios->items as $item){ $n++;?>
+  <tr>
+  	<td><?php echo $n?></td>
+    <td><?php echo $item->usuario?></td>
+    <td><?php echo $item->nombres?></td>
+    <td><?php echo $item->getAcldatos()->correo?></td>
+    <td><?php echo $item->getAclroles()->rol?></td>
+    <td>
+    <?php 
+	 if($item->activo=='0'){
+	 echo Html::linkAction('activar/'.$item->id,Html::img("figuras/circulo_rojo.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'');
+	 }else{
+	 echo Html::linkAction("desactivar/$item->id",Html::img("figuras/circulo_verde.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');}?>
+    </td>
+    <td><?php echo Html::linkAction('editar/'.$item->id,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'')?>
+    <?php echo Html::linkAction("eliminar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+<?php View::partial('paginators/extended', false, array('page' => $usuarios ,'url' => Router::get('controller_path').'/index')); ?>
+<div class="form-actions">
+    <?php echo Html::linkAction("crear", 'Crear Usuario','class="btn btn-primary"') ?>
+</div>

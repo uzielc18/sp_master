@@ -1,0 +1,36 @@
+<div class="page-header">
+    <h1>Crear Unidad de Medida</h1>
+</div>      
+<?php View::content() ?>
+<?php echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
+<?php echo Form::hidden('tesunidadesmedidas.id') ?>
+<div class="control-group">
+    <label class="control-label">Nombre de la Empresa* : </label>
+    <div class="controls">
+        <?php echo Form::dbSelect('tesunidadesmedidas.aclempresas_id', 'nombre') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label">Nombre de la Unidad de Medida* : </label>
+    <div class="controls">
+        <?php echo Form::text('tesunidadesmedidas.nombre') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label">Simbolo* : </label>
+    <div class="controls">
+        <?php echo Form::textarea('tesunidadesmedidas.simbolo') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label">Detalle* : </label>
+    <div class="controls">
+        <?php echo Form::textarea('tesunidadesmedidas.detalle') ?>
+    </div>
+</div>
+
+<div class="form-actions">
+    <?php echo Form::submit('Guardar Datos', 'class="btn btn-primary"') ?>
+    <?php echo Html::linkAction('', 'Cancelar', 'class="btn"') ?>
+    </div>
+<?php echo Form::close() ?>

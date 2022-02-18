@@ -1,0 +1,35 @@
+
+<div class="page-header">
+    <h1>Sub cuentas creadas</h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="form-actions">
+   <?php echo Html::link("admin/cuentas/listado", 'Listado General de las cuentas','class="btn btn-primary"') ?>
+</div>
+<table class="table table-bordered table-striped">
+  <tr>
+    <td>Codigo</td>
+    <td>Descripcion</td>
+    <td>Estado</td>
+    <td>Acciones</td>
+  </tr>
+<?php
+foreach($subcuentas as $item){?>
+  <tr>
+    <td><?php echo $item->codigo?></td>
+    <td><?php echo $item->descripcion?></td>
+    <td>
+    <?php 
+	 if($item->activo=='0'){
+	 echo Html::linkAction('activar/'.$item->id,Html::img("figuras/circulo_rojo.png",'Editar','style="width: 20px;margin-left:2px;margin-right:2px;"'),'');
+	 }else{
+	 echo Html::linkAction("desactivar/$item->id",Html::img("figuras/circulo_verde.png",'Editar','style="width: 20px;margin-left:2px;margin-right:2px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');}?>
+    </td>
+    <td><?php echo Html::linkAction('editar/'.$item->id,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:2px;margin-right:2px;"'),'')?>
+    <?php echo Html::linkAction("eliminar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:2px;margin-right:2px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+  </td>
+  </tr>
+<?php }?>
+</table>

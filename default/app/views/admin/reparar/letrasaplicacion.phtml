@@ -1,0 +1,79 @@
+<div class="page-header">
+    <h1>Listado de Letras<span>Letras ingresos y sus aplicaciones</span></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content(); echo Session::get('DOC_CODIGO'); ?>
+</div>
+<div class="form-actions">
+<?Php echo Html::linkAction("",'Regresar' ,'class="btn btn-info"');?> <?php echo Html::linkAction("repar_letra_adelanto","Actualizar Montos",'class="btn btn-primary"');?>
+</div>
+<div class="page">
+<div id="ver_resultado"></div>
+<table width="75%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+<caption>Letras con Numero Unico de Pago</caption>
+  <tr>
+  	<th width="17" align="left">Nº</th>
+    <th width="176" align="left">Proveedor</th>
+    <th width="58" align="left">Número Doc.</th>
+    <th width="62" align="left">Numero unico</th>
+	<th width="76" align="left">F. Emision</th>
+    <th width="60" align="left">F. Vto</th>
+    <th width="96" align="left">Banco</th>
+    <th width="35" align="left">Total</th>
+    <th width="35" align="left">Total (op)</th>
+    <th width="35" align="left">Aplicaciones</th>
+    <th width="35" align="left">Saldo</th>
+    <th width="64" align="left">Acciones </th>
+  </tr>
+<?php 
+foreach($letras as $item){ 
+$simbolo="S/. ";
+if(!empty($item->tesingresos_id)){
+switch ($item->getTesingresos()->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+}
+?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20"><?php echo $item->id?></td>
+  	<td height="20"><?php echo $item->getTesingresos()->getTesdatos()->razonsocial?></td>
+    <td><?php echo $item->getTesingresos()->serie?><?php echo $item->getTesingresos()->numero?>  (<?php echo $item->activo?>)</td>
+    <td><?php echo $item->numerounico?> </td>
+	<td><?php echo Sp::formatFecha('%d / %m / %Y',$item->getTesingresos()->femision)?></td>
+    <td><?php echo Sp::formatFecha('%d / %m / %Y',$item->getTesingresos()->fvencimiento)?></td>
+    <td><?php echo $item->bancos?></td>
+    <td><?php if($item->getTesingresos()->totalconigv!='NaN.00' && !empty($item->getTesingresos()->totalconigv))echo $simbolo.number_format($item->getTesingresos()->totalconigv,2,'.','');else eh('S/ 00.00')?>
+    </td>
+    <td>
+	<?php echo $item->monto_n?>
+    </td>
+    <td>
+	<?php echo number_format($item->app,2,'.',',')?>
+    </td>
+    <td>
+    <?php 
+	if(!empty($item->monto_n))
+	{
+		echo number_format($item->monto_n-$item->app,2,'.',',');
+	}else
+	{
+		//if($item->getTesingresos()->totalconigv!='NaN.00' && !empty($item->getTesingresos()->totalconigv))
+		echo number_format($item->getTesingresos()->totalconigv-$item->app,2,'.',',');
+	}?>
+    </td>
+    <td>
+	<?php echo Html::linkAction("letra_activo/".$item->id,'Terminar'); ?>
+    <?Php if($item->getTesingresos()->estadoingreso=="ANULADO")echo Html::linkAction("letra_ingresos_activar/".$item->getTesingresos()->id,'Activar');else echo "Activo";?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+<div class="form-actions">
+<?php //echo Html::linkAction("cargaringreso/0", 'Nueva '.Session::get('DOC_NOMBRE'),'class="btn btn-primary"') ?>&nbsp;<?php echo Html::linkAction("", 'Volver ','class="btn"') ?>
+</div>
+</div>

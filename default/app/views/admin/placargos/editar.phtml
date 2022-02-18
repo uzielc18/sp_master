@@ -1,0 +1,33 @@
+<div class="page-header">
+    <h1>
+        Edición del Cargo
+        <small><?php eh(strtoupper($placargos->login)) ?></small>
+    </h1>
+</div>      
+<?php View::content() ?>
+<?php echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
+<?php echo Form::hidden('placargos.id') ?>
+<div class="control-group">
+    <label for="plareas_aclempresas_id">Nombre de la Empresa* : </label>
+    <div class="controls">
+        <?php echo Form::dbSelect('placargos.aclempresas_id', 'nombre') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label for="usuario_clave">Nombre del Cargo* : </label>
+    <div class="controls">
+        <?php echo Form::text('placargos.nombre') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label for="usuario_clave2">Descripcion* : </label>
+    <div class="controls">
+        <?php echo Form::textarea('placargos.detalle') ?>
+    </div>
+</div>
+
+<div class="form-actions">
+    <?php echo Form::submit('Guardar Datos', 'class="btn btn-primary"') ?>
+    <?php echo Html::linkAction('', 'Cancelar', 'class="btn"') ?>
+    </div>
+<?php echo Form::close() ?>

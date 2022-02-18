@@ -1,0 +1,36 @@
+<div class="page-header">
+    <span class="icoprin-usuarios"></span><h1>Tesdatos del Sistema</h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div> 
+...
+<table class="table table-bordered table-striped">
+  <tr>
+  	<td>Nº</td>
+    <td>Razon Social</td>
+    <td>codigo_ant</td>
+    <td>codigo</td>
+    <td>ruc</td>
+    <td>direccion</td>
+    <td>Dep-Prov-Dist</td>
+    <td>tipo</td>
+    <td>Acciones</td>
+  </tr>
+<?php $n=0;
+foreach($datos as $item){ $n++;?>
+  <tr>
+  	<td><?php echo $n?></td>
+    <td><?php echo $item->razonsocial?></td>
+    <td><?php echo $item->codigo_ant?></td>
+    <td><?php echo $item->codigo?></td>
+    <td><?php echo $item->ruc?></td>
+    <td><?php echo $item->direccion?></td>
+    <td><?php echo $item->provincia?>-<?php echo $item->departamento?>-<?php echo $item->distrito?></td>
+    <td><?php echo $item->getTestipodatos()->nombre?></td>
+    <td><?php echo Html::linkAction('editar/'.$item->id,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'')?>
+    <?php echo Html::linkAction("eliminar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+    </td>
+  </tr>
+<?php }?>
+</table>

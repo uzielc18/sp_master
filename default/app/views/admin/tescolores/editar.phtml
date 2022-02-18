@@ -1,0 +1,34 @@
+<div class="page-header">
+    <h1>
+        Edición del Color
+        <small><?php eh(strtoupper($tescolores->login)) ?></small>
+    </h1>
+</div>      
+<?php View::content() ?>
+<?php echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
+<?php echo Form::hidden('tescolores.id') ?>
+<div class="control-group">
+    <label for="tescolores_aclempresas_id">Nombre de la Empresa* : </label>
+    <div class="controls">
+        <?php echo Form::dbSelect('tescolores.aclempresas_id', 'nombre') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label for="usuario_nombre">Nombre del Color* : </label>
+    <div class="controls">
+        <?php echo Form::text('tescolores.nombre') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label for="usuario_codigo">Codi<br />
+   	go* : </label>
+    <div class="controls">
+        <?php echo Form::text('tescolores.codigo') ?>
+    </div>
+</div>
+
+<div class="form-actions">
+    <?php echo Form::submit('Guardar Datos', 'class="btn btn-primary"') ?>
+    <?php echo Html::linkAction('', 'Cancelar', 'class="btn"') ?>
+    </div>
+<?php echo Form::close() ?>

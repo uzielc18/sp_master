@@ -1,0 +1,44 @@
+<div class="page-header">
+    <span class="icoprin-admin"></span><h1>Modificar Codigos de los datos</h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="form-actions">
+<?Php foreach($empresas as $e):?>
+<?Php echo Html::linkAction('modificar_codigos_datos/1/'.$e->id,$e->abr.' Proveedor','class="btn"'); ?>
+<?Php echo Html::linkAction('modificar_codigos_datos/2/'.$e->id,$e->abr.' Cliente','class="btn"'); ?>
+<?php endforeach;?>
+</div>
+<div class="page">
+
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered">
+  <tr>
+    <th scope="col">id</th>
+    <th scope="col">Empresa</th>
+    <th scope="col">Tipo</th>
+    <th scope="col">Razonsocial</th>
+    <th scope="col">codigo_ant</th>
+    <th scope="col">codigo</th>
+    <th scope="col">sufijo</th>
+    <th scope="col">Mov / Acciones</th>
+  </tr>
+  <?php
+  if($tipo!=0){
+  foreach($datos as $dato){?>
+  <tr>
+    <td><?Php echo $dato->id?></td>
+    <td><?Php echo $dato->getAclempresas()->nombre?></td>
+    <td><?Php echo $dato->getTestipodatos()->nombre?></td>
+    <td><?Php echo $dato->razonsocial?></td>
+    <td><?Php echo $dato->codigo_ant?></td>
+    <td><?Php echo $dato->codigo?></td>
+    <td><?Php echo $dato->sufijo?></td>
+    <td><?Php echo $c=$dato->validar_dato($dato->id);if($c==0)$val=4340881;else $val=0;?> <?php if($c==0)echo Html::linkAction('eliminar_dato/'.$dato->id.'/'.$val,'Eliminar'); ?></td>
+  </tr>
+  <?php 
+  }
+  }?>
+</table>
+
+</div>

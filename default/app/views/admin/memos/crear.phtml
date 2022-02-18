@@ -1,0 +1,53 @@
+<?php
+View::content();
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<script type="text/javascript">
+        $(document).ready(function() {
+            $("#memos_acldatos_id").tokenInput("<?php echo "/admin/memos/resultados/".$empresa->id?>", 
+			{
+				tokenLimit: 1,minChars:1
+                
+            });
+		});
+</script>
+<?php echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
+<?php echo Form::hidden('memos.id') ?>
+<?php echo Form::hidden('memos.aclusuarios_id','',Auth::get('id')) ?>
+<div class="control-group">
+    <label for="memos_aclempresas_id">Nombre de la Empresa* : </label>
+    <div class="controls">
+       <?php echo $empresa->razonsocial?>
+    </div>
+</div>
+<div class="control-group">
+    <label for="memos_acldatos_id">Trabajador* : </label>
+    <div class="controls">
+        <?php echo Form::text('memos.acldatos_id') ?>    
+    </div>
+</div>
+<div class="control-group">
+    <label for="memos_fecha">Fecha* : </label>
+    <div class="controls">
+        <?php
+				 echo Calendar::selector('memos.fecha')?>
+    </div>
+</div>
+<div class="control-group">
+    <label for="memos_titulo">Concepto* : </label>
+    <div class="controls">
+        <?php echo Form::text('memos.titulo','size="40"') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label for="memos_detalle">Detalle* : </label>
+    <div class="controls">
+        <?php echo Form::textarea('memos.detalle','cols="43", rows="6"') ?>
+    </div>
+</div>
+
+<div class="form-actions">
+    <?php echo Form::submit('Guardar Datos', 'class="btn btn-primary"') ?>
+    <?php echo Html::linkAction('', 'Cancelar', 'class="btn"') ?>
+    </div>
+<?php echo Form::close() ?>

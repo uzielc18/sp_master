@@ -1,0 +1,91 @@
+
+<div class="page-header">
+
+    <h1>Listado de Memos Santa Carmela</h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div> 
+<?php echo Html::linkAction("crear/$SC", 'Crear Memo S Carmela','class="btn btn-primary"') ?>
+<table class="table table-bordered table-striped">
+  <tr>
+  	<td width="17">Nº</td>
+    <td width="68">Trabajador</td>
+    <td width="21">Dia</td>
+    <td width="60">Concepto</td>
+    <td width="42">Detalle</td>
+    <td width="42">Estado</td>
+    <td width="83">Acciones</td>
+  </tr>
+<?php $n=0;
+foreach($memosC->items as $item){ $n++;?>
+  <tr>
+  	<td><?php echo $n?></td>
+    <td><?php echo $item->getAcldatos()->nombre?> <?php echo $item->getAcldatos()->appaterno?> <?php echo $item->getAcldatos()->apmaterno?></td>
+    <td><?php echo $item->fecha?></td>
+    <td><?php echo $item->titulo?></td>
+    <td><?php echo $item->detalle?></td>
+    
+    <td>
+    <?php 
+	 if($item->activo=='0'){
+	 echo Html::linkAction('activar/'.$item->id,Html::img("figuras/circulo_rojo.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'');
+	 }else{
+	 echo Html::linkAction("desactivar/$item->id",Html::img("figuras/circulo_verde.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');}?>
+    </td>
+    <td><?php echo Html::linkAction('editar/'.$item->id,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'')?>
+    <?php echo Html::linkAction("eliminar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+    <?php echo Html::linkAction('ver/'.$item->id,Html::img("figuras/ver.png",'Ver','style="width: 20px;margin-left:1px;margin-right:1px;"'));?>
+    
+    </td>
+  </tr>
+<?php }?>
+</table>
+<?php View::partial('paginators/extended', false, array('page' => $memosC ,'url' => Router::get('controller_path').'/index')); ?>
+<div class="form-actions">
+    <?php //echo Html::linkAction("crear", 'Crear Area','class="btn btn-primary"') ?>
+</div>
+
+    <h1>Listado de Memos Santa Patricia</h1>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div> 
+<?php echo Html::linkAction("crear/$SP", 'Crear Memo S Patricia','class="btn btn-primary"') ?>
+<table class="table table-bordered table-striped">
+  <tr>
+  	<td width="17">Nº</td>
+    <td width="68">Trabajador</td>
+    <td width="21">Dia</td>
+    <td width="60">Concepto</td>
+    <td width="42">Detalle</td>
+    <td width="42">Estado</td>
+    <td width="96">Acciones</td>
+  </tr>
+<?php $n=0;
+foreach($memosP->items as $item){ $n++;?>
+  <tr>
+  	<td><?php echo $n?></td>
+    <td><?php echo $item->getAcldatos()->nombre?> <?php echo $item->getAcldatos()->appaterno?> <?php echo $item->getAcldatos()->apmaterno?></td>
+    <td><?php echo $item->fecha?></td>
+    <td><?php echo $item->titulo?></td>
+    <td><?php echo $item->detalle?></td>
+    
+    <td>
+    <?php 
+	 if($item->activo=='0'){
+	 echo Html::linkAction('activar/'.$item->id,Html::img("figuras/circulo_rojo.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'');
+	 }else{
+	 echo Html::linkAction("desactivar/$item->id",Html::img("figuras/circulo_verde.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');}?>
+    </td>
+    <td><?php echo Html::linkAction('editar/'.$item->id,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'')?>
+    <?php echo Html::linkAction("eliminar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+    <?php echo Html::linkAction('ver/'.$item->id,Html::img("figuras/ver.png",'Ver','style="width: 20px;margin-left:1px;margin-right:1px;"'));?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+<?php View::partial('paginators/extended', false, array('page' => $memosP ,'url' => Router::get('controller_path').'/index')); ?>
+<div class="form-actions">
+    
+</div>
+

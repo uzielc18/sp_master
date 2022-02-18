@@ -1,0 +1,40 @@
+<div class="page-header">
+    <h1>
+        Edición de Cuenta
+        <small><?php eh(strtoupper($subcuentas->descripcion)) ?></small>
+    </h1>
+</div>      
+<?php View::content() ?>
+<?php echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
+<?php echo Form::hidden('subcuentas.id') ?>
+<div class="control-group">
+    <label for="cuentas_codigo">Cuenta principal* : </label>
+    <div class="controls">
+        <?php echo Form::dbSelect('subcuentas.cuentas_id','codigo') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label for="cuentas_codigo">Codigo de la Sub Cuenta* : </label>
+    <div class="controls">
+        <?php echo Form::dbSelect('subcuentas.subcuentas_id','codigo') ?>
+    </div>
+</div>
+
+<div class="control-group">
+    <label for="cuentas_codigo">Codigo de la Cuenta* : </label>
+    <div class="controls">
+        <?php echo Form::text('subcuentas.codigo') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label for="cuentas_descripcion">Descripcion* : </label>
+    <div class="controls">
+        <?php echo Form::text('subcuentas.descripcion') ?>
+    </div>
+</div>
+
+<div class="form-actions">
+    <?php echo Form::submit('Guardar Datos', 'class="btn btn-primary"') ?>
+    <?php echo Html::linkAction('', 'Cancelar', 'class="btn"') ?>
+    </div>
+<?php echo Form::close() ?>

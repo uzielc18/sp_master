@@ -1,0 +1,58 @@
+<div class="page-header">
+    <h1>Crear Empresa</h1>
+</div>      
+<?php View::content() ?>
+<?php echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
+<?php echo Form::hidden('aclempresas.id') ?>
+<div class="control-group">
+    <label class="control-label">Nombre de la Empresa* : </label>
+    <div class="controls">
+        <input class="span5" placeholder="Nombre de la Empresa" type="<?php echo Form::text('aclempresas.nombre') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label">Razon Social* : </label>
+    <div class="controls">
+        <input class="span5" placeholder="Razon Social de la Empresa" type="<?php echo Form::text('aclempresas.razonsocial') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label">Direccion* : </label>
+    <div class="controls">
+        <input class="span5" placeholder="Direccion de la Empresa" type="<?php echo Form::text('aclempresas.direccion') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label">Ruc* : </label>
+    <div class="controls">
+        <input class="span2" placeholder="Nro.11 Digitos" type="<?php echo Form::text('aclempresas.ruc') ?>
+    </div>
+</div>
+<div class="control-group">
+     <label class="control-label">Movimiento de la Empresa* : </label>
+    <div class="controls">
+        <input class="span3" placeholder="Movimiento de la Empresa" type="<?php echo Form::text('aclempresas.detalle') ?>
+    </div>
+</div>
+<div class="control-group">
+     <label class="control-label">Telefono Fijo* : </label>
+    <div class="controls">
+        <input class="span2" placeholder="Nro. Tel Fijo" type="<?php echo Form::text('aclempresas.telefonos') ?>
+    </div>
+</div><div class="control-group">
+     <label class="control-label">Fax* : </label>
+    <div class="controls">
+       <input class="span2" placeholder="Nro. Fax" type=" <?php echo Form::text('aclempresas.telefonos1') ?>
+    </div>
+</div>
+<div class="control-group">
+     <label class="control-label">Celular/Movil* : </label>
+    <div class="controls">
+        <input class="span2" placeholder="Nro. Celular" type="<?php echo Form::text('aclempresas.telefonos2') ?>
+    </div>
+</div>
+<div class="form-actions">
+    <?php echo Form::submit('Guardar Datos', 'class="btn btn-primary"') ?>
+    <?php echo Html::linkAction('', 'Cancelar', 'class="btn"') ?>
+    </div>
+<?php echo Form::close() ?>

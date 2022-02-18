@@ -1,0 +1,16 @@
+<div class="page-header">
+    <h1>Tipo de datos para la emisión de documentos</h1>
+</div>
+<?php View::content() ?>
+<?php
+Table::headers('id', 'Nombre', 'Descripcion', 'Estado', 'Editar', 'Eliminar');
+Table::fields('id', 'nombre', 'descripcion');
+Table::imgLink('figuras/circulo_verde.png|figuras/circulo_rojo.png', 'admin/testipodatos/desactivar|admin/testipodatos/activar', '', 'activo');
+Table::imgLink('figuras/editar.png', 'admin/testipodatos/editar');
+Table::imgLinkConfirm('figuras/eliminar.png', 'admin/testipodatos/eliminar', '', '¿Realmente desea Eliminar Este Rol?');
+//Table::link('admin/usuarios/editar', 'Editar');
+echo Table::create($testipodatos, 'class="table table-bordered table-striped"');
+?>
+<div class="form-actions">
+    <?php echo Html::linkAction("crear", 'Crear tipo de Dato', 'class="btn btn-primary"') ?>
+</div>

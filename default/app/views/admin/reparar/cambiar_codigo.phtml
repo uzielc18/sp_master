@@ -1,0 +1,39 @@
+<?php //Tag::css('scaffold')?>
+<div id="scaffold">
+<?php View::content()?>
+<h1>Listado general de empresas</h1>
+<?php if ($empresas) : ?>
+<table border="0" cellpadding="0" cellspacing="0" class="table" style="font-size:9px;">
+    <thead><tr align="center">
+    <?php foreach (current($empresas)->fields as $field) : ?>
+        <th><?php echo (current($empresas)->get_alias($field))?></th>
+    <?php endforeach?>
+	<th>Acciones</th>
+    </tr></thead>
+	<tbody>
+    <?php foreach ($empresas as $item) : ?>
+        <tr>
+            <?php foreach ($item->fields as $field) : ?>
+            <td align="center"><?php eh($item->$field)?></td>
+            <?php endforeach?>
+			<td>
+			<?php echo Html::linkAction("cambiar_codigo/$item->id/2",'ACTUALIZAR CODIGO / CLIENTE')?> |
+			<?php echo Html::linkAction("cambiar_codigo/$item->id/1",'ACTUALIZAR CODIGO / PROVEEDOR')?> |
+			<?php //echo Html::linkAction("editar/$item->id",'Editar')?> |
+			<?php //echo Html::linkAction("borrar/$item->id",'Borrar', 'onclick="return confirm(\'¿Está seguro?\')"')?>
+			</td>
+        </tr>
+    <?php endforeach?>
+	</tbody>
+</table>
+<?php //View::partial('paginators/extended', false, array('page' => $results ,'url' => Router::get('controller_path').'/rollos')); ?>
+
+<?php else : // Si no hay items?>
+<h2>No hay ningún registro</h2>
+<?php endif ?>
+
+</div>
+<div class="actions">
+	<?php //echo Html::linkAction("crear/",'Crear registro')?>
+</div>
+<?php //var_dump($results)?>

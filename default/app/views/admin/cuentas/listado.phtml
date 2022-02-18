@@ -1,0 +1,87 @@
+<?php 
+$CLASES=array(
+"1"=>"CLASE 1: ACTIVO DISPONIBLE Y EXIGIBLE",
+"2"=>"CLASE 2: ACTIVO REALIZABLE (EXISTENCIAS)",
+"3"=>"CLASE 3: ACTIVO INMOVILIZADO (ACTIVO FIJO)",
+"4"=>"CLASE 4: PASIVOS",
+"5"=>"CLASE 5: PATRIMONIO",
+"6"=>"CLASE 6: GASTOS",
+"7"=>"CLASE 7: INGRESOS",
+"8"=>"CLASE 8: CUENTAS DE CIERRE",
+"9"=>"CLASE 9: CUENTAS ANALITICAS DE EXPLOTACION",
+)?>
+<div class="page-header">
+    <h1>Cuentas Principales del Plan Contable</h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="form-actions"><?php echo Html::linkAction("", 'Cuentas Principales','class="btn btn-primary"') ?> - <?php echo Html::link("admin/subcuentas/", 'Sub Cuentas','class="btn btn-primary"') ?>
+</div>
+<table class="table table-bordered table-striped">
+<?php
+$elemto=0;
+$cl=0;
+foreach($cuentas as $item){
+	//validacion para la subcuentas
+	$borrar=1;
+	if($SUB->count("cuentas_id=$item->id")){$borrar=0;}
+	?>
+  <?php if($cl==0){
+	  $elemto++;
+	  ?>
+  <tr>
+  	<th colspan="7"><?php echo $CLASES[$elemto]?></th>
+  </tr>
+  <tr>
+    <th colspan="5" width="10%">Cuenta Principal</th>
+    <th width="70%">Descripcion</th>
+    <th width="30%">Acciones</th>
+  </tr>
+  <?php }
+  $cl++;
+ if(($item->codigo+1)%10==0){$cl=0;}
+ 
+ 	?>
+  <tr id="<?php echo $item->id?>-0">
+    <td colspan="5"><?php echo $item->codigo?></td>
+    <td><?php echo $item->descripcion?></td>
+   	<td>
+    <?php if($borrar==1)echo Html::linkAction("eliminar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 15px;margin-left:2px;margin-right:2px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+     <?php echo Ajax::link("admin/subcuentas/crear/$item->id/0",'Crear Sub cuentas',$item->id."-0") ?>
+  </td>
+  </tr>
+<?php /*inicio del segundo Nivel*/
+foreach($SUB->obtenerSubcuentas($item->id,NULL) as $item1){
+	$borrar1=1;
+	if($SUB->count("subcuentas_id=$item1->id")){$borrar1=0;}
+?>
+  <tr id="<?php echo $item->id?>-<?php echo $item1->id?>">
+    <td></td>
+    <td colspan="4"><?php echo $item1->codigo?></td>
+    <td><?php echo $item1->descripcion?></td>
+   	<td><?php echo Html::link('admin/subcuentas/editar/'.$item1->id,Html::img("figuras/editar.png",'Editar','style="width: 15px;margin-left:2px;margin-right:2px;"'),'')?>
+    <?php if($borrar1==1)echo Html::linkAction("eliminar/$item1->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 15px;margin-left:2px;margin-right:2px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+	 <?php echo Ajax::link("admin/subcuentas/crear/$item->id/$item1->id" ,'Crear Sub cuentas','class="btn btn-primary"',$item->id."-".$item1->id) ?>
+  	</td>
+  </tr>
+  <?php /*Inicio del Tercer nivel es decir de las sub-subcuentas*/
+  foreach($SUB->obtenerSubcuentas($item->id,$item1->id) as $item2){
+	$borrar2=1;
+	if($SUB->count("subcuentas_id=$item2->id")){$borrar2=0;}
+  ?>
+  <tr id="<?php echo $item->id?>-<?php echo $item2->id?>">
+    <td></td>
+    <td></td>
+    <td colspan="3"><?php echo $item2->codigo?></td>
+    <td><?php echo $item2->descripcion?></td>
+   	<td><?php echo Html::link('admin/subcuentas/editar/'.$item2->id,Html::img("figuras/editar.png",'Editar','style="width: 15px;margin-left:2px;margin-right:2px;"'),'')?>
+    <?php if($borrar2==1)echo Html::linkAction("eliminar/$item2->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 15px;margin-left:2px;margin-right:2px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+	 <?php //echo Ajax::link("admin/subcuentas/crear/$item->id/$item2->id",'Crear Sub cuentas',$item->id."-".$item2->id) ?>
+  	</td>
+  </tr>
+  <?php }?>
+  <?php }?>
+<?php }?>
+</table>
+

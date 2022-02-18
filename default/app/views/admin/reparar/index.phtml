@@ -1,0 +1,85 @@
+<style type="text/css">
+.page a.btn{
+	float:right;
+}
+</style>
+<div class="page-header">
+    <span class="icoprin-admin"></span><h1>Funciones para reparar <span>Tener cuidado al realizar cada accion</span></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="page">
+    <div class="hoja">
+        <div class="well well-small">
+        <h4>Facturas de adelanto "entrega total"</h4>
+        <p class="text-warning"><?Php echo NumerosLetras::NL(2100.00,'NUEVOS SOLES');?>Con esta accion se va a terminar una factura por adelanto. <?php echo Html::linkAction('terminar_fa','Terminar Facturas Adelantos','class="btn btn-info"')?></p>
+        </div>
+        
+        <div class="well well-small">
+        <h4>Letras Apliaccion listado y actualizacion de datos</h4>
+        <p class="text-warning">Con esta accion se va a terminar una letra por adelanto o recalcular el monto de la misma. <?php echo Html::linkAction('letrasaplicacion','Terminar Letras Adelantos','class="btn btn-info"')?></p>
+        </div>
+        
+        <div class="well well-small">
+        <h4>Tipo de Cambios Ingreso</h4>
+        <p class="text-warning">Con esta accion se puede cambiar <?php echo Html::linkAction('reparaeltipodecambio','Actualizar','class="btn btn-info"')?></p>
+        </div>
+        <div class="well well-small">
+        <h4>Tipo de Cambios Salidas</h4>
+        <p class="text-warning">Con esta accion se puede cambiar <?php echo Html::linkAction('reparaeltipodecambio_salidas','Actualizar','class="btn btn-info"')?></p>
+        </div>
+        <div class="well well-small">
+        <h4>Tipo de Cambios Salidas internas</h4>
+        <p class="text-warning">Con esta accion se puede cambiar <?php echo Html::linkAction('reparaeltipodecambio_salidas_internas','Actualizar','class="btn btn-info"')?></p>
+        </div>
+        <div class="well well-small">
+        <h4>Letras aceptadas por Santa Patricia</h4>
+        <p class="text-warning">En esta accion se verifica las letras Pendientes y se procede a su cancelacion (errores al pagar una letra)<?php echo Html::link('santapatricia/letras/actualizar_letras/43408841','Actualizar','class="btn btn-info"')?></p>
+        </div>
+        <div class="well well-small">
+        <h4>Letras aceptadas por Santa Carmela</h4>
+        <p class="text-warning">En esta accion se verifica las letras Pendientes y se procede a su cancelacion (errores al pagar una letra)<?php echo Html::link('santacarmela/letras/actualizar_letras/43408841','Actualizar','class="btn btn-info"')?></p>
+        </div>
+        <div class="well well-small">
+        <h4>Actualizar salidas</h4>
+        <p class="text-warning">En esta accion se verifica el estado de las salidas (compara las tablas tesaplicacionfacturas y tessalidas), pasa de Pendiente a PAGADO <?php echo Html::linkAction('actualizarsalidas','Actualizar','class="btn btn-info"')?></p>
+        </div>
+        <div class="well well-small">
+        <h4>Actualizar guias Internas</h4>
+        <p class="text-warning">En esta accion se verifica el estado de las salidas internas (compara las tablas tesaplicacionletrasinternas y tessalidasinternas), pasa de Pendiente a PAGADO <?php echo Html::linkAction('actualizarinternas','Actualizar','class="btn btn-info"')?></p>
+        </div>
+        
+        <div class="well well-small">
+        <h4>Actualizar salidas que tengas abonos en todas las aplicaciones Santa Patricia</h4>
+        <p class="text-warning">En esta accion se verifica el estado de las salidas (compara las tablas tessalidas, tesabonos y tesabonosdetalles), pasa de ADELANTADO a PAGADO <?php echo Html::linkAction('facturasConAbonos/index/1','Actualizar','class="btn btn-info"')?></p>
+        </div>
+        
+        <div class="well well-small">
+        <h4>Actualizar salidas que tengas abonos en todas las aplicaciones Santa Carmela</h4>
+        <p class="text-warning">En esta accion se verifica el estado de las salidas (compara las tablas tessalidas, tesabonos y tesabonosdetalles), pasa de ADELANTADO a PAGADO <?php echo Html::linkAction('facturasConAbonos/index/2','Actualizar','class="btn btn-info"')?></p>
+        </div>
+        
+        
+        <div class="well well-small">
+        <h4>Actualizar salidas que tengas abonos en Internas</h4>
+        <p class="text-warning">En esta accion se verifica el estado de las salidas (compara las tablas tessalidas, tesabonos y tesabonosdetalles), pasa de ADELANTADO a PAGADO <?php echo Html::linkAction('facturasConAbonos_interna','Actualizar','class="btn btn-info"')?></p>
+        </div>
+        
+        
+        <div class="well well-small">
+        <h4>Actualizar Ingresos </h4>
+        <p class="text-warning">En esta accion se verifica el estado de los ingresos (compara las tablas tesingresos , tesdetallevauchers), pasa de ADELANTADO,Pendiente a PAGADO si el monto de l afactura es igual al de detalle monto <?php echo Html::linkAction('actualizarIngresos/','Actualizar','class="btn btn-info"')?></p>
+        </div>
+        
+        <div class="well well-small">
+        <h4>Administrar direcciones de los clientes</h4>
+        <p class="text-warning">En esta accion se verificara las direcciones de los clientes en las guias y facturas <br /><?php echo Html::linkAction('direcciones/1','Actualizar Santa Patricia','class="btn btn-info"')?> <?php echo Html::linkAction('direcciones/2','Actualizar Santa Carmela','class="btn btn-info"')?></p>
+        </div>
+        
+        <div class="well well-small">
+        <h4>Administrar codigos de los clientes y proveedores</h4>
+        <p class="text-warning">En esta accion se verificara las direcciones de los clientes en las guias y facturas <br /><?php echo Html::linkAction('modificar_codigos_datos/','Actualizar','class="btn btn-info"')?></p>
+        </div>
+    </div>
+</div>

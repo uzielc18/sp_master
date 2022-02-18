@@ -1,0 +1,42 @@
+<div class="page-header">
+    <h1>Crear Cuenta Corriente</h1>
+</div>      
+<?php View::content() ?>
+<?php echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
+<?php echo Form::hidden('tescuentascorrientes.id') ?>
+<div class="control-group">
+    <label class="control-label">Nombre de la Empresa* : </label>
+    <div class="controls">
+        <?php echo Ajax::dbSelect('tescuentascorrientes.aclempresas_id', 'nombre',array('aclempresas','find'),'cuentas','admin/tescuentascorrientes/bancos','seleccione') ?>
+    </div>
+</div>
+<div class="control-group">
+   <label class="control-label">Nombre del Banco* : </label>
+    <div class="controls" id="cuentas">
+        <?php echo Form::dbSelect('tescuentascorrientes.tesbancos_id', 'nombre') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label">Descripcion* : </label>
+    <div class="controls">
+        <input class="span4" placeholder="Cuenta Corriente Soles o Dolares" type="<?php echo Form::text('tescuentascorrientes.detalle') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label">Numero* : </label>
+    <div class="controls">
+        <input class="span3" placeholder="Numero de la Cuenta" type="<?php echo Form::text('tescuentascorrientes.numero') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label">Cuenta Plan Contable* : </label>
+    <div class="controls">
+        <input class="span2" placeholder="Cuenta Contable" type="<?php echo Form::text('tescuentascorrientes.cuentaplan') ?>
+    </div>
+</div>
+
+<div class="form-actions">
+    <?php echo Form::submit('Guardar Datos', 'class="btn btn-primary"') ?>
+    <?php echo Html::linkAction('', 'Cancelar', 'class="btn"') ?>
+    </div>
+<?php echo Form::close() ?>

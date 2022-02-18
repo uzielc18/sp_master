@@ -1,0 +1,86 @@
+
+<div class="page-header">
+<?php echo Html::linkAction("crear", 'Crear Cuenta Corriente','class="btn btn-primary"') ?>
+    <h1>Listado de Cuentas Corrientes Santa Carmela</h1>
+</div>   
+
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div> 
+
+<table class="table table-bordered table-striped">
+  <tr>
+  	<td>Nº</td>
+    <td>Banco</td>
+    <td>Descripcion</td>
+    <td>Numero</td>
+    <td>Cuenta Plan Contable</td>
+    <td>Estado</td>
+    <td>Acciones</td>
+  </tr>
+<?php $n=0;
+foreach($tescuentascorrientesC->items as $item){ $n++;?>
+  <tr>
+  	<td><?php echo $n?></td>
+  	<td><?php echo $item->getTesbancos()->nombre?></td>
+    <td><?php echo $item->detalle?></td>
+    <td><?php echo $item->numero?></td>
+    <td><?php echo $item->cuentaplan?></td>
+    <<td>
+    <?php 
+	 if($item->activo=='0'){
+	 echo Html::linkAction('activar/'.$item->id,Html::img("figuras/circulo_rojo.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'');
+	 }else{
+	 echo Html::linkAction("desactivar/$item->id",Html::img("figuras/circulo_verde.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');}?>
+    </td>
+    <td><?php echo Html::linkAction('editar/'.$item->id,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'')?>
+    <?php echo Html::linkAction("eliminar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+<?php View::partial('paginators/extended', false, array('page' => $tescuentascorrientesC ,'url' => Router::get('controller_path').'/index')); ?>
+<div class="form-actions">
+    <?php //echo Html::linkAction("crear", 'Crear Cuenta Corriente','class="btn btn-primary"') ?>
+</div>
+
+    <h1>Listado de Cuentas Corrientes Santa Patricia</h1>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div> 
+
+<table class="table table-bordered table-striped">
+  <tr>
+  	<td>Nº</td>
+    <td>Banco</td>
+    <td>Descripcion</td>
+    <td>Numero</td>
+    <td>Cuenta Plan Contable</td>
+    <td>Estado</td>
+    <td>Acciones</td>
+  </tr>
+<?php $n=0;
+foreach($tescuentascorrientesP->items as $item){ $n++;?>
+  <tr>
+  	<td><?php echo $n?></td>
+  	<td><?php echo $item->getTesbancos()->nombre?></td>
+    <td><?php echo $item->detalle?></td>
+    <td><?php echo $item->numero?></td>
+    <td><?php echo $item->cuentaplan?></td>
+    <<td>
+    <?php 
+	 if($item->activo=='0'){
+	 echo Html::linkAction('activar/'.$item->id,Html::img("figuras/circulo_rojo.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'');
+	 }else{
+	 echo Html::linkAction("desactivar/$item->id",Html::img("figuras/circulo_verde.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');}?>
+    </td>
+    <td><?php echo Html::linkAction('editar/'.$item->id,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'')?>
+    <?php echo Html::linkAction("eliminar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+<?php View::partial('paginators/extended', false, array('page' => $tescuentascorrientesP ,'url' => Router::get('controller_path').'/index')); ?>
+<div class="form-actions">
+
+</div>

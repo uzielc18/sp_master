@@ -1,0 +1,2 @@
+<label for="usuario_plareas_id">Areas* : </label>
+<?php echo Form::dbSelect('datos.plareas_id', 'nombre',array('plareas','find','conditions: activo=1 and aclempresas_id='.$id)) ?>

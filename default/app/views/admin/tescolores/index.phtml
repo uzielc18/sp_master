@@ -1,0 +1,66 @@
+
+<div class="page-header">
+    <?php //echo Html::linkAction("crear", 'Crear Color','class="btn btn-primary"') ?>
+  <h1>Listado de Colores <?php echo $empresa->nombre?></h1>  
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div> 
+<script type="text/JavaScript">
+    $(document).ready(function(){
+        $("#empresa").change(function(event){
+            var id = $("#empresa").find(':selected').val();
+			location.href = '/admin/tescolores/index/'+id;
+        });
+    });
+</script>
+Cambie de Empresa: <select id="empresa">
+<option value="0">Seleccione otra empresa</option>
+<?php foreach($empresas as $obj): 
+
+$selec='';
+if($empresa->id==$obj->id){
+	$selec=' selected="selected"';
+	}
+?>
+<option<?php echo $selec?> value="<?php echo $obj->id?>"><?php echo $obj->nombre?></option>
+<?php endforeach;?>
+</select>
+<div class="form-actions">
+    <?php echo Html::linkAction("crear", 'Crear Color','class="btn btn-primary"') ?>
+</div>
+<table class="table table-bordered table-striped">
+  <tr>
+  	<td>Nº</td>
+ <!--   <td>Empresa</td>-->
+    <td>Nombre</td>
+    <td>Codigo</td>
+	<td>Codigo Anterior</td>
+    <td>Estado</td>
+    <td>Acciones</td>
+  </tr>
+<?php $n=0;
+foreach($tescolores->items as $item){ $n++;?>
+  <tr>
+  	<td><?php echo $n?></td>
+<?php /*?>    <td><?php echo $item->getAclempresas()->nombre?></td><?php */?>
+    <td><?php echo $item->nombre?></td>
+    <td><?php echo $item->codigo?></td>
+	<td><?php echo $item->codigo_ant?></td>
+    <td>
+    <?php 
+	 if($item->activo=='0'){
+	 echo Html::linkAction('activar/'.$item->id.'/'.$id_e.'/'.$page,Html::img("figuras/circulo_rojo.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'');
+	 }else{
+	 echo Html::linkAction("desactivar/$item->id/$id_e/$page",Html::img("figuras/circulo_verde.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');}?>
+    </td>
+    <td><?php echo Html::linkAction('editar/'.$item->id.'/'.$id_e.'/'.$page,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'')?>
+    <?php echo Html::linkAction("eliminar/$item->id/$id_e/$page",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+<?php View::partial('paginators/bootstrap', false, array('page' => $tescolores ,'url' => Router::get('controller_path').'/index/'.$empresa->id.'')); ?>
+<div class="form-actions">
+    <?php //echo Html::linkAction("crear", 'Crear Color','class="btn btn-primary"') ?>
+</div>

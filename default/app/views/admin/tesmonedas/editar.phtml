@@ -1,0 +1,40 @@
+<div class="page-header">
+    <h1>
+        Edición de la Moneda
+        <small><?php eh(strtoupper($tesmonedas->login)) ?></small>
+    </h1>
+</div>      
+<?php View::content() ?>
+<?php echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
+<?php echo Form::hidden('tesmonedas.id') ?>
+<div class="control-group">
+    <label for="tesmonedas_aclempresas_id">Nombre de la Empresa* : </label>
+    <div class="controls">
+        <?php echo Form::dbSelect('tesmonedas.aclempresas_id', 'nombre') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label for="tesmonedas_clave">Nombre de la Moneda* : </label>
+    <div class="controls">
+        <?php echo Form::text('tesmonedas.nombre') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label for="tesmonedas_clave">Abreviatura de la Moneda* : </label>
+    <div class="controls">
+        <?php echo Form::text('tesmonedas.abr') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label for="tesmonedas_simbolo">Simbolo* : </label>
+    <div class="controls">
+        <?php echo Form::text('tesmonedas.simbolo') ?>
+    </div>
+</div>
+
+<div class="form-actions">
+    <?php echo Form::submit('Guardar Datos', 'class="btn btn-primary"') ?>
+    <?php echo Html::linkAction('', 'Cancelar', 'class="btn"') ?>
+    </div>
+<?php echo Form::close() ?>
+

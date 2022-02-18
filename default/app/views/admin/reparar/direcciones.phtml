@@ -1,0 +1,33 @@
+<div class="page-header">
+    <span class="icoprin-admin"></span><h1>Modificar direcciones de las salidas</span></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="page">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table table-bordered">
+<thead>
+  <tr>
+    <th width="11%" scope="col">Cliente</th>
+    <th width="3%" scope="col">id</th>
+    <th width="40%" scope="col">Direccion entrega</th>
+    <th width="34%" scope="col">Direccion</th>
+    <th width="8%" scope="col">#(Guias+Fac)</th>
+    <th width="4%" scope="col">Accion</th>
+  </tr>
+</thead>
+<tbody>
+  <?php foreach($salidas as $salida):?>
+  <tr>  
+    <td><?php if(!empty($salida->getTesdatos()->razonsocial))echo $salida->getTesdatos()->razonsocial?></td>
+    <td><?php echo $salida->tesdatos_id?></td>
+    <td><?php echo $salida->direccion_entrega?></td>
+    <td><?php if(!empty($salida->getTesdatos()->direccion))echo $salida->getTesdatos()->direccion?> - <?php if(!empty($salida->getTesdatos()->distrito))echo $salida->getTesdatos()->distrito?></td>
+    <td><?php echo $salida->total?></td>
+    <td>&nbsp;</td>
+  </tr>
+  <?php endforeach;?>
+</tbody>
+</table>
+
+</div>

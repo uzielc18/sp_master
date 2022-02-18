@@ -1,0 +1,33 @@
+<div class="page-header">
+    <h1>
+        Edición del Area
+        <small><?php eh(strtoupper($plareas->login)) ?></small>
+    </h1>
+</div>      
+<?php View::content() ?>
+<?php echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
+<?php echo Form::hidden('plareas.id') ?>
+<div class="control-group">
+    <label for="plareas_aclempresas_id">Nombre de la Empresa* : </label>
+    <div class="controls">
+        <?php echo Form::dbSelect('plareas.aclempresas_id', 'nombre') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label for="plareas_nombre">Nombre del Area* : </label>
+    <div class="controls">
+        <?php echo Form::text('plareas.nombre') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label for="plareas_descricion">Descripcion* : </label>
+    <div class="controls">
+        <?php echo Form::textarea('plareas.descripcion') ?>
+    </div>
+</div>
+
+<div class="form-actions">
+    <?php echo Form::submit('Guardar Datos', 'class="btn btn-primary"') ?>
+    <?php echo Html::linkAction('', 'Cancelar', 'class="btn"') ?>
+    </div>
+<?php echo Form::close() ?>

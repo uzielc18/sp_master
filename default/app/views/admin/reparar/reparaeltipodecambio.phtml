@@ -1,0 +1,65 @@
+
+<div class="page-header">
+<h1>Reparar <span>Reparar los tipo de cambio a la fecha de emision de la factura</span></h1></div>
+
+<?php View::content();?>
+<div class="page">
+<table width="100%" border="0" class="table table-bordered table-striped">
+  <tr>
+  	<th width="19">Nº</th>
+	<th width="69">F. Emisison Doc.</th>
+    <th width="57">Número Doc.</th>
+    <th width="139">Proveedor</th>
+    <th width="45">Sub-total</th>
+    <th width="36">Igv</th>
+    <th width="268">Total</th>
+    <th width="255">ID TIPO CAMBIO</th>
+  </tr>
+<?php $number=0;
+foreach($ingresos as $item){ 
+$simbolo="S/. ";
+
+switch ($item->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+
+$number++;?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20"><?php echo $number?></td>
+	<td height="20"><?php echo Sp::formatFecha('%d / %m / %Y',$item->femision)?><?php //echo $item->femision?></td>
+  	<td height="20"><?php echo $item->serie?>-<?php echo $item->numero?></td>
+    <td><?php if(!empty($item->tesdatos_id))echo $item->getTesdatos()->razonsocial.'----'.$item->tesdatos_id;else echo $item->tesdatos_id;?></td>
+    
+    <td><?php if($item->totalconigv!='NaN.00' && !empty($item->totalconigv))echo $simbolo.number_format($item->totalconigv-$item->igv,2,'.','');else eh('S/ 00.00');?></td>
+    <td><?php if($item->igv!='NaN.00' && !empty($item->igv))echo $simbolo.number_format($item->igv,2,'.','');else eh('S/ 00.00')?></td>
+    <td><?php if($item->totalconigv!='NaN.00' && !empty($item->totalconigv))echo $simbolo.number_format($item->totalconigv,2,'.','');else eh('S/ 00.00')?></td>
+   <td><?php echo $item->testipocambios_id;?></td>
+  </tr>
+<?php }?>
+</table>
+<?Php echo Form::open();?>
+<select id="estado" name="estado"><option value="0" selected >Seleccione</option>
+<?php foreach($estados as $e)
+{
+	$select='';
+	if(!empty($e->estadoingreso)){
+	if($estado==$e->estadoingreso)$select='selected';
+	echo '<option value="'.$e->estadoingreso.'" '.$select.'>'.$e->estadoingreso.'</option>';
+	}else
+	{
+		if($estado==$e->estadosalida)$select='selected';
+		echo '<option value="'.$e->estadosalida.'" '.$select.'>'.$e->estadosalida.'</option>';
+	}
+}?>
+
+</select>
+<?php echo $c;?>
+<?php echo Form::text('c')?>
+<?php echo Form::submit('Modificar','class="btn btn-primary"');?>
+<?Php echo Form::close();?>
+</div>

@@ -1,0 +1,46 @@
+<div class="page-header">
+<h1>Funciones para reparar <span>Tener cuidado al realizar cada accion</span></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="form-actions">
+	<?php echo Html::linkAction("",'Volver','class="btn btn-secondary"')?>
+</div>
+<div class="page">
+
+<h2>1.- Facturas Sin PAGAR</h2>
+<table width="98%" border="0" cellspacing="0" cellpadding="0" class="table-bordered" align="center">
+  <thead>
+  <tr>
+    <th width="6%" scope="col">Factura</th>
+    <th width="32%" scope="col">Empresa</th>
+    <th width="11%" scope="col">Estado</th>
+    <th width="15%" align="right" scope="col">Monto</th>
+    <th width="9%" align="right" scope="col">Solo Abonos</th>
+    <th width="15%" align="right" scope="col">Total Adelantos(Lt+Ab)</th>
+    <th width="12%" align="right" scope="col">Abono_factura</th>
+    <th width="12%" align="right" scope="col">Diferencia/Accion</th>
+  </tr>
+  </thead>
+  <tbody>
+  <?php foreach($facturas as $fa):?>
+  <tr>
+    <td><?php echo  $fa->serie.'-'.$fa->numero?></td>
+    <td><?php echo $fa->getTesdatos()->razonsocial?></td>
+    <td><?php echo $fa->estadosalida?></td>
+    <td align="right"><?Php echo $fa->getTesmonedas()->simbolo?><?php echo number_format($fa->totalconigv,2,'.','')?></td>
+    <td align="right"><?Php echo $fa->getTesmonedas()->simbolo?><?php echo number_format($fa->total,2,'.','')?></td>
+    <td align="right"><?Php echo $fa->getTesmonedas()->simbolo?><?php echo number_format($fa->getAdelantos($fa->id,'tessalidas_id'),2,'.','');//echo number_format($fa->total,2,'.','')?></td>
+    <td align="right"><?Php echo $fa->getTesmonedas()->simbolo?><?php echo number_format( $fa->getAbonos_factura($fa->id,'tessalidas_id'),2,'.','');//echo number_format($fa->total,2,'.','')?></td>
+    <td align="right">
+    <?php 
+	$resta=number_format($fa->totalconigv,2,'.','')-number_format($fa->total,2,'.','');
+	if($resta<1.00)echo Html::linkAction('cambiar_estado/'.$fa->id,'Terminar' ,'class="btn-info"'); else echo $resta?>
+    </td>
+  </tr>
+  <?php endforeach;?>
+ </tbody>
+</table>
+<div class="form-actions"><?php echo Html::linkAction('facturasConAbonos/index/'.$empresas_id.'/43408841','Terminar Todo','class="btn btn-info"')?></div>
+</div>

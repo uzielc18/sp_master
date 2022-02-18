@@ -1,0 +1,19 @@
+
+<div class="page-header">
+    <h1>Listado de Estado Plegadores</h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div> 
+<?php
+Table::headers('id', 'Nombre');
+Table::headers('Estado', 'Editar','Eliminar');
+Table::fields('id', 'nombre');
+Table::imgLink('figuras/circulo_verde.png|figuras/circulo_rojo.png', 'admin/estadoplegador/desactivar|admin/estadoplegador/activar', '', 'activo');
+Table::imgLink('figuras/editar.png', 'admin/estadoplegador/editar');
+Table::imgLinkConfirm('figuras/eliminar.png', 'admin/estadoplegador/eliminar', '', '¿Realmente desea Eliminar el Estado del Plegador?');
+echo Table::create($estadoplegador, 'class="table table-bordered table-striped"');
+?>
+<div class="form-actions">
+    <?php echo Html::linkAction("crear", 'Crear Estado','class="btn btn-primary"') ?>
+</div>

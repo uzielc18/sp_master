@@ -1,0 +1,22 @@
+
+<div class="page-header">
+    <h1>Listado de Empresas</h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div> 
+<div class="form-actions">
+    <?php echo Html::linkAction("crear", 'Crear Empresa','class="btn btn-primary"') ?>
+</div>
+<?php
+Table::headers('id', 'Nombre', 'Razon Social', 'Ruc', 'Direccion');
+Table::headers('Estado', 'Editar','Eliminar');
+Table::fields('id', 'nombre', 'razonsocial', 'ruc', 'direccion');
+Table::imgLink('figuras/circulo_verde.png|figuras/circulo_rojo.png', 'admin/aclempresas/desactivar|admin/aclempresas/activar', '', 'activo');
+Table::imgLink('figuras/editar.png', 'admin/aclempresas/editar');
+Table::imgLinkConfirm('figuras/eliminar.png', 'admin/aclempresas/eliminar', '', '¿Realmente desea Eliminar Esta Empresa?');
+echo Table::create($aclempresas, 'class="table table-bordered table-striped"');
+?>
+<div class="form-actions">
+    <?php //echo Html::linkAction("crear", 'Crear Empresa','class="btn btn-primary"') ?>
+</div>

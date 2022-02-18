@@ -1,0 +1,117 @@
+
+<?php Tag::css('scaffold')?>
+<div class="page-header">
+    <h1>Tipo de Cambio</h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div> 
+<div class="form-actions">
+    <?php echo Html::linkAction("crear", 'Ingresar T/C','class="btn btn-primary"') ?>
+</div>
+
+Cambie de Año 
+<select id="anio">
+<?php
+for($i=2011;$i<=2020;$i++)
+{
+	$selec='';
+	if($anio==$i){
+	$selec=' selected="selected"';
+	}
+	echo '<option value="'.$i.'" '.$selec.'>'.$i.'</option>';
+}
+?>
+</select> 
+<div class="menu">
+<?php 
+$mes_actual=date('Y-m');
+foreach($meses as $clave => $mes):
+if($anio.'-'.$clave<=$mes_actual){
+$class='';
+if($mes_activo==$clave)$class=' active';
+echo '<ul>';
+echo '<li><a class="enviar'.$class.'" id="mes-'.$mes.'" href="javascript:;" data-id="'.$anio.'-'.$clave.'-01">'.$mes.'</a></li>'; 
+echo '</ul>';
+}
+endforeach;?>
+</div>
+<div class="clear"></div>
+<div id="scaffold">
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus="" placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+<?php if ($results) : ?>
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+    <thead><tr>
+    <?php foreach (current($results)->fields as $field) : ?>
+        <th width="4%"><?php echo (current($results)->get_alias($field))?></th>
+    <?php endforeach?>
+    <th width="90%">Documentos</th>
+	<th width="6%">Acciones</th>
+    </tr></thead>
+	<tbody>
+    <?php foreach ($results as $item) : ?>
+        <tr>
+            <?php foreach ($item->fields as $field) : ?>
+            <td><?php eh($item->$field)?></td>
+            <?php endforeach?>
+            <td> <?php echo Ajax::linkAction("cambiar/$item->id/$item->fecha",'actualizar','cambio'.$item->id)?><br />
+            <div id='cambio<?php echo $item->id?>'>
+            Ruc:
+			<?Php echo $item->getSalidas($item->id,$item->fecha);?> <?php //echo Html::linkAction("cambiar/$item->id/$item->fecha",'actualizar')?><br />
+            Internas:
+			<?Php echo $item->getInternas($item->id,$item->fecha);?><br />
+            Ingresos:
+			<?Php echo $item->getIngresos($item->id,$item->fecha);?>
+            </div>
+            </td>
+			<td><?php echo Html::linkAction("ver/$item->id",'Ver')?> |
+			<?php echo Html::linkAction("editar/$item->id",'Editar')?> |
+			<?php echo Html::linkAction("borrar/$item->id",'Borrar', 'onclick="return confirm(\'¿Está seguro?\')"')?>
+			</td>
+        </tr>
+    <?php endforeach?>
+	</tbody>
+</table>
+<?php //View::partial('paginators/extended', false, array('page' => $results ,'url' => Router::get('controller_path').'/index')); ?>
+
+<?php else : // Si no hay items?>
+<h2>No hay ningún registro</h2>
+<?php endif ?>
+
+<div class="actions">
+	<?php //echo Html::linkAction("crear/",'Crear registro')?>
+</div>
+<?php //var_dump($results)?>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	
+	
+$(".ver").click(function(){
+	var op=$(this).attr('data-id');
+	document.location = "/<?php echo $module_name?>/<?php echo $controller_name?>/index/"+op;
+	});	
+//hacemos la busqueda en el evento search del control de busqueda
+	$('#txtBuscar').on('search',function(){
+		//le decimos a la funcion que busque en la tabla tblTabla el
+		//valor que contiene el campo actual
+		$.fntBuscarEnTabla($(this).val(),'vauchers');
+		
+	});
+	
+	$("#anio").change(function(event){
+    	var id = $("#anio").find(':selected').val();
+		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/<?Php echo $action_name?>/'+id;
+     });
+	$(".enviar").click(function()
+	{
+		var fecha = $(this).attr('data-id');
+		var F=fecha.split('-');
+		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/<?Php echo $action_name?>/'+F[0]+'/'+F[1];
+	});
+	
+});
+</script>
