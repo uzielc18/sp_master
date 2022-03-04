@@ -28,8 +28,8 @@ class MemosController extends AppController {
 				$me->activo='0';
                 if ($me->save()) {
                     Flash::valid('Memo fué agregada Exitosamente...!!!');
-                    Acciones::add("Agregó Memo {$me->nombre} al sistema");
-                    return Router::redirect();
+                    Aclauditorias::add("Agregó Memo {$me->nombre} al sistema");
+                    return Redirect::to();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                 }
@@ -51,8 +51,8 @@ class MemosController extends AppController {
 					$me->userid=Auth::get('id');
                 if ($me->update(Input::post('memos'))) {
                     Flash::valid('El Memo fué actualizado Exitosamente...!!!');
-                    Acciones::add("Editó el Memo {$me->id}", 'memos');
-                    return Router::redirect();
+                    Aclauditorias::add("Editó el Memo {$me->id}", 'memos');
+                    return Redirect::to();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                     unset($this->me); //para que cargue el $_POST en el form
@@ -70,7 +70,7 @@ class MemosController extends AppController {
                 Flash::warning("No existe ningun Memo con id '{$id}'");
             }else if ($me->activar()) {
                 Flash::valid("El Memo<b>{$me->id}</b> Esta ahora <b>Activo</b>...!!!");
-                Acciones::add("Colocó al Memo {$me->id} como activo", 'plareas');
+                Aclauditorias::add("Colocó al Memo {$me->id} como activo", 'plareas');
             } else {
                 Flash::warning('No se pudo Activar el Memo!!!');
             }
@@ -87,7 +87,7 @@ class MemosController extends AppController {
                 Flash::warning("No existe ningun Memo con id '{$id}'");
             }else if ($me->desactivar()) {
                 Flash::valid("El Memo <b>{$me->id}</b> Esta ahora <b>Inactivo</b>...!!!");
-                Acciones::add("Colocó al Memo {$me->id} como inactivo", 'memos');
+                Aclauditorias::add("Colocó al Memo {$me->id} como inactivo", 'memos');
             } else {
                 Flash::warning('No se Pudo Desactivar el Memo...!!!');
             }
@@ -106,14 +106,14 @@ class MemosController extends AppController {
                 Flash::warning("No existe ningun Memo con id '{$id}'");
             } else if ($me->delete()) {
                 Flash::valid("El Memo <b>{$me->id}</b> fué Eliminado...!!!");
-                Acciones::add("Eliminó el Memo {$me->id} del sistema", 'memos');
+                Aclauditorias::add("Eliminó el Memo {$me->id} del sistema", 'memos');
             } else {
                 Flash::warning("No sepudo eliminar el Memo <b>{$me->id}</b>...!!!");
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::redirect();
+        return Redirect::to();
     }
   public function ver($id) {
         try {

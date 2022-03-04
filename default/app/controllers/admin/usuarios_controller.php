@@ -1,6 +1,6 @@
 <?php
-Load::models('aclusuarios','acldatos','plareas','tesdatos');
-View::template('backend/backend');
+//Load::models('aclusuarios','acldatos','plareas','tesdatos');
+//View::template('backend/backend');
 
 class UsuariosController extends AdminController {
     
@@ -70,8 +70,8 @@ class UsuariosController extends AdminController {
 						//Flash::valid('Datos Actualizados Correctamente');
 					}
                     Flash::valid('El Usuario Ha Sido Agregado Exitosamente...!!!');
-                    Acciones::add("Agregó al usuario {$usr->login} al sistema", 'usuarios');
-                    return Router::redirect();
+                    Aclauditorias::add("Agregó al usuario {$usr->login} al sistema", 'usuarios');
+                    return Redirect::to();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                 }
@@ -97,15 +97,15 @@ class UsuariosController extends AdminController {
 					$dat->update(Input::post('datos'));
                     Flash::valid('El Usuario Ha Sido Actualizado 
 					Exitosamente...!!!');
-                    Acciones::add("Editó al usuario {$usr->login}", 'usuarios');
-                    return Router::redirect();
+                    Aclauditorias::add("Editó al usuario {$usr->login}", 'usuarios');
+                    return Redirect::to();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                     unset($this->usuario); //para que cargue el $_POST en el form
                 }
             } else if (!$this->usuario) {
                 Flash::warning("No existe ningun usuario con id '{$id}'");
-                return Router::redirect();
+                return Redirect::to();
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
@@ -120,7 +120,7 @@ class UsuariosController extends AdminController {
                 Flash::warning("No existe ningun usuario con id '{$id}'");
             }else if ($usuario->activar()) {
                 Flash::valid("La Cuenta del Usuario {$usuario->login} ({$usuario->nombres}) fué activada...!!!");
-                Acciones::add("Colocó al usuario {$usuario->login} como activo", 'usuarios');
+                Aclauditorias::add("Colocó al usuario {$usuario->login} como activo", 'usuarios');
             } else {
                 Flash::warning('No se Pudo Activar la cuenta del Usuario...!!!');
             }
@@ -138,7 +138,7 @@ class UsuariosController extends AdminController {
                 Flash::warning("No existe ningun usuario con id '{$id}'");
             }else if ($usuario->desactivar()) {
                 Flash::valid("La Cuenta del Usuario {$usuario->login} ({$usuario->nombres}) fué desactivada...!!!");
-                Acciones::add("Colocó al usuario {$usuario->login} como inactivo", 'usuarios');
+                Aclauditorias::add("Colocó al usuario {$usuario->login} como inactivo", 'usuarios');
             } else {
                 Flash::warning('No se Pudo Desactivar la cuenta del Usuario...!!!');
             }
@@ -157,14 +157,14 @@ class UsuariosController extends AdminController {
                 Flash::warning("No existe ningun Usuario con id '{$id}'");
             } else if ($usuario->delete()) {
                 Flash::valid("El Usuario <b>{$usuario->usuario}</b> fué Eliminado...!!!");
-                Acciones::add("Eliminó el Usuario {$usuario->usuario} del sistema", 'aclusuarios');
+                Aclauditorias::add("Eliminó el Usuario {$usuario->usuario} del sistema", 'aclusuarios');
             } else {
                 Flash::warning("No se Pudo Eliminar el Usuario <b>{$usuario->ususario}</b>...!!!");
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::redirect();
+        return Redirect::to();
     }
 	
 	public function areas($id=0)

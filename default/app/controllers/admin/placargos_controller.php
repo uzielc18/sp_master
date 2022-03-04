@@ -33,8 +33,8 @@ class PlacargosController extends AdminController {
 				$pc->activo='0';
                 if ($pc->save()) {
                     Flash::valid('Cargo fué agregado Exitosamente...!!!');
-                    Acciones::add("Agregó el Cargo {$pc->nombre} al sistema");
-                    return Router::redirect();
+                    Aclauditorias::add("Agregó el Cargo {$pc->nombre} al sistema");
+                    return Redirect::to();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                 }
@@ -56,8 +56,8 @@ class PlacargosController extends AdminController {
 					$pc->userid=Auth::get('id');
                 if ($pc->update(Input::post('placargos'))) {
                     Flash::valid('Cargo actualizado Exitosamente...!!!');
-                    Acciones::add("Editó el Cargo {$pc->nombre}", 'placargos');
-                    return Router::redirect();
+                    Aclauditorias::add("Editó el Cargo {$pc->nombre}", 'placargos');
+                    return Redirect::to();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                     unset($this->placargos); //para que cargue el $_POST en el form
@@ -75,7 +75,7 @@ class PlacargosController extends AdminController {
                 Flash::warning("No existe ningun Cargo con id '{$id}'");
             }else if ($pc->activar()) {
                 Flash::valid("El Cargo<b>{$pc->nombre}</b> Esta ahora <b>Activo</b>...!!!");
-                Acciones::add("Colocó el Cargo {$pc->nombre} como activo", 'placargos');
+                Aclauditorias::add("Colocó el Cargo {$pc->nombre} como activo", 'placargos');
             } else {
                 Flash::warning('No se pudo Activar el Area!!!');
             }
@@ -92,7 +92,7 @@ class PlacargosController extends AdminController {
                 Flash::warning("No existe ningun Cargo con id '{$id}'");
             }else if ($pc->desactivar()) {
                 Flash::valid("El Cargo <b>{$pc->nombre}</b> Esta ahora <b>Inactivo</b>...!!!");
-                Acciones::add("Colocó el Cargo {$pc->nombre} como Inactivo", 'placargos');
+                Aclauditorias::add("Colocó el Cargo {$pc->nombre} como Inactivo", 'placargos');
             } else {
                 Flash::warning('No se Pudo Desactivar el Cargo...!!!');
             }
@@ -111,14 +111,14 @@ class PlacargosController extends AdminController {
                 Flash::warning("No existe ningun Cargo con id '{$id}'");
             } else if ($placargos->delete()) {
                 Flash::valid("El Cargo <b>{$placargos->placargos}</b> fué Eliminado...!!!");
-                Acciones::add("Eliminó el Cargo {$placargos->placargos} del sistema", 'placargos');
+                Aclauditorias::add("Eliminó el Cargo {$placargos->placargos} del sistema", 'placargos');
             } else {
                 Flash::warning("No se Pudo Eliminar el Cargo<b>{$placargos->placargos}</b>...!!!");
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::redirect();
+        return Redirect::to();
     }
 
 }

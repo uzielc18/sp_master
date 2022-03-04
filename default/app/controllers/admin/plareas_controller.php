@@ -23,8 +23,8 @@ class PlareasController extends AdminController {
 				$ar->activo='0';
                 if ($ar->save()) {
                     Flash::valid('Area fué agregada Exitosamente...!!!');
-                    Acciones::add("Agregó Area {$ar->nombre} al sistema");
-                    return Router::redirect();
+                    Aclauditorias::add("Agregó Area {$ar->nombre} al sistema");
+                    return Redirect::to();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                 }
@@ -46,8 +46,8 @@ class PlareasController extends AdminController {
 					$ar->userid=Auth::get('id');
                 if ($ar->update(Input::post('plareas'))) {
                     Flash::valid('El Area fué actualizada Exitosamente...!!!');
-                    Acciones::add("Editó el Area {$ar->nombre}", 'plareas');
-                    return Router::redirect();
+                    Aclauditorias::add("Editó el Area {$ar->nombre}", 'plareas');
+                    return Redirect::to();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                     unset($this->ar); //para que cargue el $_POST en el form
@@ -65,7 +65,7 @@ class PlareasController extends AdminController {
                 Flash::warning("No existe ningun Area con id '{$id}'");
             }else if ($ar->activar()) {
                 Flash::valid("El Area<b>{$ar->nombre}</b> Esta ahora <b>Activo</b>...!!!");
-                Acciones::add("Colocó al Area {$ar->nombre} como activo", 'plareas');
+                Aclauditorias::add("Colocó al Area {$ar->nombre} como activo", 'plareas');
             } else {
                 Flash::warning('No se pudo Activar el Area!!!');
             }
@@ -82,7 +82,7 @@ class PlareasController extends AdminController {
                 Flash::warning("No existe ningun Area con id '{$id}'");
             }else if ($ar->desactivar()) {
                 Flash::valid("El Area <b>{$ar->nombre}</b> Esta ahora <b>Inactivo</b>...!!!");
-                Acciones::add("Colocó el Area {$ar->nombre} como inactivo", 'plareas');
+                Aclauditorias::add("Colocó el Area {$ar->nombre} como inactivo", 'plareas');
             } else {
                 Flash::warning('No se Pudo Desactivar el Area...!!!');
             }
@@ -101,14 +101,14 @@ class PlareasController extends AdminController {
                 Flash::warning("No existe ningun Area con id '{$id}'");
             } else if ($ar->delete()) {
                 Flash::valid("El Area <b>{$ar->nombre}</b> fué Eliminado...!!!");
-                Acciones::add("Eliminó el Area {$ar->nombre} del sistema", 'plareas');
+                Aclauditorias::add("Eliminó el Area {$ar->nombre} del sistema", 'plareas');
             } else {
                 Flash::warning("No se Pudo Eliminar el Area <b>{$ar->nombre}</b>...!!!");
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::redirect();
+        return Redirect::to();
     }
 	   
 }

@@ -16,7 +16,7 @@ return [
         /**
          * password: clave del usuario de la base de datos
          */
-        'password' => 'p3p3r0n12020',
+        'password' => 'p3p3r0n1',
         /**
          * test: nombre de la base de datos
          */

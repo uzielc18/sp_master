@@ -1,6 +1,5 @@
 <?php
-Load::models('aclmenus');
-View::template('backend/backend');
+
 class MenuController extends AdminController {
 
     public function index($visible=3,$pagina = 1) {
@@ -23,8 +22,8 @@ class MenuController extends AdminController {
 				$menu->userid=Auth::get('id');
                 if ($menu->save()) {
                     Flash::valid('El Menu fué agregado Exitosamente...!!!');
-                    Acciones::add("Agregó el Menú {$menu->nombre} al sistema", 'menu');
-                    return Router::redirect();
+                    Aclauditorias::add("Agregó el Menú {$menu->nombre} al sistema", 'menu');
+                    return Redirect::to();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                 }
@@ -47,8 +46,8 @@ class MenuController extends AdminController {
 
                 if ($menu->update(Input::post('aclmenus'))) {
                     Flash::valid('El Menu fué actualizado Exitosamente...!!!');
-                    Acciones::add("Editó el Menú {$menu->nombre}", 'aclmenu');
-                    return Router::redirect();
+                    Aclauditorias::add("Editó el Menú {$menu->nombre}", 'aclmenu');
+                    return Redirect::to();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                     unset($this->menu); //para que cargue el $_POST en el form
@@ -65,14 +64,14 @@ class MenuController extends AdminController {
             $menu->find_first($id);
             if ($menu->activar()) {
                 Flash::valid("El menu <b>{$menu->nombre}</b> Esta ahora <b>Activo</b>...!!!");
-                Acciones::add("Colocó al Menu {$menu->nombre} como activo", 'menu');
+                Aclauditorias::add("Colocó al Menu {$menu->nombre} como activo", 'menu');
             } else {
                 Flash::warning("No se Pudo Activar el menu <b>{$menu->nombre}</b>...!!!");
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::redirect();
+        return Redirect::to();
     }
 
     public function desactivar($id) {
@@ -81,14 +80,14 @@ class MenuController extends AdminController {
             $menu->find_first($id);
             if ($menu->desactivar()) {
                 Flash::valid("El menu <b>{$menu->nombre}</b> Esta ahora <b>Inactivo</b>...!!!");
-                Acciones::add("Colocó al Menu {$menu->nombre} como inactivo", 'menu');
+                Aclauditorias::add("Colocó al Menu {$menu->nombre} como inactivo", 'menu');
             } else {
                 Flash::warning("No se Pudo Desactivar el menu <b>{$menu->menu}</b>...!!!");
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::redirect();
+        return Redirect::to();
     }
 
     public function eliminar($id) {
@@ -97,14 +96,14 @@ class MenuController extends AdminController {
             $menu->find_first($id);
             if ($menu->delete()) {
                 Flash::valid("El Menu <b>{$menu->nombre}</b> fué Eliminado...!!!");
-                Acciones::add("Eliminó al Menu {$menu->nombre} del sistema", 'menu');
+                Aclauditorias::add("Eliminó al Menu {$menu->nombre} del sistema", 'menu');
             } else {
                 Flash::warning("No se Pudo Eliminar el Menu <b>{$menu->nombre}</b>...!!!");
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::redirect();
+        return Redirect::to();
     }
 
 }

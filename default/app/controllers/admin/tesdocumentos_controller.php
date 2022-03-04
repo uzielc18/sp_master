@@ -21,8 +21,8 @@ class TesdocumentosController extends AdminController {
 				$doc->activo='0';
                 if ($doc->save()) {
                     Flash::valid('Documento fué agregado Exitosamente...!!!');
-                    Acciones::add("Agregó Documento {$doc->nombre} al sistema");
-                    return Router::redirect();
+                    Aclauditorias::add("Agregó Documento {$doc->nombre} al sistema");
+                    return Redirect::to();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                 }
@@ -44,8 +44,8 @@ class TesdocumentosController extends AdminController {
 					$doc->userid=Auth::get('id');
                 if ($doc->update(Input::post('tesdocumentos'))) {
                     Flash::valid('La Documento fué actualizado Exitosamente...!!!');
-                    Acciones::add("Editó el Documento {$doc->nombre}", 'tesdocumentos');
-                    return Router::redirect();
+                    Aclauditorias::add("Editó el Documento {$doc->nombre}", 'tesdocumentos');
+                    return Redirect::to();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                     unset($this->doc); //para que cargue el $_POST en el form
@@ -63,7 +63,7 @@ class TesdocumentosController extends AdminController {
                 Flash::warning("No existe ningun Documento con id '{$id}'");
             }else if ($doc->activar()) {
                 Flash::valid("El Documento<b>{$doc->nombre}</b> Esta ahora <b>Activo</b>...!!!");
-                Acciones::add("Colocó al Documento {$doc->nombre} como activo", 'tesdocumentos');
+                Aclauditorias::add("Colocó al Documento {$doc->nombre} como activo", 'tesdocumentos');
             } else {
                 Flash::warning('No se pudo Activar el Documento!!!');
             }
@@ -80,7 +80,7 @@ class TesdocumentosController extends AdminController {
                 Flash::warning("No existe ningun Documento con id '{$id}'");
             }else if ($doc->desactivar()) {
                 Flash::valid("El Documento <b>{$doc->nombre}</b> Esta ahora <b>Inactivo</b>...!!!");
-                Acciones::add("Colocó el Documento {$doc->nombre} como inactivo", 'tesdocumentos');
+                Aclauditorias::add("Colocó el Documento {$doc->nombre} como inactivo", 'tesdocumentos');
             } else {
                 Flash::warning('No se Pudo Desactivar el Documento...!!!');
             }
@@ -99,14 +99,14 @@ class TesdocumentosController extends AdminController {
                 Flash::warning("No existe ningun Documento con id '{$id}'");
             } else if ($doc->delete()) {
                 Flash::valid("El Documento <b>{$doc->nombre}</b> fué Eliminado...!!!");
-                Acciones::add("Eliminó el Documento {$doc->nombre} del sistema", 'tesdocumentos');
+                Aclauditorias::add("Eliminó el Documento {$doc->nombre} del sistema", 'tesdocumentos');
             } else {
                 Flash::warning("No se Pudo Eliminar el Documento <b>{$doc->nombre}</b>...!!!");
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::redirect();
+        return Redirect::to();
     }
 	
 }

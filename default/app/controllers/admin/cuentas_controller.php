@@ -35,8 +35,8 @@ class CuentasController extends AdminController {
 				$cuentas->activo='0';
 				if ($cuentas->save()) {
                     Flash::valid('Cuenta fué agregada Exitosamente...!!!');
-                    Acciones::add("Agregó Cuenta {$cuentas->descripcion} al sistema");
-                    return Router::redirect();
+                    Aclauditorias::add("Agregó Cuenta {$cuentas->descripcion} al sistema");
+                    return Redirect::to();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                 }
@@ -58,8 +58,8 @@ class CuentasController extends AdminController {
 					$cuentas->userid=Auth::get('id');
                 if ($cuentas->update(Input::post('cuentas'))) {
                     Flash::valid('La Cuenta fué actualizada Exitosamente...!!!');
-                    Acciones::add("Editó la Cuenta {$cuentas->descripcion}", 'cuentas');
-                    return Router::redirect();
+                    Aclauditorias::add("Editó la Cuenta {$cuentas->descripcion}", 'cuentas');
+                    return Redirect::to();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                     unset($this->cuentas); //para que cargue el $_POST en el form
@@ -79,14 +79,14 @@ class CuentasController extends AdminController {
                 Flash::warning("No existe ninguna Cuenta con id '{$id}'");
             } else if ($cuentas->activar()) {
                 Flash::valid("La Cuenta <b>{$cuentas->codigo}</b> Esta ahora <b>Activo</b>...!!!");
-                Acciones::add("Colocó a la Cuenta {$cuentas->codigo} como Activo", 'cuentas');
+                Aclauditorias::add("Colocó a la Cuenta {$cuentas->codigo} como Activo", 'cuentas');
             } else {
                 Flash::warning("No se Pudo Activar la Cuenta <b>{$cuentas->cuentas}</b>...!!!");
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        Router::redirect();
+        Redirect::to();
     }
 	public function desactivar($id) {
         try {
@@ -98,14 +98,14 @@ class CuentasController extends AdminController {
                 Flash::warning("No existe ninguna Cuenta con id '{$id}'");
             } else if ($cuentas->desactivar()) {
                 Flash::valid("La Cuenta <b>{$cuentas->codigo}</b> Esta ahora <b>Inactivo</b>...!!!");
-                Acciones::add("Colocó a la Cuenta {$cuentas->codigo} como Inactivo", 'cuentas');
+                Aclauditorias::add("Colocó a la Cuenta {$cuentas->codigo} como Inactivo", 'cuentas');
             } else {
                 Flash::warning("No se Pudo Desactivar la Cuenta <b>{$cuentas->codigo}</b>...!!!");
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::redirect();
+        return Redirect::to();
     }
      public function eliminar($id) {
         try {
@@ -117,14 +117,14 @@ class CuentasController extends AdminController {
                 Flash::warning("No existe ninguna Cuenta con id '{$id}'");
             } else if ($cuentas->delete()) {
                 Flash::valid("La Cuenta <b>{$cuentas->codigo}</b> fué Eliminado...!!!");
-                Acciones::add("Eliminó la Cuenta {$cuentas->codigo} del sistema", 'cuentas');
+                Aclauditorias::add("Eliminó la Cuenta {$cuentas->codigo} del sistema", 'cuentas');
             } else {
                 Flash::warning("No se Pudo Eliminar la Cuenta <b>{$cuentas->codigo}</b>...!!!");
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::redirect();
+        return Redirect::to();
     }
 
 }

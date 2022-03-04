@@ -1,11 +1,14 @@
-<?php 
+<?php
+
+use LDAP\Result;
+
 View::template('backend/backend');
-load::models('testipocambios');
+//load::models('testipocambios');
 class TestipocambiosController extends AdminController
 {
 	protected function before_filter() {
         if ( Input::isAjax() ){
-			View::response('view');
+			View::template(null);
             //View::select(NULL, NULL);
         }
     }
@@ -34,7 +37,7 @@ class TestipocambiosController extends AdminController
                 return;
             }
 
-            return Router::redirect();
+            return Redirect::to();
         }
         // Solo es necesario para el autoForm
         $this->testipocambios = $obj;
@@ -73,7 +76,7 @@ class TestipocambiosController extends AdminController
             Flash::error('Falló Operación');
         }
         //enrutando al index para listar los articulos
-        Router::redirect();
+        Redirect::to();
     }
 
     /**
@@ -87,7 +90,6 @@ class TestipocambiosController extends AdminController
 	
 	public function guardarhoy()
 	{
-		
 		$id=$_POST['id'];
 		$fecha=$_POST['fecha'];
 		$compra= $_POST['compra'];
@@ -121,6 +123,8 @@ class TestipocambiosController extends AdminController
 			Session::set("CAMBIO_MONTO",$cambio->compra);
 			}
 		}
+
+		View::response(NULL);
 }
 public function getCambioFecha($fecha='')
 {

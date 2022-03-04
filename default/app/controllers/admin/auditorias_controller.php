@@ -26,7 +26,7 @@ class AuditoriasController extends AdminController {
             $this->auditorias = $aud->auditorias_por_usuario($id, $pagina);
             if (!$this->auditorias->items) {
                 Flash::info('Este usuario no ha realizado ninguna acción en el sistema...!!!');
-                return Router::redirect();
+                return Redirect::to();
             }
             $this->usuario = $usr->find_first($id);
             $this->tablas_afectadas = $aud->tablas_afectadas();

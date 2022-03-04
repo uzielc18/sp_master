@@ -49,8 +49,8 @@ class SubcuentasController extends AdminController
 				$subcuentas->subcuentas_id=$subcuentas_id;
 				if ($subcuentas->save()) {
                     Flash::valid('Sub Cuenta fué agregada Exitosamente...!!!');
-                    Acciones::add("Agregó Sub Cuenta {$subcuentas->descripcion} al sistema");
-                    return Router::redirect('admin/cuentas/listado');
+                    Aclauditorias::add("Agregó Sub Cuenta {$subcuentas->descripcion} al sistema");
+                    return Redirect::to('admin/cuentas/listado');
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                 }
@@ -71,8 +71,8 @@ class SubcuentasController extends AdminController
 					$subcuentas->userid=Auth::get('id');
                 if ($subcuentas->update(Input::post('subcuentas'))) {
                     Flash::valid('La Sub Cuenta fué actualizada Exitosamente...!!!');
-                    Acciones::add("Editó la Sub Cuenta {$subcuentas->descripcion}", 'subcuentas');
-                    return Router::redirect();
+                    Aclauditorias::add("Editó la Sub Cuenta {$subcuentas->descripcion}", 'subcuentas');
+                    return Redirect::to();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                     unset($this->subcuentas); //para que cargue el $_POST en el form
@@ -92,14 +92,14 @@ class SubcuentasController extends AdminController
                 Flash::warning("No existe ninguna Sub Cuenta con id '{$id}'");
             } else if ($subcuentas->activar()) {
                 Flash::valid("La Sub Cuenta <b>{$subcuentas->ceuntas}</b> Esta ahora <b>Activo</b>...!!!");
-                Acciones::add("Colocó a la Sub Cuenta {$subcuentas->subcuentas} como activo", 'subcuentas');
+                Aclauditorias::add("Colocó a la Sub Cuenta {$subcuentas->subcuentas} como activo", 'subcuentas');
             } else {
                 Flash::warning("No se Pudo Activar la Sub Cuenta <b>{$subcuentas->subcuentas}</b>...!!!");
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        Router::redirect();
+        Redirect::to();
     }
 	public function desactivar($id) {
         try {
@@ -111,14 +111,14 @@ class SubcuentasController extends AdminController
                 Flash::warning("No existe ninguna Sub Cuenta con id '{$id}'");
             } else if ($subcuentas->desactivar()) {
                 Flash::valid("La Sub Cuenta <b>{$subcuentas->subcuentas}</b> Esta ahora <b>Inactivo</b>...!!!");
-                Acciones::add("Colocó a la Sub Cuenta {$subcuentas->subcuentas} como inactivo", 'subcuentas');
+                Aclauditorias::add("Colocó a la Sub Cuenta {$subcuentas->subcuentas} como inactivo", 'subcuentas');
             } else {
                 Flash::warning("No se Pudo Desactivar la Sub Cuenta <b>{$subcuentas->subcuentas}</b>...!!!");
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::redirect();
+        return Redirect::to();
     }
      public function eliminar($id) {
         try {
@@ -130,14 +130,14 @@ class SubcuentasController extends AdminController
                 Flash::warning("No existe ninguna Sub Cuenta con id '{$id}'");
             } else if ($subcuentas->delete()) {
                 Flash::valid("La Sub Cuenta <b>{$subcuentas->subcuentas}</b> fué Eliminado...!!!");
-                Acciones::add("Eliminó la Sub Cuenta {$subcuentas->subcuentas} del sistema", 'subcuentas');
+                Aclauditorias::add("Eliminó la Sub Cuenta {$subcuentas->subcuentas} del sistema", 'subcuentas');
             } else {
                 Flash::warning("No se Pudo Eliminar la Sub Cuenta <b>{$subcuentas->subcuentas}</b>...!!!");
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::redirect();
+        return Redirect::to();
     }
 }
 ?>

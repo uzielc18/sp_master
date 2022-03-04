@@ -20,8 +20,8 @@ class TesmonedasController extends AdminController {
 				$mon->activo='0';
                 if ($mon->save()) {
                     Flash::valid('Moneda fué agregada Exitosamente...!!!');
-                    Acciones::add("Agregó Moneda {$mon->nombre} al sistema");
-                    return Router::redirect();
+                    Aclauditorias::add("Agregó Moneda {$mon->nombre} al sistema");
+                    return Redirect::to();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                 }
@@ -43,8 +43,8 @@ class TesmonedasController extends AdminController {
 					$mon->userid=Auth::get('id');
                 if ($mon->update(Input::post('tesmonedas'))) {
                     Flash::valid('La Moneda fué actualizada Exitosamente...!!!');
-                    Acciones::add("Editó la Moneda {$mon->nombre}", 'tesmonedas');
-                    return Router::redirect();
+                    Aclauditorias::add("Editó la Moneda {$mon->nombre}", 'tesmonedas');
+                    return Redirect::to();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                     unset($this->mon); //para que cargue el $_POST en el form
@@ -62,7 +62,7 @@ class TesmonedasController extends AdminController {
                 Flash::warning("No existe ninguna Moneda con id '{$id}'");
             }else if ($mon->activar()) {
                 Flash::valid("La Moneda<b>{$mon->mon}</b> Esta ahora <b>Activo</b>...!!!");
-                Acciones::add("Colocó a la Moneda{$mon->mon} como activo", 'tesmonedas');
+                Aclauditorias::add("Colocó a la Moneda{$mon->mon} como activo", 'tesmonedas');
             } else {
                 Flash::warning('No se pudo Activar la Moneda!!!');
             }
@@ -79,7 +79,7 @@ class TesmonedasController extends AdminController {
                 Flash::warning("No existe ninguna Moneda con id '{$id}'");
             }else if ($mon->desactivar()) {
                 Flash::valid("La Moneda <b>{$mon->mon}</b> Esta ahora <b>Inactivo</b>...!!!");
-                Acciones::add("Colocó la Moneda {$mon->mon} como inactivo", 'tesmonedas');
+                Aclauditorias::add("Colocó la Moneda {$mon->mon} como inactivo", 'tesmonedas');
             } else {
                 Flash::warning('No se Pudo Desactivar la Moneda...!!!');
             }
@@ -98,14 +98,14 @@ class TesmonedasController extends AdminController {
                 Flash::warning("No existe ninguna Moneda con id '{$id}'");
             } else if ($mon->delete()) {
                 Flash::valid("La Moneda <b>{$mon->mon}</b> fué Eliminado...!!!");
-                Acciones::add("Eliminó la Moneda {$mon->mon} del sistema", 'tesmonedas');
+                Aclauditorias::add("Eliminó la Moneda {$mon->mon} del sistema", 'tesmonedas');
             } else {
                 Flash::warning("No se Pudo Eliminar la Moneda <b>{$mon->mon}</b>...!!!");
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::redirect();
+        return Redirect::to();
     }
 	   
 }

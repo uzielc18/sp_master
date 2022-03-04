@@ -20,7 +20,7 @@ class TestipodatosController extends AppController {
 				$testipodatos->activo='1';
                 if ($testipodatos->save()) {
                     Flash::valid('Estado fué agregado Exitosamente...!!!');
-                    Acciones::add("Agregó Estado {$testipodatos->nombre} al sistema");
+                    Aclauditorias::add("Agregó Estado {$testipodatos->nombre} al sistema");
 					return Router::toAction('');
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
@@ -43,7 +43,7 @@ class TestipodatosController extends AppController {
 					$testipodatos->userid=Auth::get('id');
                 if ($testipodatos->update(Input::post('testipodatos'))) {
                     Flash::valid('El Estado fué actualizado Exitosamente...!!!');
-                    Acciones::add("Editó el Estado {$testipodatos->nombre}", 'testipodatos');
+                    Aclauditorias::add("Editó el Estado {$testipodatos->nombre}", 'testipodatos');
                     return Router::toAction('');
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
@@ -64,7 +64,7 @@ class TestipodatosController extends AppController {
                 Flash::warning("No existe ningun Estado con id '{$id}'");
             } else if ($testipodatos->activar()) {
                 Flash::valid("El Estado <b>{$testipodatos->testipodatos}</b> Esta ahora <b>Activo</b>...!!!");
-                Acciones::add("Colocó al Estado {$testipodatos->testipodatos} como activo", 'testipodatos');
+                Aclauditorias::add("Colocó al Estado {$testipodatos->testipodatos} como activo", 'testipodatos');
             } else {
                 Flash::warning("No se Pudo Activar el Estado <b>{$testipodatos->testipodatos}</b>...!!!");
             }
@@ -83,7 +83,7 @@ class TestipodatosController extends AppController {
                 Flash::warning("No existe ningun Estado con id '{$id}'");
             } else if ($testipodatos->desactivar()) {
                 Flash::valid("El Estado <b>{$testipodatos->testipodatos}</b> Esta ahora <b>Inactivo</b>...!!!");
-                Acciones::add("Colocó al Estado {$testipodatos->testipodatos} como inactivo", 'testipodatos');
+                Aclauditorias::add("Colocó al Estado {$testipodatos->testipodatos} como inactivo", 'testipodatos');
             } else {
                 Flash::warning("No se Pudo Desactivar el Estado <b>{$testipodatos->testipodatos}</b>...!!!");
             }
@@ -102,14 +102,14 @@ class TestipodatosController extends AppController {
                 Flash::warning("No existe ningun Estado con id '{$id}'");
             } else if ($testipodatos->delete()) {
                 Flash::valid("El Estado <b>{$testipodatos->testipodatos}</b> fué Eliminado...!!!");
-                Acciones::add("Eliminó el Estado {$testipodatos->testipodatos} del sistema", 'testipodatos');
+                Aclauditorias::add("Eliminó el Estado {$testipodatos->testipodatos} del sistema", 'testipodatos');
             } else {
                 Flash::warning("No se Pudo Eliminar el Estado <b>{$testipodatos->testipodatos}</b>...!!!");
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::redirect();
+        return Redirect::to();
     }
 
 }

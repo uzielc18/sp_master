@@ -20,8 +20,8 @@ class ProacabadosController extends AdminController {
 				$ac->activo='0';
                 if ($ac->save()) {
                     Flash::valid('Acabado fué agregado Exitosamente...!!!');
-                    Acciones::add("Agregó Acabado {$ac->nombre} al sistema");
-                    return Router::redirect();
+                    Aclauditorias::add("Agregó Acabado {$ac->nombre} al sistema");
+                    return Redirect::to();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                 }
@@ -43,8 +43,8 @@ class ProacabadosController extends AdminController {
 					$ac->userid=Auth::get('id');
                 if ($ac->update(Input::post('proacabados'))) {
                     Flash::valid('El Acabado fué actualizado Exitosamente...!!!');
-                    Acciones::add("Editó el Acabado {$ac->nombre}", 'proacabados');
-                    return Router::redirect();
+                    Aclauditorias::add("Editó el Acabado {$ac->nombre}", 'proacabados');
+                    return Redirect::to();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                     unset($this->ac); //para que cargue el $_POST en el form
@@ -64,14 +64,14 @@ class ProacabadosController extends AdminController {
                 Flash::warning("No existe ningun Acabado con id '{$id}'");
             } else if ($ac->activar()) {
                 Flash::valid("El Acabado <b>{$ac->nombre}</b> Esta ahora <b>Activo</b>...!!!");
-                Acciones::add("Colocó al Acbado {$ac->nombre} como activo", 'proacabados');
+                Aclauditorias::add("Colocó al Acbado {$ac->nombre} como activo", 'proacabados');
             } else {
                 Flash::warning("No se Pudo Activar el Acabado <b>{$ac->nombre}</b>...!!!");
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        Router::redirect();
+        Redirect::to();
     }
 	public function desactivar($id) {
         try {
@@ -83,14 +83,14 @@ class ProacabadosController extends AdminController {
                 Flash::warning("No existe ningun Acabado con id '{$id}'");
             } else if ($ac->desactivar()) {
                 Flash::valid("El Acabado <b>{$ac->nombre}</b> Esta ahora <b>Inactivo</b>...!!!");
-                Acciones::add("Colocó al Acabado {$ac->nombre} como inactivo", 'proacabados');
+                Aclauditorias::add("Colocó al Acabado {$ac->nombre} como inactivo", 'proacabados');
             } else {
                 Flash::warning("No se Pudo Desactivar el Acabado <b>{$ac->nombre}</b>...!!!");
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::redirect();
+        return Redirect::to();
     }
 	public function eliminar($id) {
         try {
@@ -102,14 +102,14 @@ class ProacabadosController extends AdminController {
                 Flash::warning("No existe ningun Acabado con id '{$id}'");
             } else if ($ac->delete()) {
                 Flash::valid("El Acabado <b>{$ac->ac}</b> fué Eliminado...!!!");
-                Acciones::add("Eliminó el Acabado {$ac->ac} del sistema", 'proacabados');
+                Aclauditorias::add("Eliminó el Acabado {$ac->ac} del sistema", 'proacabados');
             } else {
                 Flash::warning("No se Pudo Eliminar el Acabado <b>{$ac->nombre}</b>...!!!");
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::redirect();
+        return Redirect::to();
     }
 	
 }

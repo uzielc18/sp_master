@@ -24,8 +24,8 @@ class RolesController extends AdminController {
 					$rol->activo='0';
                 if ($rol->save()) {
                     Flash::valid('El Rol Ha Sido Agregado Exitosamente...!!!');
-                    Acciones::add("Agregó el Rol {$rol->rol} al sistema", 'aclroles');
-                    return Router::redirect();
+                    Aclauditorias::add("Agregó el Rol {$rol->rol} al sistema", 'aclroles');
+                    return Redirect::to();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                 }
@@ -57,15 +57,15 @@ class RolesController extends AdminController {
 
                 if ($rol->update(Input::post('rol'))) {
                     Flash::valid('El Rol Ha Sido Actualizado Exitosamente...!!!');
-                    Acciones::add("Editó el Rol {$rol->rol}", 'roles');
-                    return Router::redirect();
+                    Aclauditorias::add("Editó el Rol {$rol->rol}", 'roles');
+                    return Redirect::to();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                     unset($this->rol); //para que cargue el $_POST en el form
                 }
             } else if (!$this->rol) {
                 Flash::warning("No existe ningun rol con id '{$id}'");
-                return Router::redirect();
+                return Redirect::to();
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
@@ -95,14 +95,14 @@ class RolesController extends AdminController {
                 Flash::warning("No existe ningun rol con id '{$id}'");
             } else if ($rol->delete()) {
                 Flash::valid("El rol <b>{$rol->rol}</b> fué Eliminado...!!!");
-                Acciones::add("Eliminó el Rol {$rol->rol} del sistema", 'roles');
+                Aclauditorias::add("Eliminó el Rol {$rol->rol} del sistema", 'roles');
             } else {
                 Flash::warning("No se Pudo Eliminar el Rol <b>{$rol->rol}</b>...!!!");
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::redirect();
+        return Redirect::to();
     }
 
     public function activar($id) {
@@ -115,14 +115,14 @@ class RolesController extends AdminController {
                 Flash::warning("No existe ningun rol con id '{$id}'");
             } else if ($rol->activar()) {
                 Flash::valid("El rol <b>{$rol->rol}</b> Esta ahora <b>Activo</b>...!!!");
-                Acciones::add("Colocó al Rol {$rol->rol} como activo", 'roles');
+                Aclauditorias::add("Colocó al Rol {$rol->rol} como activo", 'roles');
             } else {
                 Flash::warning("No se Pudo Activar el Rol <b>{$rol->rol}</b>...!!!");
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        Router::redirect();
+        Redirect::to();
     }
 
     public function desactivar($id) {
@@ -135,14 +135,14 @@ class RolesController extends AdminController {
                 Flash::warning("No existe ningun rol con id '{$id}'");
             } else if ($rol->desactivar()) {
                 Flash::valid("El rol <b>{$rol->rol}</b> Esta ahora <b>Inactivo</b>...!!!");
-                Acciones::add("Colocó al Rol {$rol->rol} como inactivo", 'roles');
+                Aclauditorias::add("Colocó al Rol {$rol->rol} como inactivo", 'roles');
             } else {
                 Flash::warning("No se Pudo Desactivar el Rol <b>{$rol->rol}</b>...!!!");
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::redirect();
+        return Redirect::to();
     }
 
 }

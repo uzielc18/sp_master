@@ -321,8 +321,8 @@ public function reparar_direccion()
 	if($datos->save()){$a++;}else{}
 	endforeach;
 	if($a>=1){Flash::valid('Se actualizo los datos... !!!'.$a);}else{Flash::warning('No se Pudieron Guardar los Datos...!!!');}
-    //Acciones::add("Agregó Empresa {$em->nombre} al sistema");
-    return Router::redirect();*/
+    //Aclauditorias::add("Agregó Empresa {$em->nombre} al sistema");
+    return Redirect::to();*/
 }
 public function actualizarIngresos()
 {
@@ -392,8 +392,8 @@ public function terminar_fa()
 					$obj->find_first($aplicaciones->tesfacturasadelantos_id);
 					$obj->estado=9;
 					$obj->save();
-                    //Acciones::add("Agregó Empresa {$em->nombre} al sistema");
-                    return Router::redirect();
+                    //Aclauditorias::add("Agregó Empresa {$em->nombre} al sistema");
+                    return Redirect::to();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                 }

@@ -26,8 +26,8 @@ class TescuentascorrientesController extends AdminController {
 				$cc->activo='0';
                 if ($cc->save()) {
                     Flash::valid('Cuenta Corriente fué agregada Exitosamente...!!!');
-                    Acciones::add("Agregó Cuenta Corriente {$cc->numero} al sistema");
-                    return Router::redirect();
+                    Aclauditorias::add("Agregó Cuenta Corriente {$cc->numero} al sistema");
+                    return Redirect::to();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                 }
@@ -47,8 +47,8 @@ class TescuentascorrientesController extends AdminController {
 					$cc->userid=Auth::get('id');
                 if ($cc->update(Input::post('tescuentascorrientes'))) {
                     Flash::valid('La Cuenta Corriente fué actualizada Exitosamente...!!!');
-                    Acciones::add("Editó la Cuenta Corriente {$cc->numero}", 'tescuentascorrientes');
-                    return Router::redirect();
+                    Aclauditorias::add("Editó la Cuenta Corriente {$cc->numero}", 'tescuentascorrientes');
+                    return Redirect::to();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                     unset($this->cc); //para que cargue el $_POST en el form
@@ -66,7 +66,7 @@ class TescuentascorrientesController extends AdminController {
                 Flash::warning("No existe ninguna Cuenta Corriente con id '{$id}'");
             }else if ($cc->activar()) {
                 Flash::valid("La Cuenta Corriente<b>{$cc->numero}</b> Esta ahora <b>Activo</b>...!!!");
-                Acciones::add("Colocó a la Cuenta Corriente {$cc->numero} como activo", 'tescuentascorrientes');
+                Aclauditorias::add("Colocó a la Cuenta Corriente {$cc->numero} como activo", 'tescuentascorrientes');
             } else {
                 Flash::warning('No se pudo Activar la Cuenta Corriente!!!');
             }
@@ -83,7 +83,7 @@ class TescuentascorrientesController extends AdminController {
                 Flash::warning("No existe ninguna Cuenta Corriente con id '{$id}'");
             }else if ($cc->desactivar()) {
                 Flash::valid("La Cuenta Corriente <b>{$cc->numero}</b> Esta ahora <b>Inactivo</b>...!!!");
-                Acciones::add("Colocó la Cuenta Corriente {$cc->numero} como inactivo", 'tescuentascorrientes');
+                Aclauditorias::add("Colocó la Cuenta Corriente {$cc->numero} como inactivo", 'tescuentascorrientes');
             } else {
                 Flash::warning('No se Pudo Desactivar la Cuenta Corriente...!!!');
             }
@@ -102,14 +102,14 @@ class TescuentascorrientesController extends AdminController {
                 Flash::warning("No existe ninguna Cuenta Corriente con id '{$id}'");
             } else if ($cc->delete()) {
                 Flash::valid("La Cuenta Corriente <b>{$cc->numero}</b> fué Eliminado...!!!");
-                Acciones::add("Eliminó la Cuenta Corriente {$cc->nuemro} del sistema", 'tescuentascorrientes');
+                Aclauditorias::add("Eliminó la Cuenta Corriente {$cc->nuemro} del sistema", 'tescuentascorrientes');
             } else {
                 Flash::warning("No se Pudo Eliminar la Cuenta Corriente <b>{$cc->numero}</b>...!!!");
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::redirect();
+        return Redirect::to();
     }
 	public function bancos($id)
 	{

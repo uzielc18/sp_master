@@ -31,8 +31,8 @@ class TescoloresController extends AdminController {
 				$col->activo='0';
                 if ($col->save()) {
                     Flash::valid('Color fué agregado Exitosamente...!!!');
-                    Acciones::add("Agregó Color {$col->nombre} al sistema");
-                    return Router::redirect();
+                    Aclauditorias::add("Agregó Color {$col->nombre} al sistema");
+                    return Redirect::to();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                 }
@@ -56,8 +56,8 @@ class TescoloresController extends AdminController {
 					$col->userid=Auth::get('id');
                 if ($col->update(Input::post('tescolores'))) {
                     Flash::valid('El Color fué actualizado Exitosamente...!!!');
-                    Acciones::add("Editó el Color {$col->nombre}", 'tescolores');
-                    return Router::redirect();
+                    Aclauditorias::add("Editó el Color {$col->nombre}", 'tescolores');
+                    return Redirect::to();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                     unset($this->col); //para que cargue el $_POST en el form
@@ -77,7 +77,7 @@ class TescoloresController extends AdminController {
                 Flash::warning("No existe ningun Color con id '{$id}'");
             }else if ($col->activar()) {
                 Flash::valid("El Color<b>{$col->nombre}</b> Esta ahora <b>Activo</b>...!!!");
-                Acciones::add("Colocó al Color {$col->nombre} como activo", 'tescolores');
+                Aclauditorias::add("Colocó al Color {$col->nombre} como activo", 'tescolores');
             } else {
                 Flash::warning('No se pudo Activar el Color!!!');
             }
@@ -96,7 +96,7 @@ class TescoloresController extends AdminController {
                 Flash::warning("No existe ningun Color con id '{$id}'");
             }else if ($col->desactivar()) {
                 Flash::valid("El Color <b>{$col->nomnbre}</b> Esta ahora <b>Inactivo</b>...!!!");
-                Acciones::add("Colocó el Color {$col->nombre} como inactivo", 'tescolores');
+                Aclauditorias::add("Colocó el Color {$col->nombre} como inactivo", 'tescolores');
             } else {
                 Flash::warning('No se Pudo Desactivar el Color...!!!');
             }
@@ -116,14 +116,14 @@ class TescoloresController extends AdminController {
                 Flash::warning("No existe ningun Color con id '{$id}'");
             } else if ($col->delete()) {
                 Flash::valid("El Color <b>{$col->nombre}</b> fué Eliminado...!!!");
-                Acciones::add("Eliminó el Color {$col->nombre} del sistema", 'tescolores');
+                Aclauditorias::add("Eliminó el Color {$col->nombre} del sistema", 'tescolores');
             } else {
                 Flash::warning("No se Pudo Eliminar el Color <b>{$col->nombre}</b>...!!!");
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::redirect();
+        return Redirect::to();
     }
 	public function reporte (){
 		View::template(NULL);

@@ -24,8 +24,8 @@ class TesbancosController extends AdminController {
 				$ban->activo='0';
                 if ($ban->save()) {
                     Flash::valid('Banco fué agregado Exitosamente...!!!');
-                    Acciones::add("Agregó Banco {$ban->nombre} al sistema");
-                    return Router::redirect();
+                    Aclauditorias::add("Agregó Banco {$ban->nombre} al sistema");
+                    return Redirect::to();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                 }
@@ -47,8 +47,8 @@ class TesbancosController extends AdminController {
 					$ban->userid=Auth::get('id');
                 if ($ban->update(Input::post('tesbancos'))) {
                     Flash::valid('El Banco fué actualizado Exitosamente...!!!');
-                    Acciones::add("Editó el Banco {$ban->nombre}", 'tesbancos');
-                    return Router::redirect();
+                    Aclauditorias::add("Editó el Banco {$ban->nombre}", 'tesbancos');
+                    return Redirect::to();
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                     unset($this->ban); //para que cargue el $_POST en el form
@@ -66,7 +66,7 @@ class TesbancosController extends AdminController {
                 Flash::warning("No existe ningun Banco con id '{$id}'");
             }else if ($ban->activar()) {
                 Flash::valid("El Banco<b>{$ban->nombre}</b> Esta ahora <b>Activo</b>...!!!");
-                Acciones::add("Colocó al Banco {$ban->nombre} como activo", 'tesbancos');
+                Aclauditorias::add("Colocó al Banco {$ban->nombre} como activo", 'tesbancos');
             } else {
                 Flash::warning('No se pudo Activar el Banco!!!');
             }
@@ -83,7 +83,7 @@ class TesbancosController extends AdminController {
                 Flash::warning("No existe ningun Banco con id '{$id}'");
             }else if ($ban->desactivar()) {
                 Flash::valid("El Banco <b>{$ban->nombre}</b> Esta ahora <b>Inactivo</b>...!!!");
-                Acciones::add("Colocó el Banco {$ban->nombre} como inactivo", 'tesbancos');
+                Aclauditorias::add("Colocó el Banco {$ban->nombre} como inactivo", 'tesbancos');
             } else {
                 Flash::warning('No se Pudo Desactivar el Banco...!!!');
             }
@@ -102,14 +102,14 @@ class TesbancosController extends AdminController {
                 Flash::warning("No existe ningun Banco con id '{$id}'");
             } else if ($ban->delete()) {
                 Flash::valid("El Banco <b>{$ban->nombre}</b> fué Eliminado...!!!");
-                Acciones::add("Eliminó el Banco {$ban->nombre} del sistema", 'tesbancos');
+                Aclauditorias::add("Eliminó el Banco {$ban->nombre} del sistema", 'tesbancos');
             } else {
                 Flash::warning("No se Pudo Eliminar el Banco <b>{$ban->nombre}</b>...!!!");
             }
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::redirect();
+        return Redirect::to();
     }
 	
 }

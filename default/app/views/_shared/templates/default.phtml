@@ -1,24 +1,29 @@
+
 <!DOCTYPE html>
 <html lang="es">
- <head>
+<head>
   <meta charset=<?= APP_CHARSET ?> >
-  <title>KumbiaPHP Framework</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <?php Tag::css('kumbia') ?>
-  <?= Html::includeCss() ?>
+  <title>AdminLTE 3 | Log in</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="dist/css/adminlte.min.css">
 </head>
-<body>
-<div class="container">
-  <header class="row">
-      <div class="col-8">
-          <?= Html::link('', Html::img('kumbiaphp.svg', 'KumbiaPHP logo'), 'title="Inicio"') ?>
-      </div>
-      <div class="col-4 text-right">
-          App: <strong><?= basename(dirname(APP_PATH)) ?></strong> (<?= PRODUCTION ? 'Production' : 'Development' ?>)
-      </div>
-  </header>
-  <?php View::content() ?>
-  <?php View::partial('kumbia/footer') ?>
-</div>
+<body class="hold-transition login-page">
+  
+<?php View::content() ?>
+
+<!-- jQuery -->
+<script src="plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="dist/js/adminlte.min.js"></script>
 </body>
 </html>
