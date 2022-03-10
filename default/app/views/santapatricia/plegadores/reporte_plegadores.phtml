@@ -1,0 +1,47 @@
+<div class="card">
+    <h1>Plegadores<span> Reporte con el ultimo movimiento del plegador</span></h1>
+</div>
+<div class="form-actions">
+<?php echo Html::linkAction("plegadoresmov/",'Volver','class="btn btn-info"') ?>
+</div>
+
+<?php echo Sp::imprimir('Abonos Adelanto - ','P');?> 
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="card-body">
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+<caption>Reporte con el ultimo movimiento del plegador</caption>
+  <tr>
+  	<th width="22" align="left">Nº</th>
+    <th width="41" align="left">Codigo</th>
+    <th width="84" align="left">Tipo/Plegador</th>
+    <th width="48" align="left">Numero</th>
+    <th width="41" align="left">Estado</th>
+    <th width="152" align="left">Titulo</th>
+    <th width="47" align="left">Metraje</th>
+    <th width="28" align="left">Kilos</th>
+    <th width="189" align="left">Urdido por</th>
+  </tr>
+<?php $n=0;
+foreach($plegadores as $item){ $n++;
+
+$val=explode(",",$item->glosa);
+
+
+?>
+  <tr>
+  	<td><?php echo $n?></td>
+    <td><?php echo $item->getTesproductos()->codigo?></td>
+    <td><?php echo $item->protipoplegadores()->nombre?></td>
+    <td><?php echo $item->numero?></td>
+     <td><?php echo $item->getEstadoplegador()->nombre?></td>
+    <td width="152"><?php if($item->getEstadoplegador()->nombre!='Vacio'){$v=explode(":",$val[0]);echo $v[1];}?></td>
+    <td width="47" align="right"><?php if($item->getEstadoplegador()->nombre!='Vacio'){$v=explode(":",$val[4]);echo $v[1];}?></td>
+    <td width="28" align="right"><?php if($item->getEstadoplegador()->nombre!='Vacio'){$v=explode(":",$val[6]);echo $v[1];}?></td>
+    <td width="189"><?php if($item->getEstadoplegador()->nombre!='Vacio'){echo $item->razonsocial;}?></td>
+  </tr>
+<?php }?>
+</table>
+<div class="cl"></div>
+</div>

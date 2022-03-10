@@ -1,0 +1,64 @@
+<div class="form-actions">
+<?php View::content();?>
+<span class="print btn btn-primary"> Print </span> 
+<a href="javascript:;" class="btn botonExcel">Enviar a Excel<img src="/img/export_to_excel.gif" class="" /></a>
+<form action="/utiles/excel" method="post" target="_blank" id="FormularioExportacion" class="form-inline">
+<input type="hidden" id="datos_a_enviar" name="datos_a_enviar"/>
+<input type="hidden" id="nombre" name="nombre" value="Precios_Clientes <?php echo $dato->id?>"/>
+</form>
+</div>
+<div class="card-body">
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="cliente">
+  <tr>
+    <th colspan="6" align="left">
+    <h2>
+      Cliente: <?Php echo $dato->razonsocial;?>
+    </h2>
+    </th>
+  </tr>
+  <tr>
+    <th width="12%" align="left">Fecha</th>
+	<th width="8%" align="left">No. Doc</th>
+    <?php /*?><th width="10%" align="left">Codigo</th><?php */?>
+    <th width="23%" align="left">Tela</th>
+    <th width="12%" align="left">Color</th>
+    <th width="16%" align="left">Metros</th>
+    <th width="13%" align="right">Precio S/.</th>
+    <th width="16%" align="right">Precio $.</th>
+  </tr>
+ <?Php foreach($detalles as $item){?>
+  <tr>
+    <td><?php echo Sp::formatFecha('%d/%m/%Y',$item->fecha)?></td>
+	<td><?php echo $item->numero?></td>
+    <?php /*?><td><?php //echo $item->codigo?></td><?php */?>
+    <td><?php echo $item->nombre?></td>
+        <td><?php echo $item->getTescolores()->nombre; ?></td>
+        <td><?php echo number_format($item->cantidad,2,'.','')?></td>
+    <td align="right"><?php if($item->tesmonedas_id==1)echo number_format($item->preciounitario,2,'.','');?></td>
+    <td align="right"><?php if($item->tesmonedas_id==2)echo number_format($item->preciounitario,2,'.','');?></td>
+  </tr>
+ <?php }?>
+</table>
+<script type="text/javascript">
+$(document).ready(function()
+{
+	$('#txtBuscar').on('search',function(){
+		$.fntBuscarEnTabla($(this).val(),'cliente');
+		
+	});
+$(".botonExcel").click(function(event)
+	{
+		$("#datos_a_enviar").val( $("<div>").append( $("#cliente").eq(0).clone()).html());
+		$("#FormularioExportacion").submit();
+	});
+});
+$(function() {
+	
+	$('.print').click(function() {
+		$('div.page').printArea();
+		return false;
+	});
+	
+});
+</script>
+</div>

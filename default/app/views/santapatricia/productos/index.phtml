@@ -1,0 +1,101 @@
+<script type="text/javascript">
+$(document).ready(function(){
+        $("#lineaproducto").change(function(){
+                var op = $("#lineaproducto option:selected").val();
+                document.location = "/<?php echo $module_name?>/productos/index/"+op;
+        });
+		$("#tipoproducto").change(function(){
+                var op = $("#tipoproducto option:selected").val();
+                document.location = "/<?php echo $module_name?>/productos/index/<?php echo $id?>/"+op;
+        });
+});
+</script>
+
+<?php View::content() ?>
+<div class="card">
+    <h1>Productos </h1>
+</div>
+<div class="form-actions">
+Linea de Productos: <?php echo Form::dbSelect('lineaproducto','nombre',array("teslineaproductos",'find','conditions: estado=1 AND activo=1 and aclempresas_id='.Session::get("EMPRESAS_ID")),'Cambiar de linea de producto','',$id);?> Tipo de Producto <?php echo Form::dbSelect('tipoproducto','nombre',array("testipoproductos",'find','conditions: estado=1 AND activo=1 and teslineaproductos_id='.$id),'Cambiar de linea de producto','',$tipos_id);?>	
+</div>
+<div class="card-body">
+<h3><?php if(!empty($linea))echo $linea->nombre?> <i><?php if(!empty($linea))echo $linea->detalle?></i></h3>
+
+<?php
+if($tipos_id==0){
+foreach($tipos as $tipo){
+?>
+<h4><?php echo $linea->nombre?> - <?php echo $tipo->nombre?> <i><?php echo $tipo->detalle?> // <?php echo $tipo->abr?>-<?php echo $tipo->id?></i></h4>
+<?php echo Ajax::linkAction("crear/".$tipo->id, 'Crear Producto','producto_nuevo-'.$tipo->id, 'class="btn btn-primary"') ?>
+<div id="producto_nuevo-<?php echo $tipo->id?>"></div>
+<table class="table table-bordered table-striped">
+  <thead>
+  <tr>
+  	<th align="left">Nº</th>
+    <th align="left">Codigo</th>
+    <th align="left">Nombre</th>
+    <th align="left">Abr.</th>
+    <th align="left">Detalle</th>
+    <th align="center">Acciones</th>
+  </tr>
+  </thead>
+  <tbody id="listado-<?php echo $tipo->id?>">
+<?php $n=0;
+$PRO=$PR->find('conditions: estado=1 and activo=1 and testipoproductos_id='.$tipo->id);
+foreach($PRO as $item){ $n++;?>
+  <tr>
+  	<td><?php echo $n?></td>
+    <td><?php echo $item->prefijo?><?php echo $item->codigo?></td>
+    <td><?php echo $item->nombre?></td>
+    <td><?php echo $item->abr?></td>
+    <td><?php echo $item->detalle?></td>
+	<td><?php echo Ajax::linkAction('editar/'.$item->id.'/'.$linea->id.'/'.$tipo->id,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'producto_nuevo-'.$tipo->id)?>
+	<?php echo Html::linkAction('borrar/'.$item->id.'/'.$linea->id.'/'.$tipo->id,Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?></td>
+
+  </tr>
+<?php }?>
+	</tbody>
+</table>
+<?php
+	}
+}else{
+	?>
+ <h4><?php echo $linea->nombre?> - <?php echo $tipo->nombre?> <i><?php echo $tipo->detalle?> // <?php echo $tipo->abr?>-<?php echo $tipo->id?></i></h4>
+<?php echo Ajax::linkAction("crear/".$tipo->id, 'Crear Producto','producto_nuevo-'.$tipo->id, 'class="btn btn-primary"') ?>
+<div id="producto_nuevo-<?php echo $tipo->id?>"></div>
+<table class="table table-bordered table-striped">
+  <thead>
+  <tr>
+  	<th align="left">Nº</th>
+    <th>Codigo</th>
+    <th>Nombre</th>
+    <th>Abr.</th>
+    <?php if($tipo->getTeslineaproductos()->id==1){?>
+	<th> Tipo Fibra</th>
+	<?php }?>
+    <th>Detalle</th>
+    <th>Acciones</th>
+  </tr>
+  </thead>
+  <tbody id="listado-<?php echo $tipo->id?>">
+<?php $n=0;
+$PRO=$productos;
+foreach($PRO as $item){ $n++;?>
+  <tr>
+  	<td><?php echo $n?></td>
+    <td><?php echo $item->prefijo?><?php echo $item->codigo?></td>
+    <td><?php echo $item->nombre?></td>
+    <td><?php echo $item->abr?></td>
+    <?php if($tipo->getTeslineaproductos()->id==1){?>
+	<td> <?php echo $item->tipo_fibra?></td>
+	<?php }?>
+    <td><?php echo $item->detalle?></td>
+    <td><?php echo Ajax::linkAction('editar/'.$item->id.'/'.$linea->id.'/'.$tipo->id,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'producto_nuevo-'.$tipo->id)?>
+    <?php echo Html::linkAction('borrar/'.$item->id.'/'.$linea->id.'/'.$tipo->id,Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?></td>
+
+  </tr>
+<?php }?>
+	</tbody>
+</table>
+ <?php }?>
+ </div>

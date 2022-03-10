@@ -1,0 +1,154 @@
+
+<?php 
+ header('Content-type: application/vnd.ms-word');
+
+ header("Content-Disposition: attachment; filename=archivo.doc");
+
+ header("Pragma: no-cache");
+
+ header("Expires: 0");
+$monedas= $salida->tesmonedas_id;
+switch ($monedas)
+{
+	case 1: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES'; break;
+	case 2: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 4: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
+	case 5: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 0: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
+}
+
+?>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<table width="110%" border="0" cellspacing="0" align="left">
+  <tr>
+   
+    <td width="87" height="35" align="left"><?php if(!empty($salida->getTesdatos()->codigo_ant)) echo $salida->getTesdatos()->codigo_ant; else echo $salida->getTesdatos()->codigo.'-'.$salida->getTesdatos()->sufijo?></td>
+    <td width="623" align="lefth"><?php echo $salida->getTesdatos()->razonsocial?></td>
+    <td width="141" align="lefth"><?php echo $salida->numeroguia?></td>
+    <td width="138" align="left"><?php echo Sp::formatFecha('%d / %m / %Y',$salida->femision)?></td>
+  </tr>
+
+</table>
+<BR />
+<br />
+<br />
+<table width="110%" border="0" cellspacing="1">
+  <tr>
+    
+    <td width="5%" height="45" align="left"><?php echo $salida->getTesdatos()->ruc?></td>
+    <td width="71%" align="left"><?php echo $empresa->direccion?></td>
+    <td width="24%"><?php echo $salida->getTescondicionespagos()->nombre?></td>
+  </tr>
+</table>
+<br />
+<br />
+<br />
+<table width="112%" border="0" cellspacing="1">
+    <?php $n_total_r=10;?>
+	<?php  $n=0;$total=0;
+  foreach($detalles as $item){
+  		$total=$total+$item->importe;
+	  $n++;
+	 ?>
+  <tr>
+    <td width="39" align="left"><?php if(empty($item->getTesproductos()->codigo_ant))echo $item->getTesproductos()->codigo ;else echo $item->getTesproductos()->codigo_ant; ?></td>
+    <td width="56" align="center"><?php echo number_format($item->cantidad,2,'.','')?></td>
+    
+    <td width="50" align="center"> <?Php echo $item->getTesunidadesmedidas()->simbolo?></td>
+   <td width="269"> <?php echo $item->getTesproductos()->codigo?> <?php echo $item->getTesproductos()->detalle?> <?php echo $item->getTesproductos()->nombre?> <?Php echo $item->getTescolores()->nombre?></td>
+   <td width="63"><?php echo $simbolo ?><?php echo number_format($item->preciounitario,2,'.','');?></td>
+   <td width="77"><?php if(empty($item->descuento))echo "0.00";else echo $item->descuento/100?></td>
+   <td width="118" align="left" valign="top"><?php echo $simbolo ?><?php echo number_format($item->importe,2,'.','');?></td>
+  </tr>
+  <?php }?>
+  <tr>
+  <td width="39" align="center">&nbsp;</td>
+    <td width="56" align="center">&nbsp;</td>
+    
+    <td width="50" align="center">&nbsp;</td>
+   <td width="269">&nbsp;</td>
+   <td>&nbsp;</td>
+   <td>&nbsp;</td>
+   <td align="left" valign="top">-----------<br /><?php echo $simbolo ?><?php echo number_format($total,2,'.','')?></td>
+   </tr>
+  <?php for($i=0;$i<=$n_total_r-$n;$i++){?>
+   
+   <?php if($i==0){ ?><tr>
+   <td>&nbsp;</td>
+  <td colspan="6" align="left"><?php echo NumerosLetras::NL($salida->totalconigv,$moneda_letras);?></td>
+    </tr>
+    <?php }?>
+    <tr>
+  <td colspan="6" align="center">&nbsp;</td>
+    </tr>
+    <?php }?>
+    
+    <tr>
+    <td>&nbsp;</td>
+  <td colspan="6" align="center">
+  <?php
+	foreach($lets as $let){
+	$q=$let->id;
+	?>
+<table width="155" border="0" cellspacing="1" style="float:left;">
+	<tr>
+		<td width="50">Número</td>
+		<td width="175"><?php echo $let->getTessalidas()->numero?> </td>
+	</tr>
+	<tr>
+		<td>F.VTO:</td>
+		<td width="175"><?php echo Sp::formatFecha('%d/%m/%Y',$let->getTessalidas()->fvencimiento);?></td>
+	</tr>
+	<tr>
+		<td>MONTO:</td>
+		<td><?php echo $simbolo ?><?php echo number_format($let->getTessalidas()->totalconigv,2,'.','');?></td>
+	</tr>
+	<tr>
+		<td>DIAS</td>
+		<td><?php echo Sp::Ndias($let->getTessalidas()->fvencimiento,$let->getTessalidas()->femision);?></td>
+	</tr>
+</table>
+<?php }?></td>
+    </tr>
+</table>
+<br />
+<table width="113%" border="0" cellspacing="1">
+  <tr>
+    <td width="25%">&nbsp;</td>
+    <td width="20%">&nbsp;</td>
+    <td width="6%">&nbsp;</td>
+    <td width="17%">&nbsp;</td>
+    <td width="13%">IGV.(<?php echo Session::get('IGV')*100?>%)</td>
+    <td width="17%"><?php echo $simbolo ?><?php echo number_format($salida->totalconigv-$total,2,'.','')?></td>
+    <td width="2%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td><?php echo $simbolo ?><?php echo number_format($salida->totalconigv,2,'.','')?></td>
+    <td>&nbsp;</td>
+  </tr>
+</table>

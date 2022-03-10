@@ -1,0 +1,53 @@
+<?php //Load::lib('html_to_doc');?>
+<!DOCTYPE html>
+ <html lang="es">
+	<head>
+    	<meta charset='UTF-8' />
+        <title>Santa Patricia</title>
+        <link href="/css/backend/bootstrap.css" rel="stylesheet" type="text/css" media="screen" />
+		<link href="/css/backend/estilos.css" rel="stylesheet" type="text/css" media="screen" />
+        </head>
+    <body>
+    <div id='cabecera' class="navbar navbar-fixed-top">
+ 	<div class="navbar-inner">
+        <div class="container">
+            <a href="/" class="brand" >Bienvenidos  a la Intranet</a>
+        </div>
+    </div>
+    </div>  
+	<div class="container">
+            <div id="contenido" class="content">
+            <div class="span12">
+               <?php 
+if(Session::get('EMPRESAS_ID')==2)
+{
+	$pre_fijo="SC-";
+}else
+{
+	$pre_fijo="SP-";
+}
+?>
+<div class="page-header">
+<h1>Vista pevia <span>Documento a imprimir</span></h1>
+</div>
+<div class="page"> 
+<?php  
+(copy('reporte.doc',$nombre.'.doc')); 
+//Ejemplo aprenderaprogramar.com
+$file = fopen($nombre.".doc", "r+");
+fputs($file,utf8_decode($p));
+fclose($file);
+
+echo "<a href=\"/".$nombre.".doc\" class='btn btn-info'>descargar</a>";
+?>
+
+</div> 
+        <div style="clear:both;"></div>
+			</div> 
+            <div style="clear:both;"></div>
+            </div> 
+    </div>   
+    </body>
+</html>
+
+

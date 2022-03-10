@@ -1,0 +1,315 @@
+<?php View::content();
+$vend_array=array();
+$adel_array=array();
+$pa_array=array();
+foreach($vendedores as $vend)
+{
+	$vend_array[$vend->id]['S']=0;
+	$vend_array[$vend->id]['D']=0;
+	$adel_array[$vend->id]['S']=0;
+	$adel_array[$vend->id]['D']=0;
+	$pa_array[$vend->id]['S']=0;
+	$pa_array[$vend->id]['D']=0;
+}
+
+?>
+
+<table id="exportar_excel" width="700" border="0" cellspacing="0" cellpadding="0" class="table-hover table-bordered" align="center">
+<thead>
+      <tr>
+        <th colspan="6"><?php echo $empresa->razonsocial?></th>
+        <th width="12%">&nbsp;</th>
+      </tr>
+      <tr>
+        
+        <th colspan="4">ESTADO DE CUENTAS DE CLIENTES AL</th>
+        <th colspan="2"><?Php echo date("d/m/Y")?></th>
+        <th width="12%"><?Php echo date("H:i:s");?></th>
+      </tr>
+      <tr>
+        <td colspan="8" style="border-bottom:#999999 solid 1px;"></td>
+    </tr>
+ </thead>
+ <tbody>
+<?php $number=0;
+$a=0;
+$T_SALDOS_s=0;
+$T_SALDOS_d=0;
+$array_datos='';
+$total_soles=0;
+$total_dolares=0;
+$total_soles_abono=0;
+$total_dolares_abono=0;
+$total_soles_saldo=0;
+$total_dolares_saldo=0;
+$moneda_a=0;
+foreach($ventas as $item){ 
+$maximo=count($ventas);
+$simbolo="S/. ";
+$number++;
+switch ($item->tesmonedas_id)
+{
+	case 1: $simbolo='S/. ';break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. ';break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. ';break;
+}
+/* muestra el total de abono */
+$abono=0;
+if($item->origen=='ruc')$abono=$item->getAbonos_factura($item->id,'tessalidas_id');
+if($item->origen=='interna')$abono=$item->getAbonos_factura($item->id,'tessalidasinternas_id');
+
+$b=$item->datos_id;
+if($b!=$a)
+{
+/*reinicia la moneda a cero*/$moneda_a=0;
+$a=$item->datos_id;
+$i_coma=',';
+if($number==1){$i_coma='';}
+$array_datos.=$i_coma.'{id: '.$item->datos_id.', name: "'.$item->razonsocial.'"}';
+if($number!=1){
+?>
+      <tr>
+        
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th align="right">Total.</th>
+        <th align="right">
+		<?php if($total_dolares==0)echo number_format($total_soles,2,'.','');else echo number_format($total_dolares,2,'.','');?></th>
+        <th align="right"><?php if($total_dolares==0)echo number_format($total_soles_abono,2,'.','');else echo number_format($total_dolares_abono,2,'.','');?></th>
+        <th align="right">
+		<?php 
+		if($total_dolares==0)
+		{
+			//$T_SALDOS_s=$T_SALDOS_s+($total_soles_saldo);
+			$vend_array[$vendedor_id]['S']=$vend_array[$vendedor_id]['S']+($total_soles_saldo);
+			echo number_format($total_soles_saldo,2,'.','');
+		}else{
+			$T_SALDOS_d=$T_SALDOS_d+($total_dolares_saldo);
+			$vend_array[$vendedor_id]['D']=$vend_array[$vendedor_id]['D']+($total_soles_saldo);
+			echo number_format($total_dolares_saldo,2,'.','');
+		}?>
+        </th>
+        <th>&nbsp;</th>
+      </tr>
+      <tr>
+        <td colspan="7" style="border-bottom:#999999 solid 1px;"></td>
+    </tr>
+   <?php }?>
+      <tr>
+      
+        <th align="left">Cliente:</th>
+        <th colspan="5" align="left"><?php echo $item->razonsocial;?></th>
+        <th>&nbsp;</th>
+      </tr>
+      <tr>
+       
+        <th align="left">Codigo:</th>
+        <th align="left"><?php if(empty($item->codigo_ant))echo $item->codigo.'-'.$item->sufijo;else echo $item->codigo_ant ?></th>
+        <th colspan="4" align="left" class="encabezado">&nbsp;</th>
+        <th>&nbsp;</th>
+      </tr>
+      <tr>
+        
+        <th align="left">Vendedor:</th>
+        <th align="left"><?php $vendedor_id=$item->getTesdatos()->tesvendedores_id;echo $item->getTesdatos()->getTesvendedores()->nombre?></th>
+        <th colspan="4" align="left" class="encabezado">&nbsp;</th>
+        <th>&nbsp;</th>
+      </tr>
+      <tr>
+        
+        <th width="15%" align="left">FECHA</th>
+        <th width="18%" align="left">Nº GUIA</th>
+        <th width="17%" align="left">Nº FACTURA</th>
+        <th width="14%" align="right">IMPORTE</th>
+        <th width="13%" align="right">ABONO</th>
+        <th width="11%" align="right">SALDO</th>
+        <th align="right">P/A</th>
+      </tr>
+  <?php 
+$total_soles=0;$total_dolares=0;$total_soles_abono=0;$total_dolares_abono=0;$total_soles_saldo=0;$total_dolares_saldo=0;  }?> 
+  <?php /*validar la moneda*/
+  $moneda_b=$item->tesmonedas_id;
+  if($moneda_a!=$moneda_b){
+	 $moneda_a=$item->tesmonedas_id;
+  ?>   
+      <?php if($item->tesmonedas_id==2 or $item->tesmonedas_id==5){?>
+    <tr>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th align="right">Total:</th>
+        <th align="right"><?php if($total_dolares==0)echo number_format($total_soles,2,'.','');else echo number_format($total_dolares,2,'.','');?></th>
+        <th align="right"><?php if($total_dolares==0)echo number_format($total_soles_abono,2,'.','');else echo number_format($total_dolares_abono,2,'.','');?></th>
+        <th align="right"><?php 
+		if($total_dolares==0)
+		{
+			//$T_SALDOS_s=$T_SALDOS_s+($total_soles_saldo);
+			$vend_array[$vendedor_id]['S']=$vend_array[$vendedor_id]['S']+($total_soles_saldo);
+			echo number_format($total_soles_saldo,2,'.','');
+		}else{
+			$T_SALDOS_d=$T_SALDOS_d+($total_dolares_saldo);
+			$vend_array[$vendedor_id]['D']=$vend_array[$vendedor_id]['D']+($total_soles_saldo);
+			echo number_format($total_dolares_saldo,2,'.','');
+		}?></th>
+     
+      </tr>
+      <?php $total_dolares=0;}?>
+      <tr>
+        <th colspan="7" align="left" style="border-bottom:#CCCCCC solid 1px;">IMPORTE EN <?php echo $item->getTesmonedas()->simbolo?></th>
+      </tr>
+   <?php }?>
+      <tr title="(<?php echo $item->origen?>-<?php echo $item->id?>) estado : <?php echo $item->estadosalida?> semana: <?php echo $item->semana?> ">
+        
+        <td><?php echo Sp::formatFecha('%d/%m/%Y',$item->fecha)?></td>
+        <td><?php echo $item->getTesdocumentos()->abr; ?> <?php echo $item->numeroguia?></td>
+        <td><?php if($item->estadosalida=='TERMINADO'){echo "(CJ)";if(!empty($item->total));}?><?php echo $item->numerofactura?></td>
+        <td align="right"><?php 		
+	  switch ($item->tesmonedas_id)
+		{
+			case 1: 
+					if($item->tesdocumentos_id!=13){
+					$total_soles=$total_soles+$item->total;
+					$total_soles_abono=$total_soles_abono+$abono;
+					$total_soles_saldo=$total_soles_saldo+($item->total-$abono);
+					}else
+					{
+					$total_soles=$total_soles-$item->total;
+					}
+					if(!empty($item->pa))$adel_array[$vendedor_id]['S']=$adel_array[$vendedor_id]['S']+number_format($item->pa,2,'.','');					
+			break;
+			case 2: 
+					if($item->tesdocumentos_id!=13){
+					$total_dolares=$total_dolares+$item->total;
+					$total_dolares_abono=$total_dolares_abono+$abono;
+					$total_dolares_saldo=$total_dolares_saldo+($item->total-$abono);
+					}else
+					{
+					$total_dolares=$total_dolares-$item->total;
+					}			
+					if(!empty($item->pa))$adel_array[$vendedor_id]['D']=$adel_array[$vendedor_id]['D']+number_format($item->pa,2,'.','');
+			break;
+			case 4: 
+					if($item->tesdocumentos_id!=13){
+					$total_soles=$total_soles+$item->total;
+					$total_soles_abono=$total_soles_abono+$abono;
+					$total_soles_saldo=$total_soles_saldo+($item->total-$abono);
+					}else
+					{
+					$total_soles=$total_soles-$item->total;
+					}
+					if(!empty($item->pa))$adel_array[$vendedor_id]['S']=$adel_array[$vendedor_id]['S']+number_format($item->pa,2,'.','');		
+			break;
+			case 5: 
+					if($item->tesdocumentos_id!=13){
+					$total_dolares=$total_dolares+$item->total;
+					$total_dolares_abono=$total_dolares_abono+$abono;
+					$total_dolares_saldo=$total_dolares_saldo+($item->total-$abono);
+					}else
+					{
+					$total_dolares=$total_dolares-$item->total;
+					}
+					if(!empty($item->pa))$adel_array[$vendedor_id]['D']=$adel_array[$vendedor_id]['D']+number_format($item->pa,2,'.','');
+			break;
+			case 0: 
+					if($item->tesdocumentos_id!=13){
+					$total_soles=$total_soles+$item->total;
+					$total_soles_abono=$total_soles_abono+$abono;
+					$total_soles_saldo=$total_soles_saldo+($item->total-$abono);
+					}else
+					{
+					$total_soles=$total_soles-$item->total;
+					}
+					if(!empty($item->pa))$adel_array[$vendedor_id]['S']=$adel_array[$vendedor_id]['S']+number_format($item->pa,2,'.','');
+		    break;
+		}
+		if(!empty($item->total))echo number_format($item->total,2,'.','');else echo number_format($item->total_a,2,'.','');?></td>
+        <td align="right"><?php echo number_format($abono,2,'.','')?></td>
+        <td align="right"><?php echo number_format($item->total-$abono,2,'.','')?></td>
+        <td align="right"><?php if(!empty($item->pa))echo number_format($item->pa,2,'.','')?></td>
+      </tr>
+      <?php 
+	  
+	  if($number==$maximo){?>
+      <tr>
+        
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th align="right">Total:</th>
+        <th align="right"><?php if($total_dolares==0)echo number_format($total_soles,2,'.','');else echo number_format($total_dolares,2,'.','');?></th>
+        <th align="right"><?php if($total_dolares==0)echo number_format($total_soles_abono,2,'.','');else echo number_format($total_dolares_abono,2,'.','');?></th>
+        <th align="right">
+		<?php 
+		if($total_dolares==0)
+		{
+			$T_SALDOS_s=$T_SALDOS_s+($total_soles_saldo);
+			$vend_array[$vendedor_id]['S']=$vend_array[$vendedor_id]['S']+($total_soles_saldo);
+			echo number_format($total_soles_saldo,2,'.','');
+		}else{
+			$T_SALDOS_d=$T_SALDOS_d+($total_dolares_saldo);
+			$vend_array[$vendedor_id]['D']=$vend_array[$vendedor_id]['D']+($total_dolares_saldo);
+			echo number_format($total_dolares_saldo,2,'.','');
+		}?>
+        </th>
+        <th>&nbsp;</th>
+      </tr>
+      <?php }?>
+ <?php }?>
+ 
+  <tr>
+  <th colspan="7">
+  *--*
+  </th>
+  </tr>
+  <tr>
+  <th colspan="7">
+  RESUMEN DE SALDOS
+  </th>
+  </tr>
+  <tr>
+    <th scope="col">&nbsp;</th>
+    <th colspan="2" scope="col">SALDO NETO</th>
+    <th colspan="2" scope="col">FACTURAS ADELANTOS</th>
+    <th colspan="2" scope="col">PAGO ADELANTADO</th>
+    </tr>
+  <tr>
+    <th align="left">VENDEDOR</th>
+    <th align="right">NUEVOS SOLES</th>
+    <th align="right">US DOLAR</th>
+    <th align="right">NUEVOS SOLES</th>
+    <th align="right">US DOLAR</th>
+    <th align="right">NUEVOS SOLES </th>
+    <th align="right">US DOLAR</th>
+  </tr>
+  <?php 
+  $tg_saldo_s=0;
+  $tg_saldo_d=0;
+  $tg_facturas_s=0;
+  $tg_facturas_d=0;
+  $tg_pagos_s=0;
+  $tg_pagos_d=0;
+  foreach($vendedores as $vend):?>
+  <tr>
+    <td><?php echo $vend->nombre?></td>
+    <td align="right"><?php $tg_saldo_s=$tg_saldo_s+number_format($vend_array[$vend->id]['S'],2,'.','');echo number_format($vend_array[$vend->id]['S'],2,'.','');?></td>
+    <td align="right"><?php $tg_saldo_d=$tg_saldo_d+number_format($vend_array[$vend->id]['D'],2,'.','');echo number_format($vend_array[$vend->id]['D'],2,'.','');?></td>
+    <td align="right"><?php $tg_facturas_s=$tg_facturas_s+number_format($adel_array[$vend->id]['S'],2,'.','');echo number_format($adel_array[$vend->id]['S'],2,'.','');?></td>
+    <td align="right"><?php $tg_facturas_d=$tg_facturas_d+number_format($adel_array[$vend->id]['D'],2,'.','');echo number_format($adel_array[$vend->id]['D'],2,'.','')?></td>
+    <td align="right"><?php $tg_pagos_s=$tg_pagos_s+number_format($vend->total_sp,2,'.',''); echo number_format($vend->total_sp,2,'.','')?></td>
+    <td align="right"><?php $tg_pagos_d=$tg_pagos_d+number_format($vend->total_dp,2,'.','');echo number_format($vend->total_dp,2,'.','')?></td>
+  </tr>
+  <?php endforeach;?>
+  </tbody>
+  <tfoot>
+  <tr>
+  	<th align="right">TOTAL GENERAL :</th>
+  	<th align="right"><?Php echo $tg_saldo_s?></th>
+  	<th align="right"><?Php echo $tg_saldo_d?></th>
+  	<th align="right"><?Php echo $tg_facturas_s?></th>
+  	<th align="right"><?Php echo $tg_facturas_d?></th>
+  	<th align="right"><?Php echo $tg_pagos_s?></th>
+  	<th align="right"><?Php echo $tg_pagos_d?></th>
+  </tr>
+ </tfoot>
+</table>

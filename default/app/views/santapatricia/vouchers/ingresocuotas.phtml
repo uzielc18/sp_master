@@ -1,0 +1,22 @@
+<?php //echo $vale?>
+<table id="vauchers" width="86%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped"> 
+  <tr>
+    <th width="19%" align="left"><h4>Cuenta General</h4></th>
+    <th width="10%" align="left"><h4>Nº Docuemnto</h4></th>
+    <th width="14%" align="left"><h4>Fecha Vcto</h4></th>
+    <th width="14%" align="left"><h4>Codigo Auxiliar</h4></th>
+    <th width="14%" align="left"><h4>Descripcion</h4></th>
+    <th width="14%" align="left"><h4>Cargo</h4></th>
+    <th width="15%" align="left"><h4>Abono</h4></th>
+  </tr>
+  <tr>
+    <td width="19%"><?php echo $tesdetallevauchers->plancontable;
+	 echo Form::hidden('tesdetallevauchers.plancontable'); ?></td>
+    <td width="10%"><?php echo $ingreso->numero?></td>
+    <td width="14%"><?php echo $ingreso->fvencimiento?></td>
+    <td width="14%">-</td>
+    <td width="14%"><?php echo $ingreso->getTesdatos()->razonsocial;?></td>
+    <td width="14%">-</td>
+    <td width="15%"><?php echo number_format($tesdetallevauchers->monto,2,'.',''); ?></td>
+  </tr>
+</table>

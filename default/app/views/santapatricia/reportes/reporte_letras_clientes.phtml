@@ -1,0 +1,164 @@
+<div class="card">
+    <h1>Reporte de letras<span>Reporte-letras de clientes letras emitidas</span></h1>
+</div>
+<div class="form-actions">
+<?php echo Menu::menuReportes($action_name);?>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="well">
+<div class="span2"><b>Buscar al cliente:</b></div><div class="span7"><input id="clientes_id" /></div><div class="span1"><a id="ver_reporte" class="btn btn-info">VER</a></div>
+<?Php echo Form::hidden("cliente_id");echo Form::hidden("proveedor_id");?>
+<div class="clear"></div>
+</div>
+<?php echo Sp::imprimir('Letras semanal - ','P');?>
+<?php //echo Sp::imprimir('Letras semanal - ','P');?>
+<?php if($vacio){?>
+<div class="menu">
+<ul>
+<li>Año 
+<select id="anio">
+<?php
+for($i=2011;$i<=2020;$i++)
+{
+	$selec='';
+	if($anio==$i){
+	$selec=' selected="selected"';
+	}
+	echo '<option value="'.$i.'" '.$selec.'>'.$i.'</option>';
+}
+?>
+</select>
+</li>
+</ul> 
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#anio").change(function(event){
+    	var id = $("#anio").find(':selected').val();
+		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/<?Php echo $action_name?>/<?php echo $p_id?>/<?php echo $p_id?>/<?php echo $e_s?>/<?php echo $e_i?>/'+id;
+     });
+});
+</script>
+
+<div class="form-actions no_imprimir">
+<?php
+$cls='';
+foreach($e_letra_salidas as $ls)
+{
+	$cls=($e_s == $ls->estadoletras ? ' btn-info' : '');
+	echo " ".Html::linkAction("reporte_letras_clientes/".$p_id."/".$c_id."/".$ls->estadoletras."/".$e_i."/".$anio,"$ls->estadoletras","class='btn".$cls."'");}?>
+
+</div>
+<?php }?>
+<div class="card-body">
+<?Php if($vacio==1){?>
+<?php //echo Sp::imprimir('Letras semanal - ','P');?>
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered">
+<caption>
+Letras Emitidas <br /><?Php echo $dato->razonsocial;?> (<?php echo $e_s?>)
+</caption>
+ <thead>
+  <tr>
+    <th width="7%" scope="col">#Numero</th>
+    <th width="12%" scope="col">#Numero Unico</th>
+    <th width="10%" align="center" scope="col">Facturas</th>
+    <th width="19%" align="center" scope="col">Emision</th>
+    <th width="18%" align="center" scope="col">Vencimiento</th>
+    <th width="9%" align="center" scope="col">Banco</th>
+    <th width="11%" align="right" scope="col">Monto</th>
+    <th width="14%" scope="col">Estado</th>
+  </tr>
+ </thead>
+ <tbody>
+ <?php foreach($l_salidas as $ls):?>
+  <tr>
+    <td><?php echo $ls->numerodeletra?></td>
+    <td><?php echo $ls->numerounico?></td>
+    <td align="center"><?php if(!empty($ls->factura_id))echo $ls->getFacturas($ls->factura_id)?></td>
+    <td align="center"><?php echo Sp::formatFecha("%d/%m/%y",$ls->femision)?></td>
+    <td align="center"><?php echo Sp::formatFecha("%d/%m/%y",$ls->fvencimiento)?></td>
+    <td align="center"><?php echo $ls->banco?></td>
+    <td align="right"><?php echo number_format($ls->monto,2,'.','')?></td>
+    <td align="center"><?php echo $ls->estadoletras?></td>
+  </tr>
+  <?Php endforeach;?>
+  </tbody>
+</table>
+<div class="form-actions no_imprimir">
+<?php
+$cls='';
+foreach($e_letra_ingresos as $li){
+	$cls=($e_i == $li->estadodeletra ? ' btn-info' : '');
+	echo " ".Html::linkAction("reporte_letras_clientes/".$p_id."/".$c_id."/".$e_s."/".$li->estadodeletra."/".$anio,"$li->estadodeletra","class='btn".$cls."'");}?>
+</div>
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+<caption>
+Letras Aceptadas <br /><?Php echo $dato->razonsocial;?> (<?php echo $e_i?>)
+</caption>
+  <thead>
+  <tr>
+    <th align="center" scope="col">#Numero</th>
+    <th align="center" scope="col">Numero unico</th>
+    <th align="center" scope="col">Emision</th>
+    <th scope="col">Vencimiento</th>
+    <th scope="col">Banco</th>
+    <th scope="col">Monto</th>
+    <th scope="col">Estado</th>
+  </tr>
+  </thead>
+  <tbody>
+ <?php foreach($l_ingresos as $li):?>
+  <tr>
+    <td align="center"><?php echo $li->numeroletra?></td>
+    <td align="center"><?php echo $li->numerounico?></td>
+    <td align="center"><?php echo Sp::formatFecha("%d/%m/%y",$li->femision)?></td>
+    <td align="center"><?php echo Sp::formatFecha("%d/%m/%y",$li->fvencimiento)?></td>
+    <td><?php echo $li->banco?></td>
+    <td><?php echo $li->monto?></td>
+    <td><?php echo $li->estadodeletra?></td>
+  </tr>
+  <?Php endforeach;?>
+  </tbody>
+</table>
+<?php }?>
+
+</div>
+<script type="text/javascript">
+        $(document).ready(function() {
+            $("#clientes_id").tokenInput("<?php echo "/".$module_name."/reportes/tesdatos"?>", 
+			{
+				
+				tokenLimit: 1,minChars: 3,
+                onAdd: function (item) {
+                   //item.name;
+				   //alert(item.id);
+				   $("#cliente_id").val(item.id_cliente);
+			 	   $("#proveedor_id").val(item.id_proveedor);
+				   var fi=$("#fecha_inicio").val();
+			 	   var ff=$("#fecha_fin").val();
+				   $( ".page" ).html("");
+				   
+				   //$("#ver").load("/<?php //echo $module_name?>/reportes/ver_movimientos_cliente/"+item.id_cliente+"/"+item.id_proveedor+'/'+fi+'/'+ff);
+				   //$("#ver").html('display','block');
+                },
+                onDelete: function (item) {
+				  $( ".page" ).after("");
+                }
+            });
+			
+			$("#ver_reporte").click(function()
+			{
+			 $( ".page" ).after("<div style=\"padding-top: 1%;text-align: center;top: 0;left: 0;right: 0;bottom: 0;\" align=\"center\"><img src=\"/img/ajax-loader1.gif\" /></div>");
+			 var c=$("#cliente_id").val();
+			 var p=$("#proveedor_id").val();
+			 //alert(fi+'-'+ff+'-'+c+'-'+p);
+			 location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/<?Php echo $action_name?>/'+p+'/'+c;
+			 
+			});
+			
+        });
+        </script>
+<?php echo Tag::js('jquery/jquery.tokeninput');Tag::css('token-input');?>

@@ -1,0 +1,250 @@
+<div class="card">
+
+    <h1>listado del Mes <span><?php echo $empresa->razonsocial?></span></h1>
+</div>
+
+<div class="form-actions">
+<?php echo Menu::menuLetras($action_name);?> <?php //echo Html::linkAction("", 'Volver ','class="btn"') ?>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+ 
+<div class="menu">
+<ul><li><a>Año <select id="anio">
+<?php
+for($i=2011;$i<=2020;$i++)
+{
+	$selec='';
+	if($anio==$i){
+	$selec=' selected="selected"';
+	}
+	echo '<option value="'.$i.'" '.$selec.'>'.$i.'</option>';
+}
+?>
+</select> </a></li></ul>
+<?php 
+$mes_actual=date('Y-m');
+foreach($meses as $clave => $mes):
+$class=' ';
+if($m==$clave){
+$class=' active';
+$nombre_mes=$mes;
+}
+echo '<ul>';
+echo '<li><a class="enviar'.$class.'" id="mes-'.$mes.'" href="javascript:;" data-id="'.$clave.'">'.$mes.'</a></li>'; 
+echo '</ul>';
+
+endforeach;?>
+</div>
+<div id="ver_resultado"></div>
+<?php echo Sp::imprimir('Letras semanal - ','P');?>
+<div class="card-body">
+
+<table width="99%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+  <thead>
+  <caption>Letras por cobrar segun Fecha de Vencimiento - <?php echo $nombre_mes;?> - <?Php echo date("d/m/y");?></caption>
+  <tr>
+    <th width="89" align="left"># LETRA.</th>
+    <th width="81" align="left">FEC. VEN.</th>
+    <th width="240" align="left">ACEPTANTE</th>
+    <th width="126" align="right">DOLARES</th>
+    <th width="118" align="right">SOLES</th>
+    <th width="73" align="center">BANCO</th>
+    <th width="71" align="center"> # UNICO</th>
+  </tr>
+  </thead>
+  <tbody>
+<?php 
+$b='';
+$TOTAL_S=0;
+$TOTAL_D=0;
+$number=0;
+$semana=0;
+$a=0;
+$T_soles=0;
+$T_dolares=0;
+$cont=0;
+foreach($obligaciones as $item){
+$simbolo="S/. ";
+$razon_social='';
+$numero='';
+$totalconigv=00;
+$estadoingreso='';
+$fecha_vencimiento='';
+if($item->origen==1){
+$fecha_vencimiento=$item->fvencimiento;
+$razon_social=$item->razonsocial;
+	$x=$item->numero;	
+	$y=strlen($x);
+	if($y>=6){$x=substr($x, 0, -2);}
+	if(!empty($item->nrenovacion))$x.=$item->nrenovacion; else $x.="00";
+	$numero = $x;
+$totalconigv=$item->getTessalidas()->totalconigv;
+$estadoingreso=$item->estadoletras;
+$moneda_id=$item->moneda;
+}
+if($item->origen==0){
+$fecha_vencimiento=$item->fvencimiento;
+$razon_social=$item->razonsocial;
+$numero=$item->numero;
+$totalconigv=$item->monto;
+$estadoingreso=$item->estadoletras;
+$moneda_id=$item->moneda;
+}
+//echo $fecha_vencimiento;
+$T_letras=$item->Totalletrasporsemana($item->semana,$fecha_vencimiento);
+//echo " TOTAL DE LETRAS POR SEMANA ".$T_letras.' de la semana '.$item->semana." <br />";
+
+?>
+<?php 
+$b=$item->semana;
+if($a!=$b){
+$semana=0;
+$number=0;
+if($semana==0){
+	if($cont>0){
+	?>
+  <tr>
+  <td colspan="3"><b>Total de la semana <?Php echo $s?></b></td>
+  <td align="right"><b>$/.</b> <?php echo number_format($T_dolares,2,'.',' ')?></td>
+  <td align="right"><b> S/.</b> <?php echo number_format($T_soles,2,'.',' ')?></td>
+  <td></td>
+  <td></td>
+  </tr>
+ <?php 
+	}
+ }
+$T_soles=0;
+$T_dolares=0; 
+?>
+
+<tr id="<?php echo $item->id?>">
+  	<td colspan="7" style="border-top:#000 solid 1px !important;">Semana Nº <?php echo $s=$item->semana?></td>
+</tr>
+<?php 
+}
+$number++;
+$semana++;
+$a=$item->semana;
+
+switch ($moneda_id)
+{
+	case 1: $simbolo='S/. '; $TOTAL_S=$TOTAL_S+$item->monto; $T_soles=$T_soles+$item->monto; break;
+	case 2: $simbolo='$. '; $TOTAL_D=$TOTAL_D+$item->monto; $T_dolares=$T_dolares+$item->monto;break;
+	case 4: $simbolo='S/. '; $TOTAL_S=$TOTAL_S+$item->monto; $T_soles=$T_soles+$item->monto; break;
+	case 5: $simbolo='$. '; $TOTAL_D=$TOTAL_D+$item->monto; $T_dolares=$T_dolares+$item->monto;break;
+	case 0: $simbolo='S/. '; $TOTAL_S=$TOTAL_S+$item->monto; $T_soles=$T_soles+$item->monto; break;
+}
+/*pintar las fechas*/
+$class='';
+$dias='';
+
+if($fecha_vencimiento<date("Y-m-d")){$class=' class="rojo" ';$dias=", hace ".$item->dd." dia(s)";}
+if($fecha_vencimiento==date("Y-m-d"))$class=' class="verde" ';
+
+
+
+?>
+  <tr id="<?php echo $item->id?>">
+    <td><?php echo $numero?></td>
+    <td<?Php //echo $class?>><?php echo Sp::formatFecha('%d/%m/%Y',$fecha_vencimiento)?><?php //echo $dias;?></td>
+  	<td height="20"><?php echo $razon_social?></td>
+    <td align="right">
+	<?php if($totalconigv!='NaN.00' && !empty($totalconigv)){
+		if($simbolo=='$. ')echo $simbolo.number_format($totalconigv,2,'.','');else echo('');
+		}?>
+    </td>
+    <td align="right">
+	<?php if($totalconigv!='NaN.00' && !empty($totalconigv)){
+		if($simbolo=='S/. ')echo $simbolo.number_format($totalconigv,2,'.','');else echo('');
+		}?>
+    </td>
+    <td align="center"><?php echo $item->banco?></td>
+    <td align="center"><?php echo $item->numerounico?></td>
+  </tr>
+<?php 
+	
+if($a==$b)$b=$item->semana;
+	/*vontador general*/$cont++;
+	}
+	
+	?>
+    <tr>
+  <td colspan="3"><b>Total de la semana <?Php echo $b?></b></td>
+  <td align="right"><b> $.</b> <?php echo number_format($T_dolares,2,'.','')?></td>
+  <td align="right"><b>S/.</b> <?php echo number_format($T_soles,2,'.','')?></td>
+  <td></td>
+  <td></td>
+  </tr>
+    <tr>
+  	<td colspan="7"></td>
+    </tr>
+  <tr>
+  	<th colspan="3" align="left">TOTAL DEL MES</th>
+    <th align="right">$. <?php echo number_format($TOTAL_D,2,'.','')?></th>
+    <th align="right">S/. <?php echo number_format($TOTAL_S,2,'.','')?></th>
+    <th>&nbsp;</th>
+    <th>&nbsp;</th>
+  </tr>
+    <tr>
+  	<td colspan="7"></td>
+    </tr>
+  <tr>
+  </tr>
+  
+    <tr>
+  	<th colspan="7" align="left"><span style="border-bottom:#999999 double 1px;">Listado Totalizado por Clientes</span></th>
+    </tr>
+
+  <tr>
+    <th colspan="3" align="left">Aceptante</th>
+    <th align="right">Total del mes $.</th>
+    <th align="right">Total del mes S/.</th>
+    <th align="right">&nbsp;</th>
+    <th align="right">&nbsp;</th>
+    </tr>
+  <?Php
+ $n=0;
+ $t_s=0;
+ $t_d=0;
+foreach($resumenes as $resumen){
+	$n++;
+	$t_s=$t_s+number_format($resumen->total_soles,2,'.','');
+	$t_d=$t_d+number_format($resumen->total_dolares,2,'.','');
+	?>
+  <tr>
+    <td colspan="3" align="left"><?php echo $resumen->razonsocial?></td>
+    <td align="right"><?php echo number_format($resumen->total_dolares,2,'.','')?></td>
+    <td align="right"><?php echo number_format($resumen->total_soles,2,'.','')?></td>
+    <td align="right">&nbsp;</td>
+    <td align="right">&nbsp;</td>
+    </tr>
+   <?php
+}
+?>
+	<tr>
+    <th colspan="3" align="left">Total General</th>
+    <th align="right"><?php echo number_format($t_d,2,'.','')?></th>
+    <th align="right"><?php echo number_format($t_s,2,'.','')?></th>
+    <th align="right">&nbsp;</th>
+    <th align="right">&nbsp;</th>
+    </tr>
+    </tbody>
+</table>
+<?Php
+foreach($resumenes as $resumen){ 
+}
+?>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#anio").change(function(event){
+		var id = $("#anio").find(':selected').val();
+		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/letrasmes/'+id+'/<?php echo $m?>';
+	});
+	$(".enviar").click(function(){
+		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/letrasmes/<?php echo $anio?>/'+$(this).attr('data-id');
+	});
+});
+</script>

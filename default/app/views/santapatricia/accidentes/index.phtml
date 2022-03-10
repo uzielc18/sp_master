@@ -1,0 +1,32 @@
+<div class="card">
+    <h1>Libro de Accidentes <span>Del Mes de <?php echo $meses[date("m")];?></span></h1>
+</div>
+<?php View::content() ?>       
+<div class="form-actions"><?php echo Html::linkAction("crear", 'Registrar Accidente Para Hoy', 'class="btn btn-primary"') ?><?php echo Html::linkAction("reportes/".date('Y').'/'.date('m'), 'Reportes', 'class="btn btn-primary"') ?>
+ </div>
+<div class="card-body">
+<table width="95%" border="0" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+<caption>
+Accidentes Registrados
+</caption>
+  <tr>
+  	<th width="17">Nº:</th>
+    <th width="41">Fecha:</th>
+    <th width="51">Nombre:</th>
+    <th width="188">Detalle:</th>
+    <th width="88">Acciones:</th>
+  </tr>
+<?php $n=0;
+foreach($accidentes as $item){ $n++;?>
+  <tr>
+  	<td><?php echo $n?></td>
+    <td><?php echo strftime("%d / %m del %Y", strtotime($item->fecha))." ".$item->hora?></td>
+    <td><?php echo $item->nombreaccidentado?></td>
+    <td><?php echo $item->detalle?></td>
+    <td><?php echo Html::linkAction('editar/'.$item->id,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'')?>
+    <?php echo Js::linkAction("borrar/$item->id",Html::img("figuras/eliminar.png",'Deseas Eliminar?','style="width: 20px;margin-left:10px;margin-right:10px;"'),'Deseas Eliminar?');?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+</div>

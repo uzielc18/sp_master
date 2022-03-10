@@ -1,0 +1,69 @@
+<?php 
+/*if(Auth::get('id')==3){
+foreach($detalles as $d):
+echo $d->tesabonos_id.' -- '.$d->cargos.'---'.$d->abono;
+endforeach;
+}*/
+?>
+<?php /*echo $a; echo $total_abono*/?> 
+
+
+<?php echo Form::open()?>
+<?php echo Form::hidden('tesabonosdetalles.id');?>
+<?php echo Form::hidden('tesabonosdetalles.tesabonos_id','',Session::get('A_ID'));?>
+<?php echo Form::hidden('tesabonosdetalles.tesingresos_id','',0);?>
+<?php echo Form::hidden('tesabonosdetalles.tessalidas_id','',0);?>
+<?php echo Form::hidden('tesabonosdetalles.tessalidasinternas_id','',0);?>
+<?php echo Form::hidden('tesabonosdetalles.abono','',1);?>
+<?php echo Form::hidden('tesabonosdetalles.cargos','',0);?>
+<?php echo Form::hidden('tesabonosdetalles.tesdatos_id','',0);?>
+<?php echo Form::hidden('tesabonosdetalles.tescuentascorrientes_id','',0);?>
+<?php echo Form::hidden('tesabonosdetalles.estado','',1);?>
+<?php echo Form::hidden('tesabonosdetalles.cargos','',0);?>
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+  <thead>
+  <tr>
+  <th width="19%">Orden de compra</th>
+    <th width="9%" align="left">Cta General</th>
+    <th width="13%" align="left">Nº Docuemnto</th>
+    <th width="6%" align="left">F. Vcto</th>
+    <th width="13%" align="left">Codigo Auxiliar</th>
+    <th width="15%" align="left">Descripcion</th>
+    <th width="11%" align="left">Cargo</th>
+    <th width="14%" align="left">Abono</th>
+  </tr>
+  </thead>
+  <tr>
+  <td>
+<?php echo Form::text('tesdetallevauchers.tesordendecompras_id','');?></td>
+
+    <td width="9%"><?php echo $pago->ncuenta; echo Form::hidden('tesabonosdetalles.plancontable','',$pago->ncuenta); ?></td>
+    <td width="13%"><?php echo $numero; echo Form::hidden('tesabonosdetalles.correlativo','',$numero); ?></td>
+    <td width="6%">-</td>
+    <td width="13%">-</td>
+    <td width="15%"><?php echo $pago->nombre;?></td>
+    <td width="11%">-</td>
+    <td width="14%"><?php echo Form::text('tesabonosdetalles.monto','',number_format($total-$total_abono,2,'.','')); ?></td>
+  </tr>
+</table>
+<?php echo Form::submit('GRABAR','class="btn btn-primary"');?>
+<?php echo Form::close()?>
+<?php
+View::content();
+echo Tag::js('jquery/jquery.tokeninput');?>
+   <script type="text/javascript">
+$(document).ready(function()
+{
+ $("#tesdetallevauchers_tesordendecompras_id").tokenInput("<?php echo "/".$module_name."/".$controller_name."/ordenes"?>", 
+		{
+		tokenLimit: 1,
+		minChars: 2,
+		onAdd: function (item) {
+		},
+		onDelete: function (item) {
+		}
+	}); 
+		
+		
+});
+</script>

@@ -1,0 +1,205 @@
+<?php
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<script type="text/javascript">
+        $(document).ready(function() {
+            $("#distrito").tokenInput("<?php echo "/utiles/resultados"?>", 
+			{
+				tokenLimit: 1,minChars: 3,
+				<?php if(!empty($tesdatos->distrito)){?>prePopulate: [ 
+		             {id: '<?php echo $tesdatos->distrito?>', name: "<?php echo $tesdatos->distrito?>"},
+					 ],
+					 <?php }?>
+                onAdd: function (item) {
+                   var VAL=item.id.split('-');
+				   $("#tesdatos_departamento").val(VAL[0]);
+				   $("#tesdatos_provincia").val(VAL[1]);
+				   $("#tesdatos_distrito").val(VAL[2]);
+                },
+                onDelete: function (item) {
+				   $("#tesdatos_departamento").val('');
+				   $("#tesdatos_provincia").val('');
+				   $("#tesdatos_distrito").val('');
+                }
+            });
+			
+		$("#tesdatos_tipo0").click(function(evento){
+		  if ($("#tesdatos_tipo0").attr("checked")){
+			 $("#NACIONAL").css("display", "block");
+			 $("#EXTRANJERO").css("display", "none");
+		  }
+	   });
+	   $("#tesdatos_tipo1").click(function(evento){
+		  if ($("#tesdatos_tipo1").attr("checked")){
+			 $("#NACIONAL").css("display", "none");
+			 $("#EXTRANJERO").css("display", "block");
+		  }
+	   });
+        });
+        </script>
+<div class="card">
+    <h1><?php echo $titulo?></h1>
+</div>       
+<?php View::content() ?>
+
+        <?php echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
+        <div class="control-group">
+            <label class="control-label" for="datos_aclempresas_id">Empresa* : </label>
+            <div class="controls">
+                <?php echo Form::text('EMP','class="textonormal" readonly="readonly"',$empresas->nombre) ?>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="datos_codigo">Codigo* : </label>
+            <div class="controls">
+                <?php echo Form::text('tesdatos.codigo','class="textocorto" readonly="readonly"',$codigo) ?>-<?php echo $tesdatos->sufijo ?>
+            </div>
+        </div>
+         <div class="control-group">
+            <label class="control-label" for="datos_codigo">Codigo Ant* : </label>
+            <div class="controls">
+                <?php echo Form::text('tesdatos.codigo_ant','class="textocorto"') ?>
+            </div>
+        </div>
+        <div class="control-group" id="areas">
+        <label class="control-label" for="datos_razonsocial">Razon Social* : </label>
+			<div class="controls">
+<?php echo Form::text('tesdatos.razonsocial','class="textomediano"') ?>
+       		</div>
+	    </div>
+        <div class="control-group">
+        <label class="control-label" for="datos_ruc">ruc* : </label>
+            <div class="controls">
+            <?php echo Form::text('tesdatos.ruc','class="textocorto"') ?> 
+            </div>
+        </div>
+        
+        
+         <div class="control-group">
+        <label class="control-label" for="datos_ruc">Giro de Negocio* : </label>
+            <div class="controls">
+            <?php echo Form::text('tesdatos.girodenegocio','class="span9"') ?>
+            </div>
+        </div>
+        
+         <div class="control-group">
+        <label class="control-label" for="datos_ruc">Numero de dias para el credito* : </label>
+            <div class="controls">
+            <?php echo Form::text('tesdatos.diascredito','placeholder="Numero dias" class="span2 cost"') ?>
+            </div>
+        </div>
+        
+         <div class="control-group">
+        <label class="control-label" for="datos_ruc">Credito maximo* : </label>
+            <div class="controls">
+            S/. <?php echo Form::text('tesdatos.credito','placeholder="Monto del credito" class="span2 cost"') ?>
+            </div>
+        </div>
+        
+         <div class="control-group">
+        <label class="control-label" for="datos_ruc">Agente de Retencion* : </label>
+            <div class="controls">
+            <?php echo Form::select('tesdatos.ar',array('SI'=>'SI',"NO"=>"NO")) ?>
+            </div>
+        </div>
+        
+         <div class="control-group">
+        <label class="control-label" for="datos_ruc">Vendedor* : </label>
+            <div class="controls">
+            <?php echo Form::dbSelect('tesdatos.tesvendedores_id','nombre',array('tesvendedores','find','conditions: aclempresas_id='.Session::get('EMPRESAS_ID'))) ?>
+            </div>
+        </div>
+         <?php if($ant==1){?>
+        <div class="control-group">
+        <label class="control-label">Departamento* : </label>
+        <?php echo Form::text('tesdatos.departamento','class="textocorto"',$departamento) ?>
+        </div>
+        <div class="control-group">
+        <label class="control-label">Provincia* : </label>
+        <?php echo Form::text('tesdatos.provincia','class="textocorto"',$provincia) ?>
+        </div>
+        <div class="control-group">
+        <label class="control-label">Distrito* : </label>
+        <div class="distrito"><?php echo Form::text('distrito','class="textocorto"') ?></div>
+		<?php echo Form::hidden('tesdatos.distrito','class="textocorto"') ?>
+        </div>
+        <?php }else{?>
+        <div class="control-group">
+        <label class="control-label">Departamento* : </label>
+        <?php echo Form::text('tesdatos.departamento','class="textocorto"') ?>
+        </div>
+        <div class="control-group">
+        <label class="control-label">Provincia* : </label>
+        <?php echo Form::text('tesdatos.provincia','class="textocorto"') ?>
+        </div>
+        <div class="control-group">
+        <label class="control-label">Distrito* : </label><div class="distrito"><?php echo Form::text('distrito','class="textocorto"') ?></div>
+		<?php echo Form::hidden('tesdatos.distrito','class="textocorto"') ?>
+        </div>
+        <?php if(empty($tesdatos->distrito)){?>
+        <div class="control-group">
+        <label class="control-label">Distrito Anterior : </label>        
+		<?php echo Form::text('tesdatos.distrito_ant','class="textocorto"') ?>
+        </div>
+        <?php }?>
+        <?php }?>
+        <div class="control-group">
+        <label class="control-label" for="datos_ruc">Pais* : </label>
+		<div class="controls">
+        <?php echo Form::text('tesdatos.pais','class="textocorto"') ?>
+        </div>
+		</div>
+            <div class="control-group">                
+                <label class="control-label" for="datos_direccion">Direccion* : </label>
+                <div class="controls">
+                    <?php echo Form::text('tesdatos.direccion','class="textomediano"') ?>
+                   <?php echo Html::linkAction('direccionfiscal/0/'.$tesdatos->id,'<i class="icon-plus-sign"></i>');?>
+                   
+                </div>
+            </div>
+            <div class="control-group">                
+                <label class="control-label" for="datos_telefono">Telefono* : </label>
+                <div class="controls">
+                    <?php echo Form::text('tesdatos.telefono','class="textocorto"') ?>
+                </div>
+            </div>
+            <div class="control-group">                
+                <label class="control-label" for="tesdatos.celular">Celular* : </label>
+                <div class="controls">
+                    <?php echo Form::text('tesdatos.celular','class="textocorto"') ?>
+                </div>
+            </div>
+            <div class="control-group">                
+                <label class="control-label" for="tesdatos.email">Correo* : </label>
+                <div class="controls">
+                    <?php echo Form::text('tesdatos.email','class="textocorto"') ?>
+                </div>
+            </div>
+            <div class="control-group" align="center">                
+             <label><strong>Datos del Contacto</strong></label>
+            </div>
+            <div class="control-group">                
+                <label class="control-label" for="tescontactos.nombre">Nombres* : </label>
+                <div class="controls"><?php echo Form::hidden('tescontactos.id') ?>
+				<?php echo Form::hidden('tescontactos.tesdatos_id','',$tesdatos->id) ?>
+                    <?php echo Form::text('tescontactos.nombres','class="textomediano"') ?>
+                </div>
+            </div>
+            <div class="control-group">                
+                <label class="control-label" for="tescontactos.telefono">Telefono* : </label>
+                <div class="controls">
+                    <?php echo Form::text('tescontactos.telefono','class="textocorto"') ?>
+                </div>
+                 <div class="control-group">                
+                <label class="control-label" for="tescontactos.fnacimiento">Fecha Nacimiento : </label>
+                <div class="controls">
+                    <?php
+				 echo Calendar::selector('tescontactos.fnacimiento')?>
+                </div>
+            </div>
+            <div class="form-actions">
+                <?php echo Form::submit('Grabar Datos', 'name="datos_personas" class="btn btn-primary"') ?>
+                <?php echo Html::linkAction('listado/'.$campo.'/'.$direccion.'/'.$page, 'Listado', 'class="btn"') ?>
+            </div>
+        <?php echo Form::close() ?> 
+</div>

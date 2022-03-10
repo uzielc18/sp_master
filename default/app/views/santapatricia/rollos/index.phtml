@@ -1,0 +1,237 @@
+
+<?php
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<script type="text/javascript">
+
+$(document).ready(function()
+{
+	
+	$("#rollos_tesproductos_id").tokenInput("<?php echo "/santapatricia/produccion/producto/1"?>", 
+		{
+		<?php if(!empty($rollos->tesproductos_id)){?>
+		prePopulate:[ 
+					{id: <?php echo $rollos->tesproductos_id?>, name: "<?php echo $rollos->getTesproductos()->nombre?>"},
+				],
+		<?php }?>
+		tokenLimit: 1,
+		minChars: 1,preventDuplicates: true,
+		onAdd: function (item) {
+			//alert(item.id);
+			
+		  },
+		onDelete: function (item) {
+		}
+	});
+	$("#rollos_tescolores_id").tokenInput("<?php echo "/santapatricia/ingresos/colores"?>", 
+		{
+			<?php if(!empty($rollos->tescolores_id)){?>
+		prePopulate:[ 
+					{id: <?php echo $rollos->tescolores_id?>, name: "<?Php echo $rollos->color?>"},
+				],
+		<?php }?>
+		tokenLimit: 1,
+		minChars: 1,
+		preventDuplicates: true,
+		onAdd: function (item) {
+			//alert(item.name);
+			$("#rollos_color").val(item.name);
+		  },
+		onDelete: function (item) {
+		}
+	});
+  
+});
+</script>
+<div class="card">
+    <h1><?php echo $titulo?> </h1>
+</div>
+<?php View::content() ?>
+
+<div class="form-actions">
+<?php echo Menu::menuProduccion('Rollos');?>
+</div>
+<div class="menu">
+<ul><li><a>
+Año 
+<select id="anio">
+<?php
+for($i=2011;$i<=2020;$i++)
+{
+	$selec='';
+	if($anio==$i){
+	$selec=' selected="selected"';
+	}
+	echo '<option value="'.$i.'" '.$selec.'>'.$i.'</option>';
+}
+?>
+</select> 
+</a></li></ul>
+<?php 
+$mes_actual=date('Y-m');
+foreach($meses as $clave => $mes):
+if($anio.'-'.$clave<=$mes_actual){
+$class='';
+if($mes_activo==$clave)$class=' active';
+echo '<ul>';
+echo '<li><a class="enviar'.$class.'" id="mes-'.$mes.'" href="javascript:;" data-id="'.$anio.'-'.$clave.'-01">'.$mes.'</a></li>'; 
+echo '</ul>';
+}
+endforeach;?>
+</div>
+<div class="card-body">
+<?php echo Form::open(NULL, 'post', 'class="form-horizontal"'); ?>
+
+<?php echo Form::hidden('rollos.id') ?>
+<?php echo Form::hidden('rollos.color') ?>
+<table width="70%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+  <tr>
+    <th align="right" valign="top">Producto:&nbsp;</th>
+    <td colspan="" valign="top"><?php echo Form::text('rollos.tesproductos_id','placeholder="Articulo"')?></td>
+    <th align="right" valign="top">Color:&nbsp;</th>
+    <td colspan="" valign="top"><?php echo Form::text('rollos.tescolores_id','placeholder="Articulo"')?></td>
+  </tr>
+  <tr>
+    <th align="right" valign="top">Nro. de Rollo:&nbsp;</th>
+    <td valign="top"><?php echo Form::text('rollos.numero','size="30"') ?></td>
+    <th align="right" valign="top">Nro. de Maquina:&nbsp;</th>
+    <td valign="top"><?php echo Form::text('rollos.maquina_numero','size="10"') ?></td>
+  </tr>
+  <tr>
+    <th align="right" valign="top">Metros:&nbsp;</th>
+    <td valign="top"><?php echo Form::text('rollos.metros') ?></td>
+    <th align="right" valign="top">Kilos:</th>
+    <td valign="top"><?php echo Form::text('rollos.peso') ?></td>
+  </tr>
+  <tr>
+    <th align="right" valign="top">Ancho</th>
+    <td valign="top"><?php echo Form::text('rollos.ancho','size="10"')?></td>
+    <th align="right" valign="top">Fecha de Corte:</th>
+    <td valign="top"><?php echo Calendar::text('rollos.fechacorte')?></td>
+  </tr>
+</table>
+<div class="form-actions">
+    <?php echo Form::submit('Guardar Datos', 'class="btn btn-primary"') ?>
+    <?php if($tipo_id==0){echo Html::linkAction('listado', 'Cancelar', 'class="btn"');} ?>
+    </div>
+<?php echo Form::close() ?>
+<?php if($tipo_id==0){?>
+<?php }?>
+<?php //echo View::content()?>
+<style type="text/css">
+.link a{
+display:inline-table;
+width:20px;
+padding:2px 2px 7px 2px;
+background-color:#F5F5F5;
+margin:auto;}
+</style>
+<script type="text/jscript">
+function rend(tr_id)
+{
+  var metros=isNaN($('#metros-'+tr_id).val())? 0 : $('#metros-'+tr_id).val();
+  var peso=isNaN($('#peso-'+tr_id).val())? 0 : $('#peso-'+tr_id).val();
+  var rendimiento=(parseInt(metros)/parseInt(peso)); 
+  $("#rendimiento-"+tr_id).val(rendimiento); 
+  grabarDetalle(tr_id);
+  
+}
+function grabarDetalle(tr_id) 
+{
+  var id=tr_id;
+  var ordencompra=$("#ordencompra-"+tr_id).val();
+  var metros=isNaN($('#metros-'+tr_id).val())? 0 : $('#metros-'+tr_id).val();
+  var peso=isNaN($('#peso-'+tr_id).val())? 0 : $('#peso-'+tr_id).val();
+  var rendimiento=$("#rendimiento-"+tr_id).val();
+  /*
+  metros
+	 peso
+	 rendimiento
+	 ancho
+	 estadorollo
+	 ordencompra*/
+
+	  var dataString ='id='+id+'&metros='+ metros+'&peso='+ peso+'&rendimiento='+rendimiento+'&ordencompra='+ordencompra;
+	 //alert(dataString);
+	  $.ajax({
+            type:"POST",
+            url:"/santapatricia/revisiones/grabarrollo/",
+            data:dataString,
+            beforeSend:function(){
+              $("#loading").show();
+            },
+            success:function(response){
+                $("#loading").hide();
+            }
+ 
+         });
+  
+}
+$(document).ready(function()
+{
+	$('.rend').blur(function()
+	{
+		var ID=$(this).attr('id').split('-');
+		rend(ID[1]);
+	})
+	$('.save').blur(function()
+	{
+		var ID=$(this).attr('id').split('-');
+		grabarDetalle(ID[1]);
+	})
+//hacemos la busqueda en el evento search del control de busqueda
+	$('#txtBuscar').on('search',function(){
+		//le decimos a la funcion que busque en la tabla tblTabla el
+		//valor que contiene el campo actual
+		$.fntBuscarEnTabla($(this).val(),'rollos');
+		
+	});
+});
+</script><script type="text/javascript">
+$(document).ready(function() {
+	$("#anio").change(function(event){
+    	var id = $("#anio").find(':selected').val();
+		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/index/'+id;
+     });
+	$(".enviar").click(function()
+	{
+		var fecha = $(this).attr('data-id');
+		var F=fecha.split('-');
+		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/index/'+F[0]+'/'+F[1];
+	});
+});
+</script>
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus="" placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+<table id="rollos" width="100%" border="0" cellspacing="0" cellpadding="0" class="table table-bordered table-striped">
+  <tr>
+    <th width="6%">Nº Rollo</th>
+    <th width="6%">MAQ</th>
+    <th width="9%">FECHA</th>
+    <th width="10%">GUIA</th>
+    <th width="14%" align="left">Nº ARTICULO.</th>
+    <th width="13%" align="left">ARTICULO</th>
+    <th width="13%">METRAJE</th>
+    <th width="7%">PESO</th>
+    <th width="5%">O.C.</th>
+    <th width="10%" align="center">Acciones</th>
+  </tr>
+  <?php foreach($prorollos as $rollo){?>
+  <tr id="<?php echo $rollo->id?>">
+     <td align="center" valign="top"><?php if(empty($rollo->numeroventa))echo $rollo->numero;else echo $rollo->numeroventa?>-<?php echo $rollo->maquina_numero?></td>
+    <td align="center" valign="top"><?php if($rollo->prodetalleproduccion_id!=0)echo $rollo->getProdetalleproduccion()->getProproduccion()->getPromaquinas()->prefijo.$rollo->getProdetalleproduccion()->getProproduccion()->getPromaquinas()->numero; else echo "M-".$rollo->maquina_numero;?></td>
+    <td align="center" valign="top"><?php echo Sp::formatFecha('%d / %m / %Y',$rollo->fechacorte)?><?php //echo $rollo->fechacorte?></td>
+    <td align="center" valign="top"><?php if($rollo->prodetalleproduccion_id!=0)echo $rollo->getProdetalleproduccion()->getProproduccion()->guianumero; else echo "Sin Guia";?></td>
+    <td align="left" valign="top"><?php echo $rollo->getTesproductos()->prefijo.$rollo->getTesproductos()->codigo?></td>
+    <td align="left" valign="top"><?php echo $rollo->getTesproductos()->getTestipoproductos()->nombre.' '.$rollo->getTesproductos()->nombre?></td>
+    <td align="center" valign="top"><?php if(!empty($rollo->metros))echo number_format($rollo->metros,2,'.','')?></td>
+    <td align="center" valign="top"><?php if(!empty($rollo->peso))echo number_format($rollo->peso,2,'.','')?></td>
+    <td valign="top"><?php if(!empty($rollo->getProdetalleproduccion()->tesordendecompras_id)){$oc=$rollo->getProdetalleproduccion()->getTesordendecompras()->codigo;}else{$oc=$rollo->ordencompra;}?><?php echo $oc?></td>
+      <td valign="top" align="center"><?php echo Html::linkAction('editar/'.$rollo->id.'',Html::img("figuras/editar.png",'Visto Bueno','style="width: 20px;margin-left:1px;margin-right:1px;" title="Editar"'));?>
+	  <?php echo Html::linkAction('borrar/'.$rollo->id.'',Html::img("figuras/eliminar.png",'Visto Bueno','style="width: 20px;margin-left:1px;margin-right:1px;" title="Eliminar" onclick="return confirm(\'¿Está seguro?\')"'));?></td>
+  </tr>
+  <?php }?>
+</table>
+</div>

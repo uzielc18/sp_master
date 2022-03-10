@@ -1,0 +1,113 @@
+<?php View::content();?>
+<div class="card">
+    <h1><?php echo $titulo?> <?Php echo Session::get('tipo_nombre')?><span><?Php echo Session::get('tipo_nombre')?></span></h1>
+</div>
+<div class="form-actions">
+<?php echo Html::linkAction('','Volver','class="btn"')?>
+<?php echo Html::linkAction('listado','Ver todos los eventos','class="btn btn-primary"')?>
+</div>
+<div class="card-body">
+<?php echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
+<fieldset>
+<?php echo Form::hidden('eventos.id') ?>
+<?php echo Form::hidden('eventos.aclusuarios_id','',Auth::get('id')) ?>
+<?php echo Form::hidden('eventos.eventostipo_id','',Session::get('tipo_id')) ?>
+<div class="control-group">
+    <label class="control-label" for="eventos_fecha"><?php if(Session::get('tipo_id')!=1){?>Titulo*<?php }else{?>Nombre* <?php }?> : </label>
+    <div class="controls">
+        <?php
+				 echo Form::text('eventos.titulo','size="40"')?>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label" for="eventos_titulo"><?php if(Session::get('tipo_id')!=1){?>Sub titulo*<?php }else{?>Apellidos* <?php }?> : </label>
+    <div class="controls">
+        <?php echo Form::text('eventos.subtitulo','size="40"') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label" for="eventos_titulo"><?php if(Session::get('tipo_id')!=1){?>Fecha y Hora incio:*<?php }else{?>Fecha del cumpleaños <?php }?>  </label>
+    <div class="controls">
+        <?php echo Calendar::text('eventos.fecha_inicio','') ?>
+        <?php if(Session::get('tipo_id')!=1){echo Form::text('eventos.hora_inicio',' size="10" placeholder="hh:mm:ss" title="Ingresar en formato de 24 horas"').' Formato 24 horas';}else{echo " (Selecione el día y el mes, el año es opcional)".Form::hidden('eventos.hora_inicio','','00:10:10');} ?>
+    </div>
+</div>
+<?php if(Session::get('tipo_id')!=1){?>
+<div class="control-group">
+    <label class="control-label" for="eventos_titulo">Fecha y Hora final: </label>
+    <div class="controls">
+        <?php echo Calendar::text('eventos.fecha_fin','') ?>
+        <?php echo Form::text('eventos.hora_fin',' size="10" placeholder="hh:mm:ss" title="Ingresar en formato de 24 horas"').' Formato 24 horas' ?>
+    </div>
+</div>
+<?php }?>
+<div class="control-group">
+    <label class="control-label" for="eventos_detalle">Detalle* : </label>
+    <div class="controls">
+        <?php echo Form::textarea('eventos.mas_info','cols="43", rows="6"') ?>
+    </div>
+</div>
+
+<div class="control-group">
+    <label class="control-label" for="eventos_titulo">Correo: </label>
+    <div class="controls">
+        <?php echo Form::text('eventos.correo','size="40"') ?>
+    </div>
+</div>
+
+<div class="control-group">
+    <label class="control-label" for="eventos_titulo">Telefono: </label>
+    <div class="controls">
+        <?php echo Form::text('eventos.telefono','size="20"') ?>
+    </div>
+</div>
+
+<div class="control-group">
+    <label class="control-label" for="eventos_titulo">Direccion: </label>
+    <div class="controls">
+        <?php echo Form::text('eventos.direccion','size="50"') ?>
+    </div>
+</div>
+
+<div class="control-group">
+    <label class="control-label" for="eventos_titulo">Compartir: </label>
+    <div class="controls">
+        <?php echo Form::select('eventos.personal',array('1'=>'Personal','2'=>'Publico'),'',1) ?>
+    </div>
+</div>
+<?php if(Session::get('tipo_id')!=1){?>
+<div class="control-group">
+    <label class="control-label" for="eventos_titulo">Repetir: </label>
+    <div class="controls">
+        No repetir :<?php echo Form::check('eventos.norepetir','1','class="unosolo" checked="checked"') ?>
+        Diariamente :<?php echo Form::check('eventos.repetirdiario','1','class="unosolo"') ?>
+        Semanal: <?php echo Form::check('eventos.repetirsemanal','1','class="unosolo"') ?>
+        Mensual: <?php echo Form::check('eventos.repetirmensual','1','class="unosolo"') ?>
+        Anual: <?php echo Form::check('eventos.repetiranual','1','class="unosolo"') ?>
+    </div>
+</div>
+<?php }?>
+
+<div class="form-actions">
+    <?php echo Form::submit('Guardar Datos', 'class="btn btn-primary"') ?>
+    <?php echo Html::linkAction('listado', 'Cancelar', 'class="btn"') ?>
+    </div>
+   </fieldset>
+<?php echo Form::close() ?>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#eventos_hora_inicio').timepicker( {
+	  showAnim: 'blind'
+	  });
+	$('#eventos_hora_fin').timepicker( {
+		showAnim: 'blind'
+		});
+	$('input[type=checkbox]').live('click', function(){
+        var parent = $(this).attr('id');
+		//alert(parent)
+        $('.unosolo').removeAttr('checked');
+        $(this).attr('checked', 'checked');
+    });
+});
+</script>

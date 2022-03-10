@@ -1,0 +1,164 @@
+<style type="text/css">
+no_ver{display: none;} 
+h3>span
+{font-size: 10px;
+color: #666666;
+font-style: italic;
+display: block;
+margin-top: -20px
+}
+</style>
+<div class="card">
+<h1>Reporte semanal de hilos</h1>
+</div>
+<div class="form-actions">
+<?php echo Menu::menuReportes($action_name);?>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div style="clear:both"></div>
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus="" placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+<?php echo Sp::imprimir('stock hilos - ','P');?>
+<?Php 
+$semanas=array();
+$date = new DateTime($anio.'-01-01');
+if($date->format('l') != 'Monday'){
+    $date->modify('Last Monday');
+}
+$primer_dia=$date->format('Y-m-d');
+for($i=1;$i<=NumeroSemanasTieneUnAno($anio);$i++)
+{
+/* primer dia de la semana */
+$fecha=$primer_dia;
+$nuevafecha=strtotime ( '+6 day',strtotime ( $fecha ) ) ;
+$ultimo_dia=$nuevafecha= date('Y-m-d',$nuevafecha);
+$fecha=$ultimo_dia;
+if($s==$i)/*captura el 1º dia y el ultimo de la semana seleccionada*/
+{
+	$dia_uno=$primer_dia;
+	$dia_siete=$ultimo_dia;
+}
+$semanas[$i]="Semana ".$i .' del '.Sp::formatFecha("%d/%m/%y",$primer_dia).' hasta '.Sp::formatFecha("%d/%m/%y",$ultimo_dia);
+/*para el siguente dia*/
+$nuevafecha=strtotime ( '+1 day',strtotime ( $fecha ) ) ;
+$primer_dia=$nuevafecha= date('Y-m-d',$nuevafecha);
+
+}?>
+<div class="menu">
+<ul>
+<li>
+<a href="javascript:;">Año 
+<select id="anio">
+<?php
+for($i=2011;$i<=2020;$i++)
+{
+	$selec='';
+	if($anio==$i){
+	$selec=' selected="selected"';
+	}
+	echo '<option value="'.$i.'" '.$selec.'>'.$i.'</option>';
+}
+?>
+</select>
+</a>
+</li>
+</ul> 
+<ul><li><a>
+<?php echo Form::select('semana',$semanas,'',$s) ?></a></li></ul>
+</div>
+<h3>Tipo de hilos <span>Se muestran Todas las cantidades *<a id="v" href="javascript:;">clik aqui para ver solo los mayores a 0</a></span></h3>
+<?php foreach($tipos as $tipo)
+{
+	$activo='';
+	if($tipo->id==$tipo_id)$activo=' btn-success';$tiponombre=$tipo->nombre;
+	echo Html::linkAction($action_name.'/'.$s.'/'.$anio.'/'.$tipo->id.'/',$tipo->nombre,'class="btn btn-mini'.$activo.'"').' ';
+}
+echo Html::linkAction($action_name.'/'.$s.'/'.$anio.'/0/','Todos','class="btn btn-mini"')
+?>
+
+<div class="card-body">
+<table id="exportar_excel" width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+    <caption>Stock de hilos en por semana <?Php echo $tiponombre?> <span><?Php echo "Semana ".$s .' del '.Sp::formatFecha("%d/%m/%y",$dia_uno).' hasta '.Sp::formatFecha("%d/%m/%y",$dia_siete);?></span></caption>
+    <thead>
+    <tr> 
+      <th align="left">Hilo</th>
+      <th align="left">Color</th>
+      <th align="right">Saldo anterior</th>
+      <th align="right">Ingresos</th>
+      <th align="right">Salidas</th>
+      <th align="right">Saldo</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php 
+	$fecha=$dia_uno;
+	$nuevafecha=strtotime ( '-1 day',strtotime ( $fecha ) ) ;
+	$dia_anterior=$nuevafecha= date('Y-m-d',$nuevafecha);
+	$class='';
+	foreach($hilos as $hilo):
+	$saldo_inicial=number_format($DIN->getSaldo($hilo->pid,$hilo->cid,0,$dia_anterior),2,'.','');
+	$ingresos=number_format($DIN->getTotalingresos_entrefechas($hilo->pid,$hilo->cid,0,$dia_uno,$dia_siete),2,'.','');
+	$salidas=number_format($DIN->getTotalsalidas_entrefechas($hilo->pid,$hilo->cid,0,$dia_uno,$dia_siete),2,'.','');
+	$saldo=number_format(($saldo_inicial+$ingresos)-$salidas,2,'.','');
+	if($saldo_inicial>0.05 or $ingresos>0.05 or $salidas>0.05 or $saldo>0.05)$class=''; else $class=' class="no_ver"';
+	?>
+    <tr<?php echo $class?>>
+      <td align="left"><?php if(!empty($hilo->nombrecorto))echo $hilo->nombrecorto;else echo $hilo->nombre?></td>
+      <td align="left"><?php echo $hilo->color?></td>
+      <td align="right"><?php echo $saldo_inicial?></td>
+      <td align="right"><?Php echo $ingresos;?></td>
+      <td align="right"><?php echo $salidas?></td>
+      <td align="right"><?Php echo $saldo;?></td>
+      </tr>
+    <?php
+	endforeach;?>
+    
+    </tbody>
+    </thead>
+</table>
+
+
+</div>
+<?php
+/**
+ * Función para saber el numero de semanas que tiene un año dado
+ */
+function NumeroSemanasTieneUnAno($year)
+{
+    $date = new DateTime;
+    
+    # Establecemos la fecha segun el estandar ISO 8601 (numero de semana)
+    $date->setISODate($year, 53);
+    
+    # Si estamos en la semana 53 devolvemos 53, sino, es que estamos en la 52
+    if($date->format("W")=="53")
+        return 53;
+    else
+        return 52;
+}
+?>
+<script type="text/javascript">
+$(document).ready(function() {
+	/*Busqueda del Proveedores*/
+	$('#txtBuscar').on('search',function(){
+		//le decimos a la funcion que busque en la tabla tblTabla el
+		//valor que contiene el campo actual
+		$.fntBuscarEnTabla($(this).val(),'exportar_excel');
+	});
+	$("#v").click(function() {
+		$( "tr.no_ver" ).toggle();
+	});
+	$("#anio").change(function(event){
+    	var id = $("#anio").find(':selected').val();
+		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/<?Php echo $action_name?>/<?php echo $s?>/'+id+'/<?Php echo $tipo_id?>';
+     });
+	 $("#semana").change(function(event){
+    	var id = $("#semana").find(':selected').val();
+		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/<?Php echo $action_name?>/'+id+'/<?Php echo $anio?>/<?php echo $tipo_id?>';
+     });
+});
+</script>

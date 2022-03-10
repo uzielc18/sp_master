@@ -1,0 +1,85 @@
+<div class="card">
+    <h1>Libro de Accidentes !</h1>
+</div>
+<script type="text/JavaScript">
+    $(document).ready(function(){
+        $("#anio").change(function(event){
+            var id = $("#anio").find(':selected').val();
+			location.href = '/<?php echo $module_name?>/accidentes/reportes/'+id+'/<?php echo date('m')?>';
+        });
+    });
+</script>
+<div class="form-actions">
+<?php echo Html::linkAction("", 'Registrar Accidentes', 'class="btn btn-primary"') ?>
+</div>
+<?php echo Sp::imprimir('Abonos Adelanto - ','P');?> 
+
+<div class="menu">
+<ul>
+<li>
+<a href="javascript:;">Año 
+<select id="anio">
+<?php
+for($i=2011;$i<=2020;$i++)
+{
+	$selec='';
+	if($anio==$i){
+	$selec=' selected="selected"';
+	}
+	echo '<option value="'.$i.'" '.$selec.'>'.$i.'</option>';
+}
+?>
+</select>
+</a>
+</li>
+</ul> 
+<?php 
+foreach($meses as $clave => $mes):
+$class='';
+if($clave==$mes_activo){$class=' class="active"';}
+echo '<ul>';
+echo '<li>'.Html::linkAction("reportes/$anio/$clave",$mes,$class).'</li>'; 
+echo '</ul>';
+endforeach;?>
+</div>
+
+<div class="page reporte">
+
+<h2>Reporte de Accidentes de Trabajo de <?php echo $meses[$mes_activo]?></h2>
+
+<?php 
+$fin=date("t", strtotime('01-'.$mes_activo.'-'.date('Y'))); 
+for($i=1;$i<=$fin;$i++){
+	if($i<10){$i='0'.$i;}
+$accidentesdeldia=$ACCIDENTE->accidentesDia($anio,$mes_activo,$i);
+
+if($accidentesdeldia){
+
+setlocale(LC_ALL,"es_ES.UTF8","es_ES","esp");	
+echo "<h3>".strftime("%d / %b del %Y", strtotime($anio.'-'.$mes_activo.'-'.$i))."</h3>";?>
+Accidentes Mortales e Incidentes Peligrosos ocurridos en el centro de trabajo.
+
+<table width="318" class="table table-bordered table-striped">
+<caption>Reporte de Accidentes de Trabajo de <?php echo $meses[$mes_activo]?></caption>
+  <tr>
+  	<th width="17">Nº</th>
+    <th width="107">Nombre</th>
+    <th width="135">Detalle</th>
+    <th width="93"> Hora </th>
+  </tr>
+<?php $n=0;
+foreach($accidentesdeldia as $item){ $n++;?>
+  <tr>
+  	<td><?php echo $n?></td>
+    <td><?php echo $item->nombreaccidentado?></td>
+    <td><?php echo $item->detalle?></td>
+    <td><?php echo $item->hora?></td>
+  </tr>
+<?php }?>
+</table>
+<?php }else
+{
+	echo '<div class="sin_reporte">'.strftime("%d / %b del %Y", strtotime($anio.'-'.$mes_activo.'-'.$i)).'<br /><span>No Hubo Accidentes</span></div>';
+}
+}?>
+</div>

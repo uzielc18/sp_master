@@ -1,0 +1,98 @@
+<div class="card">
+    <h1>Letras Emitidas<span><?php echo $empresa->razonsocial?></span></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="form-actions">
+<?php echo Menu::menuLetras($action_name);?>
+</div>
+<div class="form-actions">
+Cambie de Año 
+<select id="anio">
+<?php
+for($i=2011;$i<=2020;$i++)
+{
+	$selec='';
+	if($anio==$i){
+	$selec=' selected="selected"';
+	}
+	echo '<option value="'.$i.'" '.$selec.'>'.$i.'</option>';
+}
+?>
+</select> 
+<div class="menu">
+<?php 
+$mes_actual=date('Y-m');
+foreach($meses as $clave => $mes):
+//if($anio.'-'.$clave<=$mes_actual){
+$class='';
+if($mes_activo==$clave)$class=' active';
+echo '<ul>';
+echo '<li><a class="enviar'.$class.'" id="mes-'.$mes.'" href="javascript:;" data-id="'.$anio.'-'.$clave.'-01">'.$mes.'</a></li>'; 
+echo '</ul>';
+//}
+endforeach;?>
+</div>
+<div style="clear:both"></div>
+</div>
+<div id="ver_resultado"></div>
+
+<div class="form-actions">
+<?php echo Sp::imprimir('Letras semanal - ','P',array("W"=>1,"P"=>1,"EX"=>1));?> 
+</div>
+<div class="card-body">
+<table width="90%" border="0" align="center" cellpadding="00" cellspacing="00" class="table table-bordered table-striped">
+  <tr>
+  	<th width="208" valign="top" align="left">CLIENTE</th>
+	<th width="197" valign="top" align="left">REFERENCIA FACT.</th>
+	<th width="111" valign="top" align="center">NRO DE LETRA</th>
+    <th width="89" valign="top" align="center">F. EMISION</th>
+    <th width="107" valign="top" align="center">F. VTO</th>
+    <th width="94" valign="top" align="right">TOTAL</th>
+    <th width="24">LD</th>
+  </tr>
+<?php $number=0;
+foreach($letras as $item){ 
+$simbolo="S/. ";
+
+switch ($item->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+
+$number++;?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20" valign="top"><?php echo $item->razonsocial?></td>
+    <td valign="top"> <?php if(!empty($item->factura_id))echo $item->getFacturas($item->factura_id);else echo 'No encontrado';?></td>
+	<td height="20" align="center" valign="top"><?php echo $item->numerodeletra?><?Php if(!empty($item->nrenovacion))echo $item->nrenovacion; else echo "";?></td>
+	<td height="20" align="center" valign="top"><?php echo Sp::formatFecha('%d/%m/%Y',$item->femision)?></td>
+    <td align="center" valign="top"><?php echo Sp::formatFecha('%d/%m/%Y',$item->fvencimiento)?></td>
+    <td align="right" valign="top">
+    <?php echo $simbolo?> <?php echo number_format($item->monto,2,'.',' ')?>
+    </td>
+    <td align="center">
+    <?php if(empty($item->numerounico))echo "NO";else echo "SI";?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#anio").change(function(event){
+    	var id = $("#anio").find(':selected').val();
+		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/<?php echo $action_name?>/'+id;
+     });
+	$(".enviar").click(function()
+	{
+		var fecha = $(this).attr('data-id');
+		var F=fecha.split('-');
+		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/<?php echo $action_name?>/'+F[0]+'/'+F[1];
+	});
+});
+</script>

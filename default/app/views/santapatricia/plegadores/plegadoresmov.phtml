@@ -1,0 +1,39 @@
+<div class="card">
+    <h1>Salida e Ingreso-Plegadores<span>Movimientos de los plgadores</span></h1>
+</div>
+
+<div class="form-actions" align="center"><?php echo Html::linkAction("salidas/", 'Salida de Plegadores','class="btn btn-primary"') ?>---------<?php echo Html::linkAction("ingresos/", 'Ingreso de PLegadores','class="btn btn-primary"') ?>---------<?php echo Html::linkAction("reporte_plegadores/", 'Reporte Plegadores','class="btn btn-info"') ?>---------<?php echo Html::linkAction("seguimiento_plegadores/", 'Seguimiento Plegadores','class="btn btn-success"') ?></div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="card-body">
+
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+  <tr align="left">
+  	<th width="17">Nº</th>
+    <th width="67">Codigo</th>
+    <th width="107">Nombre</th>
+    <th width="28">Numero</th>
+    <th width="67">Tipo/Plegador</th>
+    <th width="53">Total/mov</th>
+    <th width="53">Estado</th>
+    <th width="72" align="center">Acciones</th>
+  </tr>
+<?php $n=0;
+foreach($plegadores as $item){ $n++;?>
+  <tr>
+  	<td><?php echo $n?></td>
+    <td><?php echo $item->getTesproductos()->codigo?></td>
+    <td><?php echo $item->getTesproductos()->nombre?> <?php echo $item->getTesproductos()->getProplegadores()->numero?></td>
+    <td><?php echo $item->numero?></td>
+    <td><?php echo $item->protipoplegadores()->nombre?></td>
+    <td><?php echo $item->n?></td>
+     <td><?php echo $item->getEstadoplegador()->nombre?></td>
+    <td align="center"><?php echo Html::linkAction('vermovimientos/'.$item->numero,Html::img("figuras/ver.png",'Ver','style="width: 20px;margin-left:10px;margin-right:10px;"'),'title="Ver: Movimientos del Plegador !"','')?>
+    <?php //echo Html::linkAction("borrar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+
+</div>

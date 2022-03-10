@@ -1,0 +1,166 @@
+<?php 
+$monedas= $salida->tesmonedas_id;
+switch ($monedas)
+{
+	case 1: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES'; break;
+	case 2: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 4: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
+	case 5: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 0: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
+}
+
+?>
+<div class="card">
+    <h1>Detalle de Factura por Pago Adelantado !<span><?php echo Session::get('DOC_NOMBRE')?></span></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="card-body">
+<table width="75%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+  <tr>
+    <th width="32%" align="left">Nº Documento:</th>
+    <th width="68%" align="left"><?php echo $salida->serie?>-<?php echo $salida->numero?></th>
+    </tr>
+  <tr>
+    <th align="left">F. de Emision:</th>
+    <th align="left"><?php echo $salida->femision?></th>
+    </tr>
+  <tr>
+    <th align="left">Cliente:</th>
+    <th align="left"><?php echo $salida->getTesdatos()->razonsocial?></th>
+    </tr>
+  <tr>
+  	<th align="left">Direccion:</th>
+  	<th align="left"><?php echo $salida->getTesdatos()->direccion?></th>
+  	</tr>
+  <tr>
+  	<th align="left">Referencia:</th>
+  	<th align="left"><?php echo $salida->glosa?></th>
+  	</tr>
+  </table>
+<hr />
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+  <tr>
+  	<th align="left">Codigo</th>
+    <th align="left">Cantidad</th>
+    <th align="left">Unid</th>
+    <th align="left">Descripcion</th>
+    <th width="13%" align="left">Importe</th>
+    <th width="10%" align="left">Descuento</th>
+    <th width="23%" align="left">Valor venta</th>
+  </tr>
+  <?php 
+  $n=0;
+  $total=0;
+  foreach($detalles as $item)
+  {
+	$n++;
+	  ?>
+  <?php echo Form::open($module_name.'/'.$controller_name.'/modificardetalle/'.$action_name,'POST')?>
+  <tr id="<?php echo $item->id?>">
+  <td width="11%">
+  <?php echo Form::hidden('numero','',$n)?>
+  <?php echo Form::hidden('detalle-'.$n.'.id','',$item->id);?>
+  <?php echo Form::hidden('detalle-'.$n.'.tesunidadesmedidas_id','',$item->tesunidadesmedidas_id);?>
+  <?php echo Form::hidden('detalle-'.$n.'.tessalidas_id','',$item->tessalidas_id);?>
+  </td>
+  <td width="14%">&nbsp;</td>
+  <td width="9%">&nbsp;</td>
+  <td align="left"><?php echo nl2br($item->concepto)?> <?php echo $salida->ordendecompra?></td>
+  <td><?php 
+  $total=$total+$item->importe;
+  if(empty($salida->ordendecompra)){echo $simbolo?><?php echo number_format($item->importe,2,'.','');}?></td>
+  <td width="10%">
+  <?php if(!empty($item->descuento))echo $item->descuento; else echo "0.00 %";?>
+  <a href="javascript:;" data-id="<?php echo $n?>" class="clickme" title="Modificar el descuento"><?php echo Html::img('figuras/editar.png','Editar','style="width: 15px;margin-left:1px;margin-right:1px;"')?></a>
+  <span id="descuento-<?php echo $n?>" style="display:none;">
+  <?php echo Form::text('detalle-'.$n.'.descuento','size="10"');?>
+  <?php echo Form::submit('Grabar descuento','class="btn btn-info"')?></span>
+  </td>
+  <td width="23%">
+  <?php echo $simbolo?> <?php echo number_format($total,2,'.','');?> 
+  </td>
+  </tr>
+  	<?Php echo Form::close();?>
+ <?php }?>
+  <?Php if(!empty($salida->ordendecompra)){
+	  
+	  $detalles_orden=$salida->getDetallesorden($salida->ordendecompra);
+	  foreach($detalles_orden as $d_o){
+	  ?>
+  <tr id="<?php echo $item->id?>">
+  <td width="11%">2 <?php echo $n?>. <?php echo $d_o->getTesproductos()->codigo?></td>
+  <td width="14%"><?php echo $d_o->cantidad?></td>
+  <td width="9%"><?php echo $d_o->getTesunidadesmedidas()->simbolo?></td>
+  <td align="left"><?php echo $d_o->getTesproductos()->nombre?> <?php echo $d_o->getTesproductos()->detalle?> <?Php //echo $d_o->getTescolores()->nombre?></td>
+  <td><?php echo $simbolo?><?php echo number_format($d_o->precio,2,'.','');?></td>
+  <td width="10%">&nbsp;</td>
+  <td width="23%"><?php echo $simbolo?><?php echo number_format($d_o->total,2,'.','');?></td>
+  </tr>
+  <?php }
+  }?>
+  <tr>
+    <td width="11%">&nbsp;</td>
+    <td width="14%">&nbsp;</td>
+    <td width="9%">&nbsp;</td>
+    <td width="20%">&nbsp;</td>
+    <td width="13%">&nbsp;</td>
+    <td width="10%"><hr /></td>
+    <td><hr /></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td><strong>Sub total</strong></td>
+    <td><?php echo $simbolo?><?php echo number_format($total,2,'.','');?></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td><strong>IGV(% <?php echo Session::get('IGV')*100?>.00)</strong></td>
+    <td><?php echo $simbolo?>
+    	<?php $igv=$total*(Session::get('IGV'));echo number_format($igv,2,'.','')?></td>
+  </tr>
+  <tr>
+  	<td>&nbsp;</td>
+  	<td>&nbsp;</td>
+  	<td>&nbsp;</td>
+  	<td>&nbsp;</td>
+  	<td>&nbsp;</td>
+  	<td><strong>TOTAL</strong></td>
+  	<td><?php echo $simbolo?>
+  		<?php $TOTAL=$total+$igv;echo number_format($TOTAL,2,'.','');?></td>
+  	</tr>
+</table>
+
+<?php echo Form::open()?>
+<?php echo $texto=NumerosLetras::NL($total+$igv,$moneda_letras);?>
+<?php echo Form::hidden('salida.id');?>
+<?php echo Form::hidden('salida.tesmonedas_id');?>
+<?php echo Form::hidden('salida.aclusuarios_id');?>
+<?php echo Form::hidden('salida.tesdocumentos_id');?>
+<?php echo Form::hidden('salida.testipocambios_id');?>
+<?php echo Form::hidden('salida.tesdatos_id');?>
+<?php echo Form::hidden('salida.estadosalida','','Editable');?>
+<?php echo Form::hidden('salida.totalconigv','',$TOTAL);?>
+<?php echo Form::hidden('salida.igv','',$igv);?>
+<?php echo Form::hidden('salida.totalenletras','',$texto);?> - 
+<?php echo Form::submit('Siguente','class="btn btn-primary"')?><?php echo Html::linkAction('factura_adelanto/'.Session::get('SALIDA_ID'),' Editar','class="btn btn-secondary"')?>
+<?php echo Form::close();?>
+</div>
+<script type="text/javascript">
+$( ".clickme" ).click(function() {
+	var n=$(this).data('id');
+  $( "#descuento-"+n).toggle( "slow", function()
+  {
+	  
+  });
+});
+</script>

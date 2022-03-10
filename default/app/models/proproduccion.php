@@ -46,17 +46,23 @@ IFNULL((Select m.metros FROM promerma as m WHERE p.id=m.proproduccion_id),0)as m
 	
 	public function totalUsados($id=0)/*recibe el id de la guia*/
 	{
-		$p=$this->find_by_sql("SELECT IFNULL(sum(prodetalleproduccion.metrosrevisados),0) as c  FROM `prodetalleproduccion`, proproduccion WHERE proproduccion.id=prodetalleproduccion.proproduccion_id AND proproduccion.guia_id=".$id);
+		$p=$this->find_by_sql("SELECT IFNULL(sum(prodetalleproduccion.metrosrevisados),0) as c  FROM `prodetalleproduccion`, proproduccion 
+		WHERE proproduccion.id=prodetalleproduccion.proproduccion_id AND proproduccion.guia_id=".$id);
 		return $p->c;
 	}
 	/*Consulta para la pagina de bienvenida */
 	public function panel_produccion()
 	{
-		return $this->find_all_by_sql("SELECT CONCAT_WS('-',m.prefijo,m.numero) as maquina,pr.nombre as tela,sum(d.metroprogramados) as metros, c.nombre as color,CONCAT_WS('-',d.corte,d.observaciones) as obs
-FROM promaquinas as m, tescolores as c, tesproductos as pr, prodetalleproduccion as d INNER JOIN proproduccion as p ON p.id=d.proproduccion_id AND p.estadoproduccion='PRODUCCION'
-WHERE pr.id=d.tesproductos_id AND c.id=d.tescolores_id AND m.id=p.promaquinas_id AND ISNULL(d.fechadecorte)
-GROUP BY m.id,pr.id
-order by d.fecha_at DESC");
+		return $this->find_all_by_sql("SELECT m.id,pr.id,CONCAT_WS('-',m.prefijo,m.numero) as maquina,pr.nombre as tela,
+		sum(d.metroprogramados) as metros, c.nombre as color,CONCAT_WS('-',d.corte,d.observaciones) as obs 
+		FROM promaquinas as m 
+		INNER JOIN proproduccion as p ON m.id=p.promaquinas_id AND p.estadoproduccion='PRODUCCION' 
+		INNER JOIN prodetalleproduccion as d ON p.id=d.proproduccion_id 
+		INNER JOIN tesproductos as pr ON pr.id=d.tesproductos_id 
+		INNER JOIN tescolores as c ON c.id=d.tescolores_id 
+		WHERE ISNULL(d.fechadecorte) 
+		GROUP BY m.id,pr.id,m.prefijo,m.numero,pr.nombre ,d.metroprogramados, c.nombre ,d.corte,d.observaciones,d.fecha_at 
+		order by d.fecha_at DESC");
 	}
 	public function panel_ventas()
 	{
@@ -75,13 +81,13 @@ WHERE s.estadosalida!='ANULADO' AND s.tesdocumentos_id=".$documento_id." AND s.a
 	public function panel_rollos()
 	{
 		return $this->find_all_by_sql("SELECT p.nombre AS tela, c.nombre AS color, SUM( r.metros ) AS metros
-FROM tescolores AS c, prorollos AS r
-INNER JOIN tesproductos AS p ON p.id = r.tesproductos_id
-AND r.estadorollo =  'VENTA'
-WHERE r.tescolores_id = c.id
-GROUP BY p.id, c.id
-ORDER BY r.fecha_in DESC 
-LIMIT 0 , 20");
+		FROM  prorollos AS r
+		INNER JOIN tesproductos AS p ON p.id = r.tesproductos_id
+		INNER JOIN tescolores AS c ON r.tescolores_id = c.id
+		WHERE r.estadorollo =  'VENTA'
+		GROUP BY p.id, c.id, p.nombre, c.nombre,r.metros, r.fecha_in
+		ORDER BY r.fecha_in DESC 
+		LIMIT 0 , 20");
 	}
 	public function panel_orden()
 	{
@@ -109,4 +115,3 @@ WHERE pr.id=d.tesproductos_id AND c.id=d.tescolores_id AND m.id=p.promaquinas_id
 order by d.fecha_at DESC");
 	}
 }
-?>

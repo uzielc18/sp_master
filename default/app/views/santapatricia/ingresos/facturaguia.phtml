@@ -1,0 +1,102 @@
+<?php
+$simbolo="S/. ";
+
+switch ($monedas)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}?>
+         <tr>
+		      <th>Codigo</th>
+		      <th>Producto</th>
+		      <th>Medida</th>
+              <th>Lote</th>
+		      <th>Costo Unit</th>
+		      <th>Cantidad</th>
+		      <th>Precio</th>
+		  </tr>
+          <?php
+			if($DETALLE)
+			{
+				$n=0;
+				$subtotal=0;
+				foreach($detalles as $item)
+				{
+						  $n++;
+						  $subtotal=$subtotal+$item->importe;
+					  ?>
+				  <tr id="<?php echo $n?>" class="item-row">
+				   <td>
+						  <div class="delete-wpr">
+						  <?php echo Form::text('codigo-'.$n,'size="10" readonly="readonly"',$item->getTesproductos()->codigo)?>
+						  <a id="del-<?php echo $n?>" class="delete" href="javascript:;" title="Elimar registro" data-id="<?php echo $item->id?>">X</a>
+						  </div>
+					</td>
+					  <td class="item-name">
+						  <?php echo Form::hidden('productos_id-'.$n,'class="productos_id" readonly="readonly"',$item->tesproductos_id)?>
+						  <span id="ver-name<?php echo $n?>" style="display:none;"><?php echo Form::text('productoname-'.$n,'readonly="readonly"')?></span>
+						  <span id="ver<?php echo $n;?>" class="ver"><?php echo Form::text('producto'.$n,'class="producto" placeholder="Producto" size="30" readonly="readonly"',$item->getTesproductos()->nombre)?></span>
+					  </td>
+					  <td><?php echo Form::hidden('tesunidadesmedidas_id-'.$n,'readonly="readonly"',$item->tesunidadesmedidas_id)?> <?php echo Form::text('tesunidadesmedidas'.$n,'class="unidad" size="10"',$item->getTesunidadesmedidas()->nombre)?></td>
+					  <td> <?php echo Form::text('lote'.$n,'size="10"',$item->lote)?></td>
+					  <td><span class="simbolo"><?php echo $simbolo?></span>
+					  <?php //echo $item->preciounitario.'precio//';
+					  if(empty($item->preciounitario))$precio_unitario=0000;else $precio_unitario=$item->preciounitario;
+					   echo Form::text('precio-'.$n,'size="10" class="cost" placeholder="0.0"',number_format($precio_unitario,2,'.',''))?></td>
+					  <td><?php echo Form::text('cantidad-'.$n,' class="qty" size="10" placeholder="0.0"',$item->cantidad);?></td>
+					  <td><span class="simbolo"><?php echo $simbolo?></span><span id='total-<?php echo $n?>' class="price"><?php if(!empty($item->importe))echo number_format($item->importe,2,'.','');else echo "00.00";?></span></td>
+				  </tr>
+				  
+				  <?php
+					  }/*FIN FOREACH*/
+					if($n==0)
+						{  $n=1; ?>
+						  <tr id="1" class="item-row">
+							 <td class="item-name">
+								  <div class="delete-wpr">
+								  <?php echo Form::text('codigo-1','class="productos_id" size="10" readonly="readonly"')?>
+								  <a id="del-1" class="delete" href="javascript:;" title="Elimar registro" data-id="0">X</a>
+								  </div>
+							</td>
+							  <td class="item-name">
+								 <?php echo Form::hidden('productos_id-1','class="productos_id" readonly="readonly"')?>
+								  <span id="ver-name1" style="display:none;"><?php echo Form::text('productoname-1','readonly="readonly"')?></span>
+								  <span id="ver1" class="ver"><?php echo Form::text('producto1','class="producto" placeholder="Producto" size="30"')?></span>
+							  </td>
+							  <td><?php echo Form::hidden('tesunidadesmedidas_id-1')?> <?php echo Form::text('tesunidadesmedidas1','class="unidad"')?></td>
+					  <td> <?php echo Form::text('lote'.$n,'size="5"')?></td>
+							  <td><span class="simbolo"><?php echo $simbolo?></span><?php echo Form::text('precio-1','size="5" class="cost" placeholder="0.0"')?></td>
+							  <td><?php echo Form::text('cantidad-1',' class="qty" size="5" placeholder="0.0"');?></td>
+							  <td><span class="simbolo"><?php echo $simbolo?></span><span id='total-1' class="price">0.00</span></td>
+						  </tr>
+				  <?php
+						}?>
+				  <?php 
+				  }else{
+					 $n=1; ?>
+				  <tr id="1" class="item-row">
+					 <td class="item-name">
+						  <div class="delete-wpr">
+						  <?php echo Form::text('codigo-1','class="productos_id" readonly="readonly"')?>
+						  <a id="del-1" class="delete" href="javascript:;" title="Elimar registro" data-id="0">X</a>
+						  </div>
+					</td>
+					  <td class="item-name">
+						 <?php echo Form::hidden('productos_id-1','class="productos_id" readonly="readonly"')?>
+						  <span id="ver-name1" style="display:none;"><?php echo Form::text('productoname-1','readonly="readonly"')?></span>
+						  <span id="ver1" class="ver"><?php echo Form::text('producto1','class="producto" placeholder="Producto" size="30"')?></span>
+					  </td>
+					  <td><?php echo Form::hidden('tesunidadesmedidas_id-1')?> <?php echo Form::text('tesunidadesmedidas1','class="unidad"')?></td>
+					  <td> <?php echo Form::text('lote'.$n,'size="5"')?></td>
+					  <td><span class="simbolo"><?php echo $simbolo?></span><?php echo Form::text('precio-1','class="cost" placeholder="0.0"')?></td>
+					  <td><?php echo Form::text('cantidad-1',' class="qty" placeholder="0.0"');?></td>
+					  <td><span class="simbolo"><?php echo $simbolo?></span><span id='total-1' class="price">0.00</span></td>
+				  </tr>
+			<?php }  
+			?>
+            <tr id="hiderow">
+		    <td colspan="12"><a id="addrow" href="javascript:;" title="Agregar mas registros">Agragar Mas</a></td>
+		  </tr>

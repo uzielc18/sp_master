@@ -1,0 +1,59 @@
+<style type="text/css">
+.span_float
+{
+	float:right !important;
+	margin-left:0px;
+	margin-right:-5px;
+}
+</style>
+<div class="card">
+    <h1>Transportes</h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+
+<div class="form-actions">
+    <?php echo Html::linkAction("crear/$page", 'Crear Transportes','class="btn btn-primary"') ?>
+</div>
+
+<div id="ver_resultado"></div>
+<div class="card-body">
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+  <tr>
+  	<th width="17">Nº</th>
+    <th width="70">Modelo</th>
+    <th width="70">Marca</th>
+    <th width="70">Origen </th>
+    <th width="150">Nombre </th>
+    <th width="150">Placa </th>
+    <th width="70">Estado </th>
+    <th width="70">Acciones </th>
+  </tr>
+<?php $n=0;
+foreach($transportes->items as $item){ $n++;?>
+  <tr id="<?php echo $item->id?>">
+  	<td><?php echo $n?></td>
+    <td><?php echo $item->modelo?></td>
+    <td><?php echo $item->marca?></td>
+    <td><?php if($item->nacional=='1')echo "NACIONAL";else echo "IMPORTADO";?></td>
+    <td><?php echo $item->getTesproductos()->nombre;?></td>
+     <td><?php echo $item->numeroplaca?></td>
+   <td>
+    <?php 
+	 if($item->activo=='0'){
+	 echo Html::linkAction('activar/'.$item->id.'/'.$page,Html::img("figuras/circulo_rojo.png",'Editar','style="width: 20px;margin-left:5px;margin-right:5px;"'),'');
+	 }else{
+	 echo Html::linkAction("desactivar/$item->id/$page",Html::img("figuras/circulo_verde.png",'Editar','style="width: 20px;margin-left:5px;margin-right:5px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');}?>
+    </td>
+    <td>
+	<?php echo Html::linkAction('editar/'.$item->id.'/'.$page,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'')?>
+    <?php echo Html::linkAction("borrar/$item->id/$page",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:1px;margin-right:1px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+    <?php echo Html::linkAction("detalles/$item->id/Transporte/$page",Html::img("figuras/ver.png",'Eliminar','style="width: 20px;margin-left:1px;margin-right:1px;"'));?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+
+<?php View::partial('paginators/classic', false, array('page' => $transportes ,'url' => Router::get('controller_path').'/listado/')); ?>
+</div>

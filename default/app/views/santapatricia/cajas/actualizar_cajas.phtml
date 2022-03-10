@@ -1,0 +1,19 @@
+<div class="card">
+<h1>Actualizacion de las cajas sin estok</h1>
+</div>
+<div class="card-body">
+<?php View::content();?><h4>Tipo de hilos</h4>
+<?php foreach($tipos as $tipo)
+{
+	$activo='';
+	if($tipo->id==$id_t_p)$activo=' btn-success';
+	echo Html::linkAction($action_name.'/'.$tipo->id,$tipo->nombre,'class="btn btn-mini'.$activo.'"').' ';
+}?>
+<?Php foreach($cajas as $c)
+{
+	echo 'estado: '.$c->estado.' ';echo $c->numerodecaja; echo ' peso '.$c->pesoneto; echo ' conos'.$c->conos;
+	/*$S=explode("-",$c->getStockCC($c->id));
+	echo "STOCK peso:".$S[0]." conos:".$S[1];*/
+	echo "<br />";
+	
+}?></div>

@@ -1,0 +1,104 @@
+<style type="text/css">
+.span_float
+{
+	float:right !important;
+	margin-left:0px;
+	margin-right:-5px;
+}
+.mediano{
+	float:left; max-width:30% !important; padding-left:10px;
+	}
+</style>
+<div class="card">
+	<h1>Movimientos  <span>Ultimos movimientos de Clientes</span></h1>
+    </div>
+<div class="form-actions">
+    <?php echo Menu::menuReportes($action_name);?>
+</div>
+<div class="form-actions">
+<span class="mediano">Fecha Inicio<br />
+<?php 
+$ff=date('Y-m-d');
+$fecha=date('Y-m-d',strtotime('-30 day',strtotime(date('Y-m-d'))));
+echo Calendar::selector('fecha_inicio','',$fecha)?></span><span  class="mediano">Fecha Fin<br />
+<?php echo Calendar::selector('fecha_fin')?></span><span class="mediano">Busca el cliente:<br />
+<?php echo Form::text('clientes_id')?></span>
+<span class="mediano"><a id="ver_reporte" class="btn btn-primary" href="javascript:;"> Ver Reporte</a></span>
+<div class="clear"><?php echo Form::hidden('cliente_id')?><?php echo Form::hidden('proveedor_id')?></div>
+
+</div>
+<div id="ver">
+<br />
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+<thead>
+	<tr>
+     <th align="left">CLIENTE</th>
+     <th align="left">RUC</th>
+     <th align="left">ACCIONES</th>
+    </tr>
+</thead>
+<tbody>
+<?Php 
+$recargar='';
+foreach($datos as $d):
+$fi=$d->primerpendiente($d->id);
+$recargar.="<tr><td>".$d->razonsocial."</td><td>".$d->ruc."</td><td><a href='/santapatricia/reportes/ver_movimientos_cliente_reporte/".$d->id."/0/".$fi."/".$ff."' class='js-remote btn btn-info ver_uno' rel='#ver".$d->id."' >Ver Pendiente</a></td></tr><tr><td class='ver_varios' colspan='3' id='ver".$d->id."'></td></tr>";
+ endforeach;
+ echo $recargar;?>
+</tbody>
+</table>
+	<h3>*Visualizacion del reporte</h3>
+</div>
+<script type="text/javascript">
+        $(document).ready(function() {
+            $("#clientes_id").tokenInput("<?php echo "/".$module_name."/reportes/tesdatos"?>", 
+			{
+				tokenLimit: 1,minChars: 3,
+                onAdd: function (item) {
+                   //item.name;
+				   //alert(item.id);
+				   $("#cliente_id").val(item.id_cliente);
+			 	   $("#proveedor_id").val(item.id_proveedor);
+				   var fi=$("#fecha_inicio").val();
+			 	   var ff=$("#fecha_fin").val();
+				   //$("#ver").load("/<?php //echo $module_name?>/reportes/ver_movimientos_cliente/"+item.id_cliente+"/"+item.id_proveedor+'/'+fi+'/'+ff);
+				   //$("#ver").html('display','block');
+                },
+                onDelete: function (item) {
+				  $("#ver").html("<table width='90%' border='0' align='center' cellpadding='0' cellspacing='0' class='table-bordered table-striped'><thead><tr><th>Cliente</th><th>Ruc</th><th>Action</th></tr></thead><tbody><?Php echo $recargar;?></tbody></table><h3>*Visualizacion del reporte</h3>");
+                }
+            });
+			
+			$(".ver_uno").click(function(e){
+					//var lo=$(this).attr("rel");
+					//$("td "+lo).html('<img src=\"/img/spinner.gif\" />');
+					e.preventDefault(e);
+					
+					$(this).addClass('active');
+					
+					$(".ver_varios").html("");
+					/*$.get("",function(data,status){
+					$(".ver_varios").html("");
+					$("#ver").html(data);
+				     });					*/
+				
+				});
+			$("#ver_reporte").click(function()
+			{
+			 var fi=$("#fecha_inicio").val();
+			 var ff=$("#fecha_fin").val();
+			 var c=$("#cliente_id").val();
+			 var p=$("#proveedor_id").val();
+			 //alert(fi+'-'+ff+'-'+c+'-'+p);
+			 if(c!='')
+			 {
+				$.get("/<?php echo $module_name?>/reportes/ver_movimientos_cliente/"+c+"/"+p+'/'+fi+'/'+ff,function(data,status){
+					$(".ver_varios").html("");
+					$("#ver").html(data);
+				});
+			 }
+			});
+			
+        });
+        </script>
+<?php echo Tag::js('jquery/jquery.tokeninput');Tag::css('token-input');?>

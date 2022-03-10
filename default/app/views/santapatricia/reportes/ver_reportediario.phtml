@@ -1,0 +1,1156 @@
+<?Php 
+
+$mes_actual=date('Y-m');
+if($SALDOS){
+$SALDOS->monto_uno;
+$SALDOS->monto_dos;
+$arrayuno=explode(',',$SALDOS->monto_uno);
+$ANTERIOR_S=array();
+foreach($arrayuno as $item=>$value)
+{
+	if(!empty($value)){
+	$submontouno=explode('=',$value);
+	//echo 'id: '.$submontouno[0];
+	//echo 'valor: '.$submontouno[1];
+	$ANTERIOR_S[$submontouno[0]]=$submontouno[1];
+	}
+}
+//print_r($ANTERIOR_S);
+$ANTERIOR_D=array();
+$arraydos=explode(',',$SALDOS->monto_dos);
+foreach($arraydos as $item=>$value)
+{
+	if(!empty($value)){
+	$submontodos=explode('=',$value);
+	//echo 'id: '.$submontodos[0];
+	//echo 'valor: '.$submontodos[1];
+	$ANTERIOR_D[$submontodos[0]]=$submontodos[1];
+	}
+}
+}
+?>
+<?Php echo View::content();?>
+<?php echo Sp::imprimir('Reporte Diario de Ventas y cobranzas','P',array("W"=>"W","EX"=>"EX","P"=>"P"));?>
+<?php if(!$mostrar){?><input type="button" onclick="GRABAR()" value="Guardar reporte" class="btn btn-primary"><?Php }?>
+<?Php if($mostrar){?><?Php }else{}?>
+<div class="span12 row">
+<div class="span6">	
+<?php 
+	$DOLARES_C_a=array("total"=>0);
+	$SOLES_C_a=array("total"=>0,"igv"=>0,"sub"=>0);
+	$NOTACREDITO_C_a=array("total"=>0,"igv"=>0,"sub"=>0);
+	$NOTADEBITO_C_a=array("total"=>0,"igv"=>0,"sub"=>0);
+	$FACTURA_C_a=array("total"=>0,"igv"=>0,"sub"=>0);
+foreach($ingresos_anteriores as $item){
+	//echo $item->id;
+	//echo "<br />";
+	$monto_soles_c_a=0;
+	$monto_dolares_c_a=0;
+	$monto_igv_c_a=0;
+	$monedas_c= $item->tesmonedas_id;
+switch ($item->tesmonedas_id)
+{
+	case 1: $simbolo_c_a='S/. ';
+	$monto_soles_c_a=$item->totalconigv;
+	$monto_dolares_c_a=($item->totalconigv-$item->igv)/$item->getTestipocambios()->compra;
+	$monto_igv_c_a=$item->igv;
+	; break;
+	case 2: $simbolo_c_a='$. ';
+	$monto_soles_c_a=($item->totalconigv-$item->igv)*$item->getTestipocambios()->compra;
+	$monto_dolares_c_a=$item->totalconigv;
+	$monto_igv_c_a=$item->igv*$item->getTestipocambios()->compra;
+	  break;
+	case 4: $simbolo_c_a='S/. ';
+	$monto_soles_c_a=$item->totalconigv;
+	$monto_dolares_c_a=($item->totalconigv-$item->igv)/$item->getTestipocambios()->compra;
+	$monto_igv_c_a=$item->igv;
+	; break;
+	case 5: $simbolo_c_a='$. ';
+	$monto_soles_c_a=($item->totalconigv-$item->igv)*$item->getTestipocambios()->compra;
+	$monto_dolares_c_a=$item->totalconigv;
+	$monto_igv_c_a=$item->igv*$item->getTestipocambios()->compra;
+	  break;
+	case 0: $simbolo_c_a='S/. ';
+	$monto_soles_c_a=$item->totalconigv;
+	$monto_dolares_c_a=($item->totalconigv-$item->igv)/$item->getTestipocambios()->compra;
+	$monto_igv_c_a=$item->igv;
+	; break;
+}	
+		if($item->tesdocumentos_id==7){
+		
+		$DOLARES_C_a["total"]=$DOLARES_C_a["total"]+$monto_dolares_c_a;
+		$SOLES_C_a["sub"]=$SOLES_C_a["sub"]+($monto_soles_c_a-$monto_igv_c_a);
+		$SOLES_C_a["igv"]=$SOLES_C_a["igv"]+$monto_igv_c_a;
+		$SOLES_C_a["total"]=$SOLES_C_a["total"]+$monto_soles_c_a;
+		$FACTURA_C_a["total"]=$FACTURA_C_a["total"]+$monto_soles_c_a;
+		$FACTURA_C_a["igv"]=$FACTURA_C_a["igv"]+$monto_igv_c_a;
+		$FACTURA_C_a["sub"]=$FACTURA_C_a["sub"]+($monto_soles_c_a-$monto_igv_c_a);
+		}
+		if($item->tesdocumentos_id==13)
+		{
+		/*Nota de credito*/
+		$DOLARES_C_a["total"]=$DOLARES_C_a["total"]+$monto_dolares_c_a;
+		$SOLES_C_a["sub"]=$SOLES_C_a["sub"]+($monto_soles_c_a-$monto_igv_c_a);
+		$SOLES_C_a["igv"]=$SOLES_C_a["igv"]+$monto_igv_c_a;
+		$SOLES_C_a["total"]=$SOLES_C_a["total"]+$monto_soles_c_a;
+		$NOTACREDITO_C_a["total"]=$NOTACREDITO_C_a["total"]+$monto_soles_c_a;
+		$NOTACREDITO_C_a["igv"]=$NOTACREDITO_C_a["igv"]+$monto_igv_c_a;
+		$NOTACREDITO_C_a["sub"]=$NOTACREDITO_C_a["sub"]+($monto_soles_c_a-$monto_igv_c_a);
+		}
+		if($item->tesdocumentos_id==14)
+		{
+		/*nota de debito*/
+		$DOLARES_C_a["total"]=$DOLARES_C_a["total"]+$monto_dolares_c_a;
+		$SOLES_C_a["sub"]=$SOLES_C_a["sub"]-($monto_soles_c_a-$monto_igv_c_a);
+		$SOLES_C_a["igv"]=$SOLES_C_a["igv"]-$monto_igv_c_a;
+		$SOLES_C_a["total"]=$SOLES_C_a["total"]-$monto_soles_c_a;
+		$NOTADEBITO_C_a["total"]=$NOTADEBITO_C_a["total"]-$monto_soles_c_a;
+		$NOTADEBITO_C_a["igv"]=$NOTADEBITO_C_a["igv"]-$monto_igv_c_a;
+		$NOTADEBITO_C_a["sub"]=$NOTADEBITO_C_a["sub"]-($monto_soles_c_a-$monto_igv_c_a);
+		}
+		
+		?>
+    <?php }?>
+	
+</div>
+<div class="span5">
+    <?php 
+	
+	$DOLARES_V_a=array("total"=>0);
+	$SOLES_V_a=array("total"=>0,"igv"=>0,"sub"=>0);
+	$NOTACREDITO_V_a=array("total"=>0,"igv"=>0,"sub"=>0);
+	$NOTADEBITO_V_a=array("total"=>0,"igv"=>0,"sub"=>0);
+	$FACTURA_V_a=array("total"=>0,"igv"=>0,"sub"=>0);	
+	foreach($salidas_anteriores as $item){
+		$monto_soles_a=0;
+	$monto_dolares_a=0;
+	$monto_igv_a=0;
+			$monedas_a= $item->tesmonedas_id;
+switch ($monedas_a)
+{
+	case 1: $simbolo_a='S/. ';
+	$monto_soles_a=$item->totalconigv;
+	$monto_dolares_a=($item->totalconigv-$item->igv)/$item->getTestipocambios()->compra;
+	$monto_igv_a=$item->igv;
+	; break;
+	case 2: $simbolo_a='$. ';
+	$monto_soles_a=($item->totalconigv-$item->igv)*$item->getTestipocambios()->compra+$item->igv*$item->getTestipocambios()->compra;
+	$monto_dolares_a=$item->totalconigv;
+	$monto_igv_a=$item->igv*$item->getTestipocambios()->compra;
+	  break;
+	case 4: $simbolo_a='S/. ';
+	$monto_soles_a=$item->totalconigv;
+	$monto_dolares_a=($item->totalconigv-$item->igv)/$item->getTestipocambios()->compra;
+	$monto_igv_a=$item->igv;
+	; break;
+	case 5: $simbolo_a='$. ';
+	$monto_soles_a=($item->totalconigv-$item->igv)*$item->getTestipocambios()->compra+$item->igv*$item->getTestipocambios()->compra;
+	$monto_dolares_a=$item->totalconigv;
+	$monto_igv_a=$item->igv*$item->getTestipocambios()->compra;
+	  break;
+	case 0: $simbolo_a='S/. ';
+	$monto_soles_a=$item->totalconigv;
+	$monto_dolares_a=($item->totalconigv-$item->igv)/$item->getTestipocambios()->compra;
+	$monto_igv_a=$item->igv;
+	; break;
+}	
+		if($item->tesdocumentos_id==7){
+		
+		$DOLARES_V_a["total"]=$DOLARES_V_a["total"]+$monto_dolares_a;
+		$SOLES_V_a["sub"]=$SOLES_V_a["sub"]+($monto_soles_a-$monto_igv_a);
+		$SOLES_V_a["igv"]=$SOLES_V_a["igv"]+$monto_igv_a;
+		$SOLES_V_a["total"]=$SOLES_V_a["total"]+$monto_soles_a;
+		$FACTURA_V_a["total"]=$FACTURA_V_a["total"]+$monto_soles_a;
+		$FACTURA_V_a["igv"]=$FACTURA_V_a["igv"]+$monto_igv_a;
+		$FACTURA_V_a["sub"]=$FACTURA_V_a["sub"]+($monto_soles_a-$monto_igv_a);
+		}
+		if($item->tesdocumentos_id==13)
+		{
+		/*Nota de credito*/
+		$DOLARES_V_a["total"]=$DOLARES_V_a["total"]+$monto_dolares_a;
+		$SOLES_V_a["sub"]=$SOLES_V_a["sub"]+($monto_soles_a-$monto_igv_a);
+		$SOLES_V_a["igv"]=$SOLES_V_a["igv"]+$monto_igv_a;
+		$SOLES_V_a["total"]=$SOLES_V_a["total"]+$monto_soles_a;
+		$NOTACREDITO_V_a["total"]=$NOTACREDITO_V_a["total"]+$monto_soles_a;
+		$NOTACREDITO_V_a["igv"]=$NOTACREDITO_V_a["igv"]+$monto_igv_a;
+		$NOTACREDITO_V_a["sub"]=$NOTACREDITO_V_a["sub"]+($monto_soles_a-$monto_igv_a);
+		}
+		if($item->tesdocumentos_id==14)
+		{
+		/*nota de debito*/
+		$DOLARES_V_a["total"]=$DOLARES_V_a["total"]+$monto_dolares_a;
+		$SOLES_V_a["sub"]=$SOLES_V_a["sub"]-($monto_soles_a-$monto_igv_a);
+		$SOLES_V_a["igv"]=$SOLES_V_a["igv"]-$monto_igv_a;
+		$SOLES_V_a["total"]=$SOLES_V_a["total"]-$monto_soles_a;
+		$NOTADEBITO_V_a["total"]=$NOTADEBITO_V_a["total"]-$monto_soles_a;
+		$NOTADEBITO_V_a["igv"]=$NOTADEBITO_V_a["igv"]-$monto_igv_a;
+		$NOTADEBITO_V_a["sub"]=$NOTADEBITO_V_a["sub"]-($monto_soles_a-$monto_igv_a);
+		}
+		
+		?>
+    <?php }?>
+	
+</div>
+<br />
+<div class="span6">	
+    <?php 
+	$DOLARES_C=array("total"=>0);
+	$SOLES_C=array("total"=>0,"igv"=>0,"sub"=>0);
+	$NOTACREDITO_C=array("total"=>0,"igv"=>0,"sub"=>0);
+	$NOTADEBITO_C=array("total"=>0,"igv"=>0,"sub"=>0);
+	$FACTURA_C=array("total"=>0,"igv"=>0,"sub"=>0);
+foreach($ingresos as $item){
+	$monto_soles_c=0;
+	$monto_dolares_c=0;
+	$monto_igv_c=0;
+			$monedas_c= $item->tesmonedas_id;
+switch ($monedas_c)
+{
+	case 1: $simbolo_c='S/. ';
+	$monto_soles_c=$item->totalconigv;
+	$monto_dolares_c=($item->totalconigv-$item->igv)/$item->getTestipocambios()->compra;
+	$monto_igv_c=$item->igv;
+	; break;
+	case 2: $simbolo_c='$. ';
+	$monto_soles_c=($item->totalconigv-$item->igv)*$item->getTestipocambios()->compra;
+	$monto_dolares_c=$item->totalconigv;
+	$monto_igv_c=$item->igv*$item->getTestipocambios()->compra;
+	  break;
+	case 4: $simbolo_c='S/. ';
+	$monto_soles_c=$item->totalconigv;
+	$monto_dolares_c=($item->totalconigv-$item->igv)/$item->getTestipocambios()->compra;
+	$monto_igv_c=$item->igv;
+	; break;
+	case 5: $simbolo_c='$. ';
+	$monto_soles_c=($item->totalconigv-$item->igv)*$item->getTestipocambios()->compra;
+	$monto_dolares_c=$item->totalconigv;
+	$monto_igv_c=$item->igv*$item->getTestipocambios()->compra;
+	  break;
+	case 0: $simbolo_c='S/. ';
+	$monto_soles_c=$item->totalconigv;
+	$monto_dolares_c=($item->totalconigv-$item->igv)/$item->getTestipocambios()->compra;
+	$monto_igv_c=$item->igv;
+	; break;
+}	
+		if($item->tesdocumentos_id==7){
+		
+		$DOLARES_C["total"]=$DOLARES_C["total"]+$monto_dolares_c;
+		$SOLES_C["sub"]=$SOLES_C["sub"]+($monto_soles_c-$monto_igv_c);
+		$SOLES_C["igv"]=$SOLES_C["igv"]+$monto_igv_c;
+		$SOLES_C["total"]=$SOLES_C["total"]+$monto_soles_c;
+		$FACTURA_C["total"]=$FACTURA_C["total"]+$monto_soles_c;
+		$FACTURA_C["igv"]=$FACTURA_C["igv"]+$monto_igv_c;
+		$FACTURA_C["sub"]=$FACTURA_C["sub"]+($monto_soles_c-$monto_igv_c);
+		}
+		if($item->tesdocumentos_id==13)
+		{
+		/*Nota de credito*/
+		$DOLARES_C["total"]=$DOLARES_C["total"]+$monto_dolares_c;
+		$SOLES_C["sub"]=$SOLES_C["sub"]+($monto_soles_c-$monto_igv_c);
+		$SOLES_C["igv"]=$SOLES_C["igv"]+$monto_igv_c;
+		$SOLES_C["total"]=$SOLES_C["total"]+$monto_soles_c;
+		$NOTACREDITO_C["total"]=$NOTACREDITO_C["total"]+$monto_soles_c;
+		$NOTACREDITO_C["igv"]=$NOTACREDITO_C["igv"]+$monto_igv_c;
+		$NOTACREDITO_C["sub"]=$NOTACREDITO_C["sub"]+($monto_soles_c-$monto_igv_c);
+		}
+		if($item->tesdocumentos_id==14)
+		{
+		/*nota de debito*/
+		$DOLARES_C["total"]=$DOLARES_C["total"]+$monto_dolares_c;
+		$SOLES_C["sub"]=$SOLES_C["sub"]-($monto_soles_c-$monto_igv_c);
+		$SOLES_C["igv"]=$SOLES_C["igv"]-$monto_igv_c;
+		$SOLES_C["total"]=$SOLES_C["total"]-$monto_soles_c;
+		$NOTADEBITO_C["total"]=$NOTADEBITO_C["total"]-$monto_soles_c;
+		$NOTADEBITO_C["igv"]=$NOTADEBITO_C["igv"]-$monto_igv_c;
+		$NOTADEBITO_C["sub"]=$NOTADEBITO_C["sub"]-($monto_soles_c-$monto_igv_c);
+		}
+		
+		?>
+    <?php }?>
+	
+</div>
+<div class="span5">
+    <?php 
+	
+	$DOLARES_V=array("total"=>0);
+	$SOLES_V=array("total"=>0,"igv"=>0,"sub"=>0);
+	$NOTACREDITO_V=array("total"=>0,"igv"=>0,"sub"=>0);
+	$NOTADEBITO_V=array("total"=>0,"igv"=>0,"sub"=>0);
+	$FACTURA_V=array("total"=>0,"igv"=>0,"sub"=>0);	
+	foreach($salidas as $item){
+		$monto_soles=0;
+	$monto_dolares=0;
+	$monto_igv=0;
+			$monedas= $item->tesmonedas_id;
+switch ($monedas)
+{
+	case 1: $simbolo='S/. ';
+	$monto_soles=$item->totalconigv;
+	$monto_dolares=($item->totalconigv-$item->igv)/$item->getTestipocambios()->compra;
+	$monto_igv=$item->igv;
+	; break;
+	case 2: $simbolo='$. ';
+	$monto_soles=($item->totalconigv-$item->igv)*$item->getTestipocambios()->compra+$item->igv*$item->getTestipocambios()->compra;
+	$monto_dolares=$item->totalconigv;
+	$monto_igv=$item->igv*$item->getTestipocambios()->compra;
+	  break;
+	case 4: $simbolo='S/. ';
+	$monto_soles=$item->totalconigv;
+	$monto_dolares=($item->totalconigv-$item->igv)/$item->getTestipocambios()->compra;
+	$monto_igv=$item->igv;
+	; break;
+	case 5: $simbolo='$. ';
+	$monto_soles=($item->totalconigv-$item->igv)*$item->getTestipocambios()->compra+$item->igv*$item->getTestipocambios()->compra;
+	$monto_dolares=$item->totalconigv;
+	$monto_igv=$item->igv*$item->getTestipocambios()->compra;
+	  break;
+	case 0: $simbolo='S/. ';
+	$monto_soles=$item->totalconigv;
+	$monto_dolares=($item->totalconigv-$item->igv)/$item->getTestipocambios()->compra;
+	$monto_igv=$item->igv;
+	; break;
+}	
+		if($item->tesdocumentos_id==7){
+		
+		$DOLARES_V["total"]=$DOLARES_V["total"]+$monto_dolares;
+		$SOLES_V["sub"]=$SOLES_V["sub"]+($monto_soles-$monto_igv);
+		$SOLES_V["igv"]=$SOLES_V["igv"]+$monto_igv;
+		$SOLES_V["total"]=$SOLES_V["total"]+$monto_soles;
+		$FACTURA_V["total"]=$FACTURA_V["total"]+$monto_soles;
+		$FACTURA_V["igv"]=$FACTURA_V["igv"]+$monto_igv;
+		$FACTURA_V["sub"]=$FACTURA_V["sub"]+($monto_soles-$monto_igv);
+		}
+		if($item->tesdocumentos_id==13)
+		{
+		/*Nota de credito*/
+		$DOLARES_V["total"]=$DOLARES_V["total"]+$monto_dolares;
+		$SOLES_V["sub"]=$SOLES_V["sub"]+($monto_soles-$monto_igv);
+		$SOLES_V["igv"]=$SOLES_V["igv"]+$monto_igv;
+		$SOLES_V["total"]=$SOLES_V["total"]+$monto_soles;
+		$NOTACREDITO_V["total"]=$NOTACREDITO_V["total"]+$monto_soles;
+		$NOTACREDITO_V["igv"]=$NOTACREDITO_V["igv"]+$monto_igv;
+		$NOTACREDITO_V["sub"]=$NOTACREDITO_V["sub"]+($monto_soles-$monto_igv);
+		}
+		if($item->tesdocumentos_id==14)
+		{
+		/*nota de debito*/
+		$DOLARES_V["total"]=$DOLARES_V["total"]+$monto_dolares;
+		$SOLES_V["sub"]=$SOLES_V["sub"]-($monto_soles-$monto_igv);
+		$SOLES_V["igv"]=$SOLES_V["igv"]-$monto_igv;
+		$SOLES_V["total"]=$SOLES_V["total"]-$monto_soles;
+		$NOTADEBITO_V["total"]=$NOTADEBITO_V["total"]-$monto_soles;
+		$NOTADEBITO_V["igv"]=$NOTADEBITO_V["igv"]-$monto_igv;
+		$NOTADEBITO_V["sub"]=$NOTADEBITO_V["sub"]-($monto_soles-$monto_igv);
+		}
+		
+		?>
+    <?php }?>
+	
+</div>
+</div>
+<div class="card-body" id="exportar_excel">
+<?php ?>
+<div align="center">
+<?php echo date("d/m/Y")?> - <?php echo date("H:i:s")?>
+<h3>TEXTIL SANTA PATRICIA SA</h3>
+<h4>REPORTE DIARIO DE VENTAS Y COBRANZAS (<?Php echo Sp::formatFecha("%d/%m/%Y",$fecha_D)?>)</h4>
+</div>
+<table width="99%" border="0" cellpadding="0" cellspacing="0">
+	<tbody>
+    <tr>
+		<td width="52">&nbsp;</td>
+		<th width="135" rowspan="2" align="left">NRO.</th>
+		<th width="250" rowspan="2" align="left">CLIENTE </th>
+		<th width="75" rowspan="2" align="left">MOV</th>
+        <?php foreach($vendedores as $item){?>
+		<th colspan="2"><?php echo $item->nombre?></th>
+        <?php }?>
+		<td width="46">&nbsp;</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+        <?php foreach($vendedores as $item){?>
+		<td width="112" align="center">S/.</td>
+		<td width="109" align="center">$/.</td>
+        <?php }?>
+	  <td>&nbsp;</td>
+	</tr>
+    <?Php 
+	foreach($vendedores as $v):
+	$suma_soles{$v->id}=0;
+	$sume_dolares{$v->id}=0;
+	endforeach;
+	foreach($ventas as $item){
+		$num=explode("-",$item->pedido);
+		?>
+    <tr title="<?Php if(Auth::get('id')==3)echo $item->id.'/**/'.$item->estado.'/**/'.$item->origen.'/**/'.$item->tabla.'/**/'.$num[0].'/**/'.$num[1]?>">
+		<td>&nbsp;</td>
+		<td><?Php //if(Auth::get('id')==3)echo $item->tabla?> <?Php echo $item->numero?> <?Php //echo $num[1]?></td>
+		<td><?Php echo $item->razonsocial?></td>
+		<td>
+		<?Php 
+		$mov=$num[0];
+		if($item->estado=='ANULADO')$mov="AN";
+		if($item->cp==5 && $item->estado!='ANULADO')$mov="DV";
+		echo $mov;
+		?>
+        </td>
+		<?php foreach($vendedores as $v):?>
+        <?Php if($v->id==$item->tesvendedores_id){?>
+		<td width="112" align="right" style="border-right:#CCC solid 1px;">
+		<?php if(Auth::get('id')==0)echo $v->id;?>
+		<?php if($item->tesmonedas_id==1)
+		{
+			if($num[0]!="NC"){
+				$suma_soles{$v->id}=$suma_soles{$v->id}+number_format($item->total,2,'.','');
+			}
+			if(empty($item->totalconigv) || $item->totalconigv==0 || $item->total==0)echo "*";
+			echo number_format($item->total,2,'.',',');
+		}//echo number_format($SAL->getTotalVentaFecha($item->dato_id,$fecha,1,$item->tabla),2,'.','');?>
+        
+        </td>
+		<td width="109" align="right" style="border-right:#CCC solid 1px;">
+		<?Php if($item->tesmonedas_id==2){
+			if($num[0]!="NC"){
+			$sume_dolares{$v->id}=$sume_dolares{$v->id}+$item->total;
+			}
+			if(empty($item->totalconigv) || $item->totalconigv==0 || $item->total==0)echo "*";
+			echo number_format($item->total,2,'.',',');
+			}//echo number_format($SAL->getTotalVentaFecha($item->dato_id,$fecha,2,$item->tabla),2,'.','');?></td>
+        <?php }else{?>
+		<td width="46" align="right" style="border-right:#CCC solid 1px;">&nbsp;</td>
+		<td width="102" align="right" style="border-right:#CCC solid 1px;">&nbsp;</td>
+		<?php }?>
+        <?php endforeach;?>
+	</tr>
+    <?php }?>
+    <tr>
+   	  <td>&nbsp;</td>
+    	<td align="right">-</td>
+    	<td align="right">-</td>
+   	  <td align="right">-</td>
+      <?php foreach($vendedores as $v){?>
+   	  <td align="right"><b><?php echo number_format($suma_soles{$v->id},2,'.',',')?></b></td>
+   	  <td align="right"><b><?php echo number_format($sume_dolares{$v->id},2,'.',',')?></b></td>
+   	  <?php }?>
+      <td align="right">-</td>
+    	<td align="right">-</td>
+    	<td width="16" align="right">&nbsp;</td>
+    </tr>
+    </tbody>
+</table>
+<br />
+
+<form id="reporte">
+<table width="99%" border="0" cellpadding="0" cellspacing="0">
+	<tbody>
+    <tr>
+		<th width="115">&nbsp;</th>
+		<th width="299">&nbsp;</th>
+		<th colspan="<?Php echo count($vendedores)?>" align="center">NUEVO SOLES</th>
+		<th colspan="<?Php echo count($vendedores)?>" align="center">DOLARES AMERICANOS</th>
+		<th width="23">&nbsp;</th>
+	</tr>
+	<tr>
+		<td width="115">&nbsp;</td>
+		<td>&nbsp;</td>
+        <?php foreach($vendedores as $item){
+		/*Suma por vendedores*/
+		$sums='sums'.$item->codigo;
+		$$sums=0;
+			
+			?>
+		<td width="236" align="right" style="border-right:#CCC solid 1px;">VEND<?php echo $item->codigo?></td>
+        <?php }?>
+        
+        <?php foreach($vendedores as $item){
+			$sumd='sumd'.$item->codigo;
+			$$sumd=0;	
+			?>
+	  <td width="224" align="right" style="border-right:#CCC solid 1px;">VEND<?php echo $item->codigo?></td>
+        <?php }?>
+	  <td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td align="left">SALDO ANTERIOR</td>
+        <?php foreach($vendedores as $item){?>
+			<?php  foreach($saldos as $s){
+				if($item->id==$s->id){
+					/*soles*/
+					$s->total_ruc_soles;
+					$s->total_interna_soles;
+					$s->total_nc_soles;
+					$s->total_abono_soles;
+					$s->total_abono_interna_soles;
+					$s->total_letras_soles;
+					$s->total_ruc_nc_interna_soles;
+					if($SALDOS)
+					{
+						$suma_soles=0;
+						if(array_key_exists($item->id,$ANTERIOR_S))$suma_soles=$ANTERIOR_S[$item->id];
+						//echo $saldos_s=$SALDOS->monto_uno;
+					}else
+					{
+					$suma_soles=($s->total_ruc_soles+$s->total_interna_soles)-($s->total_nc_soles+$s->total_abono_soles+$s->total_abono_interna_soles+$s->total_letras_soles+$s->total_ruc_nc_soles+$s->total_ruc_nc_interna_soles);
+					}
+					${'sums'.$item->codigo}=${'sums'.$item->codigo}+$suma_soles;
+				?>
+            	<td width="236" align="right"  style="border-right:#CCC solid 1px;"><?php echo number_format($suma_soles,2,'.',',');
+				    if(Auth::get('id')==3){
+					/*echo "<br />";
+					echo "r: ".$s->total_ruc_soles;
+					echo "<br />i: ";
+					echo $s->total_interna_soles;
+					echo "<br />nc: ";
+					echo $s->total_nc_soles;
+					echo "<br />a: ";
+					echo $s->total_abono_soles;
+					echo "<br />a_i: ";
+					echo $s->total_abono_interna_soles;
+					echo "<br />l: ";
+					echo $s->total_letras_soles;
+					echo "<br />nc P: ";
+					echo $s->total_ruc_nc_soles;
+					echo "<br />nc P_i: ";
+					echo $s->total_ruc_nc_interna_soles;*/
+					}?>
+                </td>
+             <?php }
+			 }?>
+        <?php }?>
+		<?php foreach($vendedores as $item){?>
+			<?php  foreach($saldos as $s){
+				if($item->id==$s->id){
+					/*dolares*/
+					if($SALDOS)
+					{	
+						$suma_dolares=0;
+						if(array_key_exists($item->id,$ANTERIOR_D))$suma_dolares=$ANTERIOR_D[$item->id];
+					}else
+					{
+					$suma_dolares=($s->total_ruc_dolar+$s->total_interna_dolar)-($s->total_nc_dolar+$s->total_abono_dolar+$s->total_abono_interna_dolar+$s->total_letras_dolar+$s->total_ruc_nc_dolar+$s->total_ruc_nc_interna_dolar);
+					}
+					${'sumd'.$item->codigo}=${'sumd'.$item->codigo}+$suma_dolares;
+					?>
+   	  <td width="224" align="right" style="border-right:#CCC solid 1px;">
+	  <?php echo number_format($suma_dolares,2,'.',',');
+	  				 if(Auth::get('id')==3){
+					/*echo "<br />";
+					echo "r: ".$s->total_ruc_dolar;
+					echo "<br />i: ";
+					echo $s->total_interna_dolar;
+					echo "<br />nc A: ";
+					echo $s->total_nc_dolar;
+					echo "<br />a: ";
+					echo $s->total_abono_dolar;
+					echo "<br />a_i: ";
+					echo $s->total_abono_interna_dolar;
+					echo "<br />l: ";
+					echo $s->total_letras_dolar;
+					echo "<br />nc P: ";
+					echo $s->total_ruc_nc_dolar;
+					echo "<br />nc P_i: ";
+					echo $s->total_ruc_nc_interna_dolar;*/
+					 }
+	  ?>
+	  <?php //echo number_format($s->adelanto_dolares,2,'.','')?>
+      <?php //echo $s->suma_dolares-$s->adelanto_dolares?>
+      </td>
+             <?php }
+			 }?>
+        <?php }?>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td height="24">&nbsp;</td>
+		<td align="left">VENTAS DEL DIA</td>
+		<?php foreach($vendedores as $item){?>
+			<?php  foreach($venta as $s){
+				if($item->id==$s->id){
+					${'sums'.$item->codigo}=${'sums'.$item->codigo}+$s->suma_soles;
+				?>
+            	<td width="236" align="right" style="border-right:#CCC solid 1px;"><?php //echo $s->id.'='.$item->id.'-----------'; 
+				echo number_format($s->suma_soles,2,'.',',')?></td>
+             <?php }
+			 }?>
+        <?php }?>
+		<?php foreach($vendedores as $item){?>
+			<?php  foreach($venta as $s){
+				if($item->id==$s->id){
+					${'sumd'.$item->codigo}=${'sumd'.$item->codigo}+$s->suma_dolares;
+				?>
+   	  <td width="224" align="right" style="border-right:#CCC solid 1px;"><?php echo number_format($s->suma_dolares,2,'.',',')?></td>
+             <?php }
+			 }?>
+        <?php }?>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td align="left">COBRANZAS DEL DIA/DV</td>
+		<?php foreach($vendedores as $item){?>
+			<?php  foreach($abonos as $s){
+				if($item->id==$s->id){
+					${'sums'.$item->codigo}=${'sums'.$item->codigo}-$s->suma_soles;
+				?>
+            	<td width="236" align="right" style="border-right:#CCC solid 1px;"><?php //echo $s->id.'='.$item->id.'-----------'; 
+				echo number_format($s->suma_soles,2,'.',',')?></td>
+             <?php }
+			 }?>
+        <?php }?>
+		<?php foreach($vendedores as $item){?>
+			<?php  foreach($abonos as $s){
+				if($item->id==$s->id){
+				  ${'sumd'.$item->codigo}=${'sumd'.$item->codigo}-$s->suma_dolares;
+				?>
+   	  <td width="224" align="right" style="border-right:#CCC solid 1px;"><?php echo number_format($s->suma_dolares,2,'.',',')?></td>
+             <?php }
+			 }?>
+        <?php }?>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td align="left">SALDO ACTUAL</td>
+		<?php 
+		$SALDO_ACTUAL_SOLES='';
+		$SALDO_ACTUAL_DOLARES='';
+		foreach($vendedores as $item){?>
+        <td width="236" align="right" style="border-right:#CCC solid 1px;">
+		<?php 
+		$SALDO_ACTUAL_SOLES.=$item->id.'='.${'sums'.$item->codigo}.','; 
+		echo number_format(${'sums'.$item->codigo},2,'.',',');?></td>
+        <?php }?>
+		<?php foreach($vendedores as $item){?>
+        <td width="224" align="right" style="border-right:#CCC solid 1px;">
+		<?php 
+		$SALDO_ACTUAL_DOLARES.=$item->id.'='.${'sumd'.$item->codigo}.',';
+		echo number_format(${'sumd'.$item->codigo},2,'.',',');?></td>
+        <?php }?>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td align="left">ADELANTOS</td>
+		<?php foreach($vendedores as $item){?>
+			<?php  foreach($adelantos as $s){
+				if($item->id==$s->id){
+				$igv=($s->suma_soles*Session::get('IGV'));
+					${'sums'.$item->codigo}=${'sums'.$item->codigo}-($s->suma_soles+$igv);
+				?>
+            	<td width="236" align="right" style="border-right:#CCC solid 1px;"><?php //echo $s->id.'='.$item->id.'-----------';
+				echo number_format($s->suma_soles+$igv,2,'.',',')?></td>
+             <?php }
+			 }?>
+        <?php }?>
+		<?php foreach($vendedores as $item){?>
+			<?php  foreach($adelantos as $s){
+				if($item->id==$s->id){
+				
+				$igv=($s->suma_dolares*Session::get('IGV'));	
+				${'sumd'.$item->codigo}=${'sumd'.$item->codigo}-($s->suma_dolares+$igv);	
+				?>
+   	  <td width="224" align="right" style="border-right:#CCC solid 1px;">
+	  <?php 
+	  echo number_format($s->suma_dolares+$igv,2,'.',',')?></td>
+             <?php }
+			 }?>
+        <?php }?>
+     <td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td align="left"><b>SALDO NETO</b></td>
+		<?php foreach($vendedores as $item){?>
+        <td width="236" align="right" style="border-right:#CCC solid 1px;"><b><?php echo number_format(${'sums'.$item->codigo},2,'.',',');?></b></td>
+        <?php }?>
+		<?php foreach($vendedores as $item){?>
+        <td width="224" align="right" style="border-right:#CCC solid 1px;"><b><?php echo number_format(${'sumd'.$item->codigo},2,'.',',');?></b></td>
+        <?php }?>
+		<td>&nbsp;</td>
+	</tr>
+    <tr>
+		<td colspan="<?Php echo count($vendedores)+count($vendedores)+3?>" align="center">&nbsp;</td>
+	</tr>
+    <tr>
+		<td colspan="<?Php echo count($vendedores)+count($vendedores)+3?>" align="center">&nbsp;</td>
+	</tr>
+    <tr>
+		<td colspan="<?Php echo count($vendedores)+count($vendedores)+3?>" align="center"><b>DETALLE DE LAS COBRANZAS</b></td>
+	</tr>
+	<tr>
+		<th width="115">&nbsp;</th>
+	    <th width="299">&nbsp;</th>
+		<th colspan="<?Php echo count($vendedores)?>" align="center">NUEVO SOLES</th>
+		<th colspan="<?Php echo count($vendedores)?>" align="center">DOLARES AMERICANOS</th>
+		<th width="23">&nbsp;</th>
+	</tr>
+    
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+         <?php foreach($vendedores as $item){
+		/*Suma por vendedores*/			
+			?>
+		<td width="236" align="right">VEND<?php echo $item->codigo?></td>
+        <?php }?>
+        
+        <?php foreach($vendedores as $item){
+			?>
+	  <td width="224" align="right" style="border-right:#CCC solid 1px;">VEND<?php echo $item->codigo?></td>
+        <?php }?>
+	  <td>&nbsp;</td>	
+    </tr>
+    <?Php foreach($cobranzas as $cobranza){?>
+	<tr>
+		<td>&nbsp;</td>
+		<td align="left"><?php echo utf8_decode($cobranza->nombre)?></td>
+		<?php foreach($vendedores as $item){
+		/*Suma por vendedores*/			
+			?>
+	  <td width="236" align="right" style="border-right:#CCC solid 1px;"><?php echo number_format($cobranza->{'suma_soles'.$item->id},2,'.',',');?></td>
+        <?php }?>
+        
+        <?php foreach($vendedores as $item){
+			?>
+	  <td width="224" align="right" style="border-right:#CCC solid 1px;"><?php echo number_format($cobranza->{'suma_dolares'.$item->id},2,'.',',');?></td>
+        <?php }?>
+	  <td>&nbsp;</td>	
+    </tr>
+	<?php }?>
+    <tr>
+		<td colspan="<?Php echo count($vendedores)+count($vendedores)+3?>" align="center">&nbsp;</td>
+	</tr>
+    <tr>
+		<td colspan="<?Php echo count($vendedores)+count($vendedores)+3?>" align="center">&nbsp;</td>
+	</tr>
+    <tr>
+		<td colspan="<?Php echo count($vendedores)+count($vendedores)+3?>" align="center"><b>ABONOS DEL MES POR VENDEDOR (<?Php echo Sp::getMes($fecha)?>)</b></td>
+	</tr>
+    
+    <tr>
+		<td colspan="<?Php echo count($vendedores)+count($vendedores)+3?>" align="center">&nbsp;</td>
+	</tr>
+    <tr>
+		<th width="115">&nbsp;</th>
+	    <th width="299">&nbsp;</th>
+		<th colspan="<?Php echo count($vendedores)?>" align="center">NUEVO SOLES</th>
+		<th colspan="<?Php echo count($vendedores)?>" align="center">DOLARES AMERICANOS</th>
+		<th width="23">&nbsp;</th>
+	</tr>
+    
+	<tr>
+		<td width="115">&nbsp;</td>
+		<td><b>EFECTIVO DEL MES</b></td>
+        <?php foreach($vendedores as $item){
+		$totals='totals'.$item->codigo;
+		$$totals=0;
+		/*Suma por vendedores*/
+		$sums='sums'.$item->codigo;
+		$$sums=0;
+		$sumls='sumls'.$item->codigo;
+		$$sumls=0;
+			
+			?>
+		<td width="236" align="right" style="border-right:#CCC solid 1px;">VEND<?php echo $item->codigo?></td>
+        <?php }?>
+        
+        <?php foreach($vendedores as $item){
+			$totald='totald'.$item->codigo;
+			$$totald=0;
+			$sumd='sumd'.$item->codigo;
+			$$sumd=0;
+			$sumld='sumld'.$item->codigo;
+			$$sumld=0;	
+			?>
+	  <td width="224" align="right" style="border-right:#CCC solid 1px;">VEND<?php echo $item->codigo?></td>
+        <?php }?>
+	  <td>&nbsp;</td>
+	</tr>
+    
+	<tr>
+		<td>&nbsp;</td>
+		<td align="left">ABONOS DEL DIA</td>
+		<?php foreach($vendedores as $item){?>
+			<?php  foreach($abonos_dia as $s){
+				if($item->id==$s->id){
+					${'sums'.$item->codigo}=${'sums'.$item->codigo}+$s->totalS;
+				?>
+            	<td width="236" align="right" style="border-right:#CCC solid 1px;"><?php //echo $s->id.'='.$item->id.'-----------'; 
+				echo number_format($s->totalS,2,'.',',')?></td>
+             <?php }
+			 }?>
+        <?php }?>
+		<?php foreach($vendedores as $item){?>
+			<?php  foreach($abonos_dia as $s){
+				if($item->id==$s->id){
+				  ${'sumd'.$item->codigo}=${'sumd'.$item->codigo}+$s->totalD;
+				?>
+   	  <td width="224" align="right" style="border-right:#CCC solid 1px;">
+	  <?php echo number_format($s->totalD,2,'.',',')?></td>
+             <?php }
+			 }?>
+        <?php }?>
+		<td>&nbsp;</td>
+	</tr>    
+	<tr>
+		<td>&nbsp;</td>
+		<td align="left">ACUMULADO AYER</td>
+		<?php foreach($vendedores as $item){?>
+			<?php  foreach($abonos_mes as $s){
+				if($item->id==$s->id){
+					${'sums'.$item->codigo}=${'sums'.$item->codigo}+$s->totalS;
+				?>
+            	<td width="236" align="right" style="border-right:#CCC solid 1px;"><?php //echo $s->id.'='.$item->id.'-----------'; 
+				echo number_format($s->totalS,2,'.',',')?></td>
+             <?php }
+			 }?>
+        <?php }?>
+		<?php foreach($vendedores as $item){?>
+			<?php  foreach($abonos_mes as $s){
+				if($item->id==$s->id){
+				  ${'sumd'.$item->codigo}=${'sumd'.$item->codigo}+$s->totalD;
+				?>
+   	  <td width="224" align="right" style="border-right:#CCC solid 1px;">
+	  <?php echo number_format($s->totalD,2,'.',',')?></td>
+             <?php }
+			 }?>
+        <?php }?>
+		<td>&nbsp;</td>
+	</tr>
+    <tr>
+		<td>&nbsp;</td>
+		<td align="left"><b>ACUMULADO TOTAL</b></td>
+		<?php foreach($vendedores as $item){?>
+        <td width="236" align="right" style="border-right:#CCC solid 1px;"><b><?php echo number_format(${'sums'.$item->codigo},2,'.',',');?></b></td>
+        <?php }?>
+		<?php foreach($vendedores as $item){?>
+        <td width="224" align="right" style="border-right:#CCC solid 1px;"><b><?php echo number_format(${'sumd'.$item->codigo},2,'.',',');?></b></td>
+        <?php }?>
+		<td>&nbsp;</td>
+	</tr>    
+    <tr>
+		<td>&nbsp;</td>
+		<td align="left">LETRAS CANCELADAS AC</td>
+		<?php foreach($vendedores as $item){
+			${'LC_s'.$item->codigo}=0;
+			?>
+			<?php  foreach($letras_canceladas as $s){
+				if($item->id==$s->id){
+					${'sumls'.$item->codigo}=${'sumls'.$item->codigo}+$s->totalS;
+					${'LC_s'.$item->codigo}=$s->totalS;
+				?>
+            	<td width="236" align="right" style="border-right:#CCC solid 1px;"><?php //echo $s->id.'='.$item->id.'-----------'; 
+				echo number_format($s->totalS,2,'.',',')?></td>
+             <?php }
+			 }?>
+        <?php }?>
+		<?php foreach($vendedores as $item){
+			
+			${'LC_d'.$item->codigo}=0;
+			?>
+			<?php  foreach($letras_canceladas as $s){
+				if($item->id==$s->id){
+				  ${'sumld'.$item->codigo}=${'sumld'.$item->codigo}+$s->totalD;
+				  
+					${'LC_d'.$item->codigo}=$s->totalD;
+				?>
+   	  <td width="224" align="right" style="border-right:#CCC solid 1px;"><?php echo number_format($s->totalD,2,'.',',')?></td>
+             <?php }
+			 }?>
+        <?php }?>
+		<td>&nbsp;</td>
+	</tr>    
+    <tr>
+		<td>&nbsp;</td>
+		<td align="left">RETENCIONES AL DIA DE AYER</td>
+		<?php foreach($vendedores as $item){?>
+			<?php  foreach($retencion_mes as $s){
+				if($item->id==$s->id){
+					${'sumls'.$item->codigo}=${'sumls'.$item->codigo}+$s->totalS;
+				?>
+            	<td width="236" align="right" style="border-right:#CCC solid 1px;"><?php //echo $s->id.'='.$item->id.'-----------'; 
+				echo number_format($s->totalS,2,'.','')?></td>
+             <?php }
+			 }?>
+        <?php }?>
+		<?php foreach($vendedores as $item){?>
+			<?php  foreach($retencion_mes as $s){
+				if($item->id==$s->id){
+				  ${'sumld'.$item->codigo}=${'sumld'.$item->codigo}+$s->totalD;
+				?>
+   	  <td width="224" align="right" style="border-right:#CCC solid 1px;"><?php echo number_format($s->totalD,2,'.',',')?></td>
+             <?php }
+			 }?>
+        <?php }?>
+		<td>&nbsp;</td>
+	</tr>    
+    <tr>
+		<td>&nbsp;</td>
+		<td align="left">DETRACCIONES AL DIA DE AYER</td>
+		<?php foreach($vendedores as $item){?>
+			<?php  foreach($detraccion_mes as $s){
+				if($item->id==$s->id){
+					${'sumls'.$item->codigo}=${'sumls'.$item->codigo}+$s->totalS;
+				?>
+            	<td width="236" align="right" style="border-right:#CCC solid 1px;"><?php //echo $s->id.'='.$item->id.'-----------'; 
+				echo number_format($s->totalS,2,'.','')?></td>
+             <?php }
+			 }?>
+        <?php }?>
+		<?php foreach($vendedores as $item){?>
+			<?php  foreach($detraccion_mes as $s){
+				if($item->id==$s->id){
+				  ${'sumld'.$item->codigo}=${'sumld'.$item->codigo}+$s->totalD;
+				?>
+   	  <td width="224" align="right" style="border-right:#CCC solid 1px;"><?php echo number_format($s->totalD,2,'.',',')?></td>
+             <?php }
+			 }?>
+        <?php }?>
+		<td>&nbsp;</td>
+	</tr>
+    <tr>
+		<td>&nbsp;</td>
+		<td align="left"><b>TOTAL DEL MES VENDEDOR</b></td>
+		<?php foreach($vendedores as $item){?>
+        <td width="236" align="right" style="border-right:#CCC solid 1px;"><b>
+		<?php
+		${'totals'.$item->codigo}=${'totals'.$item->codigo}+(${'sums'.$item->codigo}+${'sumls'.$item->codigo});
+		 echo number_format(${'sums'.$item->codigo}+${'sumls'.$item->codigo},2,'.',',');?></b></td>
+        <?php }?>
+		<?php foreach($vendedores as $item){?>
+        <td width="224" align="right" style="border-right:#CCC solid 1px;"><b>
+		<?php 
+		${'totald'.$item->codigo}=${'totald'.$item->codigo}+(${'sumd'.$item->codigo}+${'sumld'.$item->codigo});
+		echo number_format(${'sumd'.$item->codigo}+${'sumld'.$item->codigo},2,'.',',');?></b></td>
+        <?php }?>
+		<td>&nbsp;</td>
+	</tr>
+    <tr>
+		<td colspan="<?Php echo count($vendedores)+count($vendedores)+3?>" align="center">&nbsp;</td>
+	</tr>
+    <tr>
+		<td colspan="<?Php echo count($vendedores)+count($vendedores)+3?>" align="center"><b>LETRAS ACEPTADAS DEL MES</b></td>
+	</tr>
+    <tr>
+		<th width="115">&nbsp;</th>
+	    <th width="299">&nbsp;</th>
+		<th colspan="<?Php echo count($vendedores)?>" align="center">NUEVO SOLES</th>
+		<th colspan="<?Php echo count($vendedores)?>" align="center">DOLARES AMERICANOS</th>
+		<th width="23">&nbsp;</th>
+	</tr>
+    <tr>
+		<td width="115">&nbsp;</td>
+		<td><b>LETRAS DEL MES</b></td>
+        <?php foreach($vendedores as $item){
+		/*Suma por vendedores*/
+		$sums='sums'.$item->codigo;
+		$$sums=0;
+		$sumls='sumls'.$item->codigo;
+		$$sumls=0;
+			
+			?>
+		<td width="236" align="right" style="border-right:#CCC solid 1px;">VEND<?php echo $item->codigo?></td>
+        <?php }?>
+        
+        <?php foreach($vendedores as $item){
+			$sumd='sumd'.$item->codigo;
+			$$sumd=0;
+			$sumld='sumld'.$item->codigo;
+			$$sumld=0;	
+			?>
+	  <td width="224" align="right" style="border-right:#CCC solid 1px;">VEND<?php echo $item->codigo?></td>
+        <?php }?>
+	  <td>&nbsp;</td>
+	</tr>   
+	<tr>
+		<td>&nbsp;</td>
+		<td align="left">DEL DIA</td>
+		<?php foreach($vendedores as $item){?>
+			<?php  foreach($aceptadas_dia as $s){
+				if($item->id==$s->id){
+					${'sums'.$item->codigo}=${'sums'.$item->codigo}+$s->totalS;
+				?>
+            	<td width="236" align="right" style="border-right:#CCC solid 1px;"><?php //echo $s->id.'='.$item->id.'-----------'; 
+				echo number_format($s->totalS,2,'.',',')?></td>
+             <?php }
+			 }?>
+        <?php }?>
+		<?php foreach($vendedores as $item){?>
+			<?php  foreach($aceptadas_dia as $s){
+				if($item->id==$s->id){
+				  ${'sumd'.$item->codigo}=${'sumd'.$item->codigo}+$s->totalD;
+				?>
+   	  <td width="224" align="right" style="border-right:#CCC solid 1px;"><?php echo number_format($s->totalD,2,'.',',')?></td>
+             <?php }
+			 }?>
+        <?php }?>
+		<td>&nbsp;</td>
+	</tr> 
+    <tr>
+		<td>&nbsp;</td>
+		<td align="left">ACUMULADAS AYER</td>
+		<?php foreach($vendedores as $item){?>
+			<?php  foreach($aceptadas_mes as $s){
+				if($item->id==$s->id){
+					${'sums'.$item->codigo}=${'sums'.$item->codigo}+$s->totalS;
+				?>
+            	<td width="236" align="right" style="border-right:#CCC solid 1px;"><?php //echo $s->id.'='.$item->id.'-----------'; 
+				echo number_format($s->totalS,2,'.',',')?></td>
+             <?php }
+			 }?>
+        <?php }?>
+		<?php foreach($vendedores as $item){?>
+			<?php  foreach($aceptadas_mes as $s){
+				if($item->id==$s->id){
+				  ${'sumd'.$item->codigo}=${'sumd'.$item->codigo}+$s->totalD;
+				?>
+   	  <td width="224" align="right" style="border-right:#CCC solid 1px;"><?php echo number_format($s->totalD,2,'.',',')?></td>
+             <?php }
+			 }?>
+        <?php }?>
+		<td>&nbsp;</td>
+	</tr>
+    <tr>
+		<td>&nbsp;</td>
+		<td align="left"><b>ACUMULADO TOTAL</b></td>
+		<?php foreach($vendedores as $item){?>
+        <td width="236" align="right" style="border-right:#CCC solid 1px;"><b>
+		<?php 
+		${'totals'.$item->codigo}=${'totals'.$item->codigo}+(${'sums'.$item->codigo});
+		echo number_format(${'sums'.$item->codigo},2,'.',',');?></b></td>
+        <?php }?>
+		<?php foreach($vendedores as $item){?>
+        <td width="224" align="right" style="border-right:#CCC solid 1px;"><b>
+		<?php 
+		${'totald'.$item->codigo}=${'totald'.$item->codigo}+(${'sumd'.$item->codigo});
+		echo number_format(${'sumd'.$item->codigo},2,'.',',');?></b></td>
+        <?php }?>
+		<td>&nbsp;</td>
+	</tr>
+    
+    
+    <tr>
+		<td>&nbsp;</td>
+		<td align="left"><b>TOTAL DEL MES</b></td>
+		<?php foreach($vendedores as $item){?>
+        <td width="236" align="right" style="border-right:#CCC solid 1px;"><b>
+		<?php 
+		$TOTAL_MES_s=${'totals'.$item->codigo}-${'LC_s'.$item->codigo};
+		echo number_format($TOTAL_MES_s,2,'.',',');?>
+        </b></td>
+        <?php }?>
+		<?php foreach($vendedores as $item){?>
+        <td width="224" align="right" style="border-right:#CCC solid 1px;"><b>
+		<?php 
+		
+		$TOTAL_MES_d=${'totald'.$item->codigo}-${'LC_d'.$item->codigo};
+		echo number_format($TOTAL_MES_d,2,'.',',');?></b></td>
+        <?php }?>
+		<td>&nbsp;</td>
+	</tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td align="left">&nbsp;</td>
+      <td align="right" style="border-right:#CCC solid 1px;">&nbsp;</td>
+      <td align="right" style="border-right:#CCC solid 1px;">&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+		<td colspan="<?Php echo count($vendedores)+count($vendedores)+3?>" align="center">&nbsp;</td>
+	</tr>
+    
+    <tr>
+		<td colspan="<?Php echo count($vendedores)+count($vendedores)+3?>" align="center">
+        <table ialign="center" cellpadding="0" cellspacing="0">
+	<thead>
+    
+	<tr>
+		<th colspan="5"><b>IGV DEL MES</b>- RESUMEN</th>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<th width="305">&nbsp;</th>
+		<th width="148" align="right">SUBTOTAL</th>
+		<th width="99" align="right">IGV</th>
+		<th width="112" align="right">TOTAL  SOLES</th>
+	</tr>
+    <tr>
+		<td>&nbsp;</td>
+		<td align="left">CREDITO MES ANTERIOR</td>
+		<td align="right"></td>
+    	<td align="right"><?php 
+		$DIA = explode('-',$fecha_D);
+		if(!$SALDOS->igv_mes_ant){echo Html::link('admin/reportes','Agregar credito fiscal');}else{echo $SALDOS->igv_mes_ant;echo form::hidden('igv_mes_ant','',$SALDOS->igv_mes_ant);}?></td>
+    	<td align="right"></td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td align="left">VENTAS</td>
+		<td align="right"><?php echo number_format($SOLES_V["sub"],2,'.',',')?></td>
+    	<td align="right"><?php echo number_format($SOLES_V["igv"],2,'.',',')?></td>
+    	<td align="right"><?php echo number_format($SOLES_V["total"],2,'.',',')?></td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td align="left">COMPRAS</td>
+		<td align="right"><?php echo number_format($SOLES_C["sub"],2,'.',',')?></td>
+    	<td align="right"><?php echo number_format($SOLES_C["igv"],2,'.',',')?></td>
+    	<td align="right"><?php echo number_format($SOLES_C["total"],2,'.',',')?></td>
+	</tr>
+	<tr>
+		<th>&nbsp;</th>
+		<th colspan="2" align="right">IGV A PAGAR</th>
+		<td align="right" style="border-top:1px solid #333 !important;"><?php echo number_format($SOLES_V["igv"],2,'.','')- number_format($SOLES_C["igv"],2,'.','')-$SALDOS->igv_mes_ant;?></td>
+		<th>&nbsp;</th>
+	</tr>
+</table>
+        
+        </td>
+	</tr>
+    </tbody>
+</table>
+<?Php echo Form::hidden('nombre','','Reporte Diario');?>
+<?Php echo Form::hidden('cuerpo');?>
+<?Php echo Form::hidden('fecha','',$fecha_D);?>
+<?Php echo Form::hidden('monto_uno','',$SALDO_ACTUAL_SOLES);?>
+<?Php echo Form::hidden('monto_dos','',$SALDO_ACTUAL_DOLARES);?>
+<?Php echo Form::hidden('monto_tres');?>
+<?Php echo Form::hidden('monto_cuatro');?>
+</form>
+</div>
+<?php 
+//print_r($SALDO_ACTUAL_SOLES); ?>
+<br /><?php //print_r($SALDO_ACTUAL_DOLARES); ?>
+<script type="text/javascript">
+function GRABAR()
+{
+    $("#cuerpo").val( $("<div>").append( $("div.page").eq(0).clone()).html());
+	//alert($("#cuerpo").val());
+	
+	//alert($("#reporte").serialize());
+	$.ajax({
+            type:"POST",
+            url:"/<?php echo $module_name?>/<?php echo $controller_name?>/salvar_reportes/1",
+            data:$("#reporte").serialize(),
+            beforeSend:function(){
+              $("#loading").show();
+          	},
+            success:function(response){
+                $("#loading").hide();
+				//$("#id").val(response);
+				alert(response);
+            }
+ 
+          	});
+ 
+};
+</script>
+<?Php /*}else
+{
+	echo "<h2>Aun no a generado el reporte para el ";
+	echo Sp::formatFecha('%d',$fecha_2).' ';
+	echo Sp::getMes($fecha_2).' ';
+	echo "</h2>";
+}*/?>

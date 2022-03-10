@@ -1,0 +1,30 @@
+<?php View::content()?>
+<div id="ingreso">
+
+</div>
+ <table width="80%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped"><caption>Rollos en Guia</caption>
+ <thead>
+  <tr>
+    <th width="9%">Codigo</th>
+    <th width="17%">Cantidad</th>
+    <th width="11%">Unidad</th>
+    <th width="53%">Descripcion</th>
+    <th width="10%">Accion</th>
+  </tr>
+ </thead>
+ <tbody>
+  <?php 
+  $n=0;
+  foreach($detalles as $item){
+	  $n++;
+	  ?> 
+  <tr id="<?php echo $item->id?>">
+    <td><?php echo $n.'.'; echo $item->getProrollos()->codigo?>-<?php echo $item->getProrollos()->numeroventa; echo ' '.$item->getProrollos()->getNprocesos($item->prorollos_id);?></td>
+    <td><?php echo $item->cantidad?></td>
+    <td><?Php echo $item->getTesunidadesmedidas()->simbolo?></td>
+    <td><?php echo $item->getTesproductos()->detalle?> <?Php echo $item->getTescolores()->nombre?></td>
+    <td><?php echo Ajax::link($module_name.'/rollos/grabarventatelas_i/0/'.$item->id,'Editar','ingreso','btn','id="'.$item->prorollos_id.'"')?> <?php echo Html::link($module_name.'/rollos/borrarventarollos_i/'.$item->id.'/'.$item->prorollos_id.'/','Elminar','mostrar','id="'.$item->prorollos_id.'"')?></td>
+  </tr>
+  <?php }?>
+  </tbody>
+</table>

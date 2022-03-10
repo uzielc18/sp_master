@@ -1,0 +1,20 @@
+<style type="text/css">
+.span_float
+{
+	float:right !important;
+	margin-left:0px;
+	margin-right:-5px;
+}
+</style>
+<div class="card">
+    <h1>Ordenes de Compra<span>Ordenes de Compra - Clientes - Proveedores</span><div class="icoimg-compras"></div></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div id="ver_resultado"></div>
+
+<div class="form-actions">
+    <?php echo Html::linkAction("listado/interno", 'Orden De Compra '.$empresa->nombre,'class="btn btn-primary"') ?>
+	<?php echo Html::linkAction("listado/externo", 'Pedido Clientes','class="btn btn-primary"') ?>
+</div>

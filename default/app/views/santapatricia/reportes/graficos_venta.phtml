@@ -1,0 +1,99 @@
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$(function () {
+        $('#reporte').highcharts({
+            chart: {
+                type: 'column',
+                margin: [ 50, 50, 100, 80]
+            },
+            title: {
+                text: 'VENTAS POR MES'
+            },
+            xAxis: {
+                categories: [
+			<?php 
+			$n=0;
+			foreach($valores as $mes):?>
+            <?php
+			 if($n!=0) echo ","; 
+			 echo "'".$mes->fecha."'";
+			$n++;
+			?>
+            <?Php endforeach;?>
+                    
+                ],
+                labels: {
+                    rotation: -45,
+                    align: 'right',
+                    style: {
+                        fontSize: '13px',
+                        fontFamily: 'Verdana, sans-serif'
+                    }
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Ventas'
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            tooltip: {
+                pointFormat: 'Ventas en : <b>{point.y:.1f} miles</b>',
+            },
+            series: [{
+                name: 'Ventas',
+                data: [
+				<?php 
+			$n=0;
+			foreach($valores as $venta):?>
+            <?php
+			 if($n!=0) echo ","; 
+			 echo number_format($venta->total,2,'.','');
+			$n++;
+			?>
+            <?Php endforeach;?>
+				],
+                dataLabels: {
+                    enabled: true,
+                    rotation: -90,
+                    color: '#FFFFFF',
+                    align: 'right',
+                    x: 4,
+                    y: 10,
+                    style: {
+                        fontSize: '13px',
+                        fontFamily: 'Verdana, sans-serif',
+                        textShadow: '0 0 3px black'
+                    }
+                }
+            }]
+        });
+    });
+    
+
+	
+});
+</script>
+        
+<?Php echo Tag::js('jquery/graficos/js/highcharts');?>
+<?Php echo Tag::js('jquery/graficos/js/modules/exporting');?>
+<?php View::content();?>
+<?php echo Menu::menuReportes($action_name);?>
+
+<?php echo Sp::imprimir('Graficos Venta','P');?>
+
+<div class="card">
+    <h1>Repote</h1>
+</div>
+
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="card-body">
+<div id="reporte" style="min-width: 500px; height:auto; margin: 0 auto"></div>
+</div>

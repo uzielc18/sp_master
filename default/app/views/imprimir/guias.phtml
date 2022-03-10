@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+ <html lang="es">
+	<head>
+    	<meta charset='UTF-8' />
+        <title>Santa Patricia</title>
+        <link href="/css/backend/bootstrap.css" rel="stylesheet" type="text/css" media="screen" />
+		<link href="/css/backend/estilos.css" rel="stylesheet" type="text/css" media="screen" />
+        </head>
+    <body>
+    <div id='cabecera' class="navbar navbar-fixed-top">
+ 	<div class="navbar-inner">
+        <div class="container">
+            <a href="/" class="brand" >Bienvenidos a la Intranet</a>
+        </div>
+    </div>
+    </div>  
+	<div class="container">
+            <div id="contenido" class="content">
+            <div class="span12">
+               <?php 
+$monedas= $salida->tesmonedas_id;
+switch ($monedas)
+{
+	case 1: $simbolo='S/ ';$moneda_letras='SOLES'; break;
+	case 2: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 4: $simbolo='S/ ';$moneda_letras='SOLES';  break;
+	case 5: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 0: $simbolo='S/ ';$moneda_letras='SOLES';  break;
+}
+if(Session::get('EMPRESAS_ID')==2)
+{
+	$EMPRESA="SANTA CARMELA S.A.C.";
+	$pre_fijo="SC-";
+}else
+{
+	$EMPRESA="TEXTIL SANTA PATRICIA S.A.";
+	$pre_fijo="SP-";
+}
+?>
+<div class="page-header">
+<h1>Vista pevia <span>Documento a imprimir</span></h1>
+</div>
+<div class="page">
+<?Php
+$cod_1=$salida->npedido;
+ $MOV=explode("-",$salida->npedido);
+echo $salida->tesdocumentos_id;
+echo $MOV[0];
+$m_t=" ";
+$m_v=" ";
+$m_e=" ";
+$m_ti=" ";
+$m_o=" ";
+$m_d=" ";
+if($MOV[0]=='TI')$m_t="X";elseif($MOV[0]=='PL')$m_t="X";elseif($MOV[0]=='VT')$m_v="X";elseif($MOV[0]=='TE')$m_v="X";elseif($MOV[0]=='PT')$m_v="X";elseif($MOV[0]=='HL')$m_t="X";else $m_o="X";
+?>
+Numero de doc : <?php 
+$guia=$salida->numero;
+$cod='';
+if($salida->serie=="999"){if(!empty($salida->numero_salida_ruc)){$guia=$salida->numero_salida_ruc;}$cod=$salida->numero;}
+echo $guia;
+?><br />
+Codigo de doc : <?php echo $cod;?><br />
+Hora <?php echo $hora=date("H:i:s");?><br />
+<?php $femision=Sp::formatFecha("%d/%m/%Y",$salida->femision)?>
+<?php $finiciotraslado=Sp::formatFecha("%d/%m/%Y",$salida->finiciotraslado)?>
+<?php $direccion_partida=utf8_decode($empresa->direccion)?>
+<?php $direccion_llegada=utf8_decode($salida->direccion_entrega)?>
+Razon Social : <?php echo $razonsocial=utf8_decode($salida->getTesdatos()->razonsocial); ?>
+<?Php if(!empty($salida->getTesdatos()->codigo_ant)) $codigo=$salida->getTesdatos()->codigo_ant; else $codigo= $salida->getTesdatos()->codigo."-".$salida->getTesdatos()->sufijo;
+echo $codigo;?><br />
+
+<?php $direccion=utf8_decode($salida->getTesdatosdirecciones()->direccion)?>
+<?php $distrito=$salida->getTesdatosdirecciones()->distrito.' - '.$salida->getTesdatosdirecciones()->provincia.' - '.$salida->getTesdatosdirecciones()->departamento;?>
+<?php $ruc=$salida->getTesdatos()->ruc?>
+<?php 
+	/*if($salida->serie=="999")
+	{
+		$co_c='';
+		if(!empty($salida->getTesdatos()->codigo_ant))
+		{
+			$co_c=$salida->getTesdatos()->codigo_ant;
+		}else
+		{
+			$co_c=$salida->getTesdatos()->codigo;
+		}
+	$ruc=$salida->getTesdatos()->ruc.' '.$co_c;
+	}*/?>
+<?php if($prodetalletransportes)$vehiculo=$prodetalletransportes->getProtransportes()->marca;else $vehiculo='NO ASIGNADO';?>
+<?php $certificado=" ";?>
+<?php if($prodetalletransportes)$licencia=$prodetalletransportes->getProtransportistas()->numerobrevete;else $licencia='NO ASIGNADO';?>
+<?php if(!empty($salida->npedido))$npedido=$salida->npedido;else $npedido="-";?>
+<?php if(!empty($salida->numerofactura))$numerofactura=$salida->numerofactura;else $numerofactura="-";?>
+<?php if(!empty($salida->ordendecompra))$orden_compra=$salida->ordendecompra;else $orden_compra="-"; ?>
+<?php if(!empty($salida->getTesdatos()->tesvendedores_id))$vendedor=$salida->getTesdatos()->getTesvendedores()->codigo;else $vendedor="-";?>
+<?php $fecha=Sp::formatFecha("%d/%m/%Y",$salida->femision)?>
+<?php if($prodetalletransportes) $t_nombre=$prodetalletransportes->getProtransportistas()->nombre?>
+<?php if($prodetalletransportes) $t_domicilio=$prodetalletransportes->getProtransportistas()->direccion?>
+<?php if($prodetalletransportes) $t_ruc=$prodetalletransportes->getProtransportistas()->ruc?>
+<?php if($prodetalletransportes) $t_placa=$prodetalletransportes->getProtransportes()->numeroplaca?>
+<?php if(!empty($salida->tescondicionespagos_id)) $tipopago=$salida->getTescondicionespagos()->nombre; else  $tipopago="-";?>
+
+<?php 
+$c_1="";
+$c_2="";
+$c_2_a="";
+$c_3="";
+$c_4="";
+$c_5="";
+$c_6="";
+$a_1="";
+$a_2="";
+$a_2_2="";
+$a_3="";
+$total=0;
+$total_a=0;
+$total_i=0;
+$total_p=0;
+/* \n salto de linea */
+?>
+<?php $n_total_r=10;?>
+<?php  $n=0;$total=0;
+foreach($detalles as $item):
+	    $item->id;
+  		if($MOV[0]=='TI'){
+			$total_p=$total_p+number_format($item->pesoneto,2,'.','');/*suma el peso en las guias de tintoreria*/
+			$total=$total+number_format($item->pesoneto,2,'.','');
+			}
+		if($MOV[0]=='TE')$total=$total+number_format($item->cantidad,2,'.','');/*suma los metros en la guia venta*/
+		if($MOV[0]=='PT'){$total=$total+number_format($item->cantidad,2,'.','');if(!empty($item->importe))$total_i=$total_i+$item->importe;}/*suma los metros en la guia venta de productos*/
+		if($urdido && $pre_fijo=="SC-")$total=$total+number_format($item->cantidad,2,'.','');
+		if($MOV[0]=='TR')$total=$total+number_format($item->cantidad,2,'.','');/*suma los metros en la guia de transformaciones*/
+		/*Total metros y kilos*/
+		if($salida->serie=='999' && $MOV[0]!='PT')
+		{
+			$total_a=$total_a+number_format($item->cantidad,2,'.','');
+			if(!empty($item->importe))$total_i=$total_i+$item->importe;
+			$total=$total+number_format($item->cantidad,2,'.','');
+		}
+	  $n++;
+	 ?>
+<?php 
+if(!empty($item->tesproductos_id))
+{
+	/*TINTORERIA*/
+	if($MOV[0]=='TI')
+	{
+		if(empty($item->getProrollos()->prorollos_id))
+		{
+			$c_1.=$item->getProrollos()->numero."-".$item->getProrollos()->maquina_numero;
+		}else
+		{
+			$c_1.=$item->getProrollos()->codigo."-".$item->getProrollos()->numeroventa.''.$item->getProrollos()->getNprocesos($item->prorollos_id);
+		}
+	
+    }elseif($pre_fijo=='SP-' and $MOV[0]=='TE')/*vetnas de rollos en santa patricia*/
+	{
+		if(empty($item->getProrollos()->getTescolores()->codigo_ant))$codigo_color=$item->getProrollos()->getTescolores()->codigo;else $codigo_color=$item->getProrollos()->getTescolores()->codigo_ant;
+		$c_1.=$n.".".$item->getProrollos()->codigo."-".$codigo_color."-".$item->getProrollos()->calidad."-".$item->getProrollos()->numeroventa; 
+	}elseif($MOV[0]=='HL')
+	{
+		$c_1.=$n." ".$item->getTescajas()->numerodecaja;
+		
+	}else	
+	{
+		/*Diferentes a TI*/
+		if(empty($item->getTesproductos()->codigo_ant))
+		{
+			$c_1.=(int)$item->getTesproductos()->codigo ;
+		}else
+		{
+			$c_1.=(int)$item->getTesproductos()->codigo_ant;
+		}
+	if($MOV[0]=='PL')$c_1.=" (".$item->getTesproductos()->getProplegadores()->numero.")";
+	if($MOV[0]=='UR')$c_1.=" (".$item->concepto.")";
+    }
+}
+	  
+	  $c_1.="\par\n";
+?>
+<?php 
+	/*Tintoreria*/
+	if($MOV[0]=="TI")
+	{
+		$c_2.=number_format($item->pesoneto,2,'.','');
+		if($salida->serie=='999'){$c_2_a.=number_format($item->cantidad,2,'.','');$c_2_a.="\par\n";}
+	}
+	
+	/*Diferente a Tintoreria*/
+	if($MOV[0]!='TI')
+	{
+		if(!empty($item->cantidad))
+		{
+			$c_2.=number_format($item->cantidad,2,'.','');
+		}else
+		{
+			$c_2.=number_format($item->pesoneto,2,'.','');
+		}
+	}
+	
+	  $c_2.="\par\n";
+?>
+<?Php 
+if($MOV[0]=='TI'){$c_3.="KLS";}
+
+if($MOV[0]!='TI'){$c_3.=$item->getTesunidadesmedidas()->simbolo;}
+	  $c_3.="\par\n";?>
+<?php 
+/*$detalle para tintoreria*/
+if($MOV[0]=="TI")
+{
+if(empty($item->getTesproductos()->codigo_ant))
+		{
+			$cod_ti=$item->getTesproductos()->codigo ;
+		}else
+		{
+			$cod_ti=$item->getTesproductos()->codigo_ant;
+		}
+	
+$c_4.=number_format($item->cantidad,2,'.','')." /".$cod_ti." ";
+}
+if(!empty($item->tesproductos_id))
+{
+	/*if($pre_fijo=='SC-' and $MOV[0]=='TR')$c_4.=utf8_decode($item->getTesproductos()->detalle.' '.$item->getTesproductos()->nombre);*/
+	if($item->getTesproductos()->detalle==$item->getTesproductos()->nombre)$c_4.=utf8_decode($item->getTesproductos()->nombre);/**/
+	if($item->getTesproductos()->detalle!=$item->getTesproductos()->nombre)$c_4.=utf8_decode($item->getTesproductos()->detalle.' '.$item->getTesproductos()->nombre);/**/
+	
+}else
+{
+	$c_4.=utf8_decode($item->concepto);
+}
+if($MOV[0]=='HL')$c_4.=" Color:".$item->getTescolores()->nombre." Lote:".$item->lote;
+if($pre_fijo=='SP-' and $MOV[0]=='TE')$c_4.=' '.$item->getProrollos()->getTescolores()->nombre;
+if($pre_fijo=='SC-'){if(!empty($item->tescolores_id))$c_4.=' '.$item->getTescolores()->nombre;else $c_4='';}
+if($pre_fijo=='SP-' and $salida->serie=="999")
+{
+	if(!empty($item->prorollos_id))$c_4.=' '.$item->getProrollos()->getTescolores()->nombre; else $c_4.=' '.$item->getTescolores()->nombre;
+}
+$c_4.="\par\n";
+if($salida->serie=="999"){
+if(!empty($item->preciounitario))$c_5.=$simbolo.number_format($item->preciounitario,2,'.','');
+if(!empty($item->preciounitario))$c_5.="\par\n";
+if(!empty($item->importe))$c_6.=$simbolo.number_format($item->importe,2,'.','');
+if(!empty($item->importe))$c_6.="\par\n";
+}
+?>
+
+<?php endforeach;?>
+<?php
+/**/
+if($salida->serie=="999"){$total_i=$simbolo.number_format($total_i,2,'.','');}
+/**/
+if($MOV[0]=='HL')
+{
+	$T=explode("-",$item->getTotales(Session::get('SALIDA_ID')));
+	$c_1.="TOTAL PN";
+	$c_2.=number_format($T[0],2,'.','');
+	$c_3.="Kilos";
+	$c_4.="Cajas y/o Bolsas: ".$T[1]." Conos: ".$T[2];
+}
+if($MOV[0]=='TI')
+{
+if($salida->serie!='999'){$c_2.=number_format($total,2,'.','');$c_3.="Kilos";}
+if($salida->serie=="999"){ }
+}
+if($MOV[0]=='TR')
+{
+$c_4.="\par\n";	
+$c_4.="\par\n";
+$c_4.="*".utf8_decode($salida->glosa);
+}
+/*PLEGADOR*/
+if($salida->glosa && $MOV[0]=='PL')
+{
+		  $c_4.="\par\n";
+		  $c_4.="\par\n";
+		  $c_4.="\par\n";
+		  $c_4.="\par\n";
+		  $c_4.='Titulo \t :'.$titulo_hilo;
+		  $c_4.="\par\n";
+		  $c_4.="Color \t :".$color;
+		  $c_4.="\par\n";
+		  $c_4.="Ancho \t :".$ancho;
+		  $c_4.="\par\n";
+		  $c_4.="Num. de hilos \t :".$nhilos;
+		  $c_4.="\par\n";
+		  if($total!=0)$c_4.="TOTAL:".$total;
+		  $c_4.="\par\n";
+		  $c_4.="Metros \t :".$metros;
+}
+if($urdido && $pre_fijo=="SC-")
+{
+	//$c_4.=$salida->id.' = '.$urdido->tessalidas_id." \par\n";
+	$c_4.="\par\n";
+	$c_4.="\par\n";
+	$c_4.="\par\n";
+	$c_4.="\par\n";
+	$c_4.='Titulo \t :'.$urdido->getTesproductos()->nombre;
+	$c_4.="\par\n";
+	$c_4.="Color \t :".$urdido->colores;
+	$c_4.="\par\n";
+	$c_4.="Ancho \t :".$urdido->ancho;
+	$c_4.="\par\n";
+	$c_4.="# Hilos \t :".$urdido->numerohilos;
+	$c_4.="\par\n";
+	$c_4.="TOTAL \t :".$urdido->totalkilos;
+	$c_4.="\par\n";
+	$c_4.="Metros \t :".$urdido->metros;
+}
+
+/*TITNTORERIA*/
+if($proceso)
+{
+	$WordArray =explode( ',',$proceso->tipo_de_fibra);
+	$WordArray=implode(',',array_unique($WordArray)); 
+	$a_1.="Tipo de Fibra: ".$WordArray;
+	$a_1.="\par\n";
+	$color_proceso='';
+	if(!empty($proceso->tescolores_id))$color_proceso=$proceso->getTescolores()->nombre;
+    $a_1.="Color: ".$color_proceso;
+	$a_1.="\par\n";
+	$a_1.="Ancho requerido: ".$proceso->ancho_requerido;
+	$a_1.="\par\n";
+	$a_1.="Rendimiento:".$proceso->rendimiento;
+	$a_2.="ACABADOS:";
+	$a_2.="\par\n";
+	foreach($detalle_A as $det){
+		$a_2.=utf8_decode($det->nombre)." (SI)";
+		$a_2.="\par\n";
+    		}
+	$a_2_2.="ACABADOS ESPECIALES:";
+	$a_2_2.="\par\n";
+	foreach($detalle_B as $det){
+		$a_2_2.=utf8_decode($det->nombre)." (SI)";
+		$a_2_2.="\par\n";
+		}
+		$a_3.="Observaciones: ".utf8_decode($proceso->detalle);
+		$a_3.="\par\n";
+		$a_3.="No Cortar Marcas";
+	
+	
+}	  	  
+?>
+<?php echo $c_2 ?> <br />
+Metros:<?php echo $total_a ?> <br />
+Peso:<?php echo $total_p?><br />
+Total: <?Php echo $total?><br />
+Total cantidad=<?php echo $total_i?><br />
+<?php $c_2?>
+<?php $c_4?>
+<?php $m_t;?>
+<?php
+// Lee la plantilla
+$plt="guia.rtf";
+if($salida->serie=="999"){$plt="detalle_guia.rtf";
+if($salida->tesdocumentos_id==13 || $salida->tesdocumentos_id==14)
+{
+	$REFERENCIA=$salida->glosa;
+	$html = nl2br($item->concepto);
+	$nl = preg_replace('#<br\s*/?>#i', "\par\n", $html);
+	$CONCEPTO=utf8_decode($nl);
+	$TEXTO=NumerosLetras::NL(number_format($salida->total,2,'.',''),$moneda_letras);
+	if($salida->tesdocumentos_id==13){$Ntipo='NOTA DE CREDITO';$plt="detalle_nota.rtf";}
+	if($salida->tesdocumentos_id==14){$Ntipo='NOTA DE DEBITO';$plt="detalle_nota.rtf";}
+}
+}
+if($MOV[0]=='TI' & $salida->serie=="002"){$plt="guia_002.rtf";}
+if($MOV[0]=='PL' & $salida->serie=="002"){$plt="guia_002.rtf";}
+if($MOV[0]=='TI' & $salida->serie=="999"){$plt="detalle_tintoreria.rtf";}
+$plantilla = file_get_contents($plt);
+//Agregamos los escapes necesarios
+$plantilla = addslashes($plantilla);
+//$plantilla = str_replace('\r','\\r',$plantilla);
+//$plantilla = str_replace('\t','\\t',$plantilla); 
+//Datos de la plantilla
+//Procesa la plantilla
+eval('$rtf = <<<EOF_RTF
+' . $plantilla . '
+EOF_RTF;
+' );
+$archivo_nombre=$pre_fijo."G".$salida->serie."-".$salida->numero.".rtf";
+// Guarda el RTF generado, el nombre del RTF en este caso sera el apellido-nombre.fechaactual.rtf
+file_put_contents("./guias/".$archivo_nombre,$rtf);
+$ruta=base64_encode("./guias/".$archivo_nombre);
+//chmod("./facturas/".$archivo_nombre, 0444);if(Auth::get('id')==3)
+
+echo Html::linkAction('descargar/'.$ruta,'descargar','class="btn btn-warning"');
+
+//chmod("./guias/".$archivo_nombre, 0444);
+//echo "<a href=\"/guias/".$archivo_nombre."\" class='btn btn-info'>descargar</a>";?>
+<?php if(Auth::get('id')==3){ /*?><embed src="http://<?php echo $_SERVER['SERVER_NAME']."/guias/".$archivo_nombre;?>" type="text/rtf"></embed>
+<?php */}?>
+<div style="clear:both;"></div>
+		</div>
+        <div style="clear:both;"></div>
+			</div>
+            <div style="clear:both;"></div>
+            </div>
+    </div> 
+    </body>
+</html>
+

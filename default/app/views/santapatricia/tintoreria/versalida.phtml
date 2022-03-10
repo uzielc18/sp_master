@@ -1,0 +1,65 @@
+<div class="card">
+    <h1><em>Detalle de Doc.<span><?php echo Session::get('DOC_NOMBRE')?></span></em></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="card-body">
+<div class="hoja">
+<div id="guia">
+<table width="75%" border="0" cellpadding="0" cellspacing="1" class="table table-hover">
+<strong>Rollos en Guia</strong>
+
+  <tr>
+    <th width="13%" align="left">Codigo</th>
+    <th width="15%" align="left">Cantidad</th>
+    <th width="11%" align="left">Unidad</th>
+    <th width="61%" align="left">Descripcion</th>
+  </tr>
+  <?php 
+  $n=0;
+  foreach($detalles as $item){
+	  $n++;
+	  ?> 
+  <tr id="<?php echo $item->id?>">
+    <td><?php echo $n?>. <?php if(empty($item->getProrollos()->prorollos_id)){echo $item->getProrollos()->numero?>-M<?php echo $item->getProrollos()->maquina_numero;}else{echo $item->getProrollos()->codigo?>-<?php echo $item->getProrollos()->numeroventa; echo ' '.$item->getProrollos()->getNprocesos($item->prorollos_id);}?></td>
+    <td><?php echo $item->pesoneto?></td>
+    <td><?Php echo $item->getTesunidadesmedidas()->simbolo?></td>
+    <td><?php echo $item->getTesproductos()->detalle?> <?php echo $item->getTesproductos()->nombre?> <?Php echo $item->getTescolores()->nombre?></td>
+  </tr>
+  <?php }?>
+</table>
+</div>
+<div class="input-prepend">
+    	<p><span class="add-on">Tipo de Fibra:</span>
+    	<?php echo $proceso->tipo_de_fibra;?>	 	<span class="add-on"><strong>Color: </strong></span>
+    		<?php if(!empty($proceso->tescolores_id))echo $proceso->getTescolores()->nombre;?><br />
+    		<span class="add-on">Ancho requerido:</span>
+    		<?php echo $proceso->ancho_requerido;?><br />
+    		<span class="add-on">Rendimiento:</span>
+    		<?php echo $proceso->rendimiento;?><br />
+    		<?php foreach($detalle_A as $det){?>
+    		<span class="add-on"><?php echo $det->getProacabados()->nombre;?></span>
+    		<i class="icon-ok"></i><br />
+    		<?php }?>
+   		<span class="add-on">Observaciones:</span></p>
+    <?php echo $proceso->detalle;?>
+</div> 
+<?php echo Form::open(NULL,'POST','class="form-inline"')?>
+<?php echo Form::hidden('salida.id')?>
+<?php echo Form::hidden('salida.aclusuarios_id')?>
+<?php echo Form::hidden('salida.tesmonedas_id')?>
+<?php echo Form::hidden('salida.tesdatos_id')?>
+<?php echo Form::hidden('salida.tesdocumentos_id')?>
+<?php echo Form::hidden('salida.testipocambios_id')?>
+<?php echo Form::hidden('salida.estadosalida','','Enviado')?>
+<?php if($salida->estadosalida=='Editable'){?><button type="submit" class="btn btn-primary" title="Si Usted, cree que ya terminó, entonces Terminar, sino haga Clic en Editar, para verificar los datos ingresados">Terminar</button> 
+<?php echo Html::linkAction('agregardetalles','Editar','class="btn"')?><?Php }else{?><?php echo Html::linkAction('salidas','Listado','class="btn"')?> <?php //echo Html::linkAction('versalida_i','Imprimir','class="btn"')?><?php }?>
+<?php echo Form::close();?>
+<button onclick="myFunction()" class="btn btn-info"> IMPRIMIR </button>
+
+<script>
+function myFunction() {
+    window.open("http://"+document.domain+"/imprimir/guias", "_blank", "toolbar=NO, scrollbars=yes, resizable=yes, top=100, left=250, width=600, height=400");
+}
+</script>

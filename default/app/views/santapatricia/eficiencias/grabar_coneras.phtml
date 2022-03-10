@@ -1,0 +1,84 @@
+<div class="card">
+    <h1>Grabar Produccion de las Coneras</h1>
+</div>
+ <div class="form-actions">
+ <?Php //echo Html::linkAction('grabar_coneras')?>
+<?php /*?><a href="/<?Php echo $module_name;?>/<?Php echo $controller_name;?>/" class="btn btn-primary">Tejeduria</a>
+<a href="/<?Php echo $module_name;?>/<?Php echo $controller_name;?>/index/140" class="btn btn-primary">Hilatura-Chenillera</a>
+<a href="/<?Php echo $module_name;?>/<?Php echo $controller_name;?>/index/141" class="btn btn-primary">Urdido</a>
+<a href="/<?Php echo $module_name;?>/<?Php echo $controller_name;?>/index/142" class="btn btn-primary">Control de Calidad</a>
+<a href="/<?Php echo $module_name;?>/<?Php echo $controller_name;?>/index/143" class="btn btn-primary">Estampado</a>
+<a href="/<?Php echo $module_name;?>/<?Php echo $controller_name;?>/index/144" class="btn btn-primary">Soporte</a>
+<a href="/<?Php echo $module_name;?>/<?Php echo $controller_name;?>/index/163" class="btn btn-primary">Enconado</a><?php */?>
+</div>
+<div class="card-body">
+<h2>Ver los resultados de las coneras</h2>
+<?php echo Form::open(NULL,'POST','class="form-horizontal"');?>
+<fieldset>
+<?php echo Form::hidden('grabar.valor');?>
+<div class="control-group">
+    <label class="control-label">Fecha Inicio</label>
+    <div class="controls">  <?php echo Calendar::text('fecha_inicio');?>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label">Hora Inicio</label>
+    <div class="controls">  <?php echo Form::text('hora_inicio','placeholder="H:i:s" size="6"');?>
+    </div>
+</div>
+<div class="control-group"> <label class="control-label">Fecha Fin</label> 
+	<div class="controls"><?php echo Calendar::text('fecha');?>
+	</div>
+<div class="control-group">
+    <label class="control-label">Hora Fin</label>
+    <div class="controls">  <?php echo Form::text('hora_fin','placeholder="H:i:s" size="6"');?>
+    </div>
+</div>
+</div>
+<?php echo Form::hidden('grabar.valor');?>
+
+<table width="90%" border="0" cellspacing="0" cellpadding="0" class="table table-bordered">
+  <tr>
+    <th rowspan="2" align="center" valign="top">Maquina</th>
+    <th colspan="3" valign="top">IZQUIERDO</th>
+    <th colspan="3" valign="top">DERECHO</th>
+    </tr>
+  <tr>
+    <th valign="top">Color</th>
+    <th valign="top">VAlor</th>
+    <th valign="top">Observacion</th>
+    <th valign="top">Color</th>
+    <th valign="top">VAlor</th>
+    <th valign="top">Observacion</th>
+    </tr>
+<?php 
+$n=0;
+foreach($maquinas as $maquina){
+
+?>
+  <tr>
+    <td><?Php echo $maquina->nombre?></td>
+    <?php 
+	for($i=0;$i<2;$i++)
+	{$n++;
+	$lado='IZQUIERDO';
+	if($i==1)$lado='DERECHO';
+	?>
+    
+    <td><?Php echo Form::hidden('eficiencia-'.$i.'-'.$maquina->id.'.lado','',$lado)?><?Php echo Form::text('eficiencia-'.$i.'-'.$maquina->id.'.color','placeholder="Color" size="6"')?></td>
+    <td><?Php echo Form::text('eficiencia-'.$i.'-'.$maquina->id.'.valor_c','size="6" placeholder="Valor"')?></td>
+    <td><?Php echo Form::text('eficiencia-'.$i.'-'.$maquina->id.'.observacion','placeholder="Observaciones"')?></td>
+    <?php 
+	}?>
+  </tr>
+ 
+<?Php }?>
+</table>
+<div class="control-group">
+    <div class="controls">
+<?Php echo Form::submit('GRABAR','class="btn btn-primary"')?>
+    </div>
+</div>
+<?Php echo Form::close();?>
+</fieldset>
+</div>

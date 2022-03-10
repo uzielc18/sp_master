@@ -9,7 +9,7 @@ class RepararController extends AdminController {
 protected function before_filter() {
 		
 		if ( Input::isAjax() ){
-			View::response('view');
+			View::template(null);
             //View::select(NULL, NULL);
         }
     }
@@ -177,7 +177,7 @@ public function actualizarsalidas()
 	}else{
 		Flash::valid('Se modifico '.$n.' Elementos'.$mensaje);
 	}	
-	return Router::toAction('');
+	return Redirect::toAction('');
 }
 
 /* Optimizar para las dos empresas en cuestion de abonos */
@@ -212,7 +212,7 @@ group by s.id");
 		Flash::valid('Se modifico '.$n.' Elementos'.$mensaje.' de las '.$e.' salidas');
 	}
 	}
-	//return Router::toAction($url);
+	//return Redirect::toAction($url);
 	
 }
 
@@ -238,7 +238,7 @@ public function facturasConAbonos_interna($url='',$empresas_id=1)
 	}else{
 		Flash::valid('Se modifico '.$n.' Elementos'.$mensaje.' de las '.$e.' salidas');
 	}	
-	return Router::toAction($url);
+	return Redirect::toAction($url);
 	
 }
 public function actualizarinternas()
@@ -259,7 +259,7 @@ public function actualizarinternas()
 	}else{
 		Flash::valid('Se modifico '.$n.' Elementos'.$mensaje);
 	}	
-	return Router::toAction('');
+	return Redirect::toAction('');
 }
 /*Cancelar las facturas que sus abonos esten completos */
 public function cambiar_estado($id=0)
@@ -274,7 +274,7 @@ public function cambiar_estado($id=0)
 		$mensaje='Salida pagada !Actualizado';
 	}
 	Flash::valid($mensaje);
-	return Router::toAction('facturasConAbonos');
+	return Redirect::toAction('facturasConAbonos');
 }
 public function cambiar_codigo($em=0,$id=0)
 {
@@ -342,7 +342,7 @@ ORDER BY `i`.`id`  DESC");
 	endforeach;
 	
 	Flash::valid($var);
-	return Router::toAction('');
+	return Redirect::toAction('');
 	
 }
 
@@ -370,7 +370,7 @@ WHERE tesingresos_id=5414 AND tesproductos_id=13368'*/
 		$tt->cantidad=$cantidad;
 		$tt->save();
 	}
-	return Router::toAction('');
+	return Redirect::toAction('');
 	
 }
 public function direcciones($id=0,$aclempresas=1)
@@ -405,11 +405,11 @@ public function cambiar_estado_fa($id)
 	$data=$AP->find_first($id);
 	$data->estado=9;
 	$data->save();
-	return Router::toAction('terminar_fa');
+	return Redirect::toAction('terminar_fa');
 }
 public function buscar_fa()
 {
-	View::response('view');
+	View::template(null);
 	$this->data='';
 	$q=$_GET['q'];
 	$obj= new Tesfacturasadelantos();
@@ -475,7 +475,7 @@ public function eliminar_dato($id,$val=0)
 	}else{
 	Flash::valid('Val incorrecto');
 	}
-	return Router::toAction('modificar_codigos_datos/'.$d->testipodatos_id.'/'.$d->aclempresas_id);
+	return Redirect::toAction('modificar_codigos_datos/'.$d->testipodatos_id.'/'.$d->aclempresas_id);
 	
 }
 
@@ -513,7 +513,7 @@ WHERE tesvauchers.id=tesdetallevauchers.tesvauchers_id AND tesvauchers.estadov='
 	endforeach;
 	
 	
-	return Router::toAction('letrasaplicacion');
+	return Redirect::toAction('letrasaplicacion');
 }
 public function letra_ingresos_activar($id)
 {
@@ -521,7 +521,7 @@ public function letra_ingresos_activar($id)
 	$i=$ingresos->find_first($id);
 	$i->estadoingreso="Pendiente";
 	$i->save();
-	return Router::toAction('letrasaplicacion');
+	return Redirect::toAction('letrasaplicacion');
 }
 public function letra_activo($id)
 {
@@ -529,7 +529,7 @@ public function letra_activo($id)
 	$lt=$letras->find_first($id);
 	$lt->activo="0";
 	$lt->save();
-	return Router::toAction('letrasaplicacion');
+	return Redirect::toAction('letrasaplicacion');
 }
 
 public function num_a_letras_salidas()
@@ -542,7 +542,7 @@ public function num_a_letras_salidas()
 		$ts->save();
 	}
 	Flash::valid('Modificaciones correctas');
-	return Router::toAction('');
+	return Redirect::toAction('');
 }
 
 

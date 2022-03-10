@@ -1,0 +1,36 @@
+<td colspan="10">
+<h1>Contactos</h1>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<table class="table table-bordered table-striped">
+  <tr>
+  	<td>Nº</td>
+    <td>Nombre</td>
+    <td>Telefono</td>
+    <td>Estado</td>
+    <td>Acciones</td>
+  </tr>
+<?php $n=0;
+foreach($contactos as $item){ $n++;?>
+  <tr>
+  	<td><?php echo $n?></td>
+    <td><?php echo $item->nombres?></td>
+    <td><?php echo $item->telefono?></td>
+    <td>
+    <?php 
+	 if($item->activo=='0'){
+	 echo Ajax::linkAction('activar/'.$item->id,Html::img("figuras/circulo_rojo.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),$id,NULL);
+	 }else{
+	 echo Ajax::linkAction("desactivar/$item->id",Html::img("figuras/circulo_verde.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),$id,'','onclick="return confirm(\'¿Está seguro?\')"');}?>
+    </td>
+    <td><?php echo Ajax::linkAction('editar/'.$item->id,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),$id,'')?>
+    <?php echo Ajax::linkAction("borrar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:10px;margin-right:10px;"'),$id,'', 'onclick="return confirm(\'¿Está seguro?\')"');?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+<div class="form-actions">
+<?php echo Ajax::linkAction('tesdatosid/'.$id, 'Cancelar',$id,'btn btn-primary') ?>
+</div>
+</td>

@@ -1,0 +1,55 @@
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" id="+" class="table table-bordered">>
+  <tr>
+    <th colspan="6" align="left">Hilo: <?php echo $producto->detalle?><br />
+    Fibra: <?php echo $producto->getTestipoproductos()->nombre;?>
+    </th>
+
+  </tr>
+  <tr>
+    <th width="13%" align="left">Lote</th>
+    <th width="33%" align="left">Proveedor</th>
+    <th width="24%" align="left">Color</th>
+    <th width="8%" align="left">Cajas</th>
+    <th width="11%" align="left">Bobinas </th>
+    <th width="11%" align="left">Kilos</th>
+  </tr>
+<?Php $n=0;
+foreach($hilos as $item){
+	$n++;
+	?>  
+  <tr>
+    <td><?php echo $item->lote?></td>
+    <td><?php echo $item->razonsocial?> <a href="javascript:;" id="ver-<?php echo $n?>">[ Ver detalle]</a></td>
+    <td><?php echo $item->color?></td>
+    <td><?php echo $item->cajas?></td>
+    <td><?php echo $item->conos?></td>
+    <td><?php echo number_format($item->pesoneto,2,'.','')?></td>
+  </tr>
+  <script type="text/javascript">
+$(document).ready(function()
+{
+	$("#ver-<?php echo $n?>").click(function()
+	{
+		var data='lote=<?php echo $item->lote?>';
+		var id=$("#producto_id").val();
+		$.ajax({
+			type:"POST",
+			url:"/<?php echo $module_name?>/<?php echo $controller_name?>/hiloutilizado_detalle/"+id,
+			data:data,
+			beforeSend:function(){
+				},
+			success:function(response){
+				$("#detalle-<?php echo $n?>").html(response);
+				//alert(response);
+			}
+		});
+				
+	});
+			
+});
+</script>
+  <tr>
+    <td colspan="6" id="detalle-<?php echo $n?>"><br /></td>
+  </tr>
+  <?php }?>
+</table>

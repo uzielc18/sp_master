@@ -1,0 +1,53 @@
+<?php switch ($letras->getTessalidasinternas()->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}?>
+<div class="card">
+    <h1><em>Ingrese Numero Unico y Banco donde se encuentra la Letra !<span><?php echo $empresa->razonsocial?></span></em></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="card-body">
+<?php echo form::open()?>
+<?php echo form::hidden('letras.id');
+echo form::hidden('letras.tessalidasinternas_id');
+echo form::hidden('letras.monto');?>
+<table width="75%" border="0" align="center" cellpadding="0" cellspacing="1">
+  <tr>
+    <th width="11%" align="left">Letra Nº:</th>
+    <th width="16%" align="left"><?php echo $letras->numerodeletra?></th>
+    <th width="25%" align="left">F. de Vto:</th>
+    <td width="14%"><?php echo $letras->getTessalidasinternas()->fvencimiento?></td>
+    <th width="17%" align="left">Proveedor:</th>
+    <td width="17%"><?php echo $letras->getTessalidasinternas()->getTesdatos()->razonsocial?></td>
+    </tr>
+  <tr>
+    <th align="left">Referencia</th>
+    <td><?php if(empty($letras->numerofactura))echo 'Letra de Adelanto';else echo $letras->numerofactura?></td>
+    <th align="left">Numero Unico:</th>
+    <td><?php echo Form::text('letras.numerounico')?></td>
+    <th align="left">Banco:</th>
+    <td><?php echo Form::text('letras.banco')?></td>
+    </tr>
+  <?php if($letras->getTessalidasinternas()->movimiento=='LA'){?>
+  <tr>
+    <th colspan="6" align="center">Para poder usar la Letra, en pagos de Facturas en S/. debera ingresar el monto en S/..</th>
+    </tr>
+    <tr>
+    
+      <th colspan="3" align="left">Monto $/.<?php echo $letras->getTessalidasinternas()->getTesmonedas()->nombre?><?php echo Form::text('letras.monto')?></th>
+      <th colspan="3" align="left"><?php if($letras->getTessalidasinternas()->getTesmonedas()->nombre=='DOLARES AMERICANOS'){?>Monto S/.<?php echo Form::text('letras.monto_n');}?></th>
+    </tr>
+    <?php }?>
+</table>
+<div class="form-actions">
+<?php echo Form::Submit("REGISTRAR",'class="btn btn-primary"') ?> <?php echo Html::linkAction("", 'Volver ','class="btn"') ?>
+</div>
+<?php echo Form::close()?>
+
+</div>

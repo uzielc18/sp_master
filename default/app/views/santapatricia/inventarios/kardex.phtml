@@ -1,0 +1,104 @@
+
+<?php View::content()?>
+<?php if($detalles){?>
+<script type="text/javascript">
+$(function() {
+	
+	
+	$('.<?php echo $clp?>').live("click",function(e) {
+		e.preventDefault();
+		$('div.<?php echo $cld?>').printArea();
+		return false;
+	});
+	
+});
+$(document).ready(function() {
+	$(".botonExcel").click(function(event) {
+		$("#datos_a_enviar-<?php echo $cld?>").val( $("<div>").append( $("#exportar_excel-<?php echo $cld?>").eq(0).clone()).html());
+		$("#FormularioExportacion").submit();
+});
+});
+</script>
+<style type="text/css">
+.ingreso{ background-color:#FCFAA9;}
+.salida{ background-color:#E1978C;}
+.saldo{ background-color:#80B134;}
+</style>
+<hr />
+<span class="<?php echo $clp?> btn btn-primary"> Print </span> 
+<a href="javascript:;" class="btn">Enviar a Excel<img src="/img/export_to_excel.gif" class="botonExcel" /></a><form action="/utiles/excel" method="post" target="_blank" id="FormularioExportacion" class="form-inline">
+<input type="hidden" id="datos_a_enviar-<?php echo $cld?>" name="datos_a_enviar"/>
+<input type="hidden" id="nombre" name="nombre" value="Kardex-<?Php echo $producto?>"/>
+</form>
+<div class="<?php echo $cld?>">
+
+<table width="100%" border="0" cellspacing="1" cellpadding="0" class="table table-hover" id="exportar_excel-<?php echo $cld?>">
+  <tr>
+    <th colspan="12">KARDEX &nbsp;Producto:&nbsp;<?php echo $producto?>&nbsp;&nbsp;Color:&nbsp;<?php echo $color?>&nbsp;&nbsp;Lote:&nbsp;<?php echo $lote?>&nbsp;&nbsp;Fecha/Inicio:&nbsp;<?php echo Sp::formatFecha('%d/%m/%Y',$fecha_inicio)?>&nbsp;&nbsp;Fecha/Fin:&nbsp;<?php echo Sp::formatFecha('%d/%m/%Y',$fecha_fin)?></th>
+  </tr>
+  <tr>
+    <th width="4%" rowspan="2">Fecha</th>
+    <th width="3%" rowspan="2">Doc</th>
+    <th width="25%" rowspan="2">Descripcion</th>
+    <th colspan="3" align="center">ENTRADAS</th>
+    <th colspan="3" align="center">SALIDAS</th>
+    <th colspan="3" align="center">SALDOS</th>
+  </tr>
+  <tr>
+    <th width="7%">Cantidad</th>
+    <th width="10%">Precio</th>
+    <th width="8%">Total</th>
+    <th width="10%">Cantidad</th>
+    <th width="8%">Precio</th>
+    <th width="3%">Total</th>
+    <th width="10%">Cantidad</th>
+    <th width="6%">Precio</th>
+    <th width="6%">Total</th>
+  </tr>
+  <tr>
+    <td><?php $nuevafecha = strtotime ( '-1 day' , strtotime ($fecha_inicio) ) ; echo $nuevafecha = date ( 'd/m/Y' , $nuevafecha );?></td>
+    <td>-</td>
+    <td>Saldo anterior</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td align="right">
+	<?php $ant=explode('-',$saldo_anterios);
+	$ant_0=0;
+	$ant_1=0;
+	if(array_key_exists(0,$ant))$ant_0=$ant[0];
+	if(array_key_exists(1, $ant))$ant_1=$ant[1];
+	?>	
+	<?Php if(array_key_exists(1, $ant))echo $ant_0;else?></td>
+    <td align="right"><?php echo $ant_1?></td>
+    <td align="right"><?php echo $ant_0*$ant_0?></td>
+  </tr>
+  <?php 
+  $saldo_total=$ant_0;
+  foreach($detalles as $detalle){
+	   	if($detalle->tipo=='ingreso')$saldo_total=$saldo_total+$detalle->cantidad;
+	  	if($detalle->tipo=='salida')$saldo_total=$saldo_total-$detalle->cantidad;
+		if(empty($detalle->precio))$precio=$ant_1;else $precio=$detalle->precio;
+	  ?>
+  <tr title="<?php echo $detalle->tipo?> (<?php echo $detalle->id?>)">
+    <td><?php echo Sp::formatFecha('%d/%m/%Y',$detalle->fecha);?>
+    </td>
+    <td><?php echo $detalle->documento?></td>
+    <td><?php echo $detalle->descripcion ?></td>
+    <td align="right" class="ingreso"><?php if($detalle->tipo=='ingreso')echo number_format((float)$detalle->cantidad,2,'.',' ').' Kg.'?></td>
+    <td align="right" class="ingreso"><?php if($detalle->tipo=='ingreso')echo 'S/. '.number_format((float)$precio,2,'.',' ') ?></td>
+    <td align="right" class="ingreso"><?php if($detalle->tipo=='ingreso')echo 'S/. '.number_format((float)$detalle->cantidad*$precio,2,'.',' ') ?></td>
+    <td align="right" class="salida"><?php  if($detalle->tipo=='salida')echo number_format((float)$detalle->cantidad,2,'.',' ').' Kg.'?></td>
+    <td align="right" class="salida"><?php  if($detalle->tipo=='salida')echo 'S/. '.number_format((float)$precio,2,'.',' ')?></td>
+    <td align="right" class="salida"><?php  if($detalle->tipo=='salida')echo 'S/. '.number_format((float)$detalle->cantidad*$precio,2,'.',' ')?></td>
+    <td align="right" class="saldo"><?php echo number_format((float)$saldo_total,2,'.',' ').' Kg.'?></td>
+    <td align="right" class="saldo"><?php echo 'S/. '.number_format((float)$precio,2,'.',' ')?></td>
+    <td align="right" class="saldo"><?php echo 'S/. '.number_format((float)$saldo_total*$precio,2,'.',' ')?></td>
+  </tr>
+  <?php }?>
+</table>
+</div>
+<?php }else{echo '<h3> No hay Movimientos Para este producto </h3>';}?>

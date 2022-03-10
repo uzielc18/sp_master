@@ -1,0 +1,98 @@
+<?php echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<div class="card">
+    <h1>Renovar la letra (<?php echo $letra->numerodeletra?>)<span></span></h1>
+</div>
+
+<div class="form-actions">
+<?php echo Menu::menuLetras($action_name);?>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="card-body">
+<div id="ver_resultado"></div>
+<?php echo Form::open(NULL,'POST','class="form-horizontal"')?>
+      <?php echo Form::hidden('salida.npedido','size="10" readonly="readonly"');?>
+      <?php echo Form::hidden('salida.estadosalida','');?>
+      <?php echo Form::hidden('salida.totalenletras','');?>
+      <?php echo Form::hidden('salida.movimiento','size="10"');?>
+      <?php echo Form::hidden('salida.testipocambios_id','size="10"');?>
+  <div class="control-group">
+    <label class="control-label" for="salida_serie">Numero:</label>
+    <div class="controls">
+      <?php echo Form::hidden('salida.serie','size="4"','LTR');?><?php echo Form::text('salida.numero','size="10"');?><?php echo $NR?>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="salida_tesmonedas_id">Moneda:</label>
+    <div class="controls">
+      <?php echo Form::dbSelect('salida.tesmonedas_id','simbolo,nombre',array("tesmonedas",'find','conditions: aclempresas_id='.Session::get('EMPRESAS_ID')));?>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="CL">Cliente</label>
+    <div class="controls">
+    	<?php echo Form::hidden('salida.tesdatos_id');?>
+        <?php echo $salida->getTesdatos()->razonsocial?>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="salida_femision">Fecha de Emision:</label>
+    <div class="controls">
+      <?php echo Calendar::selector('salida.femision','',$salida->fvencimiento);//finiciotraslado?>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="salida_femision">Fecha de vencimiento:</label>
+    <div class="controls">
+      <?php 
+	  $new_fecha=Sp::sumarDias($salida->fvencimiento,30);
+	  echo Calendar::selector('salida.fvencimiento','',(string)$new_fecha);//finiciotraslado?>
+    </div>
+  </div>
+  <div class="control-group">
+  	<label class="control-label" for="por">Ingrese el porcentaje:</label>
+    <div class="controls"><?php echo Form::text('por','size="3" class="qty"')?>%
+     </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="CL">Monto anterior: <br />
+    Nuevo monto: </label>
+    <div class="controls">
+     <?php echo $salida->totalconigv?><br />
+      <?php echo Form::text('salida.totalconigv','class="qty"','0.00');?>
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+       <button type="submit" class="btn btn-primary">Renovar</button> <?php echo Html::linkAction('','Cancelar','class="btn"')?>
+    </div>
+  </div>
+<?php echo Form::close();?>
+</div>
+
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Nuevo </h3>
+  </div>
+  <div class="modal-body" id="otro">
+  </div>
+  <div class="modal-footer">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function()
+{
+	$("#por").change(function(){
+		
+		var p=$(this).val();
+		var monto=<?php echo $salida->totalconigv;?>;
+		var nuevo_monto=(monto*p)/100;
+		$("#salida_totalconigv").val(nuevo_monto);
+		});
+		
+});
+
+</script>

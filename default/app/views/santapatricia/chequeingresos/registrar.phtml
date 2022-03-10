@@ -1,0 +1,65 @@
+<div class="card">
+    <h1><em>Cheques Recepcionados!<span><?php //echo Auth::get('nombres')?></span></em></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<?php echo Menu::menuCheques();?>
+
+<div class="card-body">
+<div id="ver_resultado"></div>
+<?php echo Form::open(NULL,'POST','class="form-horizontal"'); ?>
+
+      <?php echo Form::hidden('ingresos.id'); ?>
+      <?php echo Form::hidden('ingresos.tesdatos_id'); ?>
+      <?php echo Form::hidden('ingresos.aclusuarios_id'); ?>
+      <?php echo Form::hidden('ingresos.tesmonedas_id'); ?>
+      <?php echo Form::hidden('ingresos.tesdocumentos_id'); ?>
+      <?php echo Form::hidden('cheques.id'); ?>
+      <?php echo Form::hidden('cheques.tesingresos_id'); ?>
+      <?php echo Form::hidden('cheques.estadocheque'); ?>
+<legend>Ingresar Fecha Asignada para Cobrar!
+  </legend><div class="control-group">
+    <label class="control-label"> Cliente</label>
+    <div class="controls">
+      <h5><?php echo $ingresos->getTesdatos()->razonsocial; ?></h5>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label">Numero</label>
+    <div class="controls">
+      <?php echo Form::text('cheques.numerocheque'); ?>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label">Banco</label>
+    <div class="controls">
+      <?php echo Form::dbSelect('cheques.tesbancos_id'); ?>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label">Fecha de Emision</label>
+    <div class="controls">
+       <?php echo Calendar::text('ingresos.femision'); ?>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label">Fecha de Cobro</label>
+    <div class="controls">
+     <?php echo Calendar::text('cheques.fecha_cobro'); ?>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label">Monto</label>
+    <div class="controls">
+      <?php echo Form::text('cheques.monto'); ?>
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+      <button type="submit" class="btn">Siguiente</button>
+    </div>
+  </div>
+</form>
+
+</div>

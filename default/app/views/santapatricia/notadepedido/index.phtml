@@ -1,0 +1,15 @@
+
+<div class="card">
+    <h1>Pedidos Internos!</h1>
+</div>   
+    <?php View::content() ?>
+<div class="form-actions">
+<?php if($value=='salida'){?>
+<?php echo Html::linkAction('listado/Produccion','Pedidos para Produccion','class="btn btn-primary"')?>
+<?php echo Html::linkAction('listado/Chenille','Pedidos para Chenille','class="btn btn-primary"')?>
+<?php echo Html::linkAction('listado/Muestra','Muestras','class="btn btn-primary"')?>
+<?Php }else{?>
+<?php echo Html::linkAction('listado/Chenille','Ingreso de Hilo','class="btn btn-primary"')?>
+<?php echo Html::linkAction('listado/Muestra','Ingreso de Muestras','class="btn btn-primary"')?>
+<?php }?>
+</div>

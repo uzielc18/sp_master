@@ -77,7 +77,7 @@ class MemosController extends AppController {
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::toAction('');
+        return Redirect::toAction('');
     }
 	public function desactivar($id) {
         try {
@@ -94,7 +94,7 @@ class MemosController extends AppController {
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::toAction('');
+        return Redirect::toAction('');
     }
 	public function eliminar($id) {
         try {
@@ -126,7 +126,7 @@ class MemosController extends AppController {
 	
 	public function resultados($id=0)
 	{
-		View::response('view');
+		View::template(null);
 		$q=$_GET['q'];
 		$obj = new Acldatos();
 		$results = $obj->find('conditions: estado=1 and aclempresas_id='.$id.' and CONCAT_WS(" ",nombre,appaterno,apmaterno,dni) like "%'.$q.'%"');

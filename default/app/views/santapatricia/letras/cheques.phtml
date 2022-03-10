@@ -1,0 +1,111 @@
+<div id="pago_con_cheques">
+
+        
+<script type="text/javascript">
+$(document).ready(function()
+{
+	$('#tesbancos_id').live("change",function(){
+		var value = $('#tesbancos_id option:selected').html();
+		$("#bancos").html(value);
+		//$("tesdetallevauchers_tescuentascorrientes_id").val(value);
+		
+		});
+	$('#cuentas_id').live("change",function(){
+		var value = $('#cuentas_id option:selected').val();
+		var v = $('#cuentas_id option:selected').html();
+		$("#salidas_tescuentascorrientes_id").val(value);
+		$("#cuenta").html(v);
+		$.ajax({
+            type:"POST",
+            url:"/<?php echo $module_name?>/letras/numerocheque/"+value,
+            success:function(response){ 
+			$("#salidas_numero").val(response);
+            }
+ 		});
+	 });
+
+});
+</script>
+<?php if($tessalidas_id==0){?>
+<div><strong><em>Seleccione el Banco !</em></strong>: <?php echo Ajax::dbSelect('tesbancos_id','nombre',array('tesbancos','find','conditions: aclempresas_id='.Session::get('EMPRESAS_ID')),'cuentas',$module_name.'/letras/cuentacorriente/','Seleccione Banco');?></div>
+<div id="cuentas"></div>
+<div>
+
+<div id="cheques">
+<?php echo Ajax::form('pago_con_cheques')?>
+	 <?php echo Form::hidden('salidas.id')?>
+     <?php echo Form::hidden('salidas.aclusuarios_id','',Auth::get('id'))?>
+     <?php echo Form::hidden('salidas.tesmonedas_id','',$tesmonedas_id)?>
+     <?php echo Form::hidden('salidas.tesdocumentos_id','','35')?>
+     <?php echo Form::hidden('salidas.codigo','',time())?>
+     <?php echo Form::hidden('salidas.femision','',date('Y-m-d'))?>
+     <?php echo Form::hidden('salidas.movimiento','','AB')?>
+     <?php echo Form::hidden('salidas.estado','',1)?>
+     <?php echo Form::hidden('salidas.userid','',Auth::get('id'))?>
+     <?php echo Form::hidden('salidas.aclempresas_id','',Session::get('EMPRESAS_ID'))?>
+     <?php echo Form::hidden('salidas.tesdatos_id','',$tesdatos_id)?>
+      <?php echo Form::hidden('salidas.tescuentascorrientes_id')?>
+<table width="100%" border="0" cellspacing="1" cellpadding="0">
+  <tr class="card">
+    <th align="left">Numero</th>
+    <th align="left">Provedor</th>
+    <th align="left">Banco</th>
+    <th align="left">Cuenta</th>
+    <th align="left">Monto</th>
+    </tr>
+  <tr>
+    <td>
+     <?php echo Form::text('salidas.numero','')?> </td>
+    <td>
+     <?php echo $proveedor?> </td>
+    <td id="bancos"></td>
+    <td id="cuenta"></td>
+    <td> 
+     <?php echo Form::text('salidas.totalconigv','',$total)?>
+     </td>
+    </tr>
+</table>
+
+<?php echo Form::submit('GRABAR','class="btn btn-primary"');?>
+<?php echo Form::close()?>
+</div>
+<?php }?>
+<?php if($tessalidas_id!=0){?>
+<div id="detalle">
+<?php echo Form::open('')?>
+<?php echo Form::hidden('tesdetallevauchers.id');?>
+<?php echo Form::hidden('tesdetallevauchers.tesvauchers_id','',Session::get('V_ID_O'));?>
+<?php echo Form::hidden('tesdetallevauchers.tesingresos_id','',0);?>
+<?php echo Form::hidden('tesdetallevauchers.tessalidas_id','',$tessalidas_id);?>
+<?php echo Form::hidden('tesdetallevauchers.abono','',1);?>
+<?php echo Form::hidden('tesdetallevauchers.cargos','',0);?>
+<?php echo Form::hidden('tesdetallevauchers.tesdatos_id','',0);?>
+<?php echo Form::hidden('tesdetallevauchers.tescuentascorrientes_id','',$salida->tescuentascorrientes_id);?>
+<?php echo Form::hidden('tesdetallevauchers.estado','',1);?>
+<?php echo Form::hidden('tesdetallevauchers.cargos','',0);?>
+<table width="100%" border="0" cellspacing="1" cellpadding="0">
+  <tr>
+    <th width="19%" align="left">Cuenta General</th>
+    <th width="10%" align="left">Nº Docuemnto</th>
+    <th width="14%" align="left">Fecha Vcto</th>
+    <th width="14%" align="left">Codigo Auxiliar</th>
+    <th width="14%" align="left">Descripcion</th>
+    <th width="14%" align="left">Cargo</th>
+    <th width="15%" align="left">Abono</th>
+  </tr>
+  <tr>
+    <td width="19%"><?php echo $tesdetallevauchers->plancontable;
+	 echo Form::hidden('tesdetallevauchers.plancontable'); ?></td>
+    <td width="10%"><?php echo $salida->numero?></td>
+    <td width="14%">-</td>
+    <td width="14%">-</td>
+    <td width="14%"><?php echo $salida->getTescuentascorrientes()->getTesbancos()->nombre;?></td>
+    <td width="14%">-</td>
+    <td width="15%"><?php echo Form::text('tesdetallevauchers.monto','',$salida->totalconigv); ?></td>
+  </tr>
+</table>
+<?php echo Form::submit('GRABAR','class="btn btn-primary"');?>
+<?php echo Form::close()?>
+</div>
+<?php }?>
+</div>

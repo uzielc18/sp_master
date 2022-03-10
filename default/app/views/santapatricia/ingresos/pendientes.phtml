@@ -1,0 +1,113 @@
+<style type="text/css">
+.span_float
+{
+	float:right !important;
+	margin-left:0px;
+	margin-right:-5px;
+}
+</style>
+<div class="card">
+    <h1><?php echo Session::get('DOC_NOMBRE')?> <span>Facturas Pendientes de Pago</span></h1>
+    
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+
+<div class="form-actions">
+<?Php echo Html::linkAction('listado','Volver','class="btn btn-primary"')?>
+</div>
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus="" placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+<div class="card-body">
+<div id="ver_resultado"></div>
+<table width="100%" border="0" id="facturas" class="table table-bordered table-striped">
+<caption>Documentos Registrados</caption>
+  <tr>
+  	<th width="19" align="left">Nº</th>
+	<th width="58" align="left">F. Emision.</th>
+    <th width="60" align="left">No Doc.</th>
+    <th width="172" align="left">Proveedor</th>
+    <th width="58" align="left">Productos </th>
+    <th width="53" align="left">Sub-total</th>
+    <th width="47" align="left">Igv</th>
+    <th width="57" align="left">Total</th>
+    <th width="58">Acc. </th>
+  </tr>
+<?php $number=0;
+foreach($inventarios as $item){ 
+$simbolo="S/. ";
+
+switch ($item->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+
+$number++;?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20"><?php echo $number?></td>
+	<td height="20"><?php echo Sp::formatFecha('%d / %m / %Y',$item->fregistro)?><?php //echo $item->femision?></td>
+  	<td height="20"><?php echo $item->serie?>-<?php echo $item->numero?></td>
+    <td><?php echo $item->getTesdatos()->razonsocial?></td>
+    <td>
+    <small style="color:#666; font-size:10px !important; font-style:italic; ">
+	<?php
+    $b=0;
+	$n=0;$m=0;
+	$url='';
+	$url_ver='';
+	foreach($item->getTesdetalleingresos() as $det)
+	{
+		$url='';
+		$url_ver='/ver';
+		if(Session::get('DOC_ID')==36){$url="/varios";$url_ver='/varios_ver';}
+		$b++;
+		if($det->tesproductos_id!=0){$n++;
+		echo $det->getTesproductos()->detalle;if(count($item->getTesdetalleingresos())>$n){echo ", ";}
+		}else{
+			echo $det->concepto;
+			}
+	}
+	if($item->estadoingreso=='Registrado')$b=1;
+	?>
+    </small>
+    </td>
+    <td><?php if($item->totalconigv!='NaN.00' && !empty($item->totalconigv))echo $simbolo.number_format($item->totalconigv-$item->igv,2,'.','');else echo('S/ 00.00');?></td>
+    <td><?php if($item->igv!='NaN.00' && !empty($item->igv))echo $simbolo.number_format($item->igv,2,'.','');else echo('S/ 00.00')?></td>
+    <td><?php if($item->totalconigv!='NaN.00' && !empty($item->totalconigv))echo $simbolo.number_format($item->totalconigv,2,'.','');else echo('S/ 00.00')?></td>
+   <td>
+   <?php echo Html::linkAction('cargaringreso/'.$item->id.''.$url_ver,Html::img("figuras/ver.png",'VER','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Visualizar Documento !"','')?>
+	<?php if($item->estadoingreso=='Editable' || Auth::get('aclroles_id')==4 || Auth::get('aclroles_id')==2)echo Html::linkAction('cargaringreso/'.$item->id.''.$url,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Editar Documento de Ingreso !"','')?>
+    <?php if($b==0)echo Html::linkAction("eliminar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:1px;margin-right:1px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+    <?php //echo Html::linkAction("ver/$item->id/$page",Html::img("figuras/ver.png",'Eliminar','style="width: 20px;margin-left:1px;margin-right:1px;"'));?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+<div class="form-actions">
+<?php $url='';
+if(Session::get('DOC_ID')==36)$url="/varios";?>
+<?php //echo Html::linkAction("cargaringreso/0".$url, 'Nueva '.Session::get('DOC_NOMBRE'),'class="btn btn-primary"') ?>&nbsp;<?php //echo Html::linkAction(" ", 'Volver ','class="btn"') ?>
+</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	
+	
+
+//hacemos la busqueda en el evento search del control de busqueda
+	$('#txtBuscar').on('search',function(){
+		//le decimos a la funcion que busque en la tabla tblTabla el
+		//valor que contiene el campo actual
+		$.fntBuscarEnTabla($(this).val(),'facturas');
+		
+	});
+	
+});
+</script>

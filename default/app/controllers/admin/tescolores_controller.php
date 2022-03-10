@@ -84,7 +84,7 @@ class TescoloresController extends AdminController {
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::toAction('');
+        return Redirect::toAction('');
     }
 	public function desactivar($id,$id_e,$pag=1) {
 		$this->page=$pag;
@@ -103,7 +103,7 @@ class TescoloresController extends AdminController {
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::toAction('');
+        return Redirect::toAction('');
     }
 	public function eliminar($id,$id_e,$pag=1) {
 		$this->page=$pag;

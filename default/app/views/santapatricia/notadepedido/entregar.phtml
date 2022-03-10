@@ -1,0 +1,356 @@
+<?php
+View::content();
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<script type="text/javascript">
+
+function grabarDetalle(tr_id) {
+  alert(tr_id);
+  var cantidadp=$.trim($('#cantidadp-'+tr_id).html());
+  alert(cantidadp);
+  var cantidade=$('#cantidade-'+tr_id).val();
+  alert(cantidade);
+  var stock=$('#stock-'+tr_id).html();
+  alert(parseFloat(cantidadp)+'<='+parseFloat(cantidade));
+  if(parseFloat(cantidade)!= 0)
+  {<?php if($pedido->origen=='Otros'){?> 
+    var tescajas_id='1';
+  	var lote='1';
+  <?php }else{?> 
+	var tescajas_id=$('#tescajas_id-'+tr_id).val();
+  	var lote=$('#lote-'+tr_id).val();<?php }?>
+  	var descripcion=$('#descripcion-'+tr_id).val();
+  	var id_detalle=tr_id;
+  	if(tescajas_id){}else{tescajas_id=0;}
+	var dataString ='id_detalle='+id_detalle+'&tescajas_id='+ tescajas_id+'&lote='+ lote+'&descripcion='+descripcion+'&cantidad='+cantidade+'&cantidad_p='+cantidadp;
+	alert(dataString);
+	  $.ajax({
+            type:"POST",
+            url:"/<?php echo $module_name?>/notadepedido/grabardetalle/",
+            data:dataString,
+            beforeSend:function(){
+              $("#loading").show();
+            },
+            success:function(response){
+                $("#loading").hide();
+				//alert('id del detalle grabado'+response);
+				//$('#del-'+tr_id).attr("data-id", response);
+            }
+ 
+      });
+	}else
+	{
+		return false;
+	}
+  }
+
+
+
+$(document).ready(function()
+{	
+$('.rr').click(function(){
+	var id=$(this).attr('data-id');
+	var newStr=id;
+	var a=$(this).val();
+	/*var str = ID[1];
+	var newStr = str.substring(0, str.length-1);*/
+	$('#lote-'+newStr).val(a)
+	alert(newStr)
+	grabarDetalle(newStr)
+});
+$('.save').blur(function(){
+	var id=$(this).attr('id');
+	alert(id);
+	var ID=id.split('-');
+	grabarDetalle(ID[1])
+	});
+$('.entregar').live('click',function()
+{
+	var id=$(this).attr('id');
+	//alert(id);
+	grabarDetalle(id)
+	var c=$("#caja-"+id).val();
+	var l=$("#lote-"+id).val();
+	var d=$("#descripcion-"+id).val();
+	$("#c"+id).html(c);
+	$("#l"+id).html(l);
+	$("#d"+id).html(d);
+	$("#a"+id).html('');
+	var te=$("#total-entregar").html();
+	var tee=$("#total-entregado").html();
+	tee++;
+	$("#total-entregado").html(tee);
+	//alert(tee+'=='+te)
+	if(parseInt(te)==parseInt(tee))
+	{
+		$("#entregar").show();
+	}
+	});
+});
+</script>
+
+<div class="card"><h1><?php echo $titulo//echo "id--->".Session::get('PROFORMA_ID')?><span><?php echo $origen;?></span></h1></div>
+	<div class="alert alert-info"> 
+    Solo se pude entregar de un lote en especifico!!!! <?php echo $pedido->id;?>
+	</div>
+    <div class="form-actions">
+    <?php echo Html::linkAction("listado/".$origen, 'Listado','class="btn btn-primary"') ?>
+	</div>
+    <div style="clear:both"></div>
+  <div id="loading" style="display:none;"><img src="/img/spin.gif" /></div>
+<div class="card-body">
+  	<table width="75%" class="table-bordered" align="center">
+    <tr>
+    	<th width="17%" align="left">Solicitado por:</th>
+        <th width="68%" align="left"><?php echo $pedido->getAclusuarios()->getAcldatos()->nombre?> <?php echo $pedido->getAclusuarios()->getAcldatos()->appaterno?> <?php echo $pedido->getAclusuarios()->getAcldatos()->apmaterno?></th>
+        <th width="9%" align="left">Estado:</th>
+        <th width="6%" align="left"><?php echo $pedido->estadonota;?></th>
+    </tr>
+    <tr>
+    	<th align="left" class="meta-head">No. Pedido:</th>
+        <th align="left"><?php echo $pedido->codigo;?></th>
+    </tr>
+    <tr>
+    	<th align="left">Origen:</th>
+        <th colspan="3" align="left"><?php echo $pedido->origen;?></th>
+    </tr>
+    <tr>
+    	<th align="left">Descripcion:</th>
+        <th align="left"><?php echo $pedido->descripcion;?></th>    
+    </tr>
+     
+  </table>
+<?php echo $pedido->origen;?>
+	<table width="100%" border="0" align="center" cellpadding="0" cellspacing="00" class="table-bordered table-striped" id="items">
+	  <tr align="center">
+        <th width="3%" align="left">Cod.</th>
+        <th width="19%" align="left">Producto</th>
+        <th width="5%" align="left">Color</th>
+        <th width="6%" align="right">Pedido</th>
+        <th width="10%" align="right">Kg. Entregado</th>
+        <th width="10%" align="right">Stock </th>
+        <th width="5%" align="center">Medida</th>
+        <?php if($pedido->origen=='Produccion' or $pedido->origen=='Chenille'){ ?>
+        <th width="20%" align="left">Lote</th>
+        <th width="12%" align="left"># Caja</th>
+        <?php }?>
+        <th width="3%" align="left">Obs</th>              
+        <th width="7%" align="left">Accion</th>
+	  </tr>
+<?php 
+$n=0;
+$b=0;
+$a=0;
+$c_e=0;
+$s=0;
+$c_p=0;
+$s_color=0;
+$s_producto=0;
+foreach($detalles as $item)
+{
+	$c_p=$c_p+$item->cantidad;
+	$cajastrama=$item->getProcajastrama();
+	echo Form::hidden('producto-'.$item->id,'',$item->tesproductos_id);
+	echo Form::hidden('color-'.$item->id,'',$item->tescolores_id);
+	$n++;
+	$s=$s_color=$item->getTesproductos()->getStockColor($item->tesproductos_id,$item->tescolores_id);
+	//if($s_color=='0')$s=$s_producto=$item->getTesproductos()->getStock($item->tesproductos_id);
+    if($item->getRollotrama($item->id))
+	{
+		$rollo=$item->getRollotrama($item->id);
+		$b=$rollo->id;
+		if($a!=$b)
+		{
+?>
+	<tr>
+    	<td colspan="11" class="item-name" style=" padding-left:15px;">
+        <p>----------------------------------------</p>
+        <p><strong>TELA: </strong>
+		<?php echo $rollo->getTesproductos()->nombre?> 
+        <strong>COLOR: </strong>
+		<?Php echo $rollo->getTescolores()->nombre?> 
+        <strong>METROS:</strong>
+		<?php echo $rollo->metroprogramados?>
+        </p>
+      	<p>----------------------------------------</p>
+      	</td>
+    </tr>
+<?php 
+		}
+	$a=$rollo->id;
+	}
+?>
+<?php
+	if($item->tescajas_id!='0' && $item->tescajas_id!=NULL)
+	{
+		//$b++;
+	?>
+    <?Php echo Form::hidden('producto-'.$item->id,'',$item->tesproductos_id)?>
+    <tr id="item-<?php echo $item->id?>" class="item-row">
+    <td>
+    <?Php echo Form::hidden('producto-'.$item->id,'',$item->tesproductos_id)?>
+    <?php echo $item->getTesproductos()->codigo?>
+    </td>
+    <td class="item-name">
+    <?php echo $item->getTesproductos()->nombre?>
+    <small style="font-style:italic"><?php echo $item->getTesproductos()->detalle?></small>
+    </td>
+    <td>
+    <?php echo $item->getTescolores()->nombre?>
+    </td>
+    <td align="right" id="cantidadp-<?php echo $item->id?>">
+    <?php echo $item->cantidad_p?>
+    </td>
+    <td align="right">
+    <?php 
+	$c_e_i=0;
+	foreach($cajastrama as $ct)
+	{
+		$c_e_i=$c_e_i+$ct->peso;
+	}
+	$c_e=$c_e+$c_e_i;
+	?>
+    <?php 
+	if($c_e_i==0)
+	{
+		echo Form::text('cantidade-'.$item->id,'size="5" readonly="readonly" class="qty"',$item->cantidad);
+	}else
+	{
+		echo Form::text('cantidade-'.$item->id,'size="5" readonly="readonly" class="qty"',$c_e_i);
+	}?>
+    </td>
+    <td align="right" id="stock-<?php echo $item->id?>">
+    <?php if($s_color!=0)echo $s_color; else echo 0.00;?>
+    </td>
+    <td align="center">
+    <?php echo $item->getTesunidadesmedidas()->nombre?>
+    </td>
+    <?php if($pedido->origen=='Produccion' or $pedido->origen=='Chenille'){ ?>
+    <td>
+    <?php echo $item->lote;?>
+    <?php $l=0;
+	/*$lotes=$item->getLotes($item->tesproductos_id,$item->tescolores_id);
+	foreach($lotes as $lote)
+	{
+		$sotck_lote=$lote->getTesproductos()->getStockLote($item->tesproductos_id,$item->tescolores_id,$lote->lote);
+		if($sotck_lote>0)
+		{
+			$l++;
+			echo "Lote: ".$lote->lote;
+			$true=FALSE;
+			foreach($cajastrama as $ct)
+			{
+				if($ct->lote==$lote->lote){$true=TRUE;}
+			}
+			echo " Stock: ".$sotck_lote."<br />";//echo Form::radio('l-'.$item->id,$lote->lote,'class="rr" data-id="'.$item->id.'"',$true);
+			}
+		}
+		if($l==0)echo "No hay lotes que tengan stock";
+		 */?>
+         <?php echo Form::hidden('lote-'.$item->id,'class="save lote" placeholder="# lote" ',$item->lote);?>
+    </td>
+    <td>
+    <em> Cajas Entregadas:</em><br />
+    <?php 
+	foreach($cajastrama as $trama): 
+	echo '#:'.$trama->numerodecaja." Lote:".$trama->lote;echo "<br />";
+	endforeach;?>
+    <?php
+	//echo Form::hidden('tescajas_id-'.$item->id,'',1);
+	//echo Html::linkAction('procajastrama_entregar/'.$item->id.'/'.$item->tesproductos_id.'/'.$item->tescolores_id,'Ver cajas','class="btn btn-info"');?>
+    </td>
+    <?php }?>
+    <td class="description">
+    <?php echo $item->descripcion?>
+    </td>
+    <td>
+    <?php
+	echo Form::hidden('tescajas_id-'.$item->id,'',1);
+	echo Html::linkAction('procajastrama_entregar/'.$item->id.'/'.$item->tesproductos_id.'/'.$item->tescolores_id,'Ver cajas','class="btn btn-info"');?>
+    </td>
+    </tr>
+    <?php
+	}else{
+	?>
+    <tr id="item-<?php echo $item->id?>" class="item-row">
+    <td>
+    <?php echo $item->getTesproductos()->codigo?>
+    </td>
+    <td class="item-name">
+    <?php echo $item->getTesproductos()->nombre?>
+    <small style="font-style:italic"><?php echo $item->getTesproductos()->detalle?></small>
+    </td>
+    <td>
+    <?php echo $item->getTescolores()->nombre?>
+    </td>
+    <td align="right" id="cantidadp-<?php echo $item->id?>">
+    <?php echo $item->cantidad_p?>
+    </td>
+    <td align="right">
+    <?php 
+	if($pedido->origen=='Produccion' or $pedido->origen=='Chenille')
+	{
+		echo Form::hidden('cantidade-'.$item->id,'size="5" class="qty"',$item->cantidad);
+	}else{
+		 echo Form::text('cantidade-'.$item->id,'size="5" class="qty"');
+	}?>
+    </td>
+    <td align="right" id="stock-<?php echo $item->id?>">
+    <?php if($s_color!=0)echo $s_color; else echo 0.00;?>
+    </td>
+    <td align="center">
+    <?php echo $item->getTesunidadesmedidas()->nombre?>
+    </td>
+    <?php if($pedido->origen=='Produccion' or $pedido->origen=='Chenille'){ ?>
+    <td id="l<?php echo $item->id?>">
+    <?php $l=0;
+	//echo $item->tesproductos_id.'---'.$item->tescolores_id.'<br />';
+	/*foreach($item->getLotes($item->tesproductos_id,$item->tescolores_id) as $lote)
+	{
+		$sotck_lote=$lote->getTesproductos()->getStockLote($item->tesproductos_id,$item->tescolores_id,$lote->lote);
+		// echo $sotck_lote;
+		if($sotck_lote>1)
+		{
+			$l++;
+			echo $lote->lote;
+			$true=FALSE;
+			if($item->lote==$lote->lote)$true=TRUE;
+			echo " Stock: ".$sotck_lote."<br />";//echo Form::radio('l-'.$item->id,$lote->lote,'class="rr" data-id="'.$item->id.'"',$true);
+		}
+	}
+	if($l==0)echo "No hay lotes que tengan stock";*/?>
+    <?php /*echo Form::hidden('lote-'.$item->id,'class="save lote" placeholder="# lote" ',$item->lote);*/?>
+    </td>
+    <td id="c<?php echo $item->id?>">
+	<?php
+	$numero='';
+	//echo Html::linkAction('procajastrama_entregar/'.$item->id.'/'.$item->tesproductos_id.'/'.$item->tescolores_id,'Entregar cajas','class="btn btn-info"');?>
+    </td>
+    <?php }?>
+    <td id="d<?php echo $item->id?>" class="description">
+    <?php echo Form::textArea('descripcion-'.$item->id,'',$item->descripcion)?>
+    </td>
+    <td id="a<?php echo $item->id?>">
+    <?php 
+		if($item->cantidad<=$s)
+		{ ?><?php
+	$numero='';
+	echo Html::linkAction('procajastrama_entregar/'.$item->id.'/'.$item->tesproductos_id.'/'.$item->tescolores_id,'Entregar cajas','class="btn btn-info"');?>
+  <?php }else{
+	    echo '<span style="color: red;">No hay Stock</span>';
+	    }?>
+    </td>
+    </tr>
+    <?php
+		}
+	}/*FIN FOREACH*/
+    ?>
+    </table>
+     <div style="clear:both"></div>
+     <div class="form-actions">
+        <span id="total-entregar" style="display:none;"><?php echo $c_p?></span>
+        <span id="total-entregado" style="display:none;"><?php echo $c_e?></span>    
+	<?php $va='';
+	echo Html::linkAction("terminar/".Session::get('NOTA_ID')."/Entregado/".$origen, 'Terminar ','id="entregar" class="btn btn-primary grabar_form"'.$va) ?>&nbsp;<?php echo Html::linkAction("listado/".$origen, 'Cancelar ','class="btn btn"') ?>
+	</div>
+</div>

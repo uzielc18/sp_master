@@ -1,0 +1,108 @@
+
+<?php if($tipo_id==0){?>
+<div class="card">
+    <h1><?php echo $titulo;?> </h1>
+</div>
+<?php }else{
+echo '
+<script type="text/javascript">
+$(document).ready(function(){
+        $("#listado-'.$tipo_id.'").load("/santapatricia/hilos/listadoportipo/'.$tipo_id.'");
+        $(".des").live("change",function(){descripcion();});
+		});
+		
+		function descripcion()
+		{
+			var a_d=" ";
+			var b_d=" ";
+			var c_d=" ";
+			var a_n=" ";
+			var b_n=" ";
+			var c_n=" ";
+			var n_d=$("#testproductos_nombre").val()+" '.$tipos->nombre.'";
+			var n_n=$("#testproductos_nombre").val()+" '.$tipos->abr.'";
+			var s=$("#testproductos_hilosistema_id option:selected").html();
+			var f=$("#testproductos_hilofibras_id option:selected").html();
+			var h=$("#testproductos_hiloacabados_id option:selected").html();
+			
+			var S=s.split("-");
+			var F=f.split("-");
+			var H=h.split("-");
+			//alert(S.length)
+			if(S.length==2){a_n=" "+S[1];a_d=" "+S[0];}
+			if(F.length==2){b_n=" "+F[1];b_d=" "+F[0];}
+			if(H.length==2){c_n=" "+H[1];c_d=" "+H[0];}
+			var det=n_d+a_d+b_d+c_d;
+			var nom=n_n+a_n+b_n+c_n;
+			$("#testproductos_nombrecorto").val(nom);
+			$("#testproductos_detalle").val(det);
+		}
+</script>';
+	echo '&nbsp;'.Ajax::linkAction("none", '[ X ]','producto_nuevo-'.$tipo_id, 'class="btn btn-primary"') ;}?>
+<?php View::content() ?>
+
+<?php if($tipo_id==0){echo Form::open(NULL, 'post', 'class="form-horizontal"');}else{echo Ajax::form('producto_nuevo-'.$tipo_id,NULL, 'form-horizontal');} ?>
+
+<?php echo Form::hidden('testproductos.id') ?>
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+  
+  <tr>
+    <th width="25%" align="right" valign="top">Linea del Producto</th>
+    <td width="13%" valign="top"><?php if($tipo_id==0){echo Ajax::dbSelect('lineaproductos','nombre',array('teslineaproductos','find','conditions: estado =1 and activo =1 and aclempresas_id='.Session::get("EMPRESAS_ID")),'tipoproductos','santapatricia/productos/tipoproductos','seleccione');}else{echo $tipos->getTeslineaproductos()->nombre;}?></td>
+    <th width="20%" align="right" valign="top">Tipo de Producto:</th>
+    <td width="42%" valign="top"><?php if($tipo_id==0){?>
+      <select name="select">
+        <option>Selecciona la linea de productos</option>
+      </select>
+    <?php }else{echo $tipos->nombre;echo Form::hidden('testproductos.testipoproductos_id','',$tipo_id);}?></td>
+  </tr>
+  <tr>
+    <th align="right" valign="top">Codigo:&nbsp;</th>
+    <td valign="top">
+	<?php 
+	echo Form::text('testproductos.codigo','size="20" readonly="readonly"',$codigo)?></td>
+    <th align="right" valign="top">Titulo:&nbsp;</th>
+    <td valign="top"><?php echo Form::text('testproductos.nombre','size="40" class="des"') ?></td>
+  </tr>
+  <tr>
+    <th align="right" valign="top">Nombre corto:&nbsp;</th>
+    <td valign="top"><?php echo Form::text('testproductos.nombrecorto','size="30"') ?></td>
+    <th align="right" valign="top">Abreviatura:&nbsp;</th>
+    <td valign="top"><?php echo Form::text('testproductos.abr','size="10"') ?></td>
+  </tr>
+  <tr>
+    <th align="right" valign="top">Sotk Minimo:</th>
+    <td valign="top"><?php echo Form::text('testproductos.stokminimo','size="10"')?></td>
+    <th align="right" valign="top">Sistema:</th>
+    <td valign="top"><?Php echo Form::dbSelect('testproductos.hilosistema_id','nombre,abr',array('hilosistema','find'),'seleccione','class="des"')?></td>
+  </tr>
+  <tr>
+    <th align="right" valign="top">Sotk Maximo:</th>
+    <td valign="top"><?php echo Form::text('testproductos.stokmaximo','size="10"')?></td>
+    <th align="right" valign="top">Tipo Material:</th>
+    <td valign="top"><?Php echo Form::dbSelect('testproductos.hiloacabados_id','nombre,abr',array('hiloacabados','find','conditions: testipoproductos_id='.$tipo_id),'seleccione','class="des"')?></td>
+  </tr>
+  <tr>
+    <th align="right" valign="top">Precio:</th>
+    <td valign="top"><?php echo Form::text('testproductos.precio') ?></td>
+    <th align="right" valign="top">Caracteristicas:</th>
+    <td valign="top" ><?Php echo Form::dbSelect('testproductos.hilofibras_id','nombre,abr',array('hilofibras','find','conditions: testipoproductos_id='.$tipo_id),'seleccione','class="des"')?></td>
+  </tr>
+  <tr>
+    <th align="right" valign="top">&nbsp;</th>
+    <td valign="top">&nbsp;</td>
+    <th align="right" valign="top">Codigo Proveedor:</th>
+    <td valign="top"><?php echo Form::text('testproductos.cod_proveedor','size="30"')?></td>
+  </tr>
+  <tr>
+    <th align="right" valign="top">Descripcion:&nbsp;</th>
+    <td colspan="3" valign="top"><?php echo Form::textarea('testproductos.detalle','cols="35" rows="4"') ?></td>
+  </tr>
+</table>
+<div class="form-actions">
+    <?php echo Form::submit('Guardar Datos', 'class="btn btn-primary"') ?>
+    <?php if($tipo_id==0){echo Html::linkAction('listado', 'Cancelar', 'class="btn"');} ?>
+    </div>
+<?php echo Form::close() ?>
+<?php if($tipo_id==0){?>
+<?php }?>

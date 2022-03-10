@@ -1,0 +1,61 @@
+<style type="text/css">
+.span_float
+{
+	float:right !important;
+	margin-left:0px;
+	margin-right:-5px;
+}
+</style>
+<div class="card">
+    <h1><em>Repuestos</em></h1>
+</div>
+<div id="mensajes_flash" > <div class="form-actions">
+<?php echo Html::linkAction("crear/$page", 'Crear Repuestos','class="btn btn-primary"') ?>    
+</div> 
+<?php View::content() ?>  
+<div id="ver_resultado"></div>
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+  <tr>
+  	<th width="17" nowrap="nowrap">Nº</th>
+<th width="69" nowrap="nowrap">Cod-Sist</th>
+<th width="69" nowrap="nowrap">Cod- Repuesto</th>
+ <!--       <td width="53">Marca</td>-->
+    <th width="69" nowrap="nowrap">Nombre </th>
+    <th width="79" nowrap="nowrap">Cod-Compra </th>
+    <th width="73" nowrap="nowrap">Cod-Importado </th>
+    <th width="81" nowrap="nowrap">Cod-Fabricacion </th>
+    <th width="64" nowrap="nowrap">Origen </th>
+    <th width="46" nowrap="nowrap">Estado </th>
+    <th width="55" nowrap="nowrap">Acciones </th>
+  </tr>
+<?php $n=0;
+foreach($repuestos->items as $item){ $n++;?>
+  <tr id="<?php echo $item->id?>">
+  	<td><?php echo $n?></td>
+    <td><?php echo $item->codigo?></td>
+    <td><?php echo $item->getTesproductos()->codigo_ant?></td>
+    <?php /*?><td><?php echo $item->marca?></td><?php */?>
+    <td><?php echo $item->getTesproductos()->nombre.' ('.$item->nombre.')';?></td>
+    <td><?php echo $item->getTesproductos()->cod_proveedor;?></td>
+    <td><?php echo $item->codigo_importado;?></td>
+    <td><?php echo $item->codigo_fabricacion;?></td>
+    <td><?php if($item->fabricacion==0){}else{echo "Fabricación";}?><?php if($item->compra==0){}else{echo " / Nacional";}?><?php if($item->importado==0){}else{echo " / Importado";}?></td>
+    <td>
+      <?php 
+	 if($item->activo=='0'){
+	 echo Html::linkAction('activar/'.$item->id.'/'.$page,Html::img("figuras/circulo_rojo.png",'Editar','style="width: 20px;margin-left:5px;margin-right:5px;"'),'');
+	 }else{
+	 echo Html::linkAction("desactivar/$item->id/$page",Html::img("figuras/circulo_verde.png",'Editar','style="width: 20px;margin-left:5px;margin-right:5px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');}?>
+    </td>
+    <td>
+	<?php echo Html::linkAction('editar/'.$item->id.'/'.$page,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'')?>
+    <?php echo Html::linkAction("borrar/$item->id/$page",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:1px;margin-right:1px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+    <?php //echo Html::linkAction("ver/$item->id/$page",Html::img("figuras/ver.png",'Eliminar','style="width: 20px;margin-left:1px;margin-right:1px;"'));?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+<?php View::partial('paginators/classic', false, array('page' => $repuestos ,'url' => Router::get('controller_path').'/listado')); ?>
+<div class="form-actions">
+
+</div>

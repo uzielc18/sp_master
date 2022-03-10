@@ -1,0 +1,126 @@
+<?php
+echo Tag::js('jquery/jquery.tokeninput');
+echo Tag::js('jquery/jquery.clockpick.min');
+Tag::css('token-input');?>
+<script type="text/javascript">
+$(document).ready(function() {
+function cback() {
+this.after("<div id='cbox' />");
+$("#cbox")
+.text('Callback fired!')
+.addClass('red')
+.fadeIn(100)
+.fadeOut(1500);
+}
+$("select").not("#test").change(function() {
+binder();
+});
+function binder() {
+var opts = {};
+$("select").not("#test").each(function() {
+if ($(this).attr("id") != 'event' && $(this).attr("id") != 'layout') {
+opts[$(this).attr("id")] = eval($(this).val());
+}
+else {
+opts[$(this).attr("id")] = $(this).val();
+}
+});
+//console.log(opts);
+$("#peraccidentes_hora").unbind().unbind( "keydown" ).clockpick(opts);
+}
+binder();
+$("#peraccidentes_nombreaccidentado").tokenInput("<?php echo '/'.$module_name.'/accidentes/resultados'?>",
+	{
+    tokenLimit: 1,minChars: 3,
+	<?php if(!empty($peraccidentes->nombreaccidentado)){?>
+	prePopulate: [
+                    {id: 0, name: "<?php echo $peraccidentes->nombreaccidentado?>"}
+                ]
+	<?php }?>
+    });
+});
+
+</script>
+<style type="text/css">
+#CP_hourcont {
+padding: 0px;
+position:absolute;
+border:1px dashed #bbbbbb;
+background-color:#dddddd;
+display:none;
+}
+
+#CP_minutecont {
+background-color:#dddddd;
+padding: 0px;
+position:absolute;
+width:45px;
+border: 1px dashed #cccccc;
+display:none;
+}
+
+.floatleft {
+float:left;
+}
+
+.CP_hour {
+padding:1px;
+font-family: Arial, Helvetica, sans-serif;
+font-size:9px;
+white-space:nowrap;
+cursor:pointer;
+width:35px;
+margin:1px;
+background-color:#eeeeee;
+}
+
+.CP_minute {
+padding:1px;
+background-color:#eeeeee;
+font-family: Arial, Helvetica, sans-serif;
+font-size:9px;
+white-space:nowrap;
+cursor:pointer;
+width:auto;
+margin:1px;
+}
+
+.CP_over {
+background-color:#ffffff;
+}
+</style>
+<div <class="card">
+    <h1><?php echo $titulo?></h1>
+</div>      
+<?php View::content() ?>
+<?php echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
+<?php echo Form::hidden('peraccidentes.id') ?>
+<div class="control-group">
+    <label for="teslineaproductos_nombre">Nombre*: </label>
+    <div class="controls">
+        <?php echo Form::text('peraccidentes.nombreaccidentado') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label for="usuario_clave2">Fecha*:</label>
+    <div class="controls">
+        <?php echo Calendar::text('peraccidentes.fecha') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label for="usuario_clave2">Hora Aprox*: </label>
+    <div class="controls">
+        <?php echo Form::text('peraccidentes.hora') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label for="teslineaproductos_detalle">Detalle*: </label>
+    <div class="controls">
+        <?php echo Form::textarea('peraccidentes.detalle') ?>
+    </div>
+</div>
+
+<div class="form-actions">
+    <?php echo Form::submit('Guardar Datos','class="btn btn-primary"') ?>
+    <?php echo Html::linkAction('', 'Cancelar', 'class="btn"') ?>
+    </div>

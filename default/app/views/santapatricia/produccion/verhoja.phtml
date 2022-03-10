@@ -1,0 +1,102 @@
+<div class="card">
+<h1>Hoja de Ruta<span><?php echo Session::get('MAQUINA_PREFIJO')?><?php echo Session::get('MAQUINA_NUMERO')?></span></h1>
+</div>
+<div class="form-actions">
+<?php echo Html::linkAction("", 'Escoger Maquina','class="btn btn-secondary"') ?>
+<?php 
+echo '&nbsp;';
+echo Html::linkAction("listado/","Ir a Listado de Hojas",'class="btn btn-secondary"');
+echo '&nbsp;';
+echo Html::link($module_name."/plegadores/seguimiento_plegadores","Ir a Seguimiento de plegadores",'class="btn btn-secondary"');
+//echo Html::linkAction("cambiarestado/".Session::get('PRODUCCION_ID')."/TERMINADO/listado","Terminar ",'class="btn btn-primary" id="verificar" onclick="return confirm(\'¿Está seguro? !!!! \')"');?>
+</div>
+<?php echo Sp::imprimir();?>
+<div class="card-body">
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0"  class="table-bordered table-striped">
+
+  <tr>
+    <th colspan="9" align="center">HOJA DE RUTA DEL PLEGADOR</th>
+  </tr>
+  <tr>
+    <th width="8%" align="left">Guia Nº:</th>
+    <td width="9%"><?php echo $guianumero?></td>
+    <th width="11%" align="left">Titulo de Urdido:</th>
+    <td width="14%"><?php echo $titulo?></td>
+    <th width="10%" align="left">Servicio de:</th>
+    <td width="15%"><?php echo $serviciode?></td>
+    <th width="11%" align="left">Peso:</th>
+    <td width="11%"><?php echo $peso?>Kg</td>
+    <th width="11%" align="left"><?php echo Sp::formatFecha('%d / %m / %Y',$fecha)?><?php //echo $fecha?></th>
+  </tr>
+  <tr>
+    <th align="left">Nº de Hilos:</th>
+    <td><?php echo $numerohilos?></td>
+    <th align="left">Metros Uridos:</h4></th>
+    <td><?php echo $metros?></td>
+    <th align="left">Color:</h4></th>
+    <td><?php echo $colores?></td>
+    <th align="left">Plegador:</th>
+    <td colspan="2"><?php foreach($plegadoresuso as $p){
+		echo $p->getProplegadores()->numero.' - ';
+		}?></td>
+  </tr>
+</table>
+<table width="110%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+  <caption>Detalle del la hoja de rota del plegador</caption>
+  <tr>
+    <th width="6%" align="left">O. C.</th>
+    <th width="17%" align="left">Articulo</h4></th>
+    <th width="6%" align="left">Color</th>
+    <th width="13%" align="center">Mts Programados</th>
+    <th width="6%" align="left">F.de Corte</th>
+    <th width="9%" align="left">Nº de Rollo</h4></th>
+    <th width="10%" align="center">Mts Revisados</h4></th>
+    <th width="14%" align="left">Trama</th>
+    <th width="10%" align="left">Obs</th>
+    <th width="9%" align="center">Mts en Plegador</th>
+  </tr>
+  <?php 
+  $n=0;
+  $mt=0;
+  foreach($detalles as $detalle){
+	?>
+  <tr>
+    <td><?php if(empty($detalle->tesordendecompras_id))echo "-"; else echo $detalle->getTesordendecompras()->codigo." (".$detalle->getTesordendecompras()->numero_interno.")";?></td>
+    <td><?php echo $detalle->getTesproductos()->nombre.' ('.$detalle->getTesproductos()->codigo_ant.')'?></td>
+    <td><?php echo $detalle->getTescolores()->nombre?></td>
+    <td align="center"><?php echo $detalle->metroprogramados?></td>
+    <td><?php 
+	if(!empty($detalle->fechadecorte)){
+		//echo Sp::formatFecha('%d de %b del %Y',$detalle->fechadecorte);
+		echo Sp::formatFecha('%d/%m/%Y',$detalle->fechadecorte);
+	}
+	?></td>
+    <td align="center"><?php if(!empty($detalle->fechadecorte))
+	{
+		$r=0; 
+		foreach($detalle->getRollos() as $rollo):
+		$r++; 
+		if($r!=1) echo ' &nbsp;/&nbsp; '; 
+		if(empty($rollo->numero))echo $rollo->numeroventa;else echo $rollo->numero; 
+		endforeach;}?></td> 
+    <td align="center"><?php if(!empty($detalle->fechadecorte))
+	{
+		$r=0; 
+		$mr=0;
+		foreach($detalle->getRollos() as $rollo):
+		$r++; 
+		if($r!=1)echo '&nbsp;/&nbsp;'; 
+		echo $rollo->metros; 
+		$mr= ($mr+$rollo->metros)/$r;
+		endforeach;
+		$mt=$mt+$mr;
+	}?></td>
+    <td style="color:#333333; font-size:8px;"><?php $t=0;
+	foreach($detalle->getProtrama() as $trama): $t++; 
+	echo '<b>S'.$t.'.-</b> '.$trama->getTesproductos()->nombre.' ';if(!empty($trama->tescolores_id))echo $trama->getTescolores()->nombre;else echo " - -"; endforeach;?></td>
+    <td><?php echo $detalle->observaciones?>-<?php echo $detalle->corte?></td>
+    <td align="center"><?php echo $metros-$mt?>
+  </tr>
+  <?php }?>
+</table>
+</div>

@@ -1,0 +1,157 @@
+
+<div class="card">
+<h1>Ingresar el detalle de las cajas para<span><?php echo $detalle->id?> <?php echo $detalle->getTesproductos()->nombre?> <?Php echo $detalle->getTesproductos()->detalle?></span></h1>
+</div>
+<?Php View::content();?>
+<div class="form-actions"><a href="javascript:;" id="<?php echo $id_detalle?>" class="btn btn-primary agregaruno">Agregar</a></div>
+<div class="card-body">
+<div class="span1"></div>
+<div class="span10">
+<table width="99%" border="0" cellpadding="0" cellspacing="0" class="table">
+<thead>
+<tr>
+<th width="6%">Nº</th>
+<th width="10%"># caja</th>
+<th width="28%">Tipo de empaque</th>
+<th width="12%">Peso</th>
+<th width="12%">Conos</th>
+<th width="10%">Lote</th>
+<th width="14%">Color</th>
+<th width="8%">Acc</th>
+</tr>
+</thead>
+</table>
+<ul>
+<?php $n=0; foreach($cajas as $caja){$n++;?>
+<li style="border-bottom:#CCC solid 1px; display:block; padding:2px;">
+<div id="c-<?php echo $caja->id?>">
+<?php echo $n?> 
+<?php echo Form::hidden('detalle_id-'.$caja->id,'',$caja->tesdetalleingresos_id)?>
+<?php echo Form::text('numerodecaja-'.$caja->id,'class="save_caja" placeholder="numero" size="10" ',$caja->numerodecaja)?>
+<?php //echo Form::text('numeroant-'.$cj->id,'class="save_caja" placeholder="numero antiguos" size="10"',$cj->numeroant)?>
+<?php echo Form::dbSelect('tipodecaja-'.$caja->id,'nombre',array('tesproductos','find','conditions: testipoproductos_id=3'),'Seleccione...','',$caja->tipodecaja)?>
+<?php echo Form::text('cpesoneto-'.$caja->id,'class="save_caja" placeholder="Peso neto" size="10"',$caja->pesoneto)?>
+<?php echo Form::text('conos-'.$caja->id,'class="save_caja" placeholder="# de conos" size="10"',$caja->conos)?>
+<?php echo Form::text('lote-'.$caja->id,'placeholder="# de conos" size="10"',$detalle->lote)?>
+<?php echo Form::text('tescolores_id-'.$caja->id,'placeholder="# de conos" size="10"',$detalle->tescolores_id)?>
+<span>
+<?php if(empty($caja->tipodecaja))
+{?>
+<a id="<?php echo $caja->id?>" class="btn borrar" href="javascript:;">Eliminar</a>
+<?php }?>
+</span>
+<a id="<?php echo $caja->id?>" class="btn borrar" href="javascript:;">[X]</a>
+</div></li>
+<?Php }?>
+</ul>
+</div>
+
+<div align="center" id="loading_c" style="display:none;"><img src="/img/ajax-loader1.gif" /></div>
+<div class="span12">
+<?Php echo Form::open();?>
+<?php echo Form::hidden('detalle.id')?>
+<?php echo Form::hidden('detalle.tesingresos_id')?>
+<?php echo Form::hidden('detalle.tesunidadesmedidas_id')?>
+<?php echo Form::hidden('detalle.tesproductos_id')?>
+<?php echo Form::hidden('detalle.cantidad')?>
+<?php echo Form::hidden('detalle.empaque')?>
+<?php echo Form::hidden('detalle.bobinas')?>
+<?php echo Form::hidden('detalle.pesoneto')?>
+<?Php echo Form::submit('TERMINAR','class="btn btn-primary"')?>
+<?Php echo Form::close();?>
+</div>
+<div style="clear:both;"></div>
+</div>
+
+
+<script>
+$(document).ready(function()
+{
+	$(".save_caja").blur(function(e)
+	{
+		var id=$(this).attr('id');
+		//alert(id)
+		var ID=id.split('-');
+		grabarCaja(ID[1]);
+	});
+	$('.agregaruno').click(function()
+	{
+		event.preventDefault();
+		var id_detalle=$(this).attr('id');
+		var dataString ='id_detalle='+id_detalle;
+		//alert(id_detalle);
+		$.ajax({
+            type:"POST",
+            url:"/santapatricia/cajas/crearuno/",
+            data:dataString,
+            beforeSend:function(){
+              $("#loading").show();
+            },
+            success:function(response){
+                $("#loading").hide();
+				$("#cajas_crear").append(response);//alert(response);//$("#"+iddiv).html(response);
+			}
+ 
+         });
+	});
+	$(".borrar").click(function(){
+		var id=$(this).attr('id');
+		alert(id);
+		$.ajax({
+            type:"POST",
+            url:"/santapatricia/cajas/borrar/"+id,
+            beforeSend:function(){
+              $("#loading").show();
+            },
+            success:function(response){
+                $("#loading").hide();
+				$("div #c-"+id).remove();
+			}
+ 
+         });
+		});
+	/*grabar detalle de las cajas */
+	/*
+	$("#empresa").find(':selected').val();
+	*/
+	/*
+	## id del div
+	*/
+	function grabarCaja(iddiv)
+	{
+		//alert(iddiv);
+		var id_detalle=$("#detalle_id-"+iddiv).val();
+		//alert(id_detalle);
+		var tipodecaja=$("#tipodecaja-"+iddiv).find(':selected').val();
+		var pesoneto=$("#cpesoneto-"+iddiv).val();
+		//alert(pesoneto);
+		var conos =$("#conos-"+iddiv).val();
+		//alert(conos);
+		var numeroant=$("#numeroant-"+iddiv).val();
+		var lote=$("#lote-"+iddiv).val();
+		var tescolores_id=$("#tescolores_id-"+iddiv).val();
+		var dataString ='id_detalle='+id_detalle+'&numeroant='+numeroant+'&tipodecaja='+tipodecaja+'&pesoneto='+pesoneto+'&conos='+conos+'&id='+iddiv+'&lote='+lote+'&tescolores_id='+tescolores_id;
+		//alert(id_detalle+' **** '+dataString+' ** '+iddiv);
+		
+	  $.ajax({
+            type:"POST",
+            url:"/santapatricia/cajas/grabar/",
+            data:dataString,
+            beforeSend:function(){
+              $("#loading_c").show();
+            },
+            success:function(response){
+                $("#loading_c").hide();
+				//alert(response)
+				var VAL=response.split("-");//$("#"+iddiv).html(response);
+				
+				$("#detalle_empaque").val(VAL[0]);
+				$("#detalle_bobinas").val(VAL[1]);
+				$("#detalle_pesoneto").val(VAL[2]);
+				
+			}
+ 
+         });
+	}
+});
+</script>

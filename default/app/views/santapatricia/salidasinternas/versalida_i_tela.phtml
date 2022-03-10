@@ -1,0 +1,197 @@
+<br />
+<br />
+<br />
+<table width="255" border="0" cellspacing="1">
+  <tr>
+    <td width="169" align="right"><?php echo date("H:i:s")?></td>
+    <td width="79">&nbsp;</td>
+  </tr>
+</table>
+<table width="113%" border="0" cellspacing="1">
+  <tr>
+    <td align="right">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td width="335" rowspan="2">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="141" height="10" align="right"><?php echo Sp::formatFecha('%d / %m / %Y',$salida->femision)?></td>
+    <td width="215" align="right"><?php echo Sp::formatFecha('%d / %m / %Y',$salida->finiciotraslado)?><?php //echo $finiciotraslado?></td>
+  </tr>
+</table>
+<br />
+<br />
+<table width="113%" border="0" cellspacing="0">
+  <tr>
+    <td width="50" align="right">&nbsp;</td>
+    <td width="328" align="lefth">los alfareros 136 urbanizacion el artezano ate</td>
+    <td width="317" align="lefth"><?php echo $salida->direccion_entrega?></td>
+  </tr>
+
+</table>
+<br />
+<br />
+<table width="113%" border="0" cellspacing="1">
+  <tr>
+    <td width="43" height="31">&nbsp;</td>
+    <td width="221" valign="bottom"><?php echo $salida->getTesdatos()->razonsocial?></td>
+    <td width="10">&nbsp;</td>
+    <td width="112" valign="bottom"><?php echo $salida->getTesdatos()->condigo_ant?></td>
+    <td width="38">&nbsp;</td>
+    <td width="258" valign="bottom"><?php echo $prodetalletransportes->getProtransportes()->marca?> <?php echo $prodetalletransportes->getProtransportes()->modelo?></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td><?php echo $salida->getTesdatos()->direccion?></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td><?Php echo $salida->getTesdatos()->distrito?></td>
+    <td>&nbsp;</td>
+    <td><?php echo $salida->getTesdatos()->ruc?></td>
+    <td>&nbsp;</td>
+    <td><?Php echo $prodetalletransportes->getProtransportistas()->numerodebrevete?></td>
+  </tr>
+</table>
+<br />
+<table width="113%" border="0" cellspacing="1">
+
+  <tr>
+    <td width="200" height="26" align="center" valign="bottom">&nbsp;</td>
+    <td width="78" valign="bottom"><?php echo $salida->npedido?></td>
+    <td width="111" valign="bottom">&nbsp;</td>
+    <td width="51">&nbsp;</td>
+    <td width="76">&nbsp;</td>
+    <td width="166">&nbsp;</td>
+  </tr>
+</table>
+
+<table width="113%" border="0" cellspacing="1">
+  <tr>
+    <td width="7%" height="21">&nbsp;</td>
+    <td width="6%">&nbsp;</td>
+    <td width="3%">&nbsp;</td>
+    <td width="7%">&nbsp;</td>
+    <td width="3%">&nbsp;</td>
+    <td width="3%">&nbsp;</td>
+    <td width="21%">x</td>
+    <td width="7%">&nbsp;</td>
+    <td width="7%">&nbsp;</td>
+    <td width="7%">&nbsp;</td>
+    <td width="7%">&nbsp;</td>
+    <td width="7%">&nbsp;</td>
+    <td width="7%">&nbsp;</td>
+    <td width="8%">&nbsp;</td>
+  </tr>
+</table>
+<br />
+<table width="100%" border="0" cellspacing="1" s>
+  <?php 
+  $n=0;
+  foreach($detalles as $item){
+	  $n++;
+	  ?> 
+  <tr>
+    <td width="78" align="center"><?php echo $n?>. <?php echo $item->getTescajas()->numerodecaja?>
+</td>
+    <td width="60" align="right"><?php echo $item->pesoneto?>
+</td>
+    
+    <td width="65" align="center"><?Php echo $item->getTesunidadesmedidas()->simbolo?>
+ </td>
+    <td width="404"><?php echo $item->getTesproductos()->detalle?> <?Php echo $item->getTescolores()->nombre?>
+    </td>
+  </tr>
+  <?php }?>
+ 
+  <tr>
+    <td colspan="4" align="center">&nbsp;</td>
+  </tr>
+</table>
+<hr />
+<table width="100%" border="0" cellspacing="1">
+	<tr>
+    <td width="16%" align="right">&nbsp;</td>
+    <td width="9%" align="center">500.000</td>
+    <td width="7%" align="center">kilos</td>
+    <td width="68%" align="center" >Acabados Especiales:</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="1">
+  <tr>
+    <td width="3%">&nbsp;</td>
+    <td width="16%">Tipo de Fibra:</td>
+    <td width="25%">Algodon</td>
+    <td width="43%">Suavisado</td>
+    <td width="13%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>Color:</td>
+    <td>Blanco</td>
+    <td>Acabado Silicona</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>Ancho Requerido:</td>
+    <td>2.96</td>
+    <td>Acabado con Antipiling e Inarrugable</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>Rendimineto</td>
+    <td>2.35</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>Observaciones:</td>
+    <td colspan="3">Servicio de lavado y teñido y acabados con antipiling e inarrugable no cortar marcas</td>
+    </tr>
+
+</table>
+<br/>
+<table width="113%" border="0" cellspacing="1">
+  <tr>
+    <td width="9%">&nbsp;</td>
+    <td width="89%">roberto</td>
+    <td width="1%">&nbsp;</td>
+    <td width="1%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>textil santa patricia</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>los alfareros</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>20101619240</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>d4m-848</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>

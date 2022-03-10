@@ -1,0 +1,62 @@
+<?php View::content()?>
+<div class="card">
+    <h1>Rollos</h1>
+</div>
+<div class="form-actions">
+<?php echo Menu::menuControl($action_name);?>
+<?php echo Html::link($module_name.'/tintoreria/salidas','Volver','class="btn"');?>
+</div>
+<div id="ver"></div>
+<div class="card-body">
+<div class="span6">
+<table width="20%" class="table table-bordered table-striped">
+<caption>Rollos-Venta en Almacen</caption>
+  <tr>
+    <th width="37" align="left">Articulo</th>
+    <th width="17" align="left"># Rollo</th>
+    <th width="33" align="left">Metros</th>
+    <th width="51" align="left">Peso</th>
+  </tr>
+  <?php foreach($rollos_almacen as $item){?>
+ 
+  <tr title="<?php //echo $item->getTesdetalleingresos()->getTesingresos()->getTesdatos()->razonsocial?>">
+    <td><?php echo $item->getTesproductos()->nombre?><?php //echo $item->estadorollo?><?php //echo $item->enalmacen?> </td>
+    <td><?php if(empty($item->prorollos_id)){echo $item->numeroventa; }?></td>
+    <td><?php echo $item->metros?></td>
+    <td><?php echo $item->peso?></td>
+  </tr>
+  <?php }?>
+</table>
+</div>
+<div class="span5">
+<table width="20%" class="table table-bordered table-striped">
+<caption>Rollos en Proceso de Ingreso 
+<?php echo Ajax::linkAction('ingresoalmacen','Ingresar Rollos al Almacen','ver','btn btn-primary');?></caption>
+  <tr>
+    <th align="left">Articulo</th>
+    <th align="left"># Rollo</th>
+    <th align="left">Metros</th>
+    <th align="left">Peso</th>
+  </tr>
+  <?php foreach($rollos as $item){?>
+  <tr title="<?php //echo $item->getTesdetalleingresos()->getTesingresos()->getTesdatos()->razonsocial?>">
+    <td><?php echo $item->getTesproductos()->nombre?><?php //echo $item->estadorollo?><?php //echo $item->enalmacen?> </td>
+    <td><?php if(empty($item->prorollos_id)){echo $item->numeroventa; }?></td>
+    <td><?php echo $item->metros?></td>
+    <td><?php echo $item->peso?></td>
+  </tr>
+  <?php }?>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<script type="text/javascript">
+$(document).ready(function()
+{
+	$("#ver_fuera").click(function(){
+		$("#cajas_urdido").toggle();
+	});
+
+
+});
+</script>

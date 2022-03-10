@@ -1,0 +1,155 @@
+<style type="text/css">
+.span_float
+{
+	float:right !important;
+	margin-left:0px;
+	margin-right:-5px;
+}
+</style>
+<div class="card">
+    <h1>Facturacion!<span><?php echo $titulo?> <?php echo Session::get('DOC_NOMBRE')?></span></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="form-actions">
+<?php echo Html::linkAction("", 'Volver ','class="btn"') ?>
+<?php //echo Html::linkAction("cargar_doc/7/factura_adelanto", 'Factura por Adelanto ','class="btn btn-primary"') ?>
+<?php //echo Html::linkAction("cargar_doc/7/listado_servicio", 'Facturas por Servicio','class="btn btn-primary"') ?>
+</div>
+<div class="card-body">
+<div id="ver_resultado"></div>
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+<caption>Facturas Emitidas !</caption>
+  <tr>
+  	<th width="18" align="left">Nº</th>
+    <th width="85" align="left">Cliente</th>
+    <th width="85" align="left">Número Doc.</th>
+    <th width="127" align="left">Productos </th>
+    <th width="58" align="left">Sub-total</th>
+    <th width="44" align="left">Igv</th>
+    <th width="77" align="left">Total</th>
+    <th width="64" align="left">Acciones </th>
+  </tr>
+
+<?php $number=0;
+foreach($salidas as $item){ 
+$simbolo="S/. ";
+switch ($item->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+$number++;?>
+  <tr id="<?php echo $item->id?>" title="<?Php echo $item->npedido?>">
+  	<td height="20"><?php echo $number?></td>
+  	<td height="20"><?php echo $item->getTesdatos()->razonsocial?></td>
+    <td><?php echo $item->serie?>-<?php echo $item->numero?></td>
+    <td>
+    <small style="color:#666; font-size:10px !important; font-style:italic; ">
+	<?php
+    $n=0;$m=0;
+	foreach($item->getTesdetallesalidas() as $det)
+	{
+
+		if($det->tesproductos_id!=0){$n++;
+		echo $det->getTesproductos()->nombre;if(count($item->getTesdetallesalidas())>$n){echo ", ";}
+		}else{
+			echo $det->concepto;
+			}
+	}
+	?>
+    </small>
+    </td>
+    <td><?php if($item->totalconigv!='NaN.00' && !empty($item->totalconigv))echo $simbolo.number_format($item->totalconigv-$item->igv,2,'.','');else echo('S/ 00.00');?></td>
+    <td><?php if($item->totalconigv!='NaN.00' && !empty($item->totalconigv))echo $simbolo.number_format($item->igv,2,'.','');else echo('S/ 00.00')?></td>
+    <td><?php if($item->totalconigv!='NaN.00' && !empty($item->totalconigv))echo $simbolo.number_format($item->totalconigv,2,'.','');else echo('S/ 00.00')?></td>
+   <td>
+   <?php 
+   if($item->estadosalida=="Editable")
+   {
+	   $pos=strpos($item->npedido,'PA');
+	   if($pos===FALSE)
+	   {
+		   echo Html::linkAction('cargarsalida/'.$item->id.'/agregardetalles',Html::img("figuras/editar.png",'EDITAR','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Editar Guia - 001"');
+		}else
+		{
+			//factura_adelanto
+			echo Html::linkAction('factura_adelanto/'.$item->id,Html::img("figuras/editar.png",'EDITAR','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Editar Factura! - 001"');
+		}
+   }
+   //echo $item->npedido;
+	$pos=strpos($item->npedido,'PA');
+	if($pos===FALSE)
+	{
+		echo Html::linkAction('cargarsalida/'.$item->id.'/versalida',Html::img("figuras/ver.png",'Ver','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Ver e Imprimir Factura!"');}else{echo Html::linkAction('cargarsalida/'.$item->id.'/versalida_adelanto',Html::img("figuras/ver.png",'Ver','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Ver e Imprimir Factura!"');}?>
+    <?php //echo Html::linkAction("borrar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:1px;margin-right:1px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+    <?php if($item->estadosalida!='ANULADO')echo Html::linkAction("anularfacturas/$item->id/",' X ','class="btn btn-danger" title="Anular" onclick="return confirm(\'¿Está seguro de anular esta factura ?\')"'); else echo "Anulado";?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+
+<?Php echo Form::open($module_name.'/ventas/generarfactura','POST');?>
+  <fieldset>
+    <legend>Seleccionar Guia(s) a Facturar!
+</legend>
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+<caption>Seleccionar Guia(s)para Facturar!</caption>
+  <tr>
+  	<th width="17" align="left">Nº</th>
+    <th width="320" align="left">Cliente</th>
+    <th width="135" align="left">Nero. Doc.</th>
+    <th width="128" align="left"> Nro. Factura</th>
+    <th width="60" align="left">Acciones </th>
+  </tr>
+<?php $number=0;
+foreach($guias as $item){ 
+$simbolo="S/. ";
+switch ($item->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+$number++;?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20"><?php echo $number?></td>
+  	<td height="20"><?php echo $item->getTesdatos()->razonsocial?></td>
+    <td><?php echo $item->serie?>-<?php echo $item->numero?></td>
+    <td><?php echo $item->numerofactura?></td>
+   <td>
+
+    <label class="checkbox" style="float:left; width:90px;">
+          <input type="checkbox" name="itemSelect[]" value="<?php echo $item->id?>" class="sele"> Seleccionar
+        </label>
+
+		<?php if($item->estadosalida!='ANULADO')echo Html::linkAction("anularguias/$item->id/",' X ','class="btn btn-danger" title="Anular" onclick="return confirm(\'¿Está seguro de anular esta guia los rollos seran restablecidos ?\')"'); else echo "Anulado";?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+<?php if($number!=0){?>
+ <button type="submit" class="btn btn-primary">Emitir Factura!</button> 
+ <?php }?> 
+  </fieldset>
+  <?php echo Form::hidden('facturas.ids');?>
+<?Php echo Form::close();?>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$('.sele').click(function(){
+		var selectedItems = new Array();
+		$("input[@name='itemSelect[]']:checked").each(function(){
+			selectedItems.push($(this).val());
+		});
+		$("#facturas_ids").val(selectedItems);
+	});
+});
+</script> 

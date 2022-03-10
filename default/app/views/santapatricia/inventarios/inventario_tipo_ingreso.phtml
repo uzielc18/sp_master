@@ -1,0 +1,112 @@
+<?php
+$simbolo="S/. ";
+
+switch ($inventario->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+View::content();
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<div class="card">
+	<h1> Reporte <?Php echo $nombre?></h1>
+    </div>
+    <div class="form-actions" title="Regresar!">
+     <?php echo Html::linkAction("",'Regresar ','class="btn btn"') ?>
+	 <?php echo html::linkAction('inventario_tipo_ingreso/3/1/ALMACEN','ALMACEN','class="btn btn-secondary"')?>
+     <?php echo html::linkAction('inventario_tipo_ingreso/3/2/URDIDO','URDIDO','class="btn btn-secondary"')?>
+     <?php echo html::linkAction('inventario_tipo_ingreso/3/3/CHENILLE','CHENILLE','class="btn btn-secondary"')?>
+     <?php echo html::linkAction('inventario_tipo_ingreso/3/4/DEVOLUCION','DEVOLUCION','class="btn btn-secondary"')?>
+     <?php echo html::linkAction('inventario_tipo_ingreso/3/5/OTROS','OTROS','class="btn btn-secondary"')?>
+     <?php echo html::linkAction('reporte_cajas/','Cajas','class="btn btn-secondary"')?>
+     </div>
+<div style="clear:both"></div>
+    <form class="form-inline">
+<div class="input-prepend input-append">
+  <span class="add-on" title="Buscar Producto"><strong><em>Busque el Prducto</em></strong></span><em><strong>
+  <input type="text" id="demo-input-local_producto" name="blah" class="input-medium search-query" />
+  </strong></em>  </div>
+</form>
+<div id="vista_p"></div>
+    <div class="card-body">
+	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+    <caption>Hilo Enviado a Urdir</caption>
+    <thead>
+		  <tr>
+		      <th width="6%" align="left">Codigo</th>
+	        <th width="19%" align="left">Producto</th>
+            <th width="13%" align="left">Color</th>
+            <th width="15%" align="left">Lote</th>
+	        <th width="10%" align="left">Inicial</th>
+	        <th width="12%" align="left">Ingresos</th>
+            <th width="10%" align="left">Salidas</th>
+	        <th width="11%" align="left">Stock</th>
+	        <th width="4%" align="left">Medida</th>
+	      </tr>
+	</thead>
+    	  <?php 
+			  $n=0;
+			  $subtotal=0;
+			  $subtotalD=0;
+			  $array_producto='';
+		  $id_productoA=0;
+			  //$igv=0;
+			  foreach($detalles as $item){
+				  $i_coma=',';
+				  if($n==0){$i_coma='';}
+				  if($id_productoA!=$item->tesproductos_id)$array_producto.=$i_coma.'{id: '.$item->tesproductos_id.', name: "'.$item->getTesproductos()->detalle.'"}';
+				  $id_productoA=$item->tesproductos_id;
+				  
+				  $n++;
+				 // print_r($item->getTesproductos()->getTotalingresos($item->tesproductos_id,$item->tescolores_id,$item->lote));
+				  $STOCK=(float)$item->getTesproductos()->getStockLote($item->tesproductos_id,$item->tescolores_id,$item->lote);
+				  $inicial=$item->getTesproductos()->getStockInicialLote($item->tesproductos_id,Session::get("INVENTARIO_ID"),$item->lote);
+				  $stock_ingreso=$item->getTesproductos()->getTotalingresos($item->tesproductos_id,$item->tescolores_id,$item->lote)-number_format($inicial,2,'.','');
+				  $stock_salida=$item->getTesproductos()->getTotalsalidas($item->tesproductos_id,$item->tescolores_id,$item->lote);
+			  ?>
+		  <tr id="<?php echo $n?>" align="left">
+           <td><?php //echo $item->getTesingresos()->getTesdocumentos()->nombre?><?php //echo $item->id?><?php echo $item->getTesproductos()->codigo?></td>
+		   <td class="item-name">
+                  <?php echo $item->getTesproductos()->nombre?> <?php echo $item->getTesproductos()->detalle?>
+           </td>
+           <td><?php echo $item->getTescolores()->nombre?></td>
+           <td><?php echo $item->lote?></td>
+           <td><?php echo number_format($inicial,2,'.','')?></td>
+           <td><?php echo $stock_ingreso?></td>
+           <td><?php echo $stock_salida?></td>
+		   <td>
+		   <?php 
+		   echo number_format($STOCK,'2','.',' ');?>
+           </td>
+		   <td><?php echo $item->getTesunidadesmedidas()->nombre?></td>
+	      </tr>
+		  <?php }
+		  ?>
+		  </table>
+
+     <div style="clear:both"></div> 
+     
+</div>
+<script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-local_producto").tokenInput(
+			[
+                <?php echo $array_producto?>
+            ],
+			{
+                minChars: 1,
+                tokenLimit: 1,
+				onAdd: function (item) {
+					$("#vista_p").load("/<?php echo $module_name?>/<?php echo $controller_name?>/<?php echo "inventario_producto_color_lote"?>_uno/" + item.id);
+                },
+                onDelete: function (item) {
+                    $("#vista_p").html('');
+                }
+			});
+			
+        });
+        </script>

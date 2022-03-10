@@ -1,0 +1,149 @@
+<style type="text/css">
+.page {
+position: relative;
+z-index: 2;
+}
+
+.texto {
+color:#F00;
+position:absolute;
+padding-top:10%;
+text-align:center ;
+z-index:1;
+top:0;
+left:0;
+right:0;
+bottom:0;
+font-size:36px !important;
+}
+</style>
+<?php 
+$monedas= $salida->tesmonedas_id;
+switch ($monedas)
+{
+	case 1: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES'; break;
+	case 2: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 4: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
+	case 5: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 0: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
+}
+?>
+<div class="card"><h1>Vista previa del documento</h1></div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="form-actions"><?php echo Html::linkAction('nota_creditos/','Listado','class="btn"')?> </div>
+<div class="card-body">
+<div id="ver_resultado"></div>
+<table align="center" width="50%" border="0" cellspacing="0" cellpadding="0" class="table-bordered"> 
+<caption>Venta - <?php echo Session::get('DOC_NOMBRE')?></caption>
+  <tr>
+    <th width="40%" align="left">Cliente:</th>
+    <td width="60%"><?php echo $salida->getTesdatos()->razonsocial?> </td>
+  </tr>
+  <tr>
+    <th align="left">Serie-Numero:</th>
+    <td><?php echo $salida->serie?>-<?php echo $salida->numero?></td>
+  </tr>
+  <tr>
+    <th align="left">Pedido :</th>
+    <td><?php echo $salida->npedido?></td>
+  </tr>
+  <tr>
+    <th align="left">Fecha de Emision:</th>
+    <td><?php echo Sp::formatFecha('%d/%m/%Y',$salida->femision);?></td>
+  </tr>
+</table>
+<br />
+<div id="guia">
+<table width="75%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+<caption>Referencia</caption>
+  <thead>
+  <tr>
+    <th width="11%" align="left">Codigo</th>
+    <th colspan="5" align="left">Descripcion</th>
+    <th width="12%" align="left">Importe</th>
+  </tr>
+  </thead>
+  <tbody>
+  <?php
+  $n=0;
+  $total=0;
+  foreach($detalles as $item){
+	  $n++;
+	  ?> 
+  <tr id="<?php echo $item->id?>">
+    <td><?php echo $n?>. <?php if(!empty($item->tesproductos_id)){if(empty($item->getProrollos()->prorollos_id)){echo $item->getProrollos()->numero?>-M<?php echo $item->getProrollos()->maquina_numero;}else{echo $item->getProrollos()->codigo?>-<?php echo $item->getProrollos()->numeroventa; echo ' '.$item->getProrollos()->getNprocesos($item->prorollos_id);}}?></td>
+    <td colspan="5"><?Php echo $salida->glosa;?> <?Php echo $item->concepto?></td>
+    <td><?php echo $simbolo?><?php 
+	$total=$total+$item->importe;
+	if(!empty($item->importe))echo number_format($item->importe,2,'.','');else echo "0.00";?></td>
+  </tr>
+  <?php }?>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td width="8%">&nbsp;</td>
+    <td width="8%">&nbsp;</td>
+    <td width="10%">Sub total</td>
+    <td><?php echo $simbolo?><?php echo number_format($total,2,'.','');?></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>Total</td>
+    <td><?php echo $simbolo?><?php $TOTAL=$total;echo number_format($TOTAL,2,'.','');?></td>
+  </tr>
+  </tbody>
+  <tfoot>
+  <tr>
+    <td colspan="7">
+<?php echo $texto=NumerosLetras::NL($total,$moneda_letras);?></td>
+  </tr>
+  </tfoot>
+</table>
+<script type="text/javascript">
+
+$(document).ready(function()
+{
+
+	$("#editar_letras").click(function(){
+		alert('hola');
+		cargar();
+	});
+});
+	</script>
+ <div class="form-actions">
+<?php 
+if($salida->tescondicionespagos_id!=2)
+	{$salida->tescondicionespagos_id;?>
+	<?php echo Form::open(NULL,'POST','class="form-inline"')?>
+	<?php echo Form::hidden('salida.id')?>
+	<?php echo Form::hidden('salida.aclusuarios_id')?>
+	<?php echo Form::hidden('salida.tesmonedas_id')?>
+	<?php echo Form::hidden('salida.tesdatos_id')?>
+	<?php echo Form::hidden('salida.tesdocumentos_id')?>
+	<?php echo Form::hidden('salida.testipocambios_id')?>
+	<?php echo Form::hidden('salida.total','',$TOTAL);?>
+	<?php echo Form::hidden('salida.totalenletras','',$texto);?>
+	<?php 
+	if($salida->estadosalida=='Pendiente')echo Form::Select('salida.estadosalida',array('Pendiente'=>'Pendiente','PAGADO'=>'Pagado'),'','Pendiente');else echo Form::hidden('salida.estadosalida','','Pendiente');?>
+	<?php if($salida->estadosalida=='Editable'){?><button type="submit" class="btn btn-primary">Finalizar</button> 
+	<?php echo Html::linkAction('agregardetalles','Editar','class="btn"')?><?Php }?>
+    <?php if($salida->estadosalida=='Pendiente'){?><button type="submit" class="btn btn-primary">PAGAR</button><?Php }?>
+<?php echo Form::close();
+}
+?>
+<button onclick="myFunction()" class="btn btn-info"> IMPRIMIR </button>
+</div>
+<script>
+function myFunction() {
+    window.open("http://"+document.domain+"/imprimir/detalles", "_blank", "toolbar=NO, scrollbars=yes, resizable=yes, top=100, left=250, width=600, height=400");
+}
+</script>
+
+</div>

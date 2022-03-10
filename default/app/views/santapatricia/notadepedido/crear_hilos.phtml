@@ -1,0 +1,533 @@
+<?php
+View::content();
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<script type="text/javascript">
+function mod(dividendo , divisor) 
+{ 
+  resDiv = dividendo / divisor ;  
+  parteEnt = Math.floor(resDiv);            // Obtiene la parte Entera de resDiv 
+  parteFrac = resDiv - parteEnt ;      // Obtiene la parte Fraccionaria de la división
+  modulo = Math.round(parteFrac * divisor);  // Regresa la parte fraccionaria * la división (modulo) 
+  return modulo; 
+} // Fin de función mod
+
+// Función ObtenerParteEntDiv, regresa la parte entera de una división
+function ObtenerParteEntDiv(dividendo , divisor) 
+{ 
+  resDiv = dividendo / divisor ;  
+  parteEntDiv = Math.floor(resDiv); 
+  return parteEntDiv; 
+} // Fin de función ObtenerParteEntDiv
+
+// function fraction_part, regresa la parte Fraccionaria de una cantidad
+function fraction_part(dividendo , divisor) 
+{ 
+  resDiv = dividendo / divisor ;  
+  f_part = Math.floor(resDiv); 
+  return f_part; 
+} // Fin de función fraction_part
+
+function roundNumber(number,decimals)
+{
+  var newString;// The new rounded number
+  decimals = Number(decimals);
+  if (decimals < 1) {
+    newString = (Math.round(number)).toString();
+  } else {
+    var numString = number.toString();
+    if (numString.lastIndexOf(".") == -1) {// If there is no decimal point
+      numString += ".";// give it one at the end
+    }
+    var cutoff = numString.lastIndexOf(".") + decimals;// The point at which to truncate the number
+    var d1 = Number(numString.substring(cutoff,cutoff+1));// The value of the last decimal place that we'll end up with
+    var d2 = Number(numString.substring(cutoff+1,cutoff+2));// The next decimal, after the last one we want
+    if (d2 >= 5) {// Do we need to round up at all? If not, the string will just be truncated
+      if (d1 == 9 && cutoff > 0) {// If the last digit is 9, find a new cutoff point
+        while (cutoff > 0 && (d1 == 9 || isNaN(d1))) {
+          if (d1 != ".") {
+            cutoff -= 1;
+            d1 = Number(numString.substring(cutoff,cutoff+1));
+          } else {
+            cutoff -= 1;
+          }
+        }
+      }
+      d1 += 1;
+    } 
+    if (d1 == 10) {
+      numString = numString.substring(0, numString.lastIndexOf("."));
+      var roundedNum = Number(numString) + 1;
+      newString = roundedNum.toString() + '.';
+    } else {
+      newString = numString.substring(0,cutoff) + d1.toString();
+    }
+  }
+  if (newString.lastIndexOf(".") == -1) {// Do this again, to the new string
+    newString += ".";
+  }
+  var decs = (newString.substring(newString.lastIndexOf(".")+1)).length;
+  for(var i=0;i<decimals-decs;i++) newString += "0";
+  //var newNumber = Number(newString);// make it a number if you like
+
+  return newString; // Output the result to the form field (change for your purposes)
+}
+/*FIN DE REDONDEO*/
+function addCommas(nStr)
+{
+    nStr += '';
+    x = nStr.split('.');
+    x1 = x[0];
+    x2 = x.length > 1 ? '.' + x[1] : '';
+    var rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return x1 + x2;
+}
+
+/*BUSCAR PRODUCTO*/
+	/*  */		
+function buscarProducto(id)
+{
+	if(id==0){
+	var row = $(this).parents('.item-row:last');
+	var ID = $('.item-row:last').attr('id');
+	}else{var ID = id;
+	}
+	//alert(ID);
+	$("#producto-"+ID).tokenInput("<?php echo "/".$module_name."/ordendecompra/producto/"?>", 
+		{
+			
+		tokenLimit: 1,
+		minChars: 1,
+		prePopulate: [ 
+		             {id: $("#productos_id-"+ID).val(), name: ""+$("#producto-"+ID).val()+""},
+					 ],
+		onAdd: function (item) {
+		   var VAL=item.id;
+		   var row =$(this).parents('.item-row')
+		   row.find('.productos_id').val(VAL['id']);
+		   //row.find('.pro_descripcion').val(VAL['detalle']);
+		   row.find('.cost').val(VAL['precio']);
+		   row.find('.delete').attr("data-id",0);
+		   $('#codigo-'+ID).val(VAL['codigo']);
+		  //$('#ver'+ID).hide();
+		  // $('#ver-name'+ID).show();
+		   $('#productoname-'+ID).val(VAL['detalle']);
+		},
+		onDelete: function (item) {
+			var row =$(this).parents('.item-row')
+		   row.find('.productos_id').val('');
+		   row.find('.pro_descripcion').val('');
+		   row.find('.cost').val('');
+		   row.find('.qty').val('');
+		   var id=row.find('.delete').attr('data-id');
+		  	EliminarDetalle(id);
+		}
+	});
+}
+/*BUSCAR PRODUCTO*/
+	/*  */		
+function buscarUnidad(id)
+{
+	if(id=='0'){
+	var row = $(this).parents('.item-row:last');
+	var ID = $('.item-row:last').attr('id');
+	}else{
+	var ID = id;
+	}
+	//alert(ID);
+	$("#tesunidadesmedidas-"+ID).tokenInput("<?php echo "/".$module_name."/ordendecompra/medidas/"?>", 
+		{
+			
+		tokenLimit: 1,
+		minChars: 1,
+		prePopulate: [ 
+		             {id: $("#tesunidadesmedidas_id-"+ID).val(), name: ""+$("#tesunidadesmedidas-"+ID).val()+""},
+					 ],
+		onAdd: function (item) {
+		   var VAL=item.id;
+		   $("#tesunidadesmedidas_id-"+ID).val(item.id);
+		   $("#tesunidadesmedidas-"+ID).val(item.name);
+		   grabarDetalle(ID);
+		},
+		onDelete: function (item) {
+		  $("#tesunidadesmedidas_id-"+ID).val('');
+		   $("#tesunidadesmedidas-"+ID).val('');
+		}
+	});
+}
+
+/*envio dew Formulario PROFORMAS*/
+  function GRABAR(){
+     var dataString=$("#proformas").serialize();
+	 alert(dataString);
+          $.ajax({
+            type:"POST",
+            url:"/<?php echo $module_name?>/notadepedido/grabar/",
+            data:dataString,
+            beforeSend:function(){
+              $("#loading").show();
+            },
+            success:function(response){
+                $("#loading").hide();
+				$("#id").val(response);
+				//alert(response);
+            }
+ 
+          	});
+ 
+      }
+
+/*GRABAR DETALLE DE PROFORMAS*/
+
+function grabarDetalle(tr_id) {
+
+  var producto_id=$('#productos_id-'+tr_id).val();
+  var pro_descripcion=$('#pro_descripcion-'+tr_id).val();
+  var cantidad=$('#cantidad-'+tr_id).val()
+  var id_detalle=$('#del-'+tr_id).attr("data-id");
+  var unidadmedida_id=$('#tesunidadesmedidas_id-'+tr_id).val();
+ //alert('ID del PRODUCTO'+producto_id);
+ //alert('id del detalle es 0 cuando es nuevo--->'+id_detalle);
+ //alert('id del tr que se graba-->'+tr_id);
+  
+  if(producto_id!='')
+  {
+	  var dataString ='id_detalle='+id_detalle+'&tesunidadesmedidas_id='+ unidadmedida_id+'&tesproductos_id='+ producto_id+'&descripcion='+pro_descripcion+'&cantidad='+cantidad;
+	  //alert(dataString);
+	  $.ajax({
+            type:"POST",
+            url:"/<?php echo $module_name?>/notadepedido/grabarDetalle/",
+            data:dataString,
+            beforeSend:function(){
+              $("#loading").show();
+            },
+            success:function(response){
+                $("#loading").hide();
+				//alert('id del detalle grabado'+response);
+				$('#del-'+tr_id).attr("data-id", response);
+            }
+ 
+         });
+  }
+  
+}
+function EliminarDetalle(id)
+{
+	if(id!=0){
+	$.ajax({
+            type:"POST",
+            url:"/<?php echo $module_name?>/notadepedido/eliminarDetalle/"+id,
+            beforeSend:function(){
+              $("#loading").show();
+            },
+            success:function(response){
+				$("#loading").hide();
+				alert('Se elimino de la base de dato');
+            }
+ 
+         });
+	}else
+	{
+		return false;
+	}
+}
+
+function bind() {
+ 
+ <?php if($origen!='Produccion'){?> if ($(".delete").length > 1) $(".delete").show();else $(".delete").hide();<?php }else{?>$(".delete").hide();<?php }?>
+  $(".qty").blur(function(){
+	var ID = $(this).attr('id');
+  	var I=ID.split('-');
+  	grabarDetalle(I[1]);
+  });
+  $(".save").blur(function(){
+	var ID = $(this).attr('id');
+  	var I=ID.split('-');
+  	grabarDetalle(I[1]);
+  });
+  $(".producto").click(buscarProducto(0));
+  $(".unidad").click(buscarUnidad(0));
+}
+
+$(document).ready(function()
+{	  
+	
+  $('.grabar').blur(function(){
+    GRABAR();
+  });   
+  $("#addrow").click(function(){
+	var ID = $('.item-row:last').attr('id');
+	//alert(ID);
+	grabarDetalle(ID);
+	var IDnew=Number(ID)+Number(1);
+	var TR='<tr id="'+IDnew+'" class="item-row"><td><div class="delete-wpr"><input id="codigo-'+IDnew+'" name="codigo-'+IDnew+'" type="text" readonly="readonly"><a id="del-'+IDnew+'" class="delete" href="javascript:;" title="Elimar registro" data-id="0" style="">X</a></div></td>';
+	TR+='<td class="item-name"><input id="productos_id-'+IDnew+'" name="productos_id-'+IDnew+'" type="hidden" class="productos_id" readonly="readonly"><span id="ver-name'+IDnew+'" style="display:none;"><input id="productoname-'+IDnew+'" name="productoname-'+IDnew+'" type="text" value="" readonly="readonly" size="50"></span><span id="ver'+IDnew+'" class="ver"><input id="producto-'+IDnew+'" name="producto-'+IDnew+'" type="text" class="producto" placeholder="Producto" size="30" readonly="readonly"></span></td>';
+	TR+='<td><input id="cantidad-'+IDnew+'" type="text" class="qty"/></td><td><input id="tesunidadesmedidas-'+IDnew+'" name="tesunidadesmedidas-'+IDnew+'" type="text" class="unidad"></td>';
+	TR+='<td class="description"><textarea id="pro_descripcion-'+IDnew+'" class="pro_descripcion" placeholder="Descripcion del producto"></textarea></td>';
+	//TR+='<td><span class="simbolo"></span><input id="precio-'+IDnew+'" type="text" class="cost"/></td>';
+	//TR+='<td><span class="simbolo"></span><span id="total-'+IDnew+'" class="price">0.00</span></td></tr>'
+    $(".item-row:last").after(TR);
+    if ($(".delete").length > 1) $(".delete").show();else $(".delete").hide();
+	bind();
+  });
+  
+	  bind();
+	  $(".delete").live('click',function(){
+		  var row =$(this).parents('.item-row')
+		  var id=row.find('.delete').attr('data-id');
+		  EliminarDetalle(id);
+		$(this).parents('.item-row').remove();
+		if ($(".delete").length < 2) $(".delete").hide();
+	  });
+$(".producto").click(function(){
+	var ID = $(this).attr('id');
+  	var I=ID.split('-');
+	buscarProducto(I[1]);
+	});
+  $(".unidad").click(
+  function(){
+	var ID = $(this).attr('id');
+  	var I=ID.split('-');
+	buscarUnidad(I[1]);
+	});
+ /*Busqueda del Cliente*/
+ $("#cliente").tokenInput("<?php echo "/".$module_name."/proformas/buscarcliente"?>", 
+		{
+		tokenLimit: 1,
+		minChars: 2,
+		<?php if(!empty($tesdatos_id)){?>
+		prePopulate: [ 
+		             {id: <?php echo $tesdatos_id?>, name: "<?php echo $cliente?>"},
+					 ],
+		<?php }?>
+		onAdd: function (item) {
+		   var VAL=item.id;
+		   $("#tesdatos_id").val(VAL);
+		   GRABAR();
+		},
+		onDelete: function (item) {
+		}
+	}); 
+});
+</script>
+
+	<div class="card"><h1><?php echo $titulo//echo "id--->".Session::get('PROFORMA_ID')?></h1></div>
+    
+    <div class="form-actions">
+    <?php echo Html::linkAction("listado/", 'Listado','class="btn btn-primary"') ?>
+    <?php
+	$estado='Pendiente'; 
+	if(Session::get('tipo_nota')=='ingreso')$estado='Ingresado';
+	echo Html::linkAction("terminar/".Session::get('NOTA_ID')."/".$estado, 'Terminar ','class="btn btn-primary grabar_form"') ?>&nbsp;<?php echo Html::linkAction("listado/", 'Cancelar ','class="btn btn"') ?>
+</div>
+<div id="page">
+<?php 
+			/*Fin de Validacion de Origen*/
+if($origen=='Produccion'){?>
+			<table width="70%" align="center" class="table-bordered">
+             <tr>
+                    <th width="13%" align="left" class="meta-head">Usuario:</th>
+                    <td width="35%"><?php echo $pedido->getAclusuarios()->getAcldatos()->nombre?> <?php echo $pedido->getAclusuarios()->getAcldatos()->appaterno?> <?php echo $pedido->getAclusuarios()->getAcldatos()->apmaterno?></td>
+                    <th width="14%" align="left"><span class="meta-head">Código #:</span></th>
+                    <td width="38%"><?php echo $pedido->estadonota;?><?php echo $pedido->codigo;?></td>
+                </tr>
+                <tr>
+                    <th align="left" class="meta-head">Origen:</th>
+                    <td><?php echo $pedido->origen;?></td>
+                    <th align="left">Tipo:</th>
+                    <td><?php echo $pedido->tipo;?></td>
+                </tr>
+                <tr>
+					<th align="left">Descripcion:</th>
+                    <td><?php echo $pedido->descripcion;?></td>
+                    <th align="left">Observacion:</th>
+                    <td><?php echo $pedido->observacion;?></td>
+                </tr>
+     
+     </table>
+	<?php }elseif($origen=='Muestra'){
+	//es diferente de Origen	
+  	echo Form::open('','post','id="proformas"');?>
+     <?php echo Form::hidden('id');?>
+  <div style="clear:both"></div>
+  <table width="70%" align="center"  class="table-bordered">
+             <tr>
+                    <th width="13%" align="left" class="meta-head">Código #:</th>
+                    <td width="35%"><?php echo Form::hidden('estadonota','class="grabar"','Sin enviar');?><?php echo Form::text('codigo','readonly="readonly" class="grabar"')?></td>
+                    <th width="14%" align="left"><span class="meta-head">Usuario:</span></th>
+                    <td width="38%"><?php echo $dato->nombre?> <?php echo $dato->appaterno?> <?php echo $dato->apmaterno?></td>
+                </tr>
+                <tr>
+                    <th align="left" class="meta-head">Origen:</th>
+                    <td><?php echo Form::hidden('origen');?><?php echo $origen?></td>
+                    <th align="left">Tipo:</th>
+                    <td><?php echo Session::get('tipo_nota');?></td>
+                </tr>
+                <tr>
+					<th align="left">Descripción:</th>
+                    <td><?php echo Form::textArea('descripcion','class="grabar"');?></td>
+                    <th align="left">Observación:</th>
+                    <td><?php echo Form::textArea('observacions','class="grabar"');?></td>
+                </tr>
+                <tr>
+					<th align="left">Cliente:</th>
+                    <td colspan="3"><?php echo Form::text('cliente','class="grabar"')?><?php echo Form::hidden('tesdatos_id','readonly="readonly" class="grabar"')?></td>
+                </tr>
+     
+     </table>
+            
+            <?php echo Form::close();
+			/*Fin de Validacion de Origen*/
+			}else{//es diferente de Origen	
+  		echo Form::open('','post','id="proformas"');?>
+     <?php echo Form::hidden('id');?>
+  <div style="clear:both"></div>
+  <table width="70%" align="center"  class="table-bordered">
+             <tr>
+                    <th width="13%" align="left" class="meta-head">Usuario:</th>
+                    <td width="35%"><?php echo $dato->nombre?> <?php echo $dato->appaterno?> <?php echo $dato->apmaterno?></td>
+                    <th width="14%" align="left"><span class="meta-head">Código #:</span></th>
+                    <td width="38%"><?php echo Form::hidden('estadonota','class="grabar"','Sin enviar');?><?php echo Form::text('codigo','readonly="readonly" class="grabar"')?></td>
+    </tr>
+                <tr>
+                    <th align="left" class="meta-head">Origen:</th>
+                    <td><?php echo Form::select('origen',array('Produccion'=>'Produccion','Muestra'=>'Muestra','Otros'=>'Otros'),'class="grabar"');?></td>
+                    <th align="left">Tipo:</th>
+                    <td><?php echo Session::get('tipo_nota');?></td>
+                </tr>
+                <tr>
+					<th align="left">Descripción:</th>
+                    <td><?php echo Form::textArea('descripcion','class="grabar"');?></td>
+                    <th align="left">Observación:</th>
+                    <td><?php echo Form::textArea('observacions','class="grabar"');?></td>
+                </tr>
+     
+  </table>
+            
+            <?php echo Form::close();
+			/*Fin de Validacion de Origen MUESTRA*/
+			}?>
+	<table width="101%" id="items">
+		
+		  <tr>
+		      <th width="8%">Codigo</th>
+		      <th width="38%">Producto</th>
+		      <th width="12%">Cantidad</th>
+		      <th width="18%">Medida</th>
+		      <th width="24%">Observacion</th>
+		  </tr>
+		  <?php 
+	if($DETALLE){
+	$n=0;
+	$subtotal=0;
+	$a=0;
+		foreach($detalles as $item){
+				  $n++;
+				  $subtotal=$subtotal+$item->total;
+			
+		 if($item->getRollotrama($item->id))
+		 {
+			 $rollo=$item->getRollotrama($item->id);
+			 $b=$rollo->id;
+			 if($a!=$b){
+			///print_r($item->getRollotrama($item->id));??>
+             <tr><td colspan="5" class="item-name" style=" padding-left:15px;"> <strong>TELA: </strong><?php echo $rollo->getTesproductos()->nombre?> <strong>COLOR: </strong><?Php echo $rollo->getTescolores()->nombre?> <strong>METROS:</strong><?php echo $rollo->metroprogramados?></td></tr>
+			 <?php
+             }
+			 $a=$rollo->id;
+		 }
+			  ?>
+		  <tr id="<?php echo $n?>" class="item-row" >
+           <td>
+                  <div class="delete-wpr">
+                  <?php echo Form::text('codigo-'.$n,'readonly="readonly"',$item->getTesproductos()->codigo)?>
+                  <a id="del-<?php echo $n?>" class="delete" href="javascript:;" title="Elimar registro" data-id="<?php echo $item->id?>">X</a>
+                  </div>
+            </td>
+		      <td class="item-name">
+                  <?php echo Form::hidden('productos_id-'.$n,'class="productos_id" readonly="readonly"',$item->tesproductos_id)?>
+                  <span id="ver<?php echo $n;?>" class="ver"><?php echo Form::text('producto-'.$n,'class="producto" placeholder="Producto" size="45"',$item->getTesproductos()->nombre)?></span>
+              </td>
+		      <td>
+              <?php echo Form::text('cantidad-'.$n,' class="qty" placeholder="0.0"',$item->cantidad);?>
+              </td>
+              <td>
+              <?php echo Form::hidden('tesunidadesmedidas_id-'.$n,'readonly="readonly"',$item->tesunidadesmedidas_id)?>
+              <?php echo Form::text('tesunidadesmedidas-'.$n,'class="unidad"',$item->getTesunidadesmedidas()->nombre)?>
+              </td>
+		      <td class="description">
+              <?php echo Form::textArea('pro_descripcion-'.$n,'class="pro_descripcion save" placeholder="Descripcion del producto"',$item->descripcion)?>
+              </td>
+		  </tr>
+		  
+		  <?php
+	  }/*FIN FOREACH*/
+			if($n==0)
+		  		{ $n=1;?>
+                  <tr id="<?php echo $n?>" class="item-row">
+           <td>
+                  <div class="delete-wpr">
+                  <?php echo Form::text('codigo-'.$n,'readonly="readonly"')?>
+                  <a id="del-1" class="delete" href="javascript:;" title="Elimar registro" data-id="0">X</a>
+                  </div>
+            </td>
+		      <td class="item-name">
+                  <?php echo Form::hidden('productos_id-'.$n,'class="productos_id"')?>
+                  <span id="ver<?php echo $n;?>" class="ver"><?php echo Form::text('producto-'.$n,'class="producto" placeholder="Producto"')?></span>
+              </td>
+		      <td>
+              <?php echo Form::text('cantidad-'.$n,' class="qty" placeholder="0.0"');?>
+              </td>
+              <td>
+              <?php echo Form::hidden('tesunidadesmedidas_id-'.$n,'readonly="readonly"')?>
+              <?php echo Form::text('tesunidadesmedidas-'.$n,'class="unidad"')?>
+              </td>
+		      <td class="description">
+              <?php echo Form::textArea('pro_descripcion-'.$n,'class="pro_descripcion save" placeholder="Descripcion del producto"')?>
+              </td>
+		  </tr>
+		  <?php
+		  		}?>
+          <?php 
+		  }else{$n=1;?>
+                  
+                  <tr id="<?php echo $n?>" class="item-row">
+                   <td>
+                          <div class="delete-wpr">
+                          <?php echo Form::text('codigo-'.$n,'readonly="readonly"')?>
+                          <a id="del-1" class="delete" href="javascript:;" title="Elimar registro" data-id="0">X</a>
+                          </div>
+                    </td>
+                      <td class="item-name">
+                          <?php echo Form::hidden('productos_id-'.$n,'class="productos_id"')?>
+                          <span id="ver<?php echo $n;?>" class="ver"><?php echo Form::text('producto-'.$n,'class="producto" placeholder="Producto"')?></span>
+                      </td>
+                      <td>
+                      <?php echo Form::text('cantidad-'.$n,' class="qty" placeholder="0.0"');?>
+                      </td>
+                      <td>
+                      <?php echo Form::hidden('tesunidadesmedidas_id-'.$n,'readonly="readonly"')?>
+                      <?php echo Form::text('tesunidadesmedidas-'.$n,'class="unidad"')?>
+                      </td>
+                      <td class="description">
+                      <?php echo Form::textArea('pro_descripcion-'.$n,'class="pro_descripcion save" placeholder="Descripcion del producto"')?>
+                      </td>
+                  </tr>
+		  <?php }?>
+          <?php if($origen!='Produccion'){?>
+		  <tr id="hiderow">
+		    <td colspan="5"><a id="addrow" href="javascript:;" title="Agregar mas registros">Agragar Mas</a></td>
+		  </tr>
+          <?php }?>
+          </table>
+     <div style="clear:both"><div id="loading" style="display:none;"><img src="/img/spin.gif" /></div></div>
+        <div class="form-actions">
+    <?php
+	$estado='Pendiente'; 
+	if(Session::get('tipo_nota')=='ingreso')$estado='Ingresado';
+	echo Html::linkAction("terminar/".Session::get('NOTA_ID')."/".$estado, 'Terminar ','class="btn btn-primary grabar_form"') ?>&nbsp;<?php echo Html::linkAction("listado/", 'Cancelar ','class="btn btn"') ?>
+</div>
+</div>

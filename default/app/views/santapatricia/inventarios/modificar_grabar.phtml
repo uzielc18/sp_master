@@ -1,0 +1,215 @@
+<pre>
+<?Php //print_r($detalles)?>
+</pre>
+<table width="99%" border="0" align="center" cellpadding="0" cellspacing="0">
+<tr>
+ <?php /*?><th width="7%">Nº</th><?php */?>
+ <th width="7%">Codigo</th>
+ <th width="9%">Producto</th>
+ <th width="8%">Medida</th>
+ <th width="8%">Color</th>
+ <th width="5%">Lote</th>
+		      <th width="10%">Nro.Empaque</th>
+		      <th width="8%">Nro.Conos</th>
+              <th width="5%">Sotk_min</th>
+		      <th width="5%">Stok_max</th>
+		      <th width="5%">Ubicacion</th>
+		      <th width="7%">Costo Unit</th>
+		      <th width="9%">Cantidad</th>
+		      <th width="27%">Precio</th>
+		  </tr>
+<?Php 
+
+switch ($inventario->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+$n=0;
+foreach($detalles as $det){
+
+$n++;
+				  $D_id=$det->id;
+				  $medida=$det->tesunidadesmedidas_id;
+				  $detalle_id=$det->id;
+				  $importe=$det->importe;
+				  $preciounitario=$det->preciounitario;
+				  $lote=$det->lote;
+				  $empaque=$det->empaque;
+				  $bobinas=$det->bobinas;
+				  $pesoneto=$det->pesoneto;
+				  $pesobruto=$det->pesobruto;
+				  $cantidad=$det->cantidad;
+				  $ubicacion_almacen=$det->getTesproductos()->ubicacion_almacen;
+				  $color_id='';
+				  $color_name='';
+				  if(!empty($det->tescolores_id))
+				  {
+					  $color_id=$det->tescolores_id;
+					  $color_name=$det->getTescolores()->nombre;
+				  }
+				  ?>
+				  <?php //echo $det->id; 
+				  //echo $det->tesproductos_id;
+				  echo Form::hidden('id-'.$n,'size="10" readonly="readonly"',$det->id);
+				  ?>
+<tr id="<?php echo $n?>" title="<?Php echo $det->getTesproductos()->nombre?>" class="item-row">
+           <?php /*?><td><?php echo $n?></td><?php */?>
+           <td><?php echo Form::hidden('codigo-'.$n,'size="10" readonly="readonly"',$det->getTesproductos()->codigo)?>
+           <?php echo $det->getTesproductos()->codigo_ant;?>
+           </td>
+           <td class="item-name">
+                  <?php echo Form::hidden('productos_id-'.$n,'class="productos_id" readonly="readonly"',$det->tesproductos_id)?>
+                  <?php echo $det->getTesproductos()->nombre?>
+              </td>
+		      <td><?php echo Form::dbSelect('tesunidadesmedidas_id-'.$n,'nombre',array('tesunidadesmedidas','find','aclempresas_id='.Session::get("EMPRESAS_ID")),'seleccione','',$medida)?> </td>
+              <td><?php echo Form::hidden('tescolores_id-'.$n,'',$color_id); echo $color_name;?> </td>
+		      <td> <?php echo Form::text('lote-'.$n,'size="8" class="save"',$lote)?></td>
+              <td> <?php echo Form::text('empaque-'.$n,'size="5" class="save caja"',$empaque)?><div class="flotante" id="cajas-<?php echo $n?>"></div></td>
+              <td> <?php echo Form::text('bobinas-'.$n,'size="5" class="save"',$bobinas)?></td>
+              <td title="sTOK minimo"> o <?php echo Form::text('stokminimo-'.$n,'size="5" class="save"')?></td>
+              <td title="sTOK maximo"> o <?php echo Form::text('stokmaximo-'.$n,'size="5" class="save"')?></td>
+              <td title="Ubicacion"> <?php //echo $ubicacion_almacen;
+			  echo Form::text('ubicacion-'.$n,'',$ubicacion_almacen);?></td>
+			  <?php echo Form::hidden('pesoneto-'.$n,'size="5" class="save"',$pesoneto)?>
+              <?php echo Form::hidden('pesobruto-'.$n,'size="5" class="save"',$pesobruto)?>
+              <td><span class="simbolo"><?php echo $simbolo?></span><?php //echo "preciounitario=> ".$preciounitario;?><?php echo Form::text('precio-'.$n,'size="10" class="cost" placeholder="0.0"',number_format($preciounitario,2,'.',''))?></td>
+		      <td><?php echo Form::text('cantidad-'.$n,' class="qty" size="10" placeholder="0.0"',$cantidad);?></td>
+		      <td><span class="simbolo"><?php echo $simbolo?></span><span id='total-<?php echo $n?>' class="price"><?php echo number_format($importe,2,'.','')?></span> </td>
+		  </tr>
+		  <?php
+         }?>
+<?php 
+if(!$detalles){
+//echo $det->tesproductos_id;
+$n=1;
+echo Form::hidden('id-'.$n,'size="10" readonly="readonly"');
+ ?>
+ <script type="text/javascript">
+$(document).ready(function()
+{
+$("#tescolores_id-<?Php echo $n?>").tokenInput("/<?php echo $module_name?>/salidas/colores/", 
+		{
+		tokenLimit: 1,
+		minChars: 1,
+		//prePopulate: [ {id: <?php //echo $color_id?>, name: "<?php //echo $color_name?>"},
+		onAdd: function (item) {
+		},
+		onDelete: function (item) {
+		}
+});
+});
+</script>
+<tr id="<?php echo $n?>" title="Producto Nuevo" class="item-row">
+           <?php /*?><td><?php echo $n?></td><?php */?>
+           <td><?php echo Form::hidden('codigo-'.$n,'size="10" readonly="readonly"',$producto->codigo)?>
+           <?php echo $producto->codigo_ant;?>
+           </td>
+           <td class="item-name">
+                  <?php echo Form::hidden('productos_id-'.$n,'class="productos_id" readonly="readonly"',$id)?>
+                  <?php echo $producto->nombre?>
+              </td>
+		      <td><?php echo Form::dbSelect('tesunidadesmedidas_id-'.$n,'nombre',array('tesunidadesmedidas','find','aclempresas_id='.Session::get("EMPRESAS_ID")),'seleccione','')?> </td>
+              <td><?php echo Form::text('tescolores_id-'.$n,''); //echo $color_name;?> </td>
+		      <td> <?php echo Form::text('lote-'.$n,'size="8""')?></td>
+              <td> <?php echo Form::text('empaque-'.$n,'size="5" class="caja"')?><div class="flotante" id="cajas-<?php echo $n?>"></div></td>
+              <td> <?php echo Form::text('bobinas-'.$n,'size="5" class=""')?></td>
+              <td title="sTOK minimo"> o <?php echo Form::text('stokminimo-'.$n,'size="5" class=""')?></td>
+              <td title="sTOK maximo"> o <?php echo Form::text('stokmaximo-'.$n,'size="5" class=""')?></td>
+              <td title="Ubicacion"> <?php //echo $ubicacion_almacen;
+			  echo Form::text('ubicacion-'.$n,'');?></td>
+			  <?php echo Form::hidden('pesoneto-'.$n,'size="5" class=""')?>
+              <?php echo Form::hidden('pesobruto-'.$n,'size="5" class=""')?>
+              <td><span class="simbolo"><?php echo $simbolo?></span><?php //echo "preciounitario=> ".$preciounitario;?><?php echo Form::text('precio-'.$n,'size="10" class="cost" placeholder="0.0"')?></td>
+		      <td><?php echo Form::text('cantidad-'.$n,' class="qty" size="10" placeholder="0.0"');?></td>
+		      <td><span class="simbolo"><?php echo $simbolo?></span><span id='total-<?php echo $n?>' class="price"> </span> 
+              <a id="save-1" href="#" class="grabar">Guardar</a> 
+              </td>
+		  </tr>
+         <?php }?>
+</table>
+<script>
+function bind() {
+  $(".save").blur(function(){
+	var ID = $(this).attr('id');
+  	var I=ID.split('-');
+  	//alert(I+ID);
+	update_price();
+	grabarDetalle(I[1]);
+	
+	});
+	$(".cost").blur(update_price);
+	$(".qty").blur(update_price);
+	$(".grabar").click(function(){
+		var ID = $(this).attr('id');
+  	var I=ID.split('-');
+  	//alert("grabar"+I[1]);
+	//update_price();
+	grabarDetalle(I[1]);
+		});
+  
+//qty
+}
+$(document).ready(function()
+{
+ bind();
+});
+function update_price()
+{
+  var ID = $(this).attr('id');
+  var I=ID.split('-');
+  //alert ('id del tr que se manda a grabar->>>'+ID);
+  var row = $(this).parents('.item-row');
+  var price = row.find('.cost').val() * row.find('.qty').val();
+  price = roundNumber(price,2);
+  isNaN(price) ? row.find('.price').html("N/A") : row.find('.price').html(price);
+  <?Php if($detalles){?>grabarDetalle(I[1]);<?php }?>
+}
+
+function grabarDetalle(tr_id) {
+
+ //alert(tr_id);
+  var producto_id=$('#productos_id-'+tr_id).val();
+  var pro_descripcion=$('#pro_descripcion-'+tr_id).val();
+  var costo=$('#precio-'+tr_id).val();
+  var cantidad=$('#cantidad-'+tr_id).val();
+  var lote=$('#lote-'+tr_id).val();
+  var empaque=$('#empaque-'+tr_id).val();
+  var bobinas=$('#bobinas-'+tr_id).val();
+  var pesoneto=$('#pesoneto-'+tr_id).val();
+  var pesobruto=$('#pesobruto-'+tr_id).val();
+  var price = $('#total-'+tr_id).html();
+  var id_detalle=$('#id-'+tr_id).val();
+  var unidadmedida_id=$('#tesunidadesmedidas_id-'+tr_id).val();
+  var stokminimo=$('#stokminimo-'+tr_id).val();
+  var stokmaximo=$('#stokmaximo-'+tr_id).val();
+  var ubicacion=$('#ubicacion-'+tr_id).val();
+  var colores_id=$('#tescolores_id-'+tr_id).val();
+  var total=price;
+ //alert('ID del PRODUCTO'+producto_id);
+ //alert('id del detalle es 0 cuando es nuevo--->'+id_detalle);
+ //alert('id del tr que se graba-->'+tr_id);
+  
+  if(producto_id!='' && unidadmedida_id!='')
+  {
+	  var dataString ='id_detalle='+id_detalle+'&tescolores_id='+colores_id+'&tesunidadesmedidas_id='+ unidadmedida_id+'&productos_id='+ producto_id+'&pro_descripcion='+pro_descripcion+'&cantidad='+cantidad+'&precio='+costo+'&total='+total+'&lote='+lote+'&empaque='+empaque+'&bobinas='+bobinas+'&pesoneto='+pesoneto+'&pesobruto='+pesobruto+'&stokmaximo='+stokmaximo+'&stokminimo='+stokminimo+'&ubicacion='+ubicacion;
+	  //alert(dataString)
+	 $.ajax({
+            type:"POST",
+            url:"/santapatricia/inventarios/grabarDetalle/1",
+            data:dataString,
+            beforeSend:function(){
+              $("#loading").show();
+            },
+            success:function(response){
+                $("#loading").hide();
+            }
+ 
+         });
+  }
+  
+}	
+</script>

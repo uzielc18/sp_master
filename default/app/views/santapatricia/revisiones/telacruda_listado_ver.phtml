@@ -1,0 +1,35 @@
+
+<table width="75%" border="0" cellpadding="0" cellspacing="1" class="table table-bordered table-striped"id="exportar_excel">
+  <thead>
+  <tr>
+    <th width="12%" align="left">Fecha</th>
+    <th width="8%" align="left">Nº Rollo</th>
+    <th width="8%" align="left">Maq.</th>
+	<th width="10%" align="left">Codigo</th>
+    <th width="28%" align="left">Descripcion</th>
+    <th width="10%" align="left">Metos</th>
+    <th width="7%" align="left">Peso</th>
+    <th width="9%" align="left">Rend.</th>
+    <th width="8%">O.C.</th>
+    <!--<th width="6%" align="left">Acc.</th>-->
+  </tr>
+  </thead>
+  
+  <?php foreach($rollos as $rollo){?>
+  <tr id="<?php echo $rollo->id?>">
+     <td align="left" valign="top"><?php echo Sp::formatFecha('%d / %m / %Y',$rollo->fechacorte)?>
+		<?php //echo $rollo->fechacorte?></td>
+    <td align="left" valign="top"><?php echo $rollo->numero?>
+		<?php if($rollo->prodetalleproduccion_id!=0)//echo '-'.$rollo->getProdetalleproduccion()->getProproduccion()->getPromaquinas()->prefijo.$rollo->getProdetalleproduccion()->getProproduccion()->getPromaquinas()->numero?></td>
+    <td align="left" valign="top"><?php if($rollo->prodetalleproduccion_id!=0)echo $rollo->getProdetalleproduccion()->getProproduccion()->getPromaquinas()->prefijo.$rollo->getProdetalleproduccion()->getProproduccion()->getPromaquinas()->numero?></td>
+    <td align="left" valign="top"><?php echo $rollo->getTesproductos()->codigo_ant?></td>
+	<td align="left" valign="top"><?php echo $rollo->getTesproductos()->nombre?></td>
+    <td align="left" valign="top"><?php echo number_format($rollo->metros,2,'.','')?></td>
+    <td align="left" valign="top"><?php echo number_format($rollo->peso,2,'.','')?></td>
+    <td valign="top" align="left"><?php echo number_format($rollo->rendimiento,2,'.','')?></td>
+    <td valign="top"><?php if(!empty($rollo->getProdetalleproduccion()->tesordendecompras_id)){$oc=$rollo->getProdetalleproduccion()->getTesordendecompras()->codigo;}else{$oc=$rollo->ordencompra;}?><?php echo $oc?></td>
+      <!--<td valign="top" align="left"><span class="link"><?php //echo Html::linkAction('cambiarestado/'.$rollo->id.'/Control de Calidad/telacruda',Html::img("figuras/produccion.png",'Visto Bueno','style="width: 20px;margin-left:1px;margin-right:1px;" title="Regresar a Control de calidad"'));?>
+      </span></td>-->
+  </tr>
+  <?php }?>
+</table>

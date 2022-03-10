@@ -1,0 +1,85 @@
+<?php View::content();?><script type="text/javascript">
+$(document).ready(function(){
+    $('.selec').click(function()
+        {
+		var totalconigv=0;
+        var selectedItems = new Array();
+        $("input[@name='SALIDA[]']:checked").each(function(){
+            selectedItems.push($(this).val());
+			var id=$(this).val();
+			var total=$("#total-"+id).val();
+			totalconigv=parseFloat(totalconigv)+parseFloat(total);
+        });
+        $("#totalconigv").val(totalconigv);
+        $("#s").val(selectedItems);
+    });
+});
+</script>
+<div class="card">
+<h1>Documentos a Cancelar!</h1>
+</div>
+<div class="card-body">
+<strong> Cliente :- </strong><?Php if(Session::get('tesdatos_id')!=0)echo $tesdatos->razonsocial;else echo "Todos";?>,
+ <?php echo Html::linkAction('',Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Cambiar de cliente"')?>
+<?php 
+echo Form::open($module_name.'/cancelacionfacturas/variasfacturas','post');
+?>
+
+<?php echo Form::hidden('s');?>
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+<caption>Seleccionar Documentos Pendientes de Cancelacion (Check)</caption>
+  <tr>
+  	<th width="17">Nº</th>
+	<th width="57">F. Emision Doc.</th>
+    <th width="78">Numero</th>
+    <th width="69">Proveedor</th>
+    <th width="56">Moneda</th>
+    <th width="36">Total</th><th width="81">Seleccionar</th>
+  </tr>
+<?php $n=0;
+foreach($salidas as $item){ 
+$n++;
+$monto_A=0;
+switch ($item->tesmonedas_id)
+{
+	case 1: $simbolo='S/. ';
+	 break;
+	case 2: $simbolo='$. ';
+	 break;
+	case 4: $simbolo='S/. '; 
+	break;
+	case 5: $simbolo='$. '; 
+	break;
+	case 0: $simbolo='S/. '; 
+	break;
+}
+$monto_A=$item->getAdelantos($item->id);
+?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20"><?php echo $n?></td>
+	<td><?php echo $item->femision?>
+    <td><?php echo $item->getTesdocumentos()->abr?>/ <?php echo $item->serie.'-'.$item->numero?></td>
+    <td><?php echo $item->getTesdatos()->razonsocial?>
+	<?php 
+	//*echo $item->estadosalida;*/
+	if($monto_A!=0)echo " ( pago adelantado ".$simbolo.number_format($monto_A,2,'.','')." )";
+	?></td>
+    <td><?php echo $item->getTesmonedas()->nombre?></td>
+    <td><?php echo $simbolo; echo number_format($total=$item->totalconigv-$monto_A,2,'.','');echo Form::text('total-'.$item->id,'',$total);?></td>
+    <td  title="Dar Check, si quiere cancelar este Documento">
+<input type="checkbox" name="SALIDA[]" class="selec" value="<?php echo $item->id?>"/>
+    </td>
+  </tr>
+<?php }?>
+<tr>
+  	<td colspan="2" width="17">Numero de letras a Generar</td>
+	<td colspan="5">
+<?php echo Form::text('numerodeletras','')?>
+<?php echo Form::hidden('totalconigv','')?></td>
+    </tr>
+</table>
+<div class="form-actions">
+    <?php echo Form::Submit('Enviar Detalles','class="btn btn-primary"') ?>
+</div>
+<?php echo Form::close()?>
+</div>

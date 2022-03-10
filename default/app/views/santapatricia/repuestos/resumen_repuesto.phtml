@@ -1,0 +1,37 @@
+<?php View::content();?>
+<?Php if($id!=0){?>
+<span><b><?Php echo $producto->nombre?></b></span><br />
+<span>Cod: <b><?Php echo $producto->codigo?></b> <?php echo 'Piso: '.$producto->piso_alamecen.' Fila:'.$producto->fila_almacen.' Columna:'.$producto->columna_almacen.' Ubicacion: '.$producto->ubicacion_almacen?></span>
+<table width="100%" border="0" cellspacing="0" cellpadding="0"class="table table-bordered table-striped">
+  <tr>
+    <th width="12%" align="left" scope="col">Fecha</th>
+    <th width="8%" align="left" scope="col">Maq.</th>
+    <th width="5%" align="left" scope="col">Lado</th>
+    <th width="6%" align="left" scope="col">Ubicacion</th>
+    <th width="8%" align="left" scope="col">No. Guia</th>
+    <th width="6%" align="center" scope="col">Cant.</th>
+  
+  </tr>
+<?php 
+$n=0;
+foreach($usos as $item){
+	$n++;
+	?>
+  <tr>
+    <td><?php echo Sp::formatFecha('%d/%m/%Y',$item->fechaingreso)?></td>
+	 <td><?php echo $item->maquina?></td>
+    <td><?php echo $item->getProubicacionmaquina()->nombre?></td>
+    <td><?php echo $item->ubicacion?></td>
+    <td><?php echo $item->codigo?></td>
+    <td align="center"><?php echo $item->cantidad?></td>
+  </tr>
+  <?Php }
+ if($n==0){?>
+  <tr>
+    <th colspan="8">No hay movimientos para este repuesto</th>
+  </tr>
+ <?php }?>
+</table>
+<?php }else{?>
+<h3>Error!</h3>
+<?php }?>

@@ -1,0 +1,103 @@
+<?php echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<div class="card">
+    <h1><em>Crear<span><?php echo Session::get('DOC_NOMBRE')?></span></em></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+
+<div class="form-actions">
+<?php if(Session::get('DOC_ID')==14)echo Html::linkAction("nota_creditos/", 'Listado ','class="btn"') ?>
+<?php if(Session::get('DOC_ID')==13)echo Html::linkAction("nota_debitos/", 'Listado ','class="btn"') ?>
+</div>
+<div class="card-body">
+<div id="ver_resultado"></div>
+<?php echo Form::open(NULL,'POST','class="form-horizontal"')?>
+<?php echo Form::hidden('salida.id');?><?php echo Form::hidden('detalle.id');?><?php echo Form::hidden('salida.npedido');?>
+  <div class="control-group">
+    <label class="control-label" for="salida_serie">Serie - Numero:</label>
+    <div class="controls">
+      <?php echo Form::text('salida.serie','size="4" class="salida_cambiar"');?>-<?php echo Form::text('salida.numero','size="10"');?>
+    </div>
+  </div>  
+  <div class="control-group">
+    <label class="control-label" for="salida_tesmonedas_id">Moneda:</label>
+    <div class="controls">
+      <?php echo Form::dbSelect('salida.tesmonedas_id','simbolo,nombre',array("tesmonedas",'find','conditions: aclempresas_id='.Session::get('EMPRESAS_ID')));?>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="CL">Cliente</label>
+    <div class="controls">
+    	<div style="float:left; width:70%;"><input id="CL" /></div>
+      <?php echo Form::hidden('salida.tesdatos_id');?>
+    </div>
+  </div>  
+  <div class="control-group">
+  <label class="control-label" for="salida_tesdatosdirecciones_id">Direccion de Fiscal:</label>
+  <div class="controls" id="direccion_fiscal">
+  
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="salida_direccion_entrega">Direccion de Entrega:</label>
+    <div class="controls">
+      <?php echo Form::text('salida.direccion_entrega','class="span8"');//finiciotraslado?><span id="script_autocargar"></span>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="salida_femision">Fecha de Emision:</label>
+    <div class="controls">
+      <?php echo Calendar::selector('salida.femision');//finiciotraslado?>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="salida_direccion_entrega">Referencia:</label>
+    <div class="controls">
+      <?php echo Form::textArea('salida.glosa','rows="3" cols="70"');//finiciotraslado?>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="salida_direccion_entrega">Concepto:</label>
+    <div class="controls">
+      <?php echo Form::textArea('detalle.concepto','rows="7" cols="70"');//finiciotraslado?>
+    </div>
+  </div>
+  
+  <div class="control-group">
+    <label class="control-label" for="salida_direccion_entrega">IMPORTE:</label>
+    <div class="controls">
+      <?php echo Form::text('detalle.importe','class="qty"');//finiciotraslado?>
+    </div>
+  </div>
+  
+  <div class="control-group">
+    <div class="controls">
+       <button type="submit" class="btn btn-primary">Siguiente</button> <?php echo Html::linkAction($url,'Cancelar','class="btn"')?>
+    </div>
+  </div>
+<?php echo Form::close();?>
+</div>
+<script type="text/javascript">
+$(document).ready(function()
+{
+	$("#CL").tokenInput("/<?php echo $module_name?>/salidas/buscarcliente", 
+		{
+			tokenLimit: 1,
+			minChars: 2,
+			<?php if(!empty($salida->tesdatos_id)){?>
+			prePopulate: [ 
+						 {id: <?Php echo $salida->tesdatos_id?>, name: "<?php echo $salida->getTesdatos()->razonsocial?>"},
+						 ],
+			<?php }?>
+			onAdd: function (item){
+			   $("#salida_tesdatos_id").val(item.id);
+			   $( "#direccion_fiscal" ).load( "/<?php echo $module_name?>/salidas/direcciones_clientes/"+item.id );
+			   //$("#BC").hide();
+			   //GrabarCliente();
+			},
+			onDelete: function (item) {
+			}
+		});
+});
+</script>

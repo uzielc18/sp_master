@@ -30,7 +30,7 @@ class PrivilegiosController extends AdminController {
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::toAction("index/$page");
+        return Redirect::toAction("index/$page");
     }
 
 }

@@ -1,0 +1,86 @@
+<style type="text/css">
+.span_float
+{
+	float:right !important;
+	margin-left:0px;
+	margin-right:-5px;
+}
+</style>
+<div class="card">
+    <h1><?php echo $titulo?><span>Ordenes de Compra de Clientes</span></h1>
+</div>
+<div class="form-actions">
+<?php echo Menu::menuPedido_Cliente($estado)?>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<!-- el buscador jquery-->
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus="" placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+
+<div id="ver_resultado"></div>
+<table id="pedidos" width="90%" border="0" align="center" cellpadding="0" cellspacing="00" class="table table-bordered table-striped">
+  <tr>
+  	<th width="19">Nº</th>
+	<th width="74">F.Emisison</th>
+    <th width="54">Numero</th>
+    <th width="78">De </th>
+    <th width="96">Para</th>
+    <th width="35">Igv</th>
+    <th width="40">Total</th>
+    <th width="73">Acciones </th>
+  </tr>
+<?php $n=0;
+foreach($ordenes as $item){ 
+$n++;
+switch ($item->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+
+?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20"><?php echo $n?></td>
+	<td><?php echo Sp::formatFecha('%d/%m/%Y',$item->fecha)?></td>
+	<td><?php //echo $item->codigo?><?php echo $item->numero_interno?></td>
+    <td><?php if($item->origenorden=='interno'){echo $empresa->razonsocial;}else{echo $item->getTesdatos()->razonsocial;}?></td>
+    <td><?php if($item->origenorden!='interno'){echo $empresa->razonsocial;}else{echo $item->getTesdatos()->razonsocial;}?></td>
+    <td><?php echo $simbolo; echo number_format($item->igv,2,'.','');?></td>
+    <td><?php echo $simbolo; echo number_format($item->totalconigv,2,'.','');?></td>
+   <td>
+   <?php if($item->aclusuarios_id==Auth::get('id') || Auth::get('aclroles_id')==4)echo Html::linkAction('cargar/'.$item->id.'/editar',Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'')?>
+   <?php echo Html::linkAction('cargar/'.$item->id.'/ver',Html::img("figuras/ver.png",'Ver','style="width: 20px;margin-left:1px;margin-right:1px;"'),'')?>
+   <?php echo Html::linkAction('cargar/'.$item->id.'/entregado/'.$estado,'<i class="icon-list"></i>','title="Ver entregados"')?>
+   <?php if($estado=='ing')echo Html::linkAction('enviar/'.$item->id.'/dis',Html::img("figuras/facturar.png",'Enviar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'')?>
+   <?php if($estado=='dis')echo Html::linkAction('enviar/'.$item->id.'/alm',Html::img("figuras/facturar.png",'Enviar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'')?>
+   <?php if($estado=='alm')echo Html::linkAction('enviar/'.$item->id.'/TERMINADO',Html::img("figuras/facturar.png",'Enviar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'')?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+<div class="form-actions">
+    <?php if($estado!='alm')echo Html::linkAction("cargar/0/crear/".$estado, 'Ingresar o Crear Orden','class="btn btn-primary"') ?> <?php echo Html::linkAction("", ' Selecione Origen','class="btn btn-secondary"') ?>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function()
+{
+		
+//hacemos la busqueda en el evento search del control de busqueda
+	$('#txtBuscar').on('search',function(){
+		//le decimos a la funcion que busque en la tabla tblTabla el
+		//valor que contiene el campo actual
+		$.fntBuscarEnTabla($(this).val(),'pedidos');
+		
+	});
+	
+	
+});
+</script>

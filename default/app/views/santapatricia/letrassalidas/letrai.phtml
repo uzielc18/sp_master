@@ -1,0 +1,75 @@
+<?php switch ($letra->getTessalidasinternas()->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+
+View::content();?>
+<span class="print btn btn-primary"> Print </span> <?php echo Html::linkAction('internas','Regresar <i class="icon-hand-left"></i>','class="btn"')?>
+<style type="text/css">
+body,td,th {
+	font-family: "Times New Roman", Times, serif;
+	font-size: 12px;
+	color: #000;
+}
+body {
+	background-color: #FFF;
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+}
+</style>
+<div class="card-body">
+<br />
+<br />
+<table width="91%" border="0" cellspacing="0" align="left">
+  <tr>
+   
+    <td width="128" height="28" align="center">&nbsp;</td>
+    <td width="50" align="lefth"><?php echo ($letra->numerodeletra)?><?Php if(!empty($letra->nrenovacion))echo $letra->nrenovacion; else echo "00";?></td>
+    <td width="96" align="lefth"><?php if(!empty($letra->factura_id))echo $letra->getTessalidasinternas()->getFacturas($letra->factura_id);else echo '-';?></td>
+	<td width="95" align="lefth">LIMA</td>
+	<td width="25" align="lefth" valign="bottom"><?php $FE=explode('-',$letra->getTessalidasinternas()->femision); echo $FE[2]?></td>
+	<td width="20" align="lefth" valign="bottom"><?php echo $FE[1]?></td>
+	<td width="27" align="lefth" valign="bottom"><?php echo $FE[0]?></td>
+	<td width="17" align="lefth" valign="bottom"><?php $FV=explode('-',$letra->getTessalidasinternas()->fvencimiento); echo $FV[2]?></td>
+	<td width="15" align="lefth" valign="bottom"><?php echo $FV[1]?></td>
+	<td width="24" align="lefth" valign="bottom"><?php echo $FV[0]?></td>
+    <td width="63" align="lefth" valign="bottom"><?php echo $simbolo?>* <?php echo number_format($letra->getTessalidasinternas()->total,2,'.',',')?></td>
+  </tr>
+</table>
+<br />
+<br />
+<br />
+<br />
+<table width="95%" border="0" cellspacing="1">
+  <tr>
+    <td width="18%" align="center"><p>&nbsp;</p></td>
+    <td width="82%" align="left"><?php echo $texto=NumerosLetras::NL($letra->getTessalidasinternas()->total,$letra->getTessalidasinternas()->getTesmonedas()->nombre);?> -----</td>
+    </tr>
+</table>
+<br />
+<table width="705" border="0" cellspacing="1">
+	<tr>
+		<td width="169">&nbsp;</td>
+		<td colspan="2"><?php echo $letra->getTessalidasinternas()->getTesdatos()->razonsocial?></td>
+		<td width="262">&nbsp;</td>
+	</tr>
+		<tr>
+		<td width="169">&nbsp;</td>
+		<td colspan="2"><?php  echo $letra->getTessalidasinternas()->getTesdatos()->direccion;?> - <?php if(empty($letra->getTessalidasinternas()->getTesdatos()->distrito))echo $letra->getTessalidas()->getTesdatos()->distrito_ant ;else $letra->getTessalidasinternas()->getTesdatos()->distrito ?></td>
+		<td width="262">&nbsp;</td>
+	</tr>
+		<tr>
+		<td width="169">&nbsp;</td>
+		<td width="174"><?php echo $letra->getTessalidasinternas()->getTesdatos()->ruc?></td>
+		<td width="87"><?php  echo $letra->getTessalidasinternas()->getTesdatos()->telefono;?></td>
+		<td width="262">&nbsp;</td>
+	</tr>
+</table>
+</div>
+

@@ -1,0 +1,114 @@
+
+<?php
+$monedas= $pedido->tesmonedas_id;
+switch ($monedas)
+{
+	case 1: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES'; break;
+	case 2: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 4: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
+	case 5: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 0: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
+}
+View::content();
+?>
+<div class="card"><h1>Salida de repuestos <span>salida de repuestos vistas para imprimir</span></h1></div>
+<div class="form-actions"><?php echo Html::linkAction("salidas",'Volver','class="btn btn-info"')?></div>
+<?php echo Sp::imprimir('Salida - ','P',array('P'=>'1'));?> 
+<div class="card-body">
+	  <table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered">
+	    <thead>
+    <tr>
+    	<th colspan="5" rowspan="4" align="left" valign="top">Santa Patricia <?php echo date("H:i:s");?></th>
+    	<th width="10%" align="left" valign="top">N.Ped.:</th>
+    	<th colspan="2" align="left" valign="top"><?php echo $pedido->codigo;?></th>
+    	</tr>
+    <tr>
+    	<th align="left" valign="top">Fecha:</th>
+    	<th colspan="2" align="left" valign="top"><?php echo Sp::formatFecha('%d/%m/%Y',$pedido->fecha_at)?></th>
+    	</tr>
+    <tr>
+    	<th align="left" valign="top"><span class="meta-head">Tipo:</span></th>
+    	<th colspan="2" align="left" valign="top"><?php echo $pedido->tipo;?></th>
+    	</tr>
+    <tr>
+    	<th align="left" valign="top">Estado:</th>
+    	<th colspan="2" align="left" valign="top"><?php echo $pedido->estadonota;?></th>
+    	</tr>
+        <tr>
+          <th width="9%" align="left" valign="top" class="meta-head">De:</th>
+          <td colspan="7" valign="top"><?php echo $pedido->getAclusuarios()->getAcldatos()->nombre?><?php echo $pedido->getAclusuarios()->getAcldatos()->appaterno?><?php echo $pedido->getAclusuarios()->getAcldatos()->apmaterno?></td>
+          </tr>
+        <tr>
+          <th align="left" valign="top">Area:</th>
+          <th colspan="7" align="left" valign="top"><?php echo $pedido->getPlareas()->nombre?></th>
+        </tr>
+		 <tr>
+		 	<th valign="top" align="left">Item</th>
+		 	<th width="10%" align="left" valign="top">Codigo</th>
+		 	<th width="45%" align="left" valign="top">Descripcion</th>
+
+		 	<th width="7%" valign="top">Med.</th>
+		 	<th width="9%" valign="top" align="right">Cant.</th>
+		 	<th width="10%" valign="top" align="right">P.S/IGV</th>
+		 	<th width="10%" valign="top" align="right">Total</th>
+	 	</tr>
+      </thead>
+     <tbody> 
+		  <?php 
+			  $n=0;
+			  $totalP=0;
+			  $totalC=0;
+			  $TOTAL=0;
+			  foreach($detalles as $item){
+				 $n++;
+			  ?>  
+		  <tr id="<?php echo $n?>" title="<?php if(Auth::get('id')==3)echo $item->id; ?>" class="item-row">
+          	 <td valign="top"><?php echo $n;?><span class="description">/ <?Php echo $item->getAcldatos()->nombre?></span></td>
+             <td valign="top"><?php echo $item->getTesproductos()->codigo_ant;?><?php //echo $item->getTesproductos()->nombre?> </td>
+		     <td valign="top" class="description"><?php echo $item->getTesproductos()->detalle?></td>
+		 	
+              <td align="center" valign="top">
+              <?php echo $item->getTesunidadesmedidas()->simbolo?>
+              </td>
+		      <td align="right" valign="top">
+              <?php echo number_format($item->cantidad,2,'.','');?>
+              <?php $totalC=$totalC+$item->cantidad;?>
+              </td>
+		      <td align="right"valign="top">
+              <?php echo $simbolo;echo number_format($item->precio,2,'.','');?>
+              <?php ?>
+              </td>
+		      <td align="right"valign="top">
+              <?php echo $simbolo;echo $monto=number_format($item->cantidad*$item->precio,2,'.','');?>
+              <?php $TOTAL=$TOTAL+$monto;?>
+              </td>
+		  </tr>
+		  
+		  <?php
+			  }/*FIN FOREACH*/?>
+              </tbody>
+        <tr>
+          <td valign="top">&nbsp;</td>
+          <td valign="top">&nbsp;</td>
+		  <td valign="top" class="description">&nbsp;</td>
+	 	  <td align="center" valign="top">&nbsp;</td>
+          <td align="right" valign="top">-----------</td>
+		  <th align="right" valign="top">&nbsp;</th>
+		  <td align="right" valign="top">----------</td>
+		</tr>
+        <tr>
+        	<td colspan="4" valign="top"><?php echo $texto=NumerosLetras::NL($TOTAL,$moneda_letras);?></td>
+        	<td align="right" valign="top"><?php echo number_format($totalC,2,'.','')?></td>
+        	<th align="right" valign="top">&nbsp;</th>
+        	<td align="right" valign="top"><?php echo $simbolo;echo number_format($TOTAL,2,'.','')?></td>
+        	</tr>
+	  </table>
+
+
+<?php echo Form::open(NULL,'POST','class="form-inline"')?>
+<?php echo Form::hidden('pedido.id')?>
+<?php echo Form::hidden('pedido.acldatos_id')?>
+  <?php if($pedido->estadonota=='Editable'){?><button type="submit" class="btn btn-primary">Finalizar</button> 
+<?php echo Html::linkAction('agregardetalles_salida','Editar','class="btn"')?><?Php }else{?><?php //echo Html::linkAction('salidas/','Volver','class="btn"')?><?php }?>
+<?php echo Form::close();?>
+</div>

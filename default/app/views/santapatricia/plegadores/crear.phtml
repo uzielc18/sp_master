@@ -1,0 +1,122 @@
+<?php
+View::content();
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<script type="text/javascript">
+        $(document).ready(function() {
+            $("#prod").tokenInput("<?php echo "/santapatricia/plegadores/resultados"?>", 
+			{
+				tokenLimit: 1,minChars: 1,
+                onAdd: function (item) {
+                   var VAL=item.id;
+				   $("#tesproductos_id").val(VAL['id']);
+				   //$("#tesproductos_testipoproductos_id").val(VAL['testipoproductos_id']);
+				   $("#tesproductos_codigo").val(VAL['codigo']);
+				   $("#tesproductos_nombre").val(VAL['nombre']);
+				   $("#tesproductos_nombrecorto").val(VAL['nombrecorto']);
+				   $("#tesproductos_abr").val(VAL['abr']);
+				   $("#tesproductos_detalle").val(VAL['detalle']);
+				   $("#tesproductos_precio").val(VAL['precio']);
+                },
+                onDelete: function (item) {
+					$("#tesproductos_id").val('');
+					//$("#tesproductos_testipoproductos_id").val('');
+				   $("#tesproductos_codigo").val('<?php echo $codigo?>');
+				   $("#tesproductos_nombre").val('');
+				   $("#tesproductos_nombrecorto").val('');
+				   $("#tesproductos_abr").val('');
+				   $("#tesproductos_detalle").val('');
+				   $("#tesproductos_precio").val('');
+                }
+            });
+		});
+        </script>
+<div class="card">
+    <h1><?php echo $titulo?></h1>
+</div>
+<div class="card-body">
+<strong>Si ya creó un Producto, buscar aqui!</strong>
+<br /><input name="prod" id="prod" type="text">
+<hr />
+
+
+<?php echo Form::open(NULL, 'post', 'class="form-horizontal"');
+echo Form::hidden('tesproductos.id')
+?>
+
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+
+  <tr>
+    <th align="right" valign="top"><div align="left">Tipo: Plegador:</div></th>
+    <td valign="top"><?php 
+	//array("VAMATEX SIMPLE 1900"=>"VAMATEX SIMPLE 1900","VAMATEX SIMPLE 2600"=>"VAMATEX SIMPLE 2600","VAMATEX DOBLE 3600"=>"VAMATEX DOBLE 3600","GALILEO"=>"GALILEO","SAURER"=>"SAURER","SULZER"=>"SULZER","CUADROS"=>"CUADROS VAMATEX","PLEGADOR/ES"=>"PLEGADOR/ES","SILLAS"=>"SILLAS","OTROS"=>"OTROS")
+	echo Form::dbSelect('proplegadores.protipoplegadores_id','nombre') ?><?php //echo Html::linkAction("crear/$page", 'Nuevo/TP','class="btn btn-primary"') ?></td>
+    <th align="right" valign="top">&nbsp;</th>
+    <td valign="top">&nbsp;</td>
+  </tr>
+  <tr>
+    <th width="14%" align="right" valign="top"><div align="left">Número:&nbsp;</div></th>
+    <td width="35%" valign="top"><?php 	echo Form::text('proplegadores.numero','size="20"')?></td>
+    <th width="14%" align="right" valign="top"><div align="left">Plegadores Pares:&nbsp;</div></th>
+    <td width="37%" valign="top"><?php echo Form::text('proplegadores.pares','size="40"') ?></td>
+  </tr>
+  <tr>
+    <th align="right" valign="top"><div align="left">Codigo:&nbsp;</div></th>
+    <td valign="top"><?php 
+	echo Form::text('tesproductos.codigo','size="20" readonly="readonly"',$codigo)?></td>
+    <th align="right" valign="top"><div align="left">Nombre:&nbsp;</div></th>
+    <td valign="top"><?php echo Form::text('tesproductos.nombre','size="40"') ?></td>
+  </tr>
+  <tr>
+    <th align="right" valign="top"><div align="left">Nombre Corto:&nbsp;</div></th>
+    <td valign="top"><?php echo Form::text('tesproductos.nombrecorto','size="30"') ?></td>
+    <th align="right" valign="top"><div align="left">Abrev:&nbsp;</div></th>
+    <td valign="top"><?php echo Form::text('tesproductos.abr','size="10"') ?></td>
+  </tr>
+  <tr>
+    <th align="right" valign="top"><div align="left">Descripcion:&nbsp;</div></th>
+    <td colspan="3" valign="top"><?php echo Form::textarea('tesproductos.detalle','cols="35" rows="4"') ?></td>
+  </tr>
+  <tr>
+    <th align="right" valign="top"><div align="left">Stock Minimo:</div></th>
+    <td valign="top"><?php echo Form::text('tesproductos.stokminimo','size="10"')?></td>
+    <th valign="top"><div align="left">Stock Maximo:</div></th>
+    <td valign="top"><?php echo Form::text('tesproductos.stokmaximo','size="10"')?></td>
+  </tr>
+  <tr>
+    <th align="right" valign="top"><div align="left">Precio:&nbsp;</div></th>
+    <td valign="top"><?php echo Form::text('tesproductos.precio') ?></td>
+    <th align="right" valign="top"><div align="left">Codigo: Proveedor: </div></th>
+    <td valign="top"><?php echo Form::text('tesproductos.cod_proveedor','size="30"')?></td>
+  </tr>
+  <tr>
+    <th align="right" valign="top"><div align="left">Modelo:</div></th>
+    <td valign="top"><?php echo Form::text('proplegadores.modelo') ?></td>
+    <th valign="top"><div align="left">Marca:</div></th>
+    <td valign="top"><?php echo Form::text('proplegadores.marca') ?></td>
+  </tr>
+    <tr>
+    <th align="right" valign="top">&nbsp;
+      <div align="left">Plato: (Diametro):&nbsp;</div></th>
+    <td valign="top"><?php echo Form::text('proplegadores.plato') ?></td>
+    <th valign="top"><div align="left">Ancho: plegador:</div></th>
+    <td valign="top"><?php echo Form::text('proplegadores.anchoplegador') ?></td>
+  </tr>
+    <tr>
+    <th align="left" valign="top">Peso(Tara):</th>
+    <td valign="top"><?php echo Form::text('proplegadores.peso')?>Kilogramos</td>
+    <th valign="top"><div align="left">Anchos:&nbsp;</div></th>
+    <td valign="top">Maximo:<?php echo Form::text('proplegadores.anchomin','size="10"') ?>Minimo.<?php echo Form::text('proplegadores.anchomax','size="10"') ?></td>
+  </tr>
+    <tr>
+    <th align="left" valign="top">Estado </th>
+    <td valign="top"><?php echo Form::dbSelect('proplegadores.estadoplegador_id')?></td>
+    <th valign="top"><div align="left"></div></th>
+    <td valign="top"><?php //echo Form::text('proplegadores.anchomin','size="10"') ?></td>
+  </tr>
+</table>
+<div class="form-actions">
+    <?php echo Form::submit('Guardar Datos', 'class="btn btn-primary"') ?>
+    <?php echo Html::linkAction('listado', 'Cancelar', 'class="btn"'); ?>
+    </div>
+</div>

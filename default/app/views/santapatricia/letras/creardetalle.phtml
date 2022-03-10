@@ -1,0 +1,82 @@
+<script type="text/javascript">
+$(document).ready(function(){
+    $('.selec').click(function()
+        {
+        var selectedItems = new Array();
+        $("input[@name='INGRESOS[]']:checked").each(function(){
+            selectedItems.push($(this).val());
+        });
+        
+        $("#i").val(selectedItems);
+    });
+});
+</script>
+<div class="card">
+<h1>Obligaciones por Pagar!</h1>
+</div>
+<div class="card-body">
+<?Php echo View::content();?>
+<div class="well"><strong> <em>Proveedor: - </em></strong><em>
+<?Php if(Session::get('proveedor_id')!=0)echo $tesdatos->razonsocial;else echo "Todos";?>
+,
+ <strong> Forma de Pago:- </strong> <?php echo $vc->getVoucherformadepagos()->nombre?>, <strong>Moneda:</strong> - <?php echo $vc->getTesmonedas()->nombre?> <?php echo Html::linkAction('editar/',Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'))?>
+	</em></div>
+
+<?php if($vc->voucherformadepagos_id!=10){echo Form::open($module_name.'/letras/grabardetalle','post');}else{echo Form::open($module_name.'/letras/grabardetalledetraccion','post');}?>
+
+<?php echo Form::hidden('i');?>
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+<caption>Pendientes de Cancelación</caption>
+  <tr align="left">
+  	<th width="31">Item.</th>
+	<th width="46" title="Documento Pendiente de Pago !!">Doc.</th>
+    <th width="69" title="Numero de Letra !">Nro. Letra</th>
+	<th width="53" title="Nro. Unico de la Letra !">Nro. Unico</th>
+	<th width="85" title="Fecha de Vencimiento !">F. Emision</th>
+    <th width="64" title="Fecha de Vencimiento !">F. Venc</th>
+    <th width="156" title="Girador de la Letra !">Proveedor</th>
+    <th width="37" title="Banco donde se debe pagar la Obligacion !">Banco</th>
+	<th width="50">Moneda</th>
+    <th width="57" align="right">Total</th>
+    <?php if($vc->voucherformadepagos_id==10){?><th width="87">Detraccion</th><th width="29">T/ C</th><?php }?>
+    <th width="66" align="center">Selecc.</th>
+  </tr>
+<?php $n=0;
+foreach($ingresos as $item){ 
+$n++;
+switch ($item->tesmonedas_id)
+{
+	case 1: $simbolo='S/. ';break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. ';	break;
+	case 0: $simbolo='S/. '; 
+	break;
+}
+
+?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20"><?php echo $n?></td>
+	<td><?php echo $item->tesdocumentos_id ;echo $item->getTesdocumentos()->abr?><?php //echo $item->serie.'-'.$item->numero?></td>
+    <td><?php //echo $item->getTesdocumentos()->abr?><?php echo $item->numero?></td>
+    <td><?php if($item->tesdocumentos_id==34){
+		if(!empty($item->numerounico))echo $item->numerounico; else echo "Sin # único";
+		}?></td>
+	<td><?php echo Sp::formatFecha('%d/%m/%Y',$item->femision)?></td>
+	<td><?php echo Sp::formatFecha('%d/%m/%Y',$item->fvencimiento)?><?Php //echo $item->fvencimiento?></td>
+    <td><?php echo $item->getTesdatos()->razonsocial?></td>
+	<td><?php if(!empty($item->bancos))echo $item->bancos; else echo "Sin Banco"?></td>
+    <td><?php if(!empty($item->tesmonedas_id))echo $item->getTesmonedas()->abr; else echo "seleccione un tipo de moneda";?></td>
+    <td align="right"><?php echo $simbolo; echo number_format($item->totalconigv,2,'.','');?></td>
+    <?php if($vc->voucherformadepagos_id==10){?><td align="right"> <?php echo 'S/. '; echo number_format($item->detraccion,2,'.','');?></td><td align="right"><?php echo $item->getTestipocambios()->compra?></td><?php }?>
+   <td align="center" title="Seleccionar Obligaciones a Cancelar!">
+   <input type="checkbox" name="INGRESOS[]" class="selec" value="<?php echo $item->id?>" />
+    </td>
+  </tr>
+<?php }?>
+</table>
+<div class="form-actions">
+    <?php echo Form::Submit('Enviar Detalles','class="btn btn-primary"') ?>
+</div>
+<?php echo Form::close()?>
+</div>

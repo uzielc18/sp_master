@@ -1,0 +1,101 @@
+<?Php echo View::content();?>
+<div id="vista_p_ajax">
+<form class="form-inline">
+<div class="input-prepend input-append">
+  <span class="add-on" title="Buscar lote!"><em><strong>Buscar Lote</strong></em></span>
+  <input type="text" id="demo-input-local_lote" name="blah" class="input-medium search-query" />
+</div>
+</form>
+
+<a href="javascript:;" id="regresar">Limpiar</a>
+<?php
+$simbolo="S/. ";
+
+switch ($inventario->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+?>
+	<table width="100%" class="table table-bordered table-striped">
+    <thead>
+		  <tr>
+		      <th width="6%" align="left"><h3>Codigo</h3></th>
+		      <th width="19%" align="left"><h3>Producto</h3></th>
+              <th width="13%" align="left"><h3>Color</h3></th>
+              <th width="15%" align="left"><h3>Lote</h3></th>
+		      <th width="10%" align="left"><h3>Inicial</h3></th>
+		      <th width="12%" align="left"><h3>Ingresos</h3></th>
+              <th width="10%" align="left"><h3>Salidas</h3></th>
+		      <th width="11%" align="left"><h3>Stock</h3></th>
+		      <th width="4%" align="left"><h3>Medida</h3></th>
+	      </tr>
+	</thead>
+    	  <?php 
+			  $n=0;
+			  $subtotal=0;
+			  $subtotalD=0;
+			  $array_lote='';
+		  	  $id_productoA=0;
+			  //$igv=0;
+			  foreach($detalles as $item){
+				  $i_coma=',';
+				  if($n==0){$i_coma='';}
+				  if($id_productoA!=$item->lote){$array_lote.=$i_coma.'{id: "'.$item->lote.'", name: "'.$item->lote.'"}';}
+				  $id_productoA=$item->lote;
+				  
+				  $n++;
+				 // print_r($item->getTesproductos()->getTotalingresos($item->tesproductos_id,$item->tescolores_id,$item->lote));
+				  $STOCK=(float)$item->getTesproductos()->getStockLote($item->tesproductos_id,$item->tescolores_id,$item->lote);
+				  $inicial=$item->getTesproductos()->getStockInicialLote($item->tesproductos_id,Session::get("INVENTARIO_ID"),$item->lote);
+				  $stock_ingreso=$item->getTesproductos()->getTotalingresos($item->tesproductos_id,$item->tescolores_id,$item->lote)-number_format($inicial,2,'.','');
+				  $stock_salida=$item->getTesproductos()->getTotalsalidas($item->tesproductos_id,$item->tescolores_id,$item->lote);
+			  ?>
+		  <tr id="<?php echo $n?>" align="left">
+           <td><?php //echo $item->getTesingresos()->getTesdocumentos()->nombre?><?php //echo $item->id?><?php echo $item->getTesproductos()->codigo?></td>
+		   <td class="item-name">
+                  <?php echo $item->getTesproductos()->nombre?> <?php echo $item->getTesproductos()->detalle?>
+           </td>
+           <td><?php echo $item->getTescolores()->nombre?></td>
+           <td><?php echo $item->lote?></td>
+           <td><?php echo number_format($inicial,2,'.','')?></td>
+           <td><?php echo $stock_ingreso?></td>
+           <td><?php echo $stock_salida?></td>
+		   <td>
+		   <?php 
+		   echo number_format($STOCK,'2','.',' ');?>
+           </td>
+		   <td><?php echo $item->getTesunidadesmedidas()->nombre?></td>
+	      </tr>
+		  <?php }
+		  ?>
+		  </table>
+                <?php //echo $array_lote?>
+<hr />
+
+<script type="text/javascript">
+        $(document).ready(function() {
+			//alert('dentro de ajax');
+            $("#demo-input-local_lote").tokenInput(
+			[
+                <?php echo $array_lote?>
+            ],
+			{
+                minChars: 1,
+                tokenLimit: 1,
+				onAdd: function (item) {
+					$("#vista_p_ajax").load("/<?php echo $module_name?>/<?php echo $controller_name?>/<?php echo $action_name?>/<?php echo $id_p?>/" + item.id);
+                },
+                onDelete: function (item) {
+                }
+			});
+			$("#regresar").live("click",function(){
+				$("#vista_p").load("/<?php echo $module_name?>/<?php echo $controller_name?>/<?php echo $action_name?>/<?php echo $id_p?>");
+				});
+        });
+        </script>
+ 
+ </div>

@@ -1,0 +1,56 @@
+<div class="card">
+    <h1>Ver Coneras</h1>
+</div>
+ <div class="form-actions">
+ <?Php echo Html::linkAction('grabar_coneras','CREAR PRODUCCION','class="btn btn-primary"')?>
+<?php /*?><a href="/<?Php echo $module_name;?>/<?Php echo $controller_name;?>/" class="btn btn-primary">Tejeduria</a>
+<a href="/<?Php echo $module_name;?>/<?Php echo $controller_name;?>/index/140" class="btn btn-primary">Hilatura-Chenillera</a>
+<a href="/<?Php echo $module_name;?>/<?Php echo $controller_name;?>/index/141" class="btn btn-primary">Urdido</a>
+<a href="/<?Php echo $module_name;?>/<?Php echo $controller_name;?>/index/142" class="btn btn-primary">Control de Calidad</a>
+<a href="/<?Php echo $module_name;?>/<?Php echo $controller_name;?>/index/143" class="btn btn-primary">Estampado</a>
+<a href="/<?Php echo $module_name;?>/<?Php echo $controller_name;?>/index/144" class="btn btn-primary">Soporte</a>
+<a href="/<?Php echo $module_name;?>/<?Php echo $controller_name;?>/index/163" class="btn btn-primary">Enconado</a><?php */?>
+</div>
+<div class="card-body">
+<?php echo Form::open(NULL,'POST','class="form-horizontal"');?>
+<fieldset>
+<?php echo Form::hidden('eficiencia.id');?>
+<?php echo Form::hidden('eficiencia.promaquinas_id');?>
+<?php echo Form::hidden('eficiencia.promaquinas_id');?>
+<?php echo Form::hidden('eficiencia.aclusuarios_id');?>
+<div class="control-group">
+    <label class="control-label">Maquina</label>
+    <div class="controls">  <?Php echo $eficiencia->getPromaquinas()->nombre;?>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label">Lado</label>
+    <div class="controls">  <?Php echo $eficiencia->lado;?>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label">Fecha y Hora inicial</label>
+    <div class="controls">  <?Php echo $eficiencia->fecha_inicio.' '.$eficiencia->hora_inicio;?>
+    </div>
+</div>
+
+<div class="control-group">
+    <label class="control-label">Valor</label>
+    <div class="controls">  <?php echo Form::text('eficiencia.valor_c','placeholder="H:i:s" size="6"');?>
+    </div>
+</div>
+
+<div class="control-group">
+    <label class="control-label">Observacion</label>
+    <div class="controls">  <?php echo Form::text('eficiencia.observacion','placeholder="Observación"');?>
+    </div>
+</div>
+
+<div class="control-group">
+    <div class="controls">
+<?Php echo Form::submit('MODIFICAR','class="btn btn-primary"')?>
+    </div>
+</div>
+</fieldset>
+<?Php echo Form::close();?>
+</div>

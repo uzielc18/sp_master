@@ -1,0 +1,206 @@
+<?php echo View::content();?>
+
+<table width="64%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered">
+<caption>Venta</caption>
+  <tr>
+    <th colspan="6" align="center" scope="col">(<?php echo $producto->codigo?>) <?php echo $producto->nombre?> <?php echo $producto->detalle?></th>
+  </tr>
+  <tr>
+    <th width="23%" align="left" scope="col"># ROLLO </th>
+    <th width="14%" align="right" scope="col">METROS</th>
+    <th width="14%" align="right" scope="col">PESO</th>
+    <th width="10%" align="right" scope="col">ANCHO</th>
+    <th width="10%" align="right" scope="col">A. UTIL</th>
+    <th width="15%" align="right" scope="col">ACABADOS.</th>
+    <th width="15%" align="right" scope="col">REVISADOR</th>
+    <th width="10%" align="right" scope="col">UBI.</th>
+   
+  </tr>
+<?php 
+$c=0;
+$total=0;
+$a=0;
+$n=0;
+foreach($rollos_venta as $rollov){
+$c=count($rollos_venta);
+$b=$rollov->tescolores_id;
+if($a!=$b){
+$a=$rollov->tescolores_id;
+if($n!=0){
+?>
+ <tr>
+    <th width="23%" scope="col"></th>
+    <th width="14%" align="right" style="border-top:#999 solid 1px;" scope="col"><?php echo number_format($total,2,'.','')?></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th width="21%" align="right" scope="col">Ubi.</th>
+ </tr>
+<?php 
+$total=0;
+  }
+?>
+ <tr>
+    <td colspan="7" align="left">Color: <?Php echo $rollov->getTescolores()->nombre?></td>
+  </tr>
+<?php 
+}
+$n++;
+?>
+  <tr>
+    <td><?php echo $rollov->codigo?>-<?php echo $rollov->numeroventa?></td>
+    <td align="right"><?Php echo $rollov->metros?></td>
+    <td align="right"><?Php //echo $rollov->peso?><?php echo number_format($rollov->peso,2,'.','')?></td>
+    <td align="right"><?php echo $rollov->ancho?></td>
+    <td align="right"><?php echo $rollov->anchoutil?></td>
+    <td align="right"><?php echo $rollov->observacion_venta?></td>
+    <td align="right"><?php echo $rollov->revisador?> <?php echo $rollov->observacion_control?></td>
+    <td align="right"><?php echo $rollov->ubicacion?></td>
+</tr>
+
+<?php 
+$total=$total+$rollov->metros;
+}?>
+<?php 
+if($n==$c){ ?>
+ <tr>
+    <th width="23%" scope="col"></th>
+    <th width="14%" align="right" style="border-top:#999 solid 1px;" scope="col"><?php echo number_format($total,2,'.','')?></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th width="21%" scope="col"> </th>
+ </tr>
+  <?php
+}
+  ?>
+</table>
+<br />
+<br />
+<table width="64%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered">
+<caption>Tintoreria</caption>
+  <tr>
+    <th colspan="7" align="center" scope="col">(<?php echo $producto->codigo?>) <?php echo $producto->nombre?> <?php echo $producto->detalle?></th>
+  </tr>
+  <tr>    
+    <th width="23%" align="left" scope="col"># ROLLO </th>
+    <th width="14%" align="right" scope="col">METROS</th>
+    <th width="14%" align="right" scope="col">PESO</th>
+    <th width="10%" align="right" scope="col">ANCHO</th>
+    <th width="10%" align="right" scope="col">A. UTIL</th>
+    <th width="25%" align="right" scope="col">ACABADOS.</th>
+    <th width="25%" align="right" scope="col">REVISADOR</th>
+    <th width="10%" align="right" scope="col">UBI.</th>
+  </tr>
+<?php 
+$c=0;
+$total=0;
+$a=0;
+$n=0;
+foreach($rollos_tintoreria as $rollot){
+$c=count($rollos_tintoreria);
+$b=$rollot->tescolores_id;
+if($a!=$b){
+$a=$rollot->tescolores_id;
+if($n!=0){
+?>
+ <tr>
+    <th width="10%" scope="col"></th>
+    <th width="12%" align="right" style="border-top:#999 solid 1px;" scope="col"><?php echo number_format($total,2,'.','')?></th>
+    <th width="34%"></th>
+    <th width="22%"></th>
+    <th width="22%"></th>
+    <th width="34%"></th>
+    <th width="22%" align="right" scope="col">Ubi.</th>
+ </tr>
+<?php 
+$total=0;
+  }
+?>
+ <tr>
+    <td colspan="7" align="left">Color: <?Php echo $rollot->getTescolores()->nombre?></td>
+  </tr>
+ <tr>
+    <td colspan="7" align="left">Guia: <?php echo $rollot->resumen?></td>
+  </tr>
+<?php 
+}
+$n++;
+?>
+  <tr>
+    <td><?php echo $rollot->codigo_t?>-<?php echo $rollot->numeroventa?></td>
+    <td align="right"><?Php echo $rollot->metros?></td>
+    <td align="right"><?Php echo $rollot->peso?></td>
+    <td align="right"><?php echo $rollot->ancho?></td>
+    <td align="right"><?php echo $rollot->anchoutil?></td>
+    <td align="right"><?php echo $rollov->observacion_venta?></td>
+    <td align="right"><?php echo $rollot->revisador?></td>
+    <td align="right"><?php echo $rollot->ubicacion?></td>
+  </tr>
+
+<?php 
+$total=$total+$rollot->metros;
+}?>
+<?php 
+if($n==$c){ ?>
+ <tr>
+    <th width="10%" scope="col"></th>
+    <th width="12%" align="right" style="border-top:#999 solid 1px;" scope="col"><?php echo number_format($total,2,'.','')?></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th width="22%" scope="col"> </th>
+ </tr>
+  <?php
+}
+  ?>
+</table>
+<br />
+<br />
+
+<table width="63%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered">
+<caption>Sin Procesos</caption>
+<tr>
+    <th colspan="7" align="center" scope="col">(<?php echo $producto->codigo?>) <?php echo $producto->nombre?> <?php echo $producto->detalle?></th>
+  </tr>
+  <tr>
+    <th width="18%" align="left" scope="col"># ROLLO </th>
+    <th width="18%" align="right" scope="col">METROS</th>
+    <th width="12%" align="right" scope="col">PESO</th>
+    <th width="18%" align="right" scope="col">ANCHO</th>
+    <th width="17%" align="right" scope="col">A. Util</th>
+    <th width="40%" align="right" scope="col">ACABADOS.</th>
+    <th width="13%" align="right" scope="col">REVISADOR</th>
+    <th width="13%" align="right" scope="col">UBI.</th> 
+  </tr>
+<?php 
+$total_p=0;
+$total_m=0;
+foreach($rollos_sinprocesos as $rollos){
+  $total_m=$total_m+$rollos->metros;
+  $total_p=$total_p+$rollos->peso;
+  ?>
+  <tr>
+    <td><?php echo $rollos->codigo?>-<?php echo $rollos->numero?></td>
+    <td align="right"><?php echo $rollos->metros?></td>
+    <td align="right"><?php echo $rollos->peso?></td>
+    <td width="10%"align="right"><?php echo $rollos->ancho?></td>
+    <td width="10%"align="right"><?php echo $rollos->anchoutil?></td>
+    <td width="25%"align="right"><?php echo $rollov->observacion_venta?></td>
+    <td width="25%"align="right"><?php echo $rollos->revisador?></td>
+    <td width="10%"align="right"><?php echo $rollos->ubicacion?></td>
+  </tr>
+<?php }?>
+ <tr>
+    <th width="18%" align="right" scope="col">Total:</th>
+    <th width="18%" align="right" scope="col"><?php echo number_format($total_m,2,'.','')?></th>
+    <th width="12%" align="right" scope="col"><?php echo number_format($total_p,2,'.','')?></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th width="13%" align="right" scope="col"></th>
+  </tr>
+</table>

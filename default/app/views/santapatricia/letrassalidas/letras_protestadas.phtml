@@ -1,0 +1,66 @@
+<style type="text/css">
+.span_float
+{
+	float:right !important;
+	margin-left:0px;
+	margin-right:-5px;
+}
+</style>
+<div class="card">
+    <h1><em>Letras Protestadas</em><span><?php echo $empresa->razonsocial?></span></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="form-actions">
+<?php echo Menu::menuLetras($action_name);?>
+</div>
+<div id="ver_resultado"></div>
+<div class="form-actions">
+<?php echo Sp::imprimir('Letras semanal - ','P',array("W"=>1,"P"=>1,"EX"=>1));?> 
+</div>
+<div class="card-body">
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+<caption>Letras Protestadas</caption>
+  <tr>
+  	<th width="17">Nº</th>
+    <th width="148">Proveedor</th>
+    <th width="63">Número Doc.</th>
+    <th width="59">Numero unico</th>
+	<th width="84">F. Emision</th>
+    <th width="78">F. Vto</th>
+    <th width="73">Banco</th>
+    <th width="58">Total</th>
+    <th width="64">Acciones </th>
+  </tr>
+<?php $number=0;
+foreach($letras as $item){ 
+$simbolo="S/. ";
+
+switch ($item->getTessalidas()->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+
+$number++;?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20"><?php echo $number?></td>
+  	<td height="20"><?php echo $item->getTessalidas()->getTesdatos()->razonsocial?></td>
+    <td><?php echo $item->getTessalidas()->numero?></td>
+    <td><?php echo $item->numerounico?></td>
+	<td><?php echo Sp::formatFecha('%d / %m / %Y',$item->getTessalidas()->femision)?><?php //echo $item->getTesingresos()->femision?></td>
+		<?php //echo Sp::formatFecha('%d / %m / %Y',$femision)?>
+    <td><?php echo Sp::formatFecha('%d / %m / %Y',$item->getTessalidas()->fvencimiento)?><?php //echo $item->getTesingresos()->fvencimiento?></td>
+    <td><?php echo $item->banco.' ('.$item->estadoletras.')'?></td>
+    <td><?php if($item->getTessalidas()->totalconigv!='NaN.00' && !empty($item->getTessalidas()->totalconigv))echo $simbolo.number_format($item->getTessalidas()->totalconigv,2,'.','');else echo('S/ 00.00')?></td>
+  	<td>
+	<?php echo Html::linkAction('pagadobanco/'.$item->id.'/'.$action_name,Html::img("figuras/pagar.png",'Editar','style="width: 30px;margin-left:1px;margin-right:1px;"'),'title="Clic !, si el Cliente Canceló la LETRA !"','')?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+</div>

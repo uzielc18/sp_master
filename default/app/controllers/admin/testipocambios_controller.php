@@ -58,7 +58,7 @@ class TestipocambiosController extends AdminController
                 //se hacen persistente los datos en el formulario
                 $this->testipocambios = Input::post('testipocambios');
             }else{
-                return Router::toAction('');
+                return Redirect::toAction('');
             }
         }
 

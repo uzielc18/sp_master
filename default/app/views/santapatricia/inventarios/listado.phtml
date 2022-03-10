@@ -1,0 +1,114 @@
+<style type="text/css">
+.span_float
+{
+	float:right !important;
+	margin-left:0px;
+	margin-right:-5px;
+}
+</style>
+<div class="card">
+    <h1><em>Inventarios<span> Inventarios de Almacen</span></em>
+   	<div class="icoimg-informes"></div></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<?php //echo Html::linkAction('cargar/0/',Html::img("figuras/nuevo.png",'VER','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Ingrese un nuevo produto al Inventario"')?>
+<div id="ver_resultado"></div>
+<div class="form-actions">
+    <?php echo Html::linkAction("",'Regresar ','class="btn btn"') ?> 
+<?php if($id==1){?>
+<span> <?php echo html::linkAction('inventario_tipo_ingreso/3/1/ALMACEN','ALMACEN','class="btn btn-secondary"')?></span>
+<span> <?php echo html::linkAction('inventario_tipo_ingreso/3/2/URDIDO','URDIDO','class="btn btn-secondary"')?></span>
+<span> <?php echo html::linkAction('inventario_tipo_ingreso/3/3/CHENILLE','CHENILLE','class="btn btn-secondary"')?></span>
+<span> <?php echo html::linkAction('inventario_tipo_ingreso/3/4/DEVOLUCION','DEVOLUCION','class="btn btn-secondary"')?></span>
+<span> <?php echo html::linkAction('inventario_tipo_ingreso/3/5/OTROS','OTROS','class="btn btn-secondary"')?></span>
+<span> <?php echo html::linkAction('reporte_cajas/','Cajas','class="btn btn-secondary"')?></span>
+<?php }?>
+</div>
+<div class="card-body">
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped" >
+<caption>Inventario Inicial Ingreso de stock</caption>
+  <tr align="left">
+  	<th width="23">Nº</th>
+    <th width="97">Numero</th>
+    <th width="142">Descripcion</th>
+    <th width="132">Total</th>
+    <th width="80">Igv</th>
+    <th width="77">Total+Igv</th>
+    <th width="101">Acciones</th>
+  </tr>
+<?php $n=0;
+foreach($inventarios as $item){ $n++;?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20"><?php echo $n?></td>
+    <td><?php echo $item->numero?></td>
+    <td>
+    <small style="color:#666; font-size:10px !important; font-style:italic; ">
+	<?php echo $item->glosa?>
+    </small>
+    </td>
+    <td>S/ <?php echo number_format($item->totalconigv-$item->igv,2,'.','');?></td>
+    <td>S/ <?php echo number_format($item->igv,2,'.','');?></td>
+    <td>S/ <?php echo number_format($item->totalconigv,2,'.','');?></td>
+   <td>
+   <?php //echo Html::linkAction('cargar/'.$item->id.'/',Html::img("figuras/editar.png",'VER','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Ingrese un nuevo produto al Inventario !"')?>
+    <?php echo Html::linkAction("cargar/$item->id/verinventario",Html::img("figuras/ver.png",'Eliminar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Visualizar el Inventario Inicial !"');?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+<?php foreach($lineas as $ln):?>
+
+<div class="card">
+    <h4> Inventario por Tipo de Producto de la Linea <?php echo $ln->nombre?><?php echo Html::linkAction('editar/'.$ln->id.'/0/',Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Ingreso del detalle Del Inventario Incial Por linea de Producto"')?><?php echo Html::linkAction('inventario_producto_resumen/'.$ln->id.'/'.base64_encode('tesproductos_id'),'Reporte Del mes','class="btn btn-primary"')?></h4>
+</div>
+
+<?php 
+$TOTAl=0;
+$n=0; 
+foreach($TP->find('conditions: teslineaproductos_id='.$ln->id) as $tipo):
+$item=$INGR->getInventario($tipo->id);
+if(empty($item->id))$invetario_id=Session::get('INVENTARIO_ID');else $invetario_id=$item->id;
+//if(!empty($item->totalconigv)){
+$TOTAl=$TOTAl+$item->totalconigv;
+$n++;
+?>
+<h5><?php echo $tipo->getTeslineaproductos()->nombre?> <?php echo $tipo->nombre?></h5>
+
+<table width="90%" border="00" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+  <tr align="left">
+  	<th width="23">Nº</th>
+    <th width="97">Numero</th>
+    <th width="142">Descripcion</th>
+    <th width="132">Total</th>
+    <th width="80">Igv</th>
+    <th width="77">Total+Igv</th>
+    <th width="101">Iventarios</th>
+  </tr>
+  <tr id="<?php echo $n?>">
+  	<td height="20"><?php echo $n?></td>
+    <td><?php echo $item->numero?></td>
+    <td>
+    <small style="color:#666; font-size:10px !important; font-style:italic; ">
+	<?php echo $item->glosa?>
+    </small>
+    </td>
+    <td>S/ <?php if(empty($item->totalconigv))echo "00.00"; else echo number_format($item->totalconigv-$item->igv,2,'.','');?></td>
+    <td>S/ <?php if(empty($item->igv))echo "00.00"; else echo number_format($item->igv,2,'.','');?></td>
+    <td>S/ <?php if(empty($item->totalconigv))echo "00.00"; else echo number_format($item->totalconigv,2,'.','');?></td>
+   <td>
+   <?php 
+   //echo $ln->testipoalmacenes_id;
+   echo Html::linkAction('cargarInventario/'.$invetario_id.'/'.$tipo->id.'/tesproductos_id',Html::img("figuras/ver.png",'VER','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Ver Stock Actual por Producto !"')?>
+   <?php  if($ln->testipoalmacenes_id==1 || $ln->testipoalmacenes_id==3){echo Html::linkAction('cargarInventario/'.$invetario_id.'/'.$tipo->id.'/tescolores_id',Html::img("figuras/hilo.png",'VER','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Ver Stock Actual por Colores !"')?>
+   <?php echo Html::linkAction('cargarInventario/'.$invetario_id.'/'.$tipo->id.'/lote',Html::img("figuras/numero_lote.png",'VER','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Ver Stock Actual por Numero de Lotes !"')?>
+   <?php echo Html::linkAction('cargarInventario/'.$invetario_id.'/'.$tipo->id.'/Movimientos',Html::img("figuras/mashoja.png",'VER','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Ver Movimientos de los Productos en Stock !"');}?>
+    </td>
+  </tr>
+  <?php //}?>
+</table>
+<?php endforeach;?>
+
+<?php endforeach;?>
+</div>

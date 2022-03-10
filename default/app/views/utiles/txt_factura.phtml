@@ -1,0 +1,63 @@
+<?php
+$txt=strip_tags($p);
+$archivo=$nombre;
+$lineas=explode('\\',$txt);
+$nombre=$archivo.".txt";
+$ruta='facturas/';
+$ar=fopen('facturas/'.$archivo.".txt","w") or die("Problemas en la creacion");
+?>
+<?php 
+$espacios='';
+$cont_lineas=0;
+$i=0;
+$a=0;$b=0;$c=0;$d=0;$e=0;$f=0;$g=0;$h=0;$n_espacios=0;
+foreach($lineas as $item=>$value)
+{
+$cont_lineas++;
+$a=0;$b=0;$c=0;$d=0;$e=0;$f=0;$g=0;$h=0;
+?>
+<?php 
+$val=explode("|",$value);
+$i=count($val);
+//fputs($ar,'I->'.$i.' ');
+if($i==5){$a=0;$b=15;$c=100;$d=28;$e=0;$f=0;$g=0;$h=0;$z=0;}
+if($i==4){$a=0;$b=15;$c=105;$d=25;$e=0;$f=0;$g=0;$h=0;$z=0;}
+if($i==9){$a=0;$b=3;$c=10;$d=16;$e=8;$f=55;$g=15;$h=13;$z=0;}
+if($i==3){$a=0;$b=169;$c=0;$d=0;$e=0;$f=0;$g=0;$h=0;$z=0;}
+if($i==7){$a=0;$b=7;$c=2;$d=15;$e=7;$f=2;$g=10;$h=0;$z=0;}
+if($cont_lineas==57)
+{
+	if($i==6){$a=0;$b=0;$c=145;$d=24;$e=5;$f=0;$g=0;$h=0;$z=0;}
+	}else{
+	if($i==6){$a=0;$b=0;$c=145;$d=17;$e=5;$f=0;$g=0;$h=0;$z=0;}
+}
+?>
+<?php 
+$v=0;
+foreach($val as $v=>$item)
+{	
+$item=trim($item);
+$espacios='';
+if(!empty($item)){$v++;}else{$espacios='';}
+if($v==1){$n_espacios=$a-strlen($item);for($S=0;$S<=$n_espacios;$S++){$espacios.=' ';} }
+if($v==2){$n_espacios=$b-strlen($item);for($S=0;$S<=$n_espacios;$S++){$espacios.=' ';} }
+if($v==3){$n_espacios=$c-strlen($item);for($S=0;$S<=$n_espacios;$S++){$espacios.=' ';} }
+if($v==4){$n_espacios=$d-strlen($item);for($S=0;$S<=$n_espacios;$S++){$espacios.=' ';} }
+if($v==5){$n_espacios=$e-strlen($item);for($S=0;$S<=$n_espacios;$S++){$espacios.=' ';} }
+if($v==6){$n_espacios=$f-strlen($item);for($S=0;$S<=$n_espacios;$S++){$espacios.=' ';} }
+if($v==7){$n_espacios=$g-strlen($item);for($S=0;$S<=$n_espacios;$S++){$espacios.=' ';} }
+if($v==8){$n_espacios=$h-strlen($item);for($S=0;$S<=$n_espacios;$S++){$espacios.=' ';} }
+
+//fputs($ar,'v->'.$v.' '.$item.$espacios);
+
+fputs($ar,trim($item).$espacios);
+}
+
+fputs($ar,chr(13).chr(10));
+?>
+
+<?php }
+fclose($ar); 
+echo "El archivo TXT se genero correctamente.";
+echo Html::link("utiles/descargas/".$nombre."/".$ruta,"descargar",'class="btn btn-primary"');
+?>

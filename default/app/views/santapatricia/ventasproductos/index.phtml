@@ -1,0 +1,102 @@
+<div class="card">
+    <h1>Ventas<span>Ventas de productos por mes</span></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+
+<div class="form-actions">
+<?php echo Menu::menuVentasP($action_name);?>
+</div>
+<div class="menu">
+<ul>
+<li>
+<a href="javascript:;">Año 
+<select id="anio">
+<?php
+for($i=2011;$i<=2020;$i++)
+{
+	$selec='';
+	if($anio==$i){
+	$selec=' selected="selected"';
+	}
+	echo '<option value="'.$i.'" '.$selec.'>'.$i.'</option>';
+}
+?>
+</select>
+</a>
+</li>
+</ul> 
+<?php 
+$mes_actual=date('Y-m');
+foreach($meses as $clave => $mes):
+if($anio.'-'.$clave<=$mes_actual){
+$class='';
+if($mes_activo==$clave){$class=' active';$name_mes=$mes;}
+echo '<ul>';
+echo '<li><a class="enviar'.$class.'" id="mes-'.$mes.'" href="javascript:;" data-id="'.$anio.'-'.$clave.'-01">'.$mes.'</a></li>'; 
+echo '</ul>';
+}
+endforeach;?>
+</div>
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus="" placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+<?php echo Sp::imprimir('Venta productos '.$name_mes.'- ','P',array("EX"=>"EX","P"=>"P"));?> 
+<div class="card-body">
+<div id="ver_resultado"></div>
+<table width="100%" border="0" class="table table-bordered table-striped" id="exportar_excel">
+<caption>Facturas del Mes!</caption>
+  <tr>
+  	<td width="30">Nº</td>
+    <td width="271">Cliente</td>
+    <td width="86">Número Doc.</td>
+    <td width="80">Sub-total</td>
+    <td width="94">Igv</td>
+    <td width="95">Total</td>
+  </tr>
+<?php $number=0;
+foreach($ventas as $item){ 
+$simbolo="S/. ";
+switch ($item->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+$number++;?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20"><?php echo $number?></td>
+  	<td height="20"><?php echo $item->getTesdatos()->razonsocial?></td>
+    <td><?php echo $item->serie?>-<?php echo $item->numero?></td>
+    <td><?php if($item->totalconigv!='NaN.00' && !empty($item->totalconigv))echo $simbolo.number_format($item->totalconigv-$item->igv,2,'.','');else echo('S/ 00.00');?></td>
+    <td><?php if($item->igv!='NaN.00' && !empty($item->totalconigv))echo $simbolo.number_format($item->igv,2,'.','');else echo('S/ 00.00')?></td>
+    <td><?php if($item->totalconigv!='NaN.00' && !empty($item->totalconigv))echo $simbolo.number_format($item->totalconigv,2,'.','');else echo('S/ 00.00')?></td>
+  </tr>
+<?php }?>
+</table>
+
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#anio").change(function(event){
+    	var id = $("#anio").find(':selected').val();
+		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/index/'+id;
+     });
+	$(".enviar").click(function()
+	{
+		var fecha = $(this).attr('data-id');
+		var F=fecha.split('-');
+		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/index/'+F[0]+'/'+F[1];
+	});
+	$('#txtBuscar').on('search',function(){
+		//le decimos a la funcion que busque en la tabla tblTabla el
+		//valor que contiene el campo actual
+		$.fntBuscarEnTabla($(this).val(),'exportar_excel');
+		
+	});
+});
+</script>

@@ -1,0 +1,147 @@
+
+
+<div class="card">
+    <h1>Tintoreria!</h1>
+</div>
+<div class="form-actions">
+<?php echo Menu::menuReportes($action_name);?>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<?php echo Sp::imprimir('Tintoreria - ','P');?>
+
+<div class="card-body" id="exportar_excel">
+<table width="90%" border="0" align="center"cellpadding="0" cellspacing="0" class="table-striped table-bordered" >
+<?php 
+$total_metro=0.00;
+$total_kilo=0.00;
+$number=0;
+$a=0;
+$array_datos='';
+foreach($rollos_tintoreria as $item){ 
+
+$simbolo="S/. ";
+$number++;
+switch ($item->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+$b=$item->datos_id;
+if($b!=$a)
+{
+$a=$item->datos_id;
+$i_coma=',';
+if($number==1){$i_coma='';}
+$array_datos.=$i_coma.'{id: '.$item->datos_id.', name: "'.$item->razonsocial.'"}';
+if($number!=1){
+?>
+<?php }?>
+<thead>
+<tr>
+<th colspan="6" style="color:#000; font-size:12px; border-bottom:#666 inset 2px;"> LISTADO DE GUIAS DE REMISION EN <?php if(Auth::get('id')==3){echo $item->datos_id;}echo $item->razonsocial?></th>
+</tr>
+<tr>
+	<th width="62" align="left">FECHA</th>
+	<th width="133" align="left">GUIA</th>
+    <th width="298" align="left">ART.DESCRIPCION</th>
+    <th width="168" align="left">COLOR</th>
+    <th width="86" align="right">KILOS</th>
+    <th width="83" align="right">METROS</th>
+ </tr>
+</thead>
+<?php 
+}
+
+?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20">&nbsp;<?php echo Sp::formatFecha('%d/%m/%Y',$item->femision)?></td>
+	<td height="20">&nbsp;<?php if(!empty($item->serie))echo $item->serie.'-'?>
+	<?php echo $item->numero?></td>
+    <td align="left">&nbsp;<?php echo $item->art?>-<?php echo $item->descripcion?></td>
+    <td align="left" width="168">
+	<?php if(!empty($item->color)){$co=$COLOR->find_first((int)$item->color); echo $co->nombre;}else{ echo $item->getdetalle_procesos();}	 ?></td>
+    <td align="right"><?php $total_kilo=$total_kilo+$item->pesoneto; echo number_format($item->pesoneto,2,'.','')?></td>
+    <td align="right"><?php $total_metro=$total_metro+$item->metros; echo number_format($item->metros,2,'.','')?></td>
+  </tr>
+<?php }?>
+<tr>
+  	<th colspan="4" align="right">TOTAL: </th>
+    <th width="86" align="right"><?php echo number_format($total_kilo,2,'.','');?></th>
+    <th width="83" align="right"><?php echo number_format($total_metro,2,'.','');?></th>
+</tr>
+</table>
+<br />
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-striped table-bordered">
+	<?php 
+$total_metro=0.00;
+$total_kilo=0.00;
+$number=0;
+$a=0;
+$array_datos='';
+foreach($rollos_reprocesos as $item){ 
+
+$simbolo="S/. ";
+$number++;
+switch ($item->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+$b=$item->datos_id;
+if($b!=$a)
+{
+$a=$item->datos_id;
+$i_coma=',';
+if($number==1){$i_coma='';}
+$array_datos.=$i_coma.'{id: '.$item->datos_id.', name: "'.$item->razonsocial.'"}';
+if($number!=1){
+?>
+<?php }?>
+<thead>
+<tr>
+<th colspan="7" style="color:#000; font-size:12px; border-bottom:#666 inset 2px;"> LISTADO DE GUIAS DE REPROCESO EN <?php echo $item->razonsocial?></th>
+</tr>
+<tr>
+	<th width="52" align="left">FECHA</th>
+	<th width="125" align="left">GUIA</th>
+    <th width="197" align="left">ART.DESCRIPCION</th>
+    <th width="101" align="left">COLOR</th>
+    <th width="43" align="right">KILOS</th>
+    <th width="66" align="right">METROS</th>
+    <th width="246" align="left">OBSERVACION</th>
+</tr>
+</thead>
+<?php 
+}
+
+?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20">&nbsp;<?php echo Sp::formatFecha('%d/%m/%Y',$item->femision)?>
+  		<?php //echo $item->femision?></td>
+	<td height="20">&nbsp;<?php if(!empty($item->serie))echo $item->serie.'-'?>
+	<?php echo $item->numero?></td>
+    <td align="left" width="197">&nbsp;<?php echo $item->art?>-<?php echo $item->descripcion?></td>
+    <td align="left" width="101"><?php if(!empty($item->color)){$co=$COLOR->find_first((int)$item->color); echo $co->nombre;}else{ echo $item->getdetalle_procesos();}	 ?></td>
+    <td align="right"><?php $total_kilo=$total_kilo+$item->pesoneto; echo number_format($item->pesoneto,2,'.','')?></td>
+    <td align="right"><?php $total_metro=$total_metro+$item->metros; echo number_format($item->metros,2,'.','')?></td>
+    <td align="left" width="246">&nbsp;<?php echo $item->observacion?></td>
+  </tr>
+<?php }?>
+<tr>
+  <th colspan="4" align="right">TOTAL REPROCESOS: </th>
+	<th width="43" align="right"><?php echo number_format($total_kilo,2,'.','');?></th>
+    <th width="66" align="right"><?php echo number_format($total_metro,2,'.','');?></th>
+    <th width="246" align="right">&nbsp;</th>
+  
+</tr>
+</table>
+</div>
+

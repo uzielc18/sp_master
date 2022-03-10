@@ -1,0 +1,56 @@
+<?php View::content()?>
+<script type="text/javascript">
+$('.qty').keyup(function () {
+	  this.value = this.value.replace(/[^0-9]/g,'.'); 
+	});
+</script>
+<?php echo Ajax::form('guia',$module_name.'/rollos/listadodetelasventa_i')?>
+<?php echo Form::hidden('detalle.id')?>
+<?php echo Form::hidden('detalle.tessalidasinternas_id')?>    
+<?php echo Form::hidden('detalle.tesproductos_id')?>
+<?php echo Form::hidden('detalle.tesunidadesmedidas_id')?>
+<?php echo Form::hidden('detalle.aclempresas_id')?>
+<?php echo Form::hidden('detalle.prorollos_id')?>
+<?php echo Form::hidden('detalle.tescolores_id');?>
+<?php echo Form::text('detalle.cantidad');?>
+ <table width="80%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped"><caption>Rollos en Guia</caption>
+ <thead>
+  <tr>
+    <th width="6%">Codigo</th>
+    <th width="8%">Cantidad</th>
+    <th width="6%">Unidad</th>
+    <th width="27%">Descripcion</th>
+    <th width="28%">Precio</th>
+    <th width="14%"> Descuento %</th>
+    <th width="11%">Accion</th>
+  </tr>
+ </thead>
+  <?php 
+  $n=1;
+	  ?> 
+  <tr id="<?php echo $detalle->id?>">
+    <td><?php echo $n.'.'; echo $detalle->getProrollos()->codigo?>-<?php echo $detalle->getProrollos()->numeroventa; echo ' '.$detalle->getProrollos()->getNprocesos($detalle->prorollos_id);?></td>
+    <td><?php echo $detalle->cantidad?></td>
+    <td><?Php echo $detalle->getTesunidadesmedidas()->simbolo?></td>
+    <td><?php echo $detalle->getTesproductos()->detalle?> <?Php echo $detalle->getTescolores()->nombre?></td>
+    <td>
+    <?php 
+	$monedas=$detalle->getTessalidasinternas()->tesmonedas_id;
+	$precio=00;
+	switch ($monedas)
+	{
+		case 1: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';$precio=$detalle->getTesproductos()->precio; break;
+		case 2: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';$precio=$detalle->getTesproductos()->preciod;  break;
+		case 4: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES'; $precio=$detalle->getTesproductos()->precio; break;
+		case 5: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS'; $precio=$detalle->getTesproductos()->preciod;break;
+		case 0: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';$precio=$detalle->getTesproductos()->precio;  break;
+	}
+
+	?>
+	<?php echo $simbolo; echo Form::text('detalle.preciounitario','class="span8 qty"',$detalle->getTesproductos()->precio)?></td>
+    <td>
+	<?php echo $simbolo; echo Form::text('detalle.descuento','class="span7 qty"')?></td>
+    <td><button type="submit" class="btn btn-primary">Modificar</button> </td>
+  </tr>
+</table>
+<?php echo Form::close();?>

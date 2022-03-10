@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="agregardetalles.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="crearsalidas.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="crear_nota.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="detalle_nota.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="editar_detalle.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="estadocuentas.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="facturaadelanto.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="facturas.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="factura_adelanto.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="factura_adelanto_detalle.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="factura_servicio.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="factura_servicio_detalle.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="guias.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="guia_servicio.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="index.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="letrasruc.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="listado_servicio.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="notacredito.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="notadebito.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="nota_creditos.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="nota_debitos.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="ordencompra.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="precios.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="precios_clientes.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="precios_telas.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="selector.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="venta.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="versalida.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="versalidafactventa - Copia.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="versalidafactventa.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="versalidafactventa_i.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="versalidafactventa_w.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="versalidaguiaventa.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="versalida_adelanto.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="versalida_f.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="versalida_i.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="versalida_servicio.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+</dwsync>

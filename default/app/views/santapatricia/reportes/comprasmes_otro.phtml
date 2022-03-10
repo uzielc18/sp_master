@@ -1,0 +1,83 @@
+
+<table width="750" border="0">
+	<tr>
+		<td width="14">&nbsp;</td>
+		<th colspan="8" align="center">Textil Santa Patricia SA</th>
+		<td width="31">&nbsp;</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<th colspan="8" align="left">VENTAS</th>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<th colspan="8" align="left"><?php echo ucfirst(Sp::formatFecha('%B',$mes_actual)); ?>-<?php echo Sp::formatFecha('%Y',$mes_actual); ?></th>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td colspan="8">---------------------------------------------------------------------------------------------------------------------------------------------------------------------</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<th>&nbsp;</th>
+		<th width="75">F. Em Doc.</th>
+		<th width="238">Cliente</th>
+		<th width="82">Doc.</th>
+		<th width="82">Nro. Doc.</th>
+		<th width="54">Dolares</th>
+		<th width="32">T/C</th>
+		<th width="63">Sub-Total</th>
+		<th width="53">IGV</th>
+		<th width="66">Total S/.</th>
+		<th>&nbsp;</th>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td colspan="8">----------------------------------------------------------------------------------------------------------------------------------------------------------------------</td>
+		<td>&nbsp;</td>
+	</tr>
+    <?php foreach($ingresos as $item){?>
+	<tr>
+		<td>&nbsp;</td>
+		<td><?php echo $item->femision?></td>
+		<td><?php echo $item->getTesdatos()->razonsocial?></td>
+		<td><?php echo $item->getTesdocumentos()->abr?></td>
+		<td><?php echo $item->serie.'-'.$item->numero;?></td>
+        <td><?php echo $item->totalconigv-$item->igv?><?php //echo $item->getTesmonedas()->nombre?></td>
+        <td><?php echo $item->getTestipocambios()->compra?></td>
+		<td><?php echo($item->totalconigv-$item->igv)*$item->getTestipocambios()->compra?></td>
+		<td><?php echo ($item->igv)*$item->getTestipocambios()->compra?></td>
+		<td><?php echo ($item->totalconigv)*$item->getTestipocambios()->compra?></td>
+		<td>&nbsp;</td>
+	</tr>
+    <?php }?>
+	<tr>
+		<td>&nbsp;</td>
+		<td>10/01/2013</td>
+		<td>Productos del Descanso S.A.C.</td>
+		<td>001-459633</td>
+		<td>2702.70</td>
+		<td>2.59</td>
+		<td>7000.00</td>
+		<td>1260.00</td>
+		<td>8260.00</td>
+		<td>&nbsp;</td>
+	</tr>
+</table>
+<table width="750" border="0">
+	<tr>
+		<td width="16">&nbsp;</td>
+		<td colspan="4" align="">----------------------------------------------------------------------------------------------------------------------------------------------------------------------</td>
+		<td width="28">&nbsp;</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td width="486" align="right">Total:</td>
+		<td width="63">12000.00</td>
+		<td width="57">2160.00</td>
+		<td width="74">14160.00</td>
+		<td>&nbsp;</td>
+	</tr>
+</table>

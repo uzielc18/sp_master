@@ -1,0 +1,79 @@
+<div class="card">
+    <h1>Repuestos<span> Reporte para la Repocicion de Repuestos! <?php echo date('d-m-Y')?> </span></h1>
+</div>
+<div class="form-actions">
+<?php echo Html::linkAction('','Volver','class="btn btn-primary"');?> 
+</div>
+<?php echo Sp::imprimir('Reporte de repocicion','P',array('W'=>1,'EX'=>1,'P'=>1));?> 
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+<div class="card-body">
+<table width="75%" align="center"  class="table-bordered table-striped" id="tblTabla">
+<caption> Repocicion de repuestos </caption>
+  <thead>
+  <tr>
+  	<th width="17" align="left">Nº</th>
+    <th width="43" align="left">Codigo</th>
+    <th width="225" align="left">Descripción</th>
+    <th width="69" align="center">Stock Min.</th>
+    <th width="74" align="center">Stock Actual</th>
+    <th width="74" align="center">Stock Repocicion</th>
+    <th width="70" align="center">Precio $/.</th>
+    <th width="61" align="center">Total $/.</th>
+  </tr>
+ </thead>
+ <tbody>
+<?php $n=0;
+
+	$total_a=0;
+	$total_ps=0;
+	$total_pd=0;
+	$ps=0;
+	$pd=0;
+foreach($repuestos as $item){ 
+	$n++;
+	$ps=0;
+	$pd=0;
+	if(!empty($item->preciodolares))$pd=$item->preciodolares;
+	$total_a=$total_a+$item->stokactual;
+	$total_pd=$total_pd+$pd;
+	?>
+  <tr>
+  	<td width="17" align="left"><?php echo $n?></td>
+    <td width="43" align="left"><?Php echo $item->codigo?></td>
+    <td width="225" align="left"><?php echo $item->nombre?></td>
+    <td width="69" align="center"><?php echo $item->stokminimo?></td>
+    <td width="74" align="center"><?php echo $item->stokactual?></td>
+    <td width="74" align="center"><?php echo number_format($item->stokminimo-$item->stokactual,2,'.','')?></td>
+    <td width="61" align="center"><?php echo number_format($pd,2,'.','')?></td>
+    <td width="70" align="center"><?php echo number_format($pd)*(number_format($item->stokminimo-$item->stokactual,2,'.',''))?></td>
+  </tr>
+<?php }?>
+</tbody>
+<tfoot>
+<tr>
+  	<td colspan="3" align="right">TOTALES:</td>
+    <td width="69" align="center"><?php //echo $item->stokminimo?></td>
+    <td width="74" align="center"><?php echo $total_a?></td>
+    <td width="74" align="center"><?php //echo $total_a?></td>
+    <td width="70" align="right"><?php echo number_format($total_pd,2,'.','')?></td>
+    <td width="61" align="right"></td>
+  </tr>
+
+</tfoot>
+</table>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	$(".botonExcel").click(function(event)
+	{
+		$("#datos_a_enviar").val( $("<div>").append( $("#tblTabla").eq(0).clone()).html());
+		$("#FormularioExportacion").submit();
+	});
+});
+</script>

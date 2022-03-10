@@ -1,0 +1,271 @@
+<div id="mensajes_flash">
+  <?php View::content() ?>
+</div>
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">Crear Salida <span><?php echo Session::get('DOC_NOMBRE') ?></span></h3>
+  </div>
+  <?php echo Form::open(NULL, 'POST', 'class="form-horizontal"') ?>
+  <div class="card-body">
+    <div id="ver_resultado"></div>
+    <?php echo Form::hidden('salida.id') ?>
+    <?php echo Form::hidden('prodetalletransportes.id') ?>
+    <?php echo Form::hidden('prodetalletransportes.tessalidas_id') ?>
+    <div class="row">
+      <div class="col-sm-3">
+        <div class="form-group">
+          <label for="salida_npedido">Pedido</label>
+          <?php echo Form::text('salida.npedido', 'class="form-control form-control-sm form-control-border" readonly="readonly"'); ?>
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="form-group">
+          <label for="salida_serie">Serie</label>
+          <?php echo Form::text('salida.serie', 'class="form-control form-control-sm form-control-border"'); ?>
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="form-group">
+          <label>Numero</label>
+          <?php echo Form::text('salida.numero', 'class="form-control form-control-sm form-control-border"'); ?>
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <?php if (Session::get('DOC_ID') == 15) { ?>
+
+          <div class="form-group">
+            <label>Numero de Factura:</label>
+            <?php echo Form::text('salida.numerofactura', 'class="form-control form-control-sm form-control-border"'); ?>
+          </div>
+        <?php } else { ?>
+
+          <div class="form-group">
+            <label>Numero de Guia:</label>
+            <?php echo Form::text('salida.numeroguia', 'class="form-control form-control-sm form-control-border"'); ?>
+          </div>
+        <?php } ?>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-4">
+        <div class="form-group">
+          <label>Moneda</label>
+          <?php echo Form::dbSelect('salida.tesmonedas_id', 'nombre', array("tesmonedas", 'find', 'conditions: aclempresas_id=' . Session::get('EMPRESAS_ID')), 'Seleccione', 'class="form-control form-control-sm"'); ?>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="form-group">
+          <label>Cliente</label>
+          <input id="CL" class="form-control form-control-sm" />
+          <?php echo Form::hidden('salida.tesdatos_id') ?>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="form-group">
+          <label>Direccion de Entrega</label>
+          <?php echo Form::text('salida.direccion_entrega', 'class="form-control form-control-sm  form-control-border"'); //finiciotraslado
+          ?>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label>Condicion pago:</label>
+          <?php echo Form::dbSelect('salida.tescondicionespagos_id', 'nombre', array("tescondicionespagos", 'find'), 'Seleccione', 'class="form-control form-control-sm form-control-border"'); ?>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label>Fecha </label>
+          <?php echo Calendar::selector('salida.femision', 'class="form-control form-control-sm form-control-border form-control-border"'); //finiciotraslado
+          ?>
+        </div>
+      </div>
+    </div>
+    <?php if (Session::get('DOC_ID') == 15) { ?>
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label>Conductor</label>
+            <?php echo Form::text('prodetalletransportes.protransportistas_id', 'class="form-control form-control-sm form-control-border"') ?>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label>Transporte</label>
+            <?php echo Form::text('prodetalletransportes.protransportes_id', 'class="form-control form-control-sm form-control-border"') ?>
+          </div>
+        </div>
+      </div>
+    <?php } ?>
+    <div class="col-sm-12">
+      <button type="submit" class="btn btn-primary" title="Si hizo alguna modificacion, Grabar	">ACT Información</button>
+    </div>
+    <hr />
+    <?php echo Form::close(); ?>
+    <div id="guia">
+      <div id="ingreso">
+        ------
+      </div>
+
+      <table width="100%" cellpadding="0" cellspacing="1" class="table table-hover">
+        <caption>Rollos en Guia</caption>
+        <tr style="font-size:12px; color:#333; font-weight:bold;">
+          <th width="8%">Codigo</th>
+          <th width="8%">Metros</th>
+          <th width="10%">Unidad</th>
+          <th width="46%">Descripcion</th>
+          <th width="11%">Precio</th>
+          <th width="17%">Accion</th>
+        </tr>
+        <?php
+        $n = 0;
+        $t_precio = 0;
+        $t_cantidad = 0;
+        foreach ($detalles as $item) {
+          $n++;
+          $t_precio = $t_precio + $item->preciounitario;
+          $t_cantidad = $t_cantidad + $item->cantidad;
+        ?>
+          <tr id="<?php echo $item->id ?>">
+            <td id="<?php echo $item->id ?>"><?php echo $n . '.';
+                                              echo $item->getProrollos()->codigo ?>-<?php echo $item->getProrollos()->numeroventa;
+                                                                                    echo ' ' . $item->getProrollos()->getNprocesos($item->prorollos_id); ?></td>
+            <td  id="<?php echo $item->id ?>"><?php echo $item->cantidad ?></td>
+            <td><?Php echo $item->getTesunidadesmedidas()->simbolo ?></td>
+            <td id="<?php echo $item->id ?>"><?php echo $item->getTesproductos()->nombre ?> <?php echo $item->getTesproductos()->detalle ?><?php echo $item->getTescolores()->nombre ?> </td>
+            <td  id="<?php echo $item->id ?>"><?php echo $item->preciounitario ?></td>
+            <td id="<?php echo $item->id ?>">
+            <?php echo Ajax::link($module_name . '/rollos/grabarventatelas/0/' . $item->id, '<i class="fa fa-edit"></i>', 'ingreso', 'btn', 'id="' . $item->prorollos_id . '"') ?>
+            <?php echo Ajax::link($module_name . '/rollos/grabarventatelas/0/' . $item->id,'',''); ?>
+            <?php echo Html::link($module_name . '/rollos/borrarventarollos/' . $item->id . '/' . $item->prorollos_id . '/', 'Elminar', 'mostrar', 'id="' . $item->prorollos_id . '"') ?></td>
+          </tr>
+        <?php } ?>
+        <tfoot>
+          <tr>
+            <th width="8%">TOTAL</th>
+            <th width="8%" ><?php echo $t_cantidad ?></th>
+            <th width="10%">&nbsp;</th>
+            <th width="46%" >&nbsp;</th>
+            <th width="11%" ><?Php //echo $t_precio
+                                          ?></th>
+            <th width="17%" >&nbsp;</th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="form-actions">
+      <?php
+      echo Html::linkAction("versalida/", 'Siguente<i class="icon-hand-right"></i>', 'class="btn btn-primary"') ?>&nbsp;<?php //echo Html::linkAction("salidas", 'Volver ','class="btn"') 
+                                                                                                                        ?>
+    </div>
+    <hr />
+
+    <div class="input-prepend input-append">
+      <label>Buscar :</label>
+      <input type="search" id="txtBuscar" autofocus="" placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+    </div>
+    <table width="75%" cellpadding="0" cellspacing="1" class="table table-hover" id="rollos">
+      <caption>Rollos en Almacen para Venta</caption>
+      <tr style="font-size:12px; color:#333; font-weight:bold;">
+        <th width="32%">Producto</th>
+        <th width="21%">Color</th>
+        <th width="13%"># Rollo</th>
+        <th width="11%">Peso</th>
+        <th width="10%">Metros</th>
+        <th width="8%">O. C.</th>
+        <th width="5%">Accion</th>
+      </tr>
+      <?Php foreach ($rollos as $rollo) {
+      ?>
+        <tr id="caja-<?php echo $rollo->id ?>">
+          <td><?php echo $rollo->getTesproductos()->codigo_ant ?> <?php echo $rollo->getTesproductos()->nombre ?> <?php echo $rollo->getTesproductos()->detalle ?> <?php //echo $rollo->estadorollo
+                                                                                                                                                                    ?></td>
+          <td><?php if (!empty($rollo->tescolores_id)) echo $rollo->getTescolores()->nombre ?></td>
+          <td><?php if (empty($rollo->prorollos_id)) {
+                echo $rollo->numeroventa ?>-0<?php echo $rollo->maquina_numero;
+                                            } else {
+                                              echo $rollo->codigo ?>-<?php echo $rollo->numeroventa;
+                                                                    } ?></td>
+          <td><?php if (!empty($rollo->peso)) echo number_format($rollo->peso, 2, '.', ' ') ?> Kg</td>
+          <td><?php if (!empty($rollo->metros)) echo number_format($rollo->metros, 2, '.', ' ') ?>Mts</td>
+          <td><?php echo $rollo->ordencompra ?></td>
+          <td width="5%" title="Elegir Rollo para Venta">
+            <?php echo Ajax::link($module_name . '/rollos/grabarventatelas/' . $rollo->id, 'ENVIAR', 'ingreso', 'ocultar', 'id="' . $rollo->id . '"') ?>
+          </td>
+        </tr>
+      <?php } ?>
+    </table>
+  </div>
+  <script type="text/javascript">
+    $(document).ready(function() {
+
+      $(".ocultar").on("click", function() {
+        var id = $(this).attr('id');
+        $("#caja-" + id).hide();
+
+      });
+
+      $("#CL").tokenInput("/<?php echo $module_name ?>/salidas/buscarproveedor", {
+        tokenLimit: 1,
+        minChars: 2,
+        <?php if (!empty($salida->tesdatos_id)) { ?>
+          prePopulate : [{
+            id: <?Php echo $salida->tesdatos_id ?>,
+            name: "<?php echo $salida->getTesdatos()->razonsocial ?>",
+          }, ],
+        <?php } ?>
+        onAdd : function(item) {
+          var VAL = item.id;
+          $("#salida_tesdatos_id").val(VAL);
+          var DIR = item.name.split('(');
+          $("#salida_direccion_entrega").val(DIR[1]);
+          //$("#BC").hide();
+          //GrabarCliente();
+        },
+        onDelete: function(item) {}
+      });
+
+      /*transporte*/
+      $("#prodetalletransportes_protransportes_id").tokenInput("/<?php echo $module_name ?>/salidas/transportes", {
+        tokenLimit: 1,
+        minChars: 2,
+        <?php if (!empty($prodetalletransportes->protransportes_id)) { ?>
+          prePopulate: [{
+            id: <?php echo $prodetalletransportes->protransportes_id ?>,
+            name: "<?php echo $prodetalletransportes->getProtransportes()->marca . ' ' . $prodetalletransportes->getProtransportes()->numeroplaca ?>"
+          }, ],
+        <?php } ?>
+      });
+
+      /*transportistas*/
+
+      $("#prodetalletransportes_protransportistas_id").tokenInput("/<?php echo $module_name ?>/salidas/transportistas", {
+        tokenLimit: 1,
+        minChars: 2,
+        <?php if (!empty($prodetalletransportes->protransportistas_id)) { ?>
+          prePopulate: [{
+            id: <?php echo $prodetalletransportes->protransportistas_id ?>,
+            name: "<?php echo $prodetalletransportes->getProtransportistas()->nombre ?> <?php echo $prodetalletransportes->getProtransportistas()->numerobrevete ?>"
+          }, ],
+        <?php } ?>
+      });
+    });
+  </script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+
+      //hacemos la busqueda en el evento search del control de busqueda
+      $('#txtBuscar').on('search', function() {
+        //le decimos a la funcion que busque en la tabla tblTabla el
+        //valor que contiene el campo actual
+        $.fntBuscarEnTabla($(this).val(), 'rollos');
+
+      });
+
+
+    });
+  </script>
+
+</div>

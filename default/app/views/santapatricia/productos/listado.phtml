@@ -1,0 +1,46 @@
+<div class="card">
+    <h1>Ultimos Productos Creados (30)</h1>
+</div>
+<?php View::content() ?>
+<div class="form-actions">
+<?php echo Html::linkAction("", 'Ver Listado General', 'class="btn btn-primary"') ?>
+</div>
+<div class="card-body">
+<table class="table table-bordered table-striped">
+  <tr>
+  	<td width="26" align="left">Nº</td>
+    <td width="103" align="left">Linea de Producto</td>
+    <td width="80" align="left">Tipo de Prodcuto</td>
+    <td width="57" align="left">Codigo</td>
+    <td width="95" align="left">Nombre</td>
+    <td width="56" align="left">Abr.</td>
+    <td width="73" align="left">Detalle</td>
+    <td width="46" align="left">Estado</td>
+    <td width="60" align="center">Acciones</td>
+ 
+  </tr> 
+<?php $n=0;
+foreach($tesproductos->items as $item){ $n++;?>
+  <tr>
+  	<td><?php echo $n?></td>
+    <td><?php //echo $item->testipoproductos_id?><?php echo $item->getTestipoproductos()->getTeslineaproductos()->nombre?></td>
+    <td><?php echo $item->getTestipoproductos()->nombre?></td>
+    <td><?php echo $item->prefijo?><?php echo $item->codigo?></td>
+    <td><?php //echo $item->nombre?> <?php echo $item->detalle?></td>
+    <td><?php echo $item->abr?></td>
+    <td><?php echo $item->detalle?></td>
+    <td>
+    <?php 
+	 if($item->activo=='0'){
+	 echo Html::linkAction('activar/'.$item->id,Html::img("figuras/circulo_rojo.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'');
+	 }else{
+	 echo Html::linkAction("desactivar/$item->id",Html::img("figuras/circulo_verde.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');}?>
+    </td>
+    <td><?php echo Html::linkAction('editar/'.$item->id,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'')?>
+    <?php echo Html::linkAction("borrar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+<?php View::partial('paginators/extended', false, array('page' => $tesproductos ,'url' => Router::get('controller_path').'/listado')); ?>
+</div>

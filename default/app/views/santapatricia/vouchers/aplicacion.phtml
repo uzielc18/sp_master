@@ -1,0 +1,256 @@
+<div id="aplicacion">
+<?php View::content();?>   
+<?php //echo $tessalidas_id;?>
+<?php if($tessalidas_id==0){?>
+<div>
+<div id="app">
+<?php //print_r($adelantos)?>
+<?php if($adelantos){?>
+
+<table id="vauchers" width="86%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped"> 
+  <tr>
+    <th width="16%" align="left">Numero</th>
+    <th width="40%" align="left">Provedor</th></th>
+    <th width="30%" align="right">Monto</th>
+    <th width="14%" align="center"><span class="btn" id="quitar_seleccion">Quitar Seleccion</span><br />Accion </th>
+    </tr>
+    <?php
+	$n=0;
+	foreach($adelantos as $adelanto)
+	{
+		
+    $total_applicaciones=$adelanto->getTotalAplicacion($adelanto->id);
+	$total_2=0;
+	if(empty($adelanto->monto_n))
+	{
+	$total_2=$adelanto->monto-$total_applicaciones;
+	
+	}else{
+	$total_2=$adelanto->monto_n-$total_applicaciones;
+	}?>
+	<?php if($total_2>0){
+	$n++;?>	
+  <tr>
+    <td><?php echo $adelanto->numero?> * <?php echo $adelanto->numeroletra?> <?php if(Auth::get('id')==3)echo 'id->>'.$adelanto->id?> </td>
+    <td>  <?php echo $adelanto->getTesingresos()->getTesdatos()->razonsocial.' '.$adelanto->getTesingresos()->getTesdatos()->ruc?>  </td>
+    <td align="right">
+	<?php echo number_format($total_2,2,'.','');?>
+    <?php echo Form::hidden('m-'.$adelanto->id,'',number_format($total_2,2,'.',''))?>
+    </td>
+    <td align="center"><?php echo '<input type="checkbox" name="LETRAS[]" class="selec" value="'.$adelanto->id.'" />';?>
+     </td>
+    </tr>
+    <?php 
+	}/*validacion : no muestra los que son cero*/
+	}?>
+</table>
+
+   
+<script type="text/javascript">
+$(document).ready(function()
+{
+	 $('.selec').click(function()
+        {
+        var selectedItems = new Array();
+		var montosIdtems = new Array();
+        var To=0;
+		$("input[@name='INGRESOS[]']:checked").each(function(){
+            selectedItems.push($(this).val());
+			To=parseFloat(To)+parseFloat($("#m-"+$(this).val()).val());
+			montosIdtems.push($("#m-"+$(this).val()).val());
+		   
+        });
+		$("#l").val(selectedItems);
+		$("#M").val(montosIdtems);
+		$("#totalseleccion").html(To);
+       if((selectedItems.length)==1){
+		 /*validar si las letras que estan para aplicar hay sola una*/  
+	    var T=$("#m-"+selectedItems).val()
+		var total=<?php echo $total?>;
+		if(parseFloat(total)>parseFloat(T))
+		{
+			<?php if($n==1){?>
+			var confirmar=confirm("El monto de la aplicacion no es suficiente para cancelar el vauchers <br />¿desa crear un abono extra?!")
+			if(confirmar){ 
+			$("#cheques").show(); 
+			}else{ 
+			$("#totalconigv").val(T);
+			}
+			<?php }?>
+		}else
+		{
+			$("#totalconigv").val(total);
+		}
+	   }else
+	   {
+		   <?php if($permite_select==0){?>alert("Solo Debe Seleccionar Un documento Para la Aplicacion Gracias");
+		   return false;
+		   <?Php }?>
+	   }
+    });
+	//alert($("#inventarios").serialize());
+		
+		if($("#cliente_id").val()){
+		 $.ajax({
+				type:"POST",
+				url:"/<?php echo $module_name?>/ingresos/grabar/1",
+				data:$("#inventarios").serialize(),
+				beforeSend:function(){
+				  $("#loading").show();
+				},
+				success:function(response){
+					$("#loading").hide();
+					$("#id").val(response);
+					//alert(response);
+				}
+	 
+				});
+		 }
+		 
+	$("#quitar_seleccion").click(function(){
+		$(".selec").removeAttr("checked");
+		$("#totalconigv").val('<?Php echo $total?>');
+		$("#l").val('');
+		$("#M").val('');
+		$("#totalseleccion").html('');
+	});
+		 
+	 $("#agregarcheque").click(function(){
+		 $("#cheques").toggle('fast');
+		 });
+
+});
+</script>
+<span id="agregarcheque" class="btn btn-info">Agrgar Cheque </span>
+<div id="cheques" style="display:none;">
+<?php echo Session::get('proveedor_id')?>
+<table width="30%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered">
+	<caption>Cheques para abonar</caption>
+	<thead>
+    <tr>
+    <th>Numero</th>
+    <th>Monto</th>
+    <th>Accion</th>
+    </tr>
+	</thead>
+    <tbody>
+    <?php foreach($cheques as $ch):?>
+    <tr>
+    <td align="right"><?php echo $ch->numero?></td>
+    <td align="right"><?Php echo $ch->monto?></td>
+    <td align="right"><?php echo Html::linkAction("ndetalle/".$ch->id."/".$ch->tessalidas_id,"[ Agregar ]",'class="btn-primary"')?></td>
+    </tr>
+    <?php endforeach;?>
+    </tbody>
+</table>
+</div>
+<div style="text-align:right;" class="form-actions">
+<?php 
+echo Ajax::form('aplicacion')?>
+<?php echo Form::hidden('tesaplicacionletraingresos.id','',0);?>
+<?php echo Form::hidden('l');?>
+<?php echo Form::hidden('M');?>
+
+
+<span id="totalseleccion"></span>
+<?php echo 'Monto a total del vaucher '.Form::text('totalconigv','',number_format($total,2,'.',''))?>
+<br />
+
+<?php echo Form::submit('GRABAR aplicacciones','class="btn btn-primary"');?>
+<?php echo Form::close()?>
+</div>
+<?php }else{ 
+/*PARA INGRESAR LAS LAETRAS O CAMBIAR LAS DE DOLARES A SOLES*/
+echo Html::link($module_name.'/letras/','Verifique si tiene letras para cambiar a soles');}?>
+
+</div>
+<?php }?>
+</div>
+<?php if($tessalidas_id!=0){?>
+<div id="detalle">
+<?Php echo $tessalidas_id?>
+<?php if($tessalidas_id==1){?>
+<?php echo Form::open('')?>
+<?php echo Form::hidden('tesdetallevauchers.id');?>
+<?php echo Form::hidden('tesdetallevauchers.tesvauchers_id','',Session::get('V_ID'));?>
+<?php echo Form::hidden('tesdetallevauchers.tesingresos_id','');?>
+<?php echo Form::hidden('tesdetallevauchers.tessalidas_id','');?>
+<?php echo Form::hidden('tesdetallevauchers.abono','1');?>
+<?php echo Form::hidden('tesdetallevauchers.cargos','');?>
+<?php echo Form::hidden('tesdetallevauchers.tesdatos_id','');?>
+<?php echo Form::hidden('tesdetallevauchers.estado','',1);?>
+<table width="100%" border="0" cellspacing="1" cellpadding="0">
+  <tr>
+    <th width="19%">Cuenta General</th>
+    <th width="10%">Nº Docuemnto</th>
+    <th width="14%">Fecha Vcto</th>
+    <th width="14%">Codigo Auxiliar</th>
+    <th width="14%">Descripcion</th>
+    <th width="14%">Cargo</th>
+    <th width="15%">Abono</th>
+  </tr>
+  <tr>
+    <td width="19%"><?php echo $tesdetallevauchers->getTesingresos()->cuentaporpagar;
+	 echo Form::hidden('tesdetallevauchers.plancontable','',$tesdetallevauchers->getTesingresos()->cuentaporpagar); ?></td>
+    <td width="10%"><?php echo $tesdetallevauchers->getTesingresos()->numero;?></td>
+    <td width="14%">-</td>
+    <td width="14%"><?php echo $tesdetallevauchers->getTesingresos()->getTesdatos()->ruc;?></td>
+    <td width="14%"><?php echo $tesdetallevauchers->getTesingresos()->getTesdatos()->razonsocial;?></td>
+    <td width="14%">-</td>
+    <td width="15%" align="right"><?php 
+	if(empty($tesdetallevauchers->monto))$tt=$total;else $tt=$tesdetallevauchers->monto;
+	echo Form::text('tesdetallevauchers.monto','',number_format($tt,2,'.','')); ?></td>
+  </tr>
+</table>
+<?php echo Form::submit('GRABAR detalle vaucher','class="btn btn-primary"');?>
+<?php echo Form::close();
+}else{?>
+<?php //echo $total;?>
+<table width="100%" border="0" cellspacing="1" cellpadding="0">
+  <tr>
+    <th width="19%">Cuenta General</th>
+    <th width="10%">Nº Docuemnto</th>
+    <th width="14%">Fecha Vcto</th>
+    <th width="14%">Codigo Auxiliar</th>
+    <th width="14%">Descripcion</th>
+    <th width="14%">Cargo</th>
+    <th width="15%">Abono</th>
+  </tr>
+  <?php foreach($detalle_abonos as $abonos)
+  {
+  if(!empty($abonos->tesingresos_id) && ($abonos->tesingresos_id!=0))
+  { 
+  $cuentaporpagar=$abonos->getTesingresos()->cuentaporpagar;
+  $numero=$abonos->getTesingresos()->numero;
+  $ruc=$abonos->getTesingresos()->getTesdatos()->ruc;
+  $razonsocial=$abonos->getTesingresos()->getTesdatos()->razonsocial;
+  }
+  if(!empty($abonos->tessalidas_id) && ($abonos->tessalidas_id!=0))
+  { 
+  $cuentaporpagar=$abonos->getTessalidas()->cuentaporpagar;
+  $numero=$abonos->getTessalidas()->numero;
+  $ruc=$abonos->getTessalidas()->getTesdatos()->ruc;
+  $razonsocial=$abonos->getTessalidas()->getTesdatos()->razonsocial;
+  }
+  ?>
+  <tr>
+    <td width="19%"><?php echo $cuentaporpagar;
+	 //echo Form::text('tesdetallevauchers.plancontable','',$tesdetallevauchers->getTesingresos()->cuentaporpagar); ?></td>
+    <td width="10%"><?php echo $numero;?></td>
+    <td width="14%">-</td>
+    <td width="14%"><?php echo $ruc;?></td>
+    <td width="14%"><?php echo $razonsocial;?></td>
+    <td width="14%">-</td>
+    <td width="15%" align="right"><?Php echo $abonos->monto;?></td>
+  </tr>
+  <?Php
+  }
+  ?>
+</table>
+<div class="form-actions">
+<?Php echo Html::LinkAction("terminar",'Siguente','class="btn btn-info"'); ?>
+</div>
+<?Php }?>
+</div>
+<?php }?>
+</div>

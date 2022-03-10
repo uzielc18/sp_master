@@ -1,0 +1,67 @@
+<?php View::content()?>
+<div class="card">
+<h1>Rollos en Reproceso<span>Listado de rollos en reporscesos</span></h1>
+</div>
+<div class="form-actions">
+<?php echo Menu::menuControl($action_name);?>
+</div>
+
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus="" placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+<?php echo Sp::imprimir('Rollos en Reprocesos - ','P',array('P'=>'1','EX'=>1));?> 
+<div id="ver"></div>
+<div class="card-body">
+<table class="table table-condensed" id="exportar_excel">
+<caption>Rollos en Tintoreria (Reproceso)</caption>
+  <tr>
+    <th width="64" align="left">Guia</th>
+    <th width="65" align="left">Ubicacion</th>
+    <th width="65">Acabados</th>
+    <th width="51">Codigo Art.</th>
+    <th width="104">Descripcion</th>
+    <th width="48">Color</th>
+    <th width="37"># Rollo</th>
+    <th width="36">Mts</th>
+    <th width="20">Kg</th>
+    <th width="86">Observacion</th>
+  </tr>
+  <?php foreach($rollos as $item){?>
+  <tr title="<?php //echo $item->getTesdetalleingresos()->getTesingresos()->getTesdatos()->razonsocial?>">
+    <td><?php echo $item->guia?></td>
+    <td><?php echo $item->proveedor?></td>
+    <td>
+	<?php $a=0;
+	$q=array();
+	foreach($item->getProdetalleprocesos() as $pro): 
+	?>
+	<?php foreach($pro->getProprocesos()->getProdetalleacabados() as $aca):?>
+				<?php $q[$a]=$aca->getProacabados()->nombre;?>
+		<?php $a++;endforeach;?>
+	<?php	endforeach;?>
+    <?php echo implode(array_unique($q),',');?></td>
+    <td><?php if(empty($item->getTesproductos()->codigo_ant))echo $item->getTesproductos()->codigo;else echo $item->getTesproductos()->codigo_ant;?></td>
+    <td><?php echo $item->getTesproductos()->detalle?><?php echo $item->getTesproductos()->nombre?></td>
+    <td><?php //echo $item->getTescolores()->nombre?></td>
+    <td><?php echo $item->numero?></td>
+    <td><?php echo number_format($item->metros,2,'.',' ')?></td>
+    <td><?php echo number_format($item->metros,2,'.',' ')?></td>
+    <td><?php echo $item->observacion?></td>
+  </tr>
+  <?php }?>
+</table>
+</div>
+<script type="text/javascript">
+$(document).ready(function()
+{
+		
+$('#txtBuscar').on('search',function(){
+		//le decimos a la funcion que busque en la tabla tblTabla el
+		//valor que contiene el campo actual
+		$.fntBuscarEnTabla($(this).val(),'exportar_excel');
+		
+	});
+	
+});
+</script>

@@ -42,6 +42,12 @@ abstract class AdminController extends Controller
 			Session::set("EMPRESAS_NOMBRE",'SANTA CARMELA');			
 			Session::set('INVENTARIO_ID',Session::get('INVENTARIO_ID_SC'));
 		}
+		if($modulo=='admin')
+		{
+			Session::set("EMPRESAS_ID",9);
+			Session::set("EMPRESAS_NOMBRE",'Admin');			
+			Session::set('INVENTARIO_ID',Session::get('INVENTARIO_ID_SC'));
+		}
         if (MyAuth::es_valido())
 		{
 			//View::template('backend/backend');
@@ -64,7 +70,6 @@ abstract class AdminController extends Controller
         } elseif (Input::hasPost('login') && Input::hasPost('clave')) {
             if(MyAuth::autenticar(Input::post('login'), Input::post('clave'))) {
                 Flash::info('Bienvenido al Sistema <b>' . Auth::get('nombres') . '</b>');
-				
 				return Router::to([]);
             } else {
                 Flash::warning('Datos de Acceso Invalidos');
@@ -75,6 +80,10 @@ abstract class AdminController extends Controller
             View::select(NULL, 'logueo');
             return FALSE;
         }
+    }
+
+    public function logout() {
+        MyAuth::cerrar_sesion();
     }
 
     final protected function finalize()

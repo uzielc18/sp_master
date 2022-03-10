@@ -1,0 +1,33 @@
+<?php View::content();?>
+<div class="card">
+    <h1>Listado de <?Php echo Session::get('tipo_nombre')?><span>Eventos de <?Php echo Session::get('tipo_nombre')?></span></h1>
+</div>
+<div class="form-actions">
+<?php echo Html::linkAction('crear','Volver a crear','class="btn"')?>
+<?php echo Html::linkAction('','Ir a calendario ','class="btn"')?>
+</div>
+<div class="card-body">
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+  <tr>
+  	<th width="17" align="left">Nº</th>
+    <th width="107" align="left">Titulo</th>
+    <th width="135" align="left">Fecha</th>
+    <th width="93" align="left">Fecha fin</th>
+    <th width="93" align="left">Mas_info</th>
+    <th width="93" align="left">Observaciones</th>
+    <th width="93" align="left">Acciones</th>
+  </tr>
+<?php $n=0;
+foreach($eventos as $item){ $n++;?>
+  <tr>
+  	<td><?php echo $n?></td>
+    <td><?php echo $item->titulo?> <?php echo $item->subtitulo?></td>
+    <td><?php echo $item->fecha_inicio?> <?php echo $item->hora_inicio ?></td>
+    <td><?php echo $item->fecha_fin?> <?php echo $item->hora_fin ?></td>
+    <td><?Php echo $item->telefono?> / <?Php echo $item->correo?> / <?Php echo $item->correo?></td>
+    <td><?Php echo $item->mas_info?></td>
+    <td><?php echo Html::linkAction('editar/'.$item->id,'Editar','class="btn"')?><?php echo Html::linkAction('eliminar/'.$item->id,'Eliminar','class="btn"')?></td>
+  </tr>
+<?php }?>
+</table>
+</div>

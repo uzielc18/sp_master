@@ -1,0 +1,50 @@
+<script type="text/javascript">
+$(document).ready(function(){
+        $("#lineaproducto").change(function(){
+                var op = $("#lineaproducto option:selected").val();
+                document.location = "/<?php echo $module_name?>/tipoproductos/index/"+op;
+        });
+});
+</script>
+<div class="card">
+<h1>Tipo de Productos de la linea <?php echo $lineaproducto->nombre?></h1>
+</div>
+<span class="span15">Ir a otra linea de productos <?php echo Form::dbSelect('lineaproducto','nombre',array("teslineaproductos",'find','conditions: activo=1 and aclempresas_id='.Session::get("EMPRESAS_ID")),'Cambiar de linea de producto','',$lineaproducto->id);?>       
+    <?php echo Html::link($module_name."/lineaproductos/", 'Regresar') ?></span>
+<?php View::content() ?>
+<table class="table table-bordered table-striped">
+  <tr>
+  	<td>Nº</td>
+      <td>Cod</td>
+      <td>Nombre</td>
+    <td>Abr.</td>
+    <td>Detalle</td>
+    <td>Estado</td>
+    <td>Acciones</td>
+  </tr>
+<?php $n=0;
+foreach($testipoproductos->items as $item){ $n++;?>
+  <tr>
+  	<th><?php echo $n?></th>
+      <td><?php echo $item->codigo?></td>
+      <td><?php echo $item->nombre?></td>
+    <td><?php echo $item->abr?></td>
+    <td><?php echo $item->detalle?></td>
+    <td>
+    <?php 
+	 if($item->activo=='0'){
+	 echo Html::linkAction('activar/'.$item->id,Html::img("figuras/circulo_rojo.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'');
+	 }else{
+	 echo Html::linkAction("desactivar/$item->id",Html::img("figuras/circulo_verde.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');}?>
+    </td>
+    <td><?php echo Html::linkAction('editar/'.$item->id,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'')?>
+    <?php echo Html::linkAction("borrar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+<?php View::partial('paginators/extended', false, array('page' => $testipoproductos ,'url' => Router::get('controller_path').'/index/'.$lineaproducto->id)); ?>
+        <div class="form-actions">        
+    <?php echo Html::linkAction("crear/".$lineaproducto->id, 'Crear Tipo Productos', 'class="btn btn-primary"') ?>
+		</div>
+ 

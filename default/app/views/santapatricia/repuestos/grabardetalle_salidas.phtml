@@ -1,0 +1,132 @@
+<?php echo Ajax::form('guia',$module_name."/repuestos/grabardetalle_salidas/".$id,'form-inline','post')?>
+  <?php echo Form::hidden('detalles.tesunidadesmedidas_id','',13)?>
+  <?php echo Form::hidden('detalles.tescolores_id','',773)?>
+  <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+  <td width="39%">Sr:<br />
+  <?php echo Form::text('detalles.acldatos_id')?>
+  </td>
+  <td width="39%">Repuesto:<br />
+  <?php echo Form::text('detalles.tesproductos_id')?>
+  </td>
+  <td width="9%">
+  Maquina:<br />
+  <?php echo Ajax::dbSelect('prorepuestosuso.promaquinas_id','nombre',array('promaquinas','find'),'ubicacion',$module_name.'/'.$controller_name.'/getubicacionmaquina')?>
+  </td>
+  <td id="ubicacion" width="22%">
+  Posicion:<br />
+  <select> <option>Seleccione una maquina</option></select>
+  </td>
+  <td width="6%">
+  Cantidad:<br />
+  <?php echo Form::text('detalles.cantidad','size="5" class="qty"')?>
+  </td>
+  <td width="4%">
+  Precio:<br />
+  <?php echo Form::text('detalles.precio','size="5" class="qty "')?>
+  </td>
+  <td width="6%">
+  Importe:<br />
+  <?php echo Form::text('detalles.importe','size="5" class="qty"')?>
+  </td>
+  <td width="7%">
+  <button type="submit" class="btn">Enviar</button>
+  </td>
+  </tr>
+  </table>
+<?php echo Form::close()?>
+<table  class="table-bordered" width="75%" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <th width="10%" align="left">Codigo</th>
+    <th width="37%" align="left">Descripcion</th>
+    <th width="10%" align="center">Unidad</th>
+    <th width="13%" align="center">Cantidad</th>
+    <!--<th width="9%" align="right">P. S/IGV</th>
+    <th width="11%" align="right">Importe</th>-->
+
+  </tr>
+  <?php 
+  $n=0;
+  foreach($detalles as $item){
+	  $n++;
+	  ?> 
+  <tr id="<?php echo $item->id?>">
+    <td><?php echo $n?>. <?php if(!empty($item->tesproductos_id))echo $item->getTesproductos()->codigo_ant?></td>
+    <td><?php if(!empty($item->tesproductos_id))echo $item->getTesproductos()->nombre?></td>
+    <td align="center"><?Php if(!empty($item->tesunidadesmedidas_id))echo $item->getTesunidadesmedidas()->simbolo?></td>
+    <td align="center"><?php echo $item->cantidad?></td>
+    <!--<td align="right"><?php //if(!empty($item->precio))echo number_format($item->precio,2,'.','')?></td>
+    <td align="right"><?php //if(!empty($item->importe))echo number_format($item->importe,2,'.','')?></td>-->
+    
+  </tr>
+  <?php }?>
+</table>
+<script type="text/javascript">
+$(document).ready(function()
+{	
+	$("#CL").tokenInput("/<?php echo $module_name?>/repuestos/getdatos", 
+		{
+			tokenLimit: 1,
+			minChars: 2,
+			<?php if(!empty($pedido->acldatos_id)){?>
+			prePopulate: [ 
+						 {id: <?Php echo $pedido->acldatos_id?>, name: "<?php echo $pedido->getAcldatos()->nombre?>"},
+						 ],
+			<?php }?>
+			onAdd: function (item){
+			   var VAL=item.id;
+			   $("#salida_acldatos_id").val(VAL);
+			},
+			onDelete: function (item) {
+			}
+		});
+		$("#detalles_acldatos_id").tokenInput("/<?php echo $module_name?>/repuestos/getdatos", 
+		{
+			tokenLimit: 1,
+			minChars: 2,
+			onAdd: function (item){
+			   var VAL=item.id;
+			   $("#prorepuestosuso_acldatos_id").val(VAL);
+			},
+			onDelete: function (item) {
+			}
+		});
+		
+		$("#detalles_tesproductos_id").tokenInput("/<?php echo $module_name?>/repuestos/getrepuestos", 
+		{
+			tokenLimit: 1,
+			minChars: 2,
+			onAdd: function (item){
+				//$("#detalles_ubicacion").val(item.oculto);
+				$("#detalles_precio").val(item.precio);
+				$.ajax({
+					type:"GET",
+					url:"/<?php echo $module_name?>/repuestos/resumen_repuesto/"+item.id,
+					success:function(response){
+						
+						$("#dialog").html(response);
+						openDialog();
+					}
+				});
+			},
+			onDelete: function (item) {
+			}
+		});
+	$("#detalles_cantidad").change(function(){
+		var cantidad=$(this).val();
+		var precio=$("#detalles_precio").val();
+		$("#detalles_importe").val(precio*cantidad);
+		});
+	$("#detalles_precio").change(function(){
+		var precio=$(this).val();
+		var cantidad=$("#detalles_cantidad").val();
+		$("#detalles_importe").val(precio*cantidad);
+	});
+	
+	$("#prorepuestosuso_promaquinas_id").change(function(){
+		openDialog();
+		});
+		
+});
+</script>
+

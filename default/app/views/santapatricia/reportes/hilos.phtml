@@ -1,0 +1,116 @@
+
+<style type="text/css">
+.no_ver{display: none;}
+h3>span
+{font-size: 10px;
+color: #666666;
+font-style: italic;
+display: block;
+margin-top: -20px
+}
+</style>
+<div class="card">
+    <h1>STOCK DE HILADO<span>HILO. SEGUN EL TIPO</span></h1>
+</div>
+<div class="form-actions">
+<?php echo Menu::menuReportes($action_name);?>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div style="clear:both"></div>
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus="" placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+<?php echo Sp::imprimir('stock hilos - ','P');?>
+<h3>Tipo de hilos <span>Solo se muestran las cantidades mayores a 0 *<a id="v" href="javascript:;">clik aqui para ver todos</a></span></h3>
+<?php foreach($tipos as $tipo)
+{
+	$activo='';
+	if($tipo->id==$id)$activo=' btn-success';
+	echo Html::linkAction($action_name.'/'.$tipo->id,$tipo->nombre,'class="btn btn-mini'.$activo.'"').' ';
+}
+//echo Html::linkAction($action_name.'/0','Todos los Hilos','class="btn btn-mini'.$activo.'"').' ';?>
+
+<div class="card-body">
+
+  <table id="exportar_excel" width="75%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+  <caption>STOCK DE MATERIA PRIMA EN KILOS - <?Php echo date("d/m/y");?></caption>
+  <thead>
+  <tr>
+    <th>SISTEMA</th>
+    <th>TITULO</th>
+    <th>MATERIAL</th>
+    <th>TIPO DE MATERIAL</th>
+    <th>CARACTERISTICAS</th>
+    <th>COLOR</th>
+    <th align="right">STOCK</th>
+  </tr>
+  </thead>
+  <tbody>  
+  <?Php 
+  $total=0;
+  $a=0;
+  $q='';
+  foreach($hilos as $hilo):
+  $z=$hilo->hilosistema_id;
+  
+  if($q!=$z){$a=0;$q=$hilo->hilosistema_id;}
+  $saldo=$PR->getStockColor($hilo->pid,$hilo->cid);
+  $class='ver';
+	if($saldo>0.25){$total=$total+$saldo;}
+	if($saldo<0.25){$class='no_ver';if($q!=$z)$a=0;}
+
+  ?>
+  <tr class="<?php echo $class;?>">
+    <td><?php //echo $a?><?php if($a==0)echo $hilo->sistema?></td>
+    <td><?php echo $hilo->titulo?></td>
+    <td><?php echo $hilo->material?></td>
+    <td><?php echo $hilo->tipo_material?></td>
+    <td><?php echo $hilo->caracteristicas?></td>
+    <td><?php echo $hilo->color?></td>
+    <td align="right"><?php echo number_format($saldo,2,'.','')?></td>
+  </tr>
+  <?Php $a++;endforeach;?>
+  </tbody>
+  <tfoot>
+    <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th align="right">Total:</th>
+    <th align="right"><?php echo number_format($total,2,'.','')?></th>
+    </tr>
+    </tfoot>
+</table>  
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#exportar_excel").tablesorter({ 
+        // pass the headers argument and assing a object 
+        headers: { 
+            // assign the secound column (we start counting zero) 
+            1: { 
+                // disable it by setting the property sorter to false 
+                sorter: false 
+            }, 
+            // assign the third column (we start counting zero) 
+            2: { 
+                // disable it by setting the property sorter to false 
+                sorter: false 
+            } 
+        } 
+    });
+	$('#txtBuscar').on('search',function(){
+		//le decimos a la funcion que busque en la tabla tblTabla el
+		//valor que contiene el campo actual
+		$.fntBuscarEnTabla($(this).val(),'exportar_excel');
+	});
+	$("#v").click(function() {
+		$( "tr.no_ver" ).toggle();
+	}); 
+});
+</script>

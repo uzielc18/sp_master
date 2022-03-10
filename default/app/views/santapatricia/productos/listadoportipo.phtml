@@ -1,0 +1,17 @@
+<?php $n=0;
+foreach($productos as $item){ $n++;?>
+  <tr>
+  	<td><?php echo $n?></td>
+    <td><?php echo $item->prefijo?><?php echo $item->codigo?></td>
+    <td><?php echo $item->nombre?></td>
+    <td><?php echo $item->abr?></td>
+    <?php if($item->getTestipoproductos()->getTeslineaproductos()->id==1){?>
+	<td><?php echo $item->tipo_fibra?></td>
+	<?php }?>
+    <td><?php echo $item->detalle?></td>
+    <td><?php echo Ajax::linkAction('editar/'.$item->id.'/'.$item->getTestipoproductos()->getTeslineaproductos()->id.'/'.$item->getTestipoproductos()->id,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'producto_nuevo-'.$item->getTestipoproductos()->id)?>
+    <?php echo Html::linkAction('borrar/'.$item->id.'/'.$item->getTestipoproductos()->getTeslineaproductos()->id.'/'.$item->getTestipoproductos()->id,Html::img("figuras/eliminar.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'onclick="return confirm(\'¿Está seguro?\')')?>
+    </td>
+
+  </tr>
+<?php }?>

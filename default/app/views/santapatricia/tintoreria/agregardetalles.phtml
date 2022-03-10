@@ -1,0 +1,184 @@
+<?php 
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?><div class="card">
+    <h1><em>Crear Salida<span><?php echo Session::get('DOC_NOMBRE')?></span></em></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="card-body">
+<div id="ver_resultado"></div>
+<?php echo Form::open(NULL,'POST','class="form-inline"')?>
+<?php echo Form::hidden('salida.id')?>
+<?php echo Form::hidden('prodetalletransportes.id')?>
+<?php echo Form::hidden('prodetalletransportes.tessalidas_id')?>
+    
+    <div class="input-prepend">
+    <span class="add-on">Pedido</span>
+    <?php echo Form::text('salida.npedido','size="8"');?>&nbsp;
+    <span class="add-on">Serie</span>
+    <?php echo Form::text('salida.serie','size="4"');?>&nbsp;
+    <span class="add-on">Numero</span>
+    <?php echo Form::text('salida.numero','size="10"');?>&nbsp;
+    <span class="add-on">Moneda</span>
+    <?php echo Form::dbSelect('salida.tesmonedas_id','simbolo,nombre',array("tesmonedas",'find','conditions: aclempresas_id='.Session::get('EMPRESAS_ID')));?>&nbsp;
+    <span class="add-on">Destino:</span>
+    <select><option>TINTORERIA-TI</option></select>
+	<?php //echo Form::dbSelect('salida.hilodestino_id','nombre,abr',array("hilodestino",'find'));?><br />
+    <span class="add-on">Proveedor</span>
+    	<input id="CL" />
+      <?php echo Form::hidden('salida.tesdatos_id')?><br />
+    <span class="add-on">Direccion de Entrega</span>
+      <?php echo Form::text('salida.direccion_entrega','class="span8"');//finiciotraslado?><br />
+      <span class="add-on">Fecha de Emision</span>
+      <?php echo Calendar::selector('salida.femision');//finiciotraslado?><br />
+    <span class="add-on">Fecha de Traslado</span>
+      <?php echo Calendar::selector('salida.finiciotraslado');//finiciotraslado?><br />
+    <span class="add-on">Conductor</span>
+      <?php echo Form::text('prodetalletransportes.protransportistas_id')?>
+    <span class="add-on">Transporte</span>
+      <?php echo Form::text('prodetalletransportes.protransportes_id')?>
+	</div>      
+  <div class="control-group">
+    <div class="controls">
+       <button type="submit" class="btn btn-primary" title="Grabar Datos Modificados">Grabar Datos</button> <?php echo Html::linkAction('salidas','Cancelar','class="btn"')?>
+    </div>
+  </div>
+<?php echo Form::close();?>
+<div id="guia">
+<table width="75%" border="0" align="center" cellpadding="0" cellspacing="1" class="table table-hover">
+<caption>
+<pre>Rollos en Guia</pre></caption>
+  <tr style="font-size:12px; color:#333; font-weight:bold;">
+    <th width="9%" align="left">Codigo</th>
+    <th width="8%" align="left">Peso</th>
+	<th width="11%" align="left">Metros</th>
+    <th width="13%" align="left">Medida</th>
+    <th width="49%" align="left">Descripcion</th>
+    <th width="10%" align="left">Accion</th>
+  </tr>
+  <?php 
+  $n=0;
+  foreach($detalles as $item){
+	  $n++;
+	  ?> 
+  <tr id="<?php echo $item->id?>">
+    <td><?php echo $n?>. <?php if(empty($item->getProrollos()->prorollos_id)){echo $item->getProrollos()->numero?>-M<?php echo $item->getProrollos()->maquina_numero;}else{echo $item->getProrollos()->codigo?>-<?php echo $item->getProrollos()->numeroventa; echo ' '.$item->getProrollos()->getNprocesos($item->prorollos_id);}?></td>
+    <td><?php echo number_format($item->pesoneto,2,'.',' ')?></td>
+	<td><?php echo number_format($item->getProrollos()->metros,2,'.',' ')?></td>
+    <td><?Php echo $item->getTesunidadesmedidas()->simbolo?></td>
+    <td><?php echo $item->getTesproductos()->detalle?><?php echo $item->getTesproductos()->nombre?> <?Php echo $item->getTescolores()->nombre?></td>
+    <td title="Regresar Rollo a Almacen"><?php echo Html::link($module_name.'/rollos/borrarsalidarollos/'.$item->id.'/'.$item->prorollos_id.'/','Eliminar','mostrar','id="'.$item->prorollos_id.'"')?></td>
+  </tr>
+  <?php }?>
+</table>
+</div>
+<div class="form-actions">
+<?php 
+echo Html::linkAction("crearprocesos/", 'Siguente<i class="icon-hand-right"></i>','class="btn btn-primary"') ?>&nbsp;<?php //echo Html::linkAction("salidas", 'Volver ','class="btn"') ?>
+</div>
+<hr />
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus="" placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+<table id="rollos" width="75%" border="0" align="center" cellpadding="0" cellspacing="1" class="table table-hover">
+<caption>
+<pre>Rollos en Almacen</pre></caption>
+  <tr style="font-size:12px; color:#333; font-weight:bold;">
+    <th width="29%" align="left">Producto</th>
+    <th width="11%" align="left">Color</th>
+    <th width="10%" align="left"># Rollo</th>
+    <th width="7%" align="left">Peso</th>
+    <th width="11%" align="left">Metros</th>
+    <th width="19%" align="left">Observacion</th>
+    <th width="4%" align="left">O. C.</th>
+    <th width="9%" align="left">Accion</th>
+  </tr>
+ <?Php foreach($rollos as $rollo){
+	 ?> 
+  <tr id="caja-<?php echo $rollo->id?>">
+    <td><?php echo $rollo->getTesproductos()->codigo_ant?> <?php echo $rollo->getTesproductos()->nombre?> <?php echo $rollo->getTesproductos()->detalle?> </td>
+    <td><?php echo $rollo->getTescolores()->nombre?></td>
+    <td><?php if(empty($rollo->prorollos_id)){echo $rollo->numero?>-M<?php echo $rollo->maquina_numero;}else{echo $rollo->codigo?>-<?php echo $rollo->numeroventa;  echo " (Rollo para reproceso)";}?></td>
+    <td><?php echo number_format($rollo->peso,2,'.',' ')?> K</td>
+    <td><?php echo number_format($rollo->metros,2,'.',' ')?> m</td>
+    <td><?php if(!empty($rollo->observacion_control))echo '('.$rollo->observacion_control.')'?></td>
+    <td></td>
+    <td width="9%"><?php echo Ajax::link($module_name.'/rollos/grabarsalidatelas/'.$rollo->id,'ENVIAR','guia','ocultar','id="'.$rollo->id.'"')?></td>
+  </tr>
+ <?php }?>
+</table>
+</div>
+<script type="text/javascript">
+$(document).ready(function()
+{
+	
+	$(".ocultar").live("click",function(){
+		var id=$(this).attr('id');
+		$("#caja-"+id).hide();
+		
+		});
+	
+	$("#CL").tokenInput("/<?php echo $module_name?>/salidas/buscarproveedor", 
+		{
+			tokenLimit: 1,
+			minChars: 2,
+			<?php if(!empty($salida->tesdatos_id)){?>
+			prePopulate: [ 
+						 {id: <?Php echo $salida->tesdatos_id?>, name: "<?php echo $salida->getTesdatos()->razonsocial?>"},
+						 ],
+			<?php }?>
+			onAdd: function (item){
+			   var VAL=item.id;
+			   $("#salida_tesdatos_id").val(VAL);
+			   var DIR=item.name.split('(');
+			   $("#salida_direccion_entrega").val(DIR[1]);
+			   //$("#BC").hide();
+			   //GrabarCliente();
+			},
+			onDelete: function (item) {
+			}
+		});
+		
+		/*transporte*/
+		$("#prodetalletransportes_protransportes_id").tokenInput("/<?php echo $module_name?>/salidas/transportes", 
+		{
+			tokenLimit: 1,
+			minChars: 2,
+			<?php if(!empty($prodetalletransportes->protransportes_id)){?>
+			prePopulate: [ 
+						 {id: <?php echo $prodetalletransportes->protransportes_id?>, name: "<?php echo $prodetalletransportes->getProtransportes()->marca.' '.$prodetalletransportes->getProtransportes()->numeroplaca?>"},
+						 ],
+			<?php }?>
+		});
+		
+		/*transportistas*/
+		
+		$("#prodetalletransportes_protransportistas_id").tokenInput("/<?php echo $module_name?>/salidas/transportistas", 
+		{
+			tokenLimit: 1,
+			minChars: 2,
+			<?php if(!empty($prodetalletransportes->protransportistas_id)){?>
+			prePopulate: [ 
+						 {id: <?php echo $prodetalletransportes->protransportistas_id?>, name: "<?php echo $prodetalletransportes->getProtransportistas()->nombre?> <?php echo $prodetalletransportes->getProtransportistas()->numerobrevete?>"},
+						 ],
+			<?php }?>
+		});
+});
+</script>
+<script type="text/javascript">
+$(document).ready(function()
+{
+		
+//hacemos la busqueda en el evento search del control de busqueda
+	$('#txtBuscar').on('search',function(){
+		//le decimos a la funcion que busque en la tabla tblTabla el
+		//valor que contiene el campo actual
+		$.fntBuscarEnTabla($(this).val(),'rollos');
+		
+	});
+	
+	
+});
+</script>

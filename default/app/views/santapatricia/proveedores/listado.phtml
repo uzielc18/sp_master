@@ -1,0 +1,83 @@
+<?php
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+
+<div class="card">
+    <h1>Proveedores de la Empresa <span><?Php echo Session::get('EMPRESAS_NOMBRE')?></span></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="form-actions">
+    <?php echo Html::linkAction('crear/'.$campo.'/'.$direccion.'/'.$page, 'Nuevo Proveedor','class="btn btn-primary"') ?>
+    <?php echo Html::linkAction('reporte_proveedores/'.$campo.'/'.$direccion.'/', 'Reporte de Proveedores','class="btn btn-info"') ?>
+    <?php echo Html::linkAction('listar_direcciones', 'Direcciones','class="btn btn-info"') ?>
+</div>
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus="" placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+
+<div id="ver_resultado"></div>
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped" id="exportar_excel">
+  <tr>
+  	<th width="17">Nº</th>
+    <th width="64">Codigo<span class="span_float"><?php echo Html::linkAction('listado/codigo/ASC/'.$page,Html::img("figuras/ascendente.gif",'Editar','style="width: 8px;"'),'');?>
+    	<?php echo Html::linkAction('listado/codigo/DESC/'.$page,Html::img("figuras/descendente.gif",'Editar','style="width: 8px;"'),'');?></span></th>
+    <th width="53">NºAnt</th>
+    <th width="77"><Razon social><span class="span_float"><?php echo Html::linkAction('listado/razonsocial/ASC/'.$page,Html::img("figuras/ascendente.gif",'Editar','style="width: 8px;"'),'');?>
+    	<?php echo Html::linkAction('listado/razonsocial/DESC/'.$page,Html::img("figuras/descendente.gif",'Editar','style="width: 8px;"'),'');?></span></th>
+    <th width="81">Ruc <span class="span_float"><?php echo Html::linkAction('listado/ruc/ASC/'.$page,Html::img("figuras/ascendente.gif",'Editar','style="width: 8px;"'),'');?>
+    	<?php echo Html::linkAction('listado/ruc/DESC/'.$page,Html::img("figuras/descendente.gif",'Editar','style="width: 8px;"'),'');?></span></th>
+    <th width="107">Direccion </th>
+    <th width="55">Telefono</th>
+    <th width="26">Pais <span class="span_float"><?php echo Html::linkAction('listado/pais/ASC/'.$page,Html::img("figuras/ascendente.gif",'Editar','style="width: 8px;"'),'');?>
+    	<?php echo Html::linkAction('listado/pais/DESC/'.$page,Html::img("figuras/descendente.gif",'Editar','style="width: 8px;"'),'');?></span></th>
+    <th width="57">Contacto</th>
+    <th width="44">Estado</th>
+    <th width="55">Acciones</th>
+  </tr>
+<?php $n=0;
+foreach($datos->items as $item){ $n++;?>
+  <tr id="<?php echo $item->id?>" title="<?php echo $item->id?>">
+  	<td><?php echo $n?></td>
+    <td><?php echo $item->codigo?>-<?php echo $item->sufijo?></td>
+    <td><?php echo $item->codigo_ant?></td>
+    <td><?php echo $item->razonsocial?></td>
+    <td><?php echo $item->ruc?></td>
+    <td><?php echo $item->direccion?></td>
+    <td><?php echo $item->telefono?></td>
+    <td><?php echo $item->pais?></td>
+    <td><?php echo $item->contacto?><br />
+	<?php if(empty($item->contacto))
+	{
+		echo Ajax::link($module_name."/contactos/crear/$item->id",'Agregar',$item->id); }else{ 
+		echo Ajax::link($module_name."/contactos/borrar/$item->idcontato",Html::img("figuras/eliminar.png",'Eliminar','style="width: 15px;margin-left:2px;margin-right:2px;"'),$item->id,'','title="Borrar este Contacto" onclick="return confirm(\'¿Está Seguro de borrar a este conacto?\')"');
+		echo Ajax::link($module_name."/contactos/listado/$item->id",Html::img("figuras/ver.png",'Ver','style="width: 15px;margin-left:2px;margin-right:2px;"'),$item->id,NULL,'title="Ver todos los contactos"');
+		}?></td>
+    <td>
+    <?php 
+	 if($item->activo=='0'){
+	 echo Html::linkAction('activar/'.$campo.'/'.$direccion.'/'.$item->id.'/'.$page,Html::img("figuras/circulo_rojo.png",'Editar','style="width: 20px;margin-left:5px;margin-right:5px;"'),'');
+	 }else{
+	 echo Html::linkAction('desactivar/'.$campo.'/'.$direccion.'/'.$item->id.'/'.$page,Html::img("figuras/circulo_verde.png",'Editar','style="width: 20px;margin-left:5px;margin-right:5px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');}?>
+    </td>
+    <td>
+	<?php echo Html::linkAction('editar/'.$campo.'/'.$direccion.'/'.$item->id.'/'.$page,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'')?>
+    <?php echo Html::linkAction('borrar/'.$campo.'/'.$direccion.'/'.$item->id.'/'.$page,Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:1px;margin-right:1px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+    <?php echo Html::linkAction('ver/'.$campo.'/'.$direccion.'/'.$item->id.'/'.$page,Html::img("figuras/ver.png",'Ver','style="width: 20px;margin-left:1px;margin-right:1px;"'));?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+<?php View::partial('paginators/classic', false, array('page' => $datos ,'url' => Router::get('controller_path').'/listado/'.$campo.'/'.$direccion.'')); ?>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#txtBuscar').on('search',function(){
+		//le decimos a la funcion que busque en la tabla tblTabla el
+		//valor que contiene el campo actual
+		$.fntBuscarEnTabla($(this).val(),'exportar_excel');
+	});
+});
+</script>

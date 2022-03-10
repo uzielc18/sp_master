@@ -1,0 +1,115 @@
+<div id="pago_con_letras"> 
+<h4>
+	<script type="text/javascript">
+$(document).ready(function()
+{
+	//alert('1');
+	$("#enviar_numero_de_letras").click(function(){
+		var numero_letras= $("#letras").val();
+		$("#pago_con_letras").html('');
+		alert('Ud. Esta generando '+numero_letras+' Letras');
+		$("#pago_con_letras").load('/<?php echo $module_name?>/vouchers/letras/3/<?php echo $tessalidas_id?>/<?php echo $numerofactura?>/'+numero_letras);
+		$("#n_let").hide();
+		});
+});
+</script>
+	<?php
+ if($tessalidas_id==0){?>
+	<strong><em>Nro. de Letras a Ingresar !<br /></em></strong><?php echo Form::text('letras');?> <a href="javascript:;" class="btn btn-primary" id="enviar_numero_de_letras">Enviar</a>
+</h4>
+<div>
+	<?php
+ for($q=1;$q<=$nletras;$q++){
+//echo $q;
+	?>
+	<div id="letras-<?php echo $q?>">
+<?php echo Ajax::form('letras-'.$q,$module_name.'/vouchers/ingresoletras/'.$q)?>
+	 <?php echo Form::hidden('ingresos-'.$q.'.id')?>
+     <?php echo Form::hidden('ingresos-'.$q.'.aclusuarios_id','',Auth::get('id'))?>
+     <?php echo Form::hidden('ingresos-'.$q.'.tesmonedas_id','',$tesmonedas_id)?>
+     <?php echo Form::hidden('ingresos-'.$q.'.tesdocumentos_id','','34')?>
+     <?php echo Form::hidden('ingresos-'.$q.'.codigo','',time())?>
+     <?php echo Form::hidden('ingresos-'.$q.'.movimiento','','AB')?>
+     <?php echo Form::hidden('ingresos-'.$q.'.estado','',1)?>
+     <?php echo Form::hidden('ingresos-'.$q.'.userid','',Auth::get('id'))?>
+     <?php echo Form::hidden('ingresos-'.$q.'.aclempresas_id','',Session::get('EMPRESAS_ID'))?>
+     <?php echo Form::hidden('ingresos-'.$q.'.tesdatos_id','',$tesdatos_id)?>
+      <?php echo Form::hidden('ingresos-'.$q.'.numerofactura','',$numerofactura)?>
+      <?php echo Form::hidden('ingresos-'.$q.'.estadoingreso','','Pendiente')?>
+<table id="vauchers" width="86%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped"> 
+  <tr>
+    <th width="13%" align="left"><h4>Nro. Letra</h4></th>
+    <th width="16%" align="left"><h4>Provedor</h4></th>
+    <th width="29%" align="left"><h4>F. Emision</h4></th>
+    <th width="35%" align="left"><h4>F. Vencimiento</h4></th>
+    <th width="7%" align="left"><h4>Monto</h4></th>
+    </tr>
+  <tr>
+    <td>
+      <?php echo Form::text('ingresos-'.$q.'.numero','size="10" placeholder="numero" required')?> </td>
+    <td>
+     <?php echo $proveedor?> </td>
+    <td><?php echo Calendar::selector('ingresos-'.$q.'.femision','');?></td>
+    <td><?php echo Calendar::selector('ingresos-'.$q.'.fvencimiento','');?></td>
+    <td> 
+     <?php echo Form::text('ingresos-'.$q.'.totalconigv','',number_format(($total/$nletras),2,'.',''))?>
+<?php echo Form::submit('GRABAR','class="btn btn-primary"');?>
+     </td>
+    </tr>
+</table>
+<?php echo Form::close()?>
+</div>
+<?php }?>
+<?php echo Ajax::linkAction('letras/3/'.$tessalidas_id.'/'.$numerofactura,'Siguente','pago_con_letras','btn btn-primary');?>
+<?php }?>
+<?php if($tessalidas_id!=0){?>
+<?php 
+$q=0;
+foreach($tesdetallevauchers as $detalle){
+	$q++;
+	?>
+<div id="detalle-<?php echo $q?>">
+<?php echo Ajax::form('detalle-'.$q,$module_name.'/vouchers/ingresoletras/'.$q)?>
+<?php echo Form::hidden('tesdetallevauchers-'.$q.'.id','',$detalle->id);?>
+<?php echo Form::hidden('tesdetallevauchers-'.$q.'.tesvauchers_id','',Session::get('V_ID'));?>
+<?php echo Form::hidden('tesdetallevauchers-'.$q.'.tesingresos_id','',$detalle->tesingresos_id);?>
+<?php echo Form::hidden('tesdetallevauchers-'.$q.'.tessalidas_id','',0);?>
+<?php echo Form::hidden('tesdetallevauchers-'.$q.'.abono','',1);?>
+<?php echo Form::hidden('tesdetallevauchers-'.$q.'.cargos','',0);?>
+<?php echo Form::hidden('tesdetallevauchers-'.$q.'.tesdatos_id','',$detalle->tesdatos_id);?>
+<?php echo Form::hidden('tesdetallevauchers-'.$q.'.estado','',1);?>
+<table id="vauchers" width="86%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped"> 
+  <tr>
+    <th width="19%" align="left"><h4>Cuenta General</h4></th>
+    <th width="10%" align="left"><h4>Nº Docuemnto</h4></th>
+    <th width="14%" align="left"><h4>Fecha Vcto</h4></th>
+    <th width="14%" align="left"><h4>Codigo Auxiliar</h4></th>
+    <th width="14%" align="left">vDescripcion</h4></th>
+    <th width="14%" align="left"><h4>Cargo</h4></th>
+    <th width="15%" align="left"><h4>Abono</h4></th>
+  </tr>
+  <tr>
+    <td width="19%"><?php echo $detalle->plancontable;
+	 echo Form::hidden('tesdetallevauchers-'.$q.'.plancontable','',$detalle->plancontable); ?></td>
+    <td width="10%"><?php echo $detalle->getTesingresos()->serie?> - <?php echo $detalle->getTesingresos()->numero?></td>
+    <td width="14%"><?php echo $detalle->getTesingresos()->fvencimiento?></td>
+    <td width="14%">-</td>
+    <td width="14%"><?php echo $detalle->getTesingresos()->getTesdatos()->razonsocial;?></td>
+    <td width="14%">-</td>
+    <td width="15%"><?php echo Form::text('tesdetallevauchers-'.$q.'.monto','',$detalle->monto); ?>
+<?php echo Form::submit('GRABAR','class="btn btn-primary"');?></td>
+  </tr>
+</table>
+<?php echo Form::close()?>
+</div>
+<?php 
+}?>
+
+<?php //echo Ajax::form('pago_con_letras',$module_name.'/vouchers/ingresoletras/')?>
+<?php echo Form::open($module_name.'/vouchers/ingresoletras/'.$q)?>
+<?php echo Form::hidden('terminar.id','',$detalle->id);?>
+<?php echo Form::submit('Terminar','class="btn btn-primary"');?>
+<?php echo Form::close()?>
+<?php
+}?>
+</div>

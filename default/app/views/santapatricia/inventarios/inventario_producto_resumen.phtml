@@ -1,0 +1,72 @@
+<?php View::content();?>
+<div class="card">
+	<h1>Resumen-Linea de Productos <?php echo $linea->nombre?></h1>
+    </div>
+    <div class="form-actions" title="Regresar!">
+    <?php echo Html::linkAction("listado/".Session::get('FAMILIA_ID'),'Regresar ','class="btn btn"') ?>
+	</div>
+    <div style="clear:both"></div>
+<div class="menu">
+<ul>
+<li>
+<a href="javascript:;">Año 
+<select id="anio">
+<?php
+for($i=2011;$i<=2020;$i++)
+{
+	$selec='';
+	if($anio==$i){
+	$selec=' selected="selected"';
+	}
+	echo '<option value="'.$i.'" '.$selec.'>'.$i.'</option>';
+}
+?>
+</select>
+</a>
+</li>
+</ul> 
+<?php 
+$mes_actual=date('Y-m');
+foreach($meses as $clave => $mes):
+if($anio.'-'.$clave<=$mes_actual){
+$class='';
+echo '<ul>';
+echo '<li><a class="enviar" id="mes-'.$mes.'" href="javascript:;" data-id="'.$anio.'-'.$clave.'-01">'.$mes.'</a></li>'; 
+echo '</ul>';
+}
+endforeach;?>
+<ul><li><?php echo Html::linkAction('inventario_producto_resumen_anio/'.$linea->id.'/'.$anio,'Ver inventario del año');?></li></ul>
+</div>
+    <div class="card-body">
+    <div id="loading" style="display:none;"><img src="/img/spin.gif" /></div>
+    <div id="kardex"></div>
+    <div style="clear:both"></div>
+	</div>
+<script type="text/javascript">
+$(document).ready(function()
+{
+	$("#anio").change(function(event)
+	{
+		var id = $("#anio").find(':selected').val();
+		location.href = '/<?php echo $module_name?>/inventarios/inventario_producto_resumen/<?php echo $linea->id?>/<?php echo Session::get('GROUP')?>/'+id;
+		});
+	$(".enviar").click(function()
+	{
+		var fecha = $(this).attr('data-id');
+		$.ajax({
+			type:"POST",
+			url:"/<?php echo $module_name?>/inventarios/inventario_producto_resumen_mes/<?php echo $linea->id?>/",
+			data:'fecha='+fecha,
+			beforeSend:function(){
+				$("#loading").show();
+			},
+			success:function(response){
+				$("#loading").hide();
+				$("#kardex").prepend(response);
+				//alert(response);
+			}
+		});
+	});
+});
+        </script>
+        

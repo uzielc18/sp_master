@@ -82,7 +82,7 @@ class PlacargosController extends AdminController {
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::toAction('');
+        return Redirect::toAction('');
     }
 	 public function desactivar($id) {
         try {
@@ -99,7 +99,7 @@ class PlacargosController extends AdminController {
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::toAction('');
+        return Redirect::toAction('');
     }
 	 public function eliminar($id) {
         try {

@@ -1,0 +1,52 @@
+
+<?php
+foreach($letras as $letra){
+$q=$letra->id;
+$letra->getTessalidas()->getTesdatos()->diascredito;
+	?>
+<div id="letras-<?php echo $letra->id?>">
+<?php echo Ajax::form('letras-'.$letra->id,$module_name.'/cancelacionfacturas/grabarletra/'.$letra->id.'/Editar')?>
+	 <?php echo Form::hidden('salida-'.$q.'.id','',$letra->getTessalidas()->id)?>
+     <?php echo Form::hidden('salida-'.$q.'.aclusuarios_id','',Auth::get('id'))?>
+     <?php echo Form::hidden('salida-'.$q.'.tesmonedas_id','',$letra->getTessalidas()->tesmonedas_id)?>
+     <?php echo Form::hidden('salida-'.$q.'.tesdocumentos_id','','34')?>
+     <?php echo Form::hidden('salida-'.$q.'.codigo','',time())?>
+     <?php echo Form::hidden('salida-'.$q.'.movimiento','','SALIDA')?>
+     <?php echo Form::hidden('salida-'.$q.'.estado','',1)?>
+     <?php echo Form::hidden('salida-'.$q.'.userid','',Auth::get('id'))?>
+     <?php echo Form::hidden('salida-'.$q.'.aclempresas_id','',Session::get('EMPRESAS_ID'))?>
+     <?php echo Form::hidden('salida-'.$q.'.tesdatos_id','',$letra->getTessalidas()->tesdatos_id)?>
+      <?php echo Form::hidden('salida-'.$q.'.estadoingreso','','Pendiente')?>
+<table width="90%" align="center" class="table table-bordered table-striped">
+  <tr>
+    <th width="13%" align="left">Nro. Letra</th>
+    <th width="16%" align="left">Cliente</th>
+    <th width="29%" align="left">F. Emision</th>
+    <th width="35%" align="left">F. Vencimiento</th>
+    <th width="7%" align="left">Monto</th>
+    </tr>
+  <tr>
+    <td>
+      <?php echo Form::text('salida-'.$q.'.numero','size="10" placeholder="numero" required',$letra->getTessalidas()->numero)?> </td>
+    <td>
+     <?php echo $letra->getTessalidas()->getTesdatos()->razonsocial?> </td>
+    <td><?php echo Calendar::selector('salida-'.$q.'.femision','',$letra->getTessalidas()->femision);?></td>
+    <td><?php echo Calendar::selector('salida-'.$q.'.fvencimiento','',$letra->getTessalidas()->fvencimiento);?></td>
+    <td> 
+     <?php echo Form::text('salida-'.$q.'.totalconigv','',$letra->getTessalidas()->totalconigv)?>
+<?php if($ajax)echo Form::submit('GRABAR','class="btn btn-primary"');?>
+     </td>
+    </tr>
+</table>
+<?php echo Form::close()?>
+</div>
+
+<?php }?>
+
+<?php 
+$npedido=$factura->npedido;
+$pos = strpos($npedido,'PA');
+$accion='versalida_adelanto';
+if($pos===FALSE){$accion='versalida';}
+//echo $accion;
+echo Html::Link($module_name.'/ventas/'.$accion,'Finalizar','class="btn btn-primary"');?>

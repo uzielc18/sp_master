@@ -1,0 +1,105 @@
+<?php
+//$inven=$INGR->getInventario(Session::get("TIPOPRODUCTO_ID"));
+
+View::content();
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<style type="text/css">
+/*.container {
+  width: 1124px;
+}*/
+#items,input,tesarea,th,td{
+	font-size:11px !important;
+}
+.item-row td{
+	padding-left:15px !important;
+	}
+#paid
+{
+	width:80% !important;
+}
+.meta td{
+	font-size:14px !important;
+	
+	}
+/*ul.token-input-list{ width:150px !important;}*/
+</style>
+<div class="card">
+	<h1>Reporte de Repuesto<span>Reporte de precios de Repuesto por producto</span></h1>
+</div>
+<div class="form-actions">
+<?php echo Html::linkAction("ingresos/",'Ingresos','class="btn btn-info"') ?>   
+<?php echo Html::linkAction("salidas/",'Salidas','class="btn btn-success"') ?>  
+<?php echo Html::linkAction("reporteingresos/",'Compras','class="btn"') ?>  
+<?php echo Html::linkAction("reportesotk/",'Consulta de Stock','class="btn"') ?>       
+<?php echo Html::linkAction("reporterepocicion/",'Reposicion de Repuestos','class="btn"') ?>       
+<?php echo Html::linkAction("reporteutilizacion/",'Reporte de Utilizacion','class="btn"') ?>     
+<?php echo Html::linkAction("repuestoprecios/",'Reporte de Precios','class="btn"') ?>         
+<?php echo Html::link($module_name."/maquinas/",'Producción','class="btn btn-primary"') ?> 
+</div> 
+    <div style="clear:both"></div>
+<?php /*?>
+<div class="input-prepend input-append">
+  <span class="add-on" title="Ingrese el Color del Producto!">Color:</span>
+  <input type="text" id="local_color" name="local_color" class="input-medium search-query" />
+</div><?php */?>
+<div class="form-actions">
+    
+<form id="buscar" class="form-inline">
+<label>Buscar Producto:</label>
+  <input type="text" id="local_producto" name="local_producto" class="input-medium search-query" />
+  <?php echo Html::linkAction("",' Regresar ','class="btn btn"') ?><button id="enviar" type="button" class="btn" title="Movimientos!"> Ver </button>
+</form>
+</div>
+  	
+
+<hr />
+    <div class="card-body">
+    <div id="loading" style="display:none;"><img src="/img/spin.gif" /></div>
+    <div id="kardex"></div>
+    <div style="clear:both"></div>
+	</div>
+   <?php 
+   //$replace = array( '"' =>'+','2800' => '$$$$' ,'chevy' => 'ford'); 
+   //$val='Pignone Z = 20 3/8" x 7/32"';
+   //echo preg_replace('/\"/','',$val);
+//echo str_replace('"','\'',(string)$val);
+  // echo (string)$PP?>
+<script type="text/javascript">
+$(document).ready(function()
+{
+	$("#enviar").click(function()
+	{
+		var data=$("#buscar").serialize();
+		$.ajax({
+			type:"POST",
+			url:"/<?php echo $module_name?>/<?php echo $controller_name?>/ver_repuesto",
+			data:data,
+			beforeSend:function(){
+				$("#loading").show();
+				},
+			success:function(response){
+				$("#loading").hide();
+				$("#kardex").prepend(response);
+				//alert(response);
+			}
+		});
+				
+	});
+	
+	$("#local_producto").tokenInput(
+	[<?php echo (string)$PP?>],
+	{
+		minChars: 1,
+		tokenLimit: 1
+	});
+	$("#local_color").tokenInput(
+	[<?php echo (string)$CC?>],
+	{
+		minChars: 1,
+		tokenLimit: 1
+	});
+			
+});
+</script>
+        

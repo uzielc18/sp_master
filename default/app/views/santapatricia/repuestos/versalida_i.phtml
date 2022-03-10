@@ -1,0 +1,52 @@
+<div class="form-actions"><span class="print btn btn-primary"> Print </span> <?php echo Html::linkAction('salidas/','Regresar <i class="icon-hand-left"></i>','class="btn"')?>
+</div>
+<div class="card-body">
+<table width="100%" border="0" cellspacing="1" cellpadding="0">
+  <tr>
+    <th width="7%" scope="col">&nbsp;</th>
+    <th width="42%" scope="col">&nbsp;</th>
+    <th width="3%" scope="col">&nbsp;</th>
+    <th width="33%" scope="col">&nbsp;</th>
+    <th width="15%" scope="col">&nbsp;</th>
+  </tr>
+  <tr>
+    <td height="42" colspan="2">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan="2">&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <?php  foreach($detalles as $item){?>
+  <tr>
+    <td><?php echo $item->cantidad?></td>
+    <td colspan="2"><?php echo $item->getTesproductos()->detalle?> COD. <?php echo $item->getTesproductos()->codigo_ant;?></td>
+    <td align="center"><?php echo $item->getAcldatos()->nombre?></td>
+    <td><?php echo $item->getTesproductos()->detalle?></td>
+  </tr>
+  <?php }?>
+  <tr>
+    <td height="39" colspan="2">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td colspan="2">&nbsp;</td>
+  </tr>
+</table>
+</div>

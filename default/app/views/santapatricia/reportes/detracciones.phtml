@@ -1,0 +1,138 @@
+<style type="text/css">
+/*.container {
+  width: 1124px;
+}*/
+#items,input,tesarea,th,td{
+	font-size:11px !important;
+}
+.item-row td{
+	padding-left:15px !important;
+	}
+#paid
+{
+	width:80% !important;
+}
+.meta td{
+	font-size:14px !important;
+	
+	}
+ul.token-input-list{ width:150px !important;}
+</style>
+<div class="form-actions" title="Regresar!">
+    <?php echo Menu::menuReportes($action_name);?>
+</div>
+<div class="card">
+	<h1>Detracciones!</h1>
+</div>
+
+    
+Año: 
+<select id="anio">
+<?php
+for($i=2011;$i<=2020;$i++)
+{
+	$selec='';
+	if($anio==$i){
+	$selec=' selected="selected"';
+	}
+	echo '<option value="'.$i.'" '.$selec.'>'.$i.'</option>';
+}
+?>
+</select> 
+<div class="menu">
+<?php 
+$mes_actual=date('Y-m');
+foreach($meses as $clave => $mes):
+if($anio.'-'.$clave<=$mes_actual){
+$class='';
+if($mes_activo==$clave)$class=' active';
+echo '<ul>';
+echo '<li><a class="enviar'.$class.'" id="mes-'.$mes.'" href="javascript:;" data-id="'.$anio.'-'.$clave.'-01">'.$mes.'</a></li>'; 
+echo '</ul>';
+}
+endforeach;?>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div style="clear:both"></div>
+<?php echo Sp::imprimir('Detracciones-'.$anio.'-'.$mes_activo,'P');?>
+<div class="card-body">
+<div id="reporte">
+<?php //echo date('d/ m/ Y')?>
+<table width="85%" border="0" align="center" class="table table-bordered table-striped" id="exportar_excel">
+	<tr>
+		<th width="48" align="left">Fecha Doc.</th>
+		<th width="119" align="left">Proveedor</th>
+		<th width="44" align="left">Nro.Doc.</th>
+		<th width="36" align="left">Total Fact.</th>
+		<th width="59" align="left">Detraccion.</th>
+		<th width="40" align="left">Fecha de Pago.</th>
+		<th width="52" align="left">Nro.SPOT</th>
+	</tr>
+    <?php 
+	$t_soles=0;
+	$t_detraccion=0;
+	foreach($detracciones as $item){?>
+	<tr>
+		<td><?php echo Sp::formatFecha('%d / %m / %Y',$item->femision)?></td>
+		<td><?php echo $item->razonsocial?></td>
+		<td><?php echo $item->numerodefactura;?></td>
+		<td align="left"><?php $t_soles=$t_soles+number_format($item->totalconigv,2,'.','');echo number_format($item->totalconigv,2,'.','')?></td>
+        <td align="left"><?php $t_detraccion=$t_detraccion+number_format($item->monto,2,'.','');echo number_format($item->monto,2,'.','')?>
+		<td align="left"><?php if(!empty($item->fechadeposito))
+		{
+			echo Sp::formatFecha('%d / %m / %Y',$item->fechadeposito);
+		}else
+		{
+			echo Html::linkAction('codigodetraccion/'.$item->id,'ingresar Fecha de Depsotio');
+		}?></td>
+
+		<td align="left"><?php if(!empty($item->codigodedetraccion)){echo $item->codigodedetraccion;}else{echo Html::linkAction('codigodetraccion/'.$item->id,'Ingrese Codogio de detraccion');}?></td>
+	</tr>
+    <?php }?>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+    <tfoot>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td style="border-top:1px solid #333 !important;">Totales</td>
+		<td align="left" style="border-top:1px solid #333 !important;"><?Php echo $t_soles?></td>
+		<td align="left" style="border-top:1px solid #333 !important;"><?Php echo $t_detraccion?></td>
+		<td align="left" style="border-top:1px solid #333 !important;">&nbsp;</td>
+		<td align="left" style="border-top:1px solid #333 !important;">&nbsp;</td>
+	</tr>
+    </tfoot>
+</table>
+</div>
+<script type="text/javascript">
+$(document).ready(function()
+{
+	$("#anio").change(function(event)
+	{
+		var id = $("#anio").find(':selected').val();
+		location.href = '/<?php echo $module_name?>/reportes/detracciones/'+id;
+    });
+	$(".enviar").click(function()
+	{
+		var fecha = $(this).attr('data-id');
+		var F=fecha.split('-');
+		location.href = '/<?php echo $module_name?>/reportes/detracciones/'+F[0]+'/'+F[1];
+	});
+	$(".botonExcel").click(function(event)
+	{
+		$("#datos_a_enviar").val( $("<div>").append( $("#exportar_excel").eq(0).clone()).html());
+		$("#FormularioExportacion").submit();
+	});
+});
+</script>
+</div>
+</div> 

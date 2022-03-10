@@ -1,0 +1,70 @@
+<div class="card">
+    <h1><?php echo $titulo?> para (<?php echo $lineaproducto->nombre?>)</h1>
+</div>
+<div class="span12">
+    <?php View::content() ?>
+    <?php echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
+    <?php echo Form::hidden('testipoproductos.id') ?>
+    <?php echo Form::hidden('testipoproductos.teslineaproductos_id','',$lineaproducto->id) ?>
+    <div class="control-group">
+        <label for="teslineaproductos_codigo" class="control-label">Codigo * : </label>
+        <div class="controls">
+            <?php echo Form::text('testipoproductos.codigo') ?>
+        </div>
+    </div>
+    <div class="control-group">
+        <label for="teslineaproductos_nombre" class="control-label">Nombre * : </label>
+        <div class="controls">
+            <?php echo Form::text('testipoproductos.nombre') ?>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label for="teslineaproductos_abr" class="control-label">Abreviatura* : </label>
+        <div class="controls">
+            <?php echo Form::text('testipoproductos.abr') ?>
+        </div>
+    </div>
+    <div class="control-group">
+        <label for="teslineaproductos_detalle" class="control-label">detalle* : </label>
+        <div class="controls">
+            <?php echo Form::textarea('testipoproductos.detalle') ?>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <?php echo Form::submit('Guardar Datos', 'class="btn btn-primary"') ?>
+        <?php echo Html::linkAction('index/'.$lineaproducto->id, 'Cancelar', 'class="btn"') ?>
+    </div>
+    <?php echo Form::close() ?>
+
+</div>
+
+<table class="table table-bordered table-striped">
+  <tr>
+  	<td>Nº</td>
+    <td>Nombre</td>
+    <td>Abr.</td>
+    <td>Detalle</td>
+    <td>Estado</td>
+    <td>Acciones</td>
+  </tr>
+<?php $n=0;
+foreach($tipos as $item){ $n++;?>
+  <tr>
+  	<td><?php echo $n?></td>
+    <td><?php echo $item->nombre?></td>
+    <td><?php echo $item->abr?></td>
+    <td><?php echo $item->detalle?></td>
+    <td><?php 
+	 if($item->activo=='0'){
+	 echo Html::linkAction('activar/'.$item->id,Html::img("figuras/circulo_rojo.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'');
+	 }else{
+	 echo Html::linkAction("desactivar/$item->id",Html::img("figuras/circulo_verde.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');}?></td>
+    
+    <td><?php echo Html::linkAction('editar/'.$item->id,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'')?>
+    <?php echo Html::linkAction("borrar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+    </td>
+  </tr>
+<?php }?>
+</table>

@@ -1,0 +1,36 @@
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered" id="items">
+	  <thead>
+      <tr align="center">
+        <th width="8%" align="left">Cod.</th>
+        <th width="7%" align="left">Producto</th>
+        <th width="4%" align="left">Color</th>
+        <th width="18%" align="right">Kg. Entregado</th>
+        <th width="14%" align="center">Medida</th>
+        <th width="14%" align="center">Maquina</th>
+        <?php if($pedido->origen=='Produccion' or $pedido->origen=='Chenille'){ ?>
+        <th width="15%" align="left">Lote</th>
+        <th width="8%" align="left"># Caja</th>
+        <?php }?>
+        <th width="3%" align="left">Obs</th>              
+        <th width="6%" align="left">Accion</th>
+	  </tr>
+      </thead>
+      <tbody>
+      <?php foreach($detalles as $detalle){?>
+      <tr>
+        <td width="8%" align="left"><?php echo $detalle->getTesproductos()->codigo?></td>
+        <td width="7%" align="left"><?php echo $detalle->getTesproductos()->detalle?></td>
+        <td width="4%" align="left"><?php echo $detalle->getTescolores()->nombre?></td>
+        <td width="18%" align="right"><?Php echo $detalle->cantidad?></td>
+        <td width="14%" align="center"><?php echo $detalle->getTesunidadesmedidas()->nombre?></td>
+        <td width="14%" align="center">M-<?php echo $detalle->promaquinas_id?></td>
+        <?php if($pedido->origen=='Produccion' or $pedido->origen=='Chenille'){ ?>
+        <td width="15%" align="left"><?php echo $detalle->lote?></td>
+        <td width="8%" align="left"><?php echo $detalle->getTescajas()->numerodecaja?></td>
+        <?php }?>
+        <td width="3%" align="left">Obs</td>                 
+        <td width="6%" align="left"><?php echo Html::linkAction('eliminar_caja_detalle/'.$detalle->id.'/'.$detalle->tescajas_id,'X','class="btn btn-warning"');?></td>
+      </tr>
+      <?php }?>
+      </tbody>
+    </table>

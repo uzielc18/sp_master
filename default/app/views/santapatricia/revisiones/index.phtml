@@ -1,0 +1,57 @@
+<?php //if(Auth::get('id')==3){?>
+<div class="card">
+<h1>Revisiones de Rollos</h1>
+</div>
+<div class="form-actions">
+<?php echo Menu::menuProduccion($action_name);?>
+</div>
+<?php echo View::content()?>
+<style type="text/css">
+.link a{
+	display:inline-table;
+width:20px;
+padding:2px 2px 7px 2px;
+background-color:#F5F5F5;
+margin:auto;}
+</style>
+<div class="card-body">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="50%" align="right"><strong>Mes:</strong><?php echo date('m');?><br />
+      	<strong>Año:</strong><?php echo date('Y');?></td>
+  </tr>
+</table>
+<br />
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table table-bordered table-striped">
+   <caption>Rollos - Enviar a Control de Calidad</caption>
+  <tr>
+    <th width="6%" align="left">Nº Rollo</th>
+    <th width="11%" align="left">Fecha</th>
+    <th width="10%" align="left">Metraje</th>
+    <th width="5%" align="left">Peso</th>
+    <th width="8%" align="center">Maq.</th>
+    <th width="7%">Guia</th>
+    <th width="12%">Nº Articulo</th>
+    <th width="18%">Articulo</th>
+    <th width="8%">Rend.</th>
+    <th width="5%">O.C.</th>
+    <th width="10%">Acciones</th>
+  </tr>
+  <?php foreach($rollos as $rollo){?>
+  <tr id="tr-<?php echo $rollo->id?>">
+    <td valign="top"><?php echo $rollo->numero?>-<?php echo $rollo->maquina_numero?></td>
+    <td valign="top"><?php echo $rollo->fechacorte?></td>
+    <td valign="top"><?php echo $rollo->metros?></td>
+    <td valign="top"><?php echo $rollo->peso?></td>
+    <td align="center" valign="top"><?php if($rollo->prodetalleproduccion_id!=0)echo $rollo->getProdetalleproduccion()->getProproduccion()->getPromaquinas()->prefijo.$rollo->getProdetalleproduccion()->getProproduccion()->getPromaquinas()->numero; else echo "M-".$rollo->maquina_numero;?></td>
+    <td align="center" valign="top"><?php if($rollo->prodetalleproduccion_id!=0) echo $rollo->getProdetalleproduccion()->getProproduccion()->guianumero;else echo "Sin Guia"?></td>
+    <td align="center" valign="top"><?php echo $rollo->getTesproductos()->prefijo.$rollo->getTesproductos()->codigo_ant?></td>
+    <td align="center" valign="top"><?php echo $rollo->getTesproductos()->getTestipoproductos()->nombre.' '.$rollo->getTesproductos()->nombre?></td>
+    <td valign="top"><?php echo $rollo->rendimiento?></td>
+    <td valign="top" align="center"><?php if(!empty($rollo->getProdetalleproduccion()->tesordendecompras_id)){echo $rollo->getProdetalleproduccion()->getTesordendecompras()->codigo;}?></td>
+      <td valign="top" align="center"><span class="link"><?php echo Ajax::linkAction('cambiarestado/'.$rollo->id.'/Control de Calidad/index',Html::img("figuras/visto_bueno.png",'Visto Bueno','style="width: 20px;margin-left:1px;margin-right:1px;"title="Enviar a Control de Calidad"'),'tr-'.$rollo->id);?></span></td>
+  </tr>
+  <?php }?>
+</table>
+<? //}?>
+</div>

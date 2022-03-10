@@ -1,0 +1,40 @@
+<style type="text/css">
+.span_float
+{
+	float:right !important;
+	margin-left:0px;
+	margin-right:-5px;
+}
+.mediano{
+	float:left; width:30% !important; padding-left:10px;
+	}
+</style>
+<div class="card">
+	<h1>Reporte Diario de Ventas y Cobranzas!</h1>
+</div>
+<div class="form-actions" title="Regresar!">
+    <?php echo Menu::menuReportes($action_name);?>
+</div>
+<div class="well">
+<span  class="mediano"><strong>FECHA</strong><br />
+<?php echo Calendar::selector('fecha')?></span><span class="mediano"><a id="ver_reporte" class="btn btn-primary" href="javascript:;"> Ver Reporte</a><br />
+</span>
+<div class="clear"></div>  
+</div>
+<div id="ver">
+	<h2>*La Busqueda por Codigo: devolvera solo</h2>
+    <?Php // imprime por ejemplo: 01/12/2012
+?>
+</div>
+<script type="text/javascript">
+        $(document).ready(function() {
+
+			$("#ver_reporte").click(function()
+			{
+			 var f=$("#fecha").val();
+			 alert(f);
+			 $("#ver").load("/<?php echo $module_name?>/reportes/ver_<?php echo $action_name?>/"+f);
+			});
+			
+        });
+        </script>

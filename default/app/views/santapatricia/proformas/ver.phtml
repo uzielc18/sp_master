@@ -1,0 +1,261 @@
+<?php
+$simbolo="S/. ";
+
+switch ($monedas)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+
+
+View::content();
+if($cl_id==0){
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<script type="text/javascript">
+
+
+function GrabarCliente(cliente_id)
+{
+	var dataString = 'proforma_id='+<?php echo $id?>+'&cliente_id='+cliente_id;
+	//alert(dataString);
+	$.ajax({
+            type:"POST",
+            url:"/<?php echo $module_name?>/proformas/grabarcliente/1",
+            data:dataString,
+            beforeSend:function(){
+              $("#loading").show();
+            },
+            success:function(response){
+                $("#loading").hide();
+				//alert(response);
+				$("#cliente-"+cliente_id+' span').attr('id','borrar-'+response);
+            }
+ 
+     });
+}
+function BorrarCliente(tesproformaenviadas_id)
+{
+	var dataString = 'tesproformaenviadas_id='+ tesproformaenviadas_id;
+	$.ajax({
+            type:"POST",
+            url:"/<?php echo $module_name?>/proformas/borrarEnvio/1",
+            data:dataString,
+            beforeSend:function(){
+              $("#loading").show();
+            },
+            success:function(response){
+                $("#loading").hide();
+            }
+ 
+     });
+}
+$(document).ready(function()
+{	  
+	
+  $('input').click(function(){
+    $(this).select();
+  });
+	
+/*Busqueda del Cliente*/
+ $("#CL").tokenInput("<?php echo "/".$module_name."/proformas/buscarcliente"?>", 
+		{
+		//tokenLimit: 1,
+		preventDuplicates: true,
+		minChars: 2,
+		onAdd: function (item) {
+		   var VAL=item.id;
+		   $("#lista_clientes").val(VAL);
+		   $("#lista_clientes").prepend('<li id="cliente-'+VAL+'">'+item.name+'<span data-id="'+VAL+' class="XC"> X </span><li>');
+			//$(".token-input-list li p").html('');
+			GrabarCliente(VAL);
+		},
+		onDelete: function (item) {
+		}
+	}); 
+
+	$(".XC").click(function(){
+		var id= $(this).attr('id');
+		var cl=$(this).attr('data-id')
+		var ID= id.split('-');
+		BorrarCliente(ID[1]);
+		$("#cliente-"+cl).hide();
+		});
+  
+});
+</script>
+<?php }?>
+<style type="text/css">
+.simbolo
+{
+	position:absolute;
+	float:left;
+	margin-left:-15px !important;
+}
+.item-row td{
+	padding-left:15px !important;
+	}
+#paid
+{
+	width:80% !important;
+}
+.XC
+{
+	border:#333333 solid 1px;
+	padding:1px;
+	color:#666666;
+	border-radius:2px;
+	cursor:pointer;
+}
+.XC:hover
+{
+	background-color:#666666;
+	color:#FFF; !important;
+}
+</style>
+<div class="form-actions">
+    <?php if($cl_id==0){echo Html::linkAction("", 'Listado de Proformas','class="btn btn-primary"');}else{echo Html::linkAction("ver/$numero/0", 'Proformas','class="btn btn-primary"');} ?></div>
+
+<div class="hoja">
+    <div class="caja1">
+      <div class="caja_iz"><img id="image" src="/img/logoSP.png" alt="logo">
+      	<span>
+        Ruc:<?php echo $empresa->ruc?><br />
+        Direccion:<?php echo $empresa->direccion?><br />
+        Telefono:<?php echo $empresa->telefono?>
+      	</span>
+      </div>
+      <div class="caja_ce"></div>
+      <div class="caja_de">
+      <h1><span class="header">PROFORMA</span></h1>
+      <table class="sobre_encabezado" align="center">
+      <tr>
+        <th>Proforma Nº.</th>
+        <th>Fecha de Emision</th></tr>
+      <tr>
+        <td><?php echo $numero?></td><td><?php echo $fecha;?></td></tr>
+      </table></div>
+      <div style="clear:both;"></div>
+    </div>
+  <div class="caja2">
+    <?php if($cl_id==0){?>
+    <div style="width:50%; float:left;"> <h3>Lista de Clientes a los que se envio la proforma</h3>
+     <label>Ingrese el Cliente al que desea mandar la Proforma</label>
+    <input id="CL" type="text">
+    <ul id="lista_clientes">
+	<?php foreach($clientes as $cliente): ?>
+    <li id="cliente-<?php echo $cliente->getTesdatos()->id?>">-&raquo;&raquo; <?php echo $cliente->getTesdatos()->razonsocial?> ruc: <?php echo $cliente->getTesdatos()->ruc?> (<?php echo $cliente->getTesdatos()->departamento?>-<?php echo $cliente->getTesdatos()->provincia?>-<?php echo $cliente->getTesdatos()->distrito?>-<?php echo $cliente->getTesdatos()->direccion?><?php echo Html::linkAction('ver/'.$numero.'/'.$cliente->getTesdatos()->id,Html::img("figuras/ver.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'));?>
+    <span id="borrar-<?php echo $cliente->id?>" data-id="<?php echo $cliente->getTesdatos()->id?>" class="XC">X</span>
+    </li>
+    <?php endforeach;?>
+    </ul>
+    </div>
+    <?php }else{?>
+    
+   	<div class="mitad">
+      <h2>dirigido a:</h2>
+       <?php /*foreach($clientes as $cliente): */?>
+	<?php echo $cliente->getTesdatos()->razonsocial?>
+    Ruc: <?php echo $cliente->getTesdatos()->ruc?> <br />
+	Direccion:<?php echo $cliente->getTesdatos()->departamento?>-<?php echo $cliente->getTesdatos()->provincia?>-<?php echo $cliente->getTesdatos()->distrito?>-<?php echo $cliente->getTesdatos()->direccion?>
+   
+	<?php /*endforeach;*/?>
+	
+    </div>
+	<?php
+	}
+	?>
+    <div class="mitad">
+      <h2>&nbsp;</h2>
+    </div>
+    <div style="clear:both;"></div>
+    <br />
+    <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" class="sobre_encabezado">
+      <tr>
+        <th width="20%">Atento:</th><th width="17%">forma de pago</th><th width="15%">Moneda</th>
+      <th width="20%">Monto Total</th>
+      <th width="28%">Fecha de Emision</th></tr>
+      <tr>
+        <td><?php /*foreach($clientes as $cliente): */?>
+	
+    <?php echo ($cliente->getTesdatos()->dato_id($cliente->getTesdatos()->id)->contacto);?>
+
+	<?php /*endforeach;*/?></td>
+      <td>-</td><td><?php echo $nombre_moneda?></td><td><?php echo $simbolo?></span><span class="due"><?php echo number_format($totalconigv,2,'.','')?></span></td><td><?php echo $fecha;?></td></tr>
+    </table>
+    <div style="clear:both;"></div>
+  </div>
+    <hr />
+	<div class="caja3">
+    <table width="100%" id="items2">
+      <tr>
+        <th width="4%">Item</th>
+        <th width="9%">Codigo</th>
+        <th width="39%">Descripcion</th>
+        <th width="8%">Costo Unit</th>
+        <th width="12%">Cantidad</th>
+        <th width="11%">Medida</th>
+        <th width="17%" align="right">Precio</th>
+      </tr>
+      <?php 
+			  $n=0;
+			  $subtotal=0;
+			  foreach($detalles as $item){
+				  $n++;
+				  $subtotal=$subtotal+$item->total;
+			  ?>
+      <tr id="<?php echo $n?>2" class="item-row">
+        <td><?php echo $n;?></td>
+        <td><?php echo $item->getTesproductos()->codigo?></td>
+        <td class="item-name"><?php echo $item->getTesproductos()->nombre?> <?php echo $item->descripcion?></td>
+        <td><span class="simbolo"><?php echo $simbolo?></span><?php echo number_format($item->precio,2,'.','')?></td>
+        <td><?php echo $item->cantidad;?></td>
+        <td><?php echo $item->getTesunidadesmedidas()->nombre?></td>
+        <td align="right"><span class="simbolo"><?php echo $simbolo?></span><span id='total-<?php echo $n?>2' class="price"><?php echo number_format($item->total,2,'.','')?></span></td>
+      </tr>
+      <?php
+			  }/*FIN FOREACH*/?>
+    </table>
+    <div class="total_letras"></div>
+    <div class="caja_de">
+    <table width="100%">
+		  <tbody>
+          <tr>
+		      <td width="50%"  class="total-line"><strong>Subtotal : </strong></td>
+		      <td width="50%" align="right" class="total-value"><?php echo $simbolo?><span id="subtotal2"><?php echo number_format($subtotal,2)?></span></td>
+		  </tr>
+		  <tr>
+		      <td  class="total-line"><strong>Descuento : </strong></td>
+
+		      <td align="right" class="total-value"><?php echo $simbolo?> <?php echo $paid?></td>
+		  </tr>
+		  <tr>
+		      <td  class="total-line"><strong>Total : </strong></td>
+		      <td align="right" class="total-value"><?php echo $simbolo?><span id="paid_total2"><?php echo number_format($subtotal-$paid,2,'.','')?></span></td>
+		  </tr>
+		  <tr>
+		      <td class="total-line"><strong>IGV : </strong></td>
+		      <td align="right" class="total-value"><span class="simbolo">S/. </span><span class="simbolo"><?php echo $simbolo?></span><?php echo number_format($igv,2,'.','')?></td>
+		  </tr>
+		  <tr>
+		      <td  class="total-line balance"><strong>Total a Pagar : </strong> </td>
+		      <td align="right" class="total-value balance"><span class="simbolo"><?php echo $simbolo?></span><span class="simbolo">S/. </span><span class="due"><?php echo number_format($totalconigv,2,'.','')?></span></td>
+		  </tr>
+		</tbody>
+        </table>
+      </div>
+      <div style="clear:both;"></div>
+      <div class="cajapie">
+      <table width="100%">
+          <tr>
+		      <th align="left">INDICACIONES ESPECIALES</th>
+	    </tr>
+		  <tr>
+	        <td> <?php echo $pre_descripcion;?></td>
+		  </tr></table>
+      </div>
+  </div>
+</div>

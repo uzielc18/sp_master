@@ -1,0 +1,10 @@
+<script type="text/javascript">
+$(document).ready(function()
+{
+	$("#tesdatosdirecciones_id").change(function(event){
+    	var id = $("#tesdatosdirecciones_id").find(':selected').text();
+		$( "#direccion" ).val(id);
+     });	
+});
+</script>
+<?php echo Form::dbSelect('tesdatosdirecciones_id','direccion',array('tesdatosdirecciones','find','conditions: tesdatos_id='.$id));//finiciotraslado?>

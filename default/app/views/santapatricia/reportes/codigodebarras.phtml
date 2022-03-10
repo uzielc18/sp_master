@@ -1,0 +1,103 @@
+<div class="card">
+<h1>Rollos para Venta <span>Listado de rollos en almacen de ventas</span></h1>
+</div>
+<?php View::content()?>
+<div class="form-actions">
+<?php echo Menu::menuReportes($action_name);?>
+</div>
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+<?php echo Sp::imprimir('Rollos en Venta - ','P',array('P'=>'1','W'=>1));?> 
+<h5>Seleccione la ubicacion del rollo para ver los codigos de barra</h5>
+<?php $estado=
+array(
+"Control de Calidad"=>" En Control de Calidad",
+"Sin procesos"=>"Almacen de telas crudas (Maquina)",
+"Control de Calidad Venta"=>"En Revision para Venta",
+"Re-Proceso"=>"Rollos para Reproceso",
+"VENTA"=>"Almacen Venta");
+?>
+<?php echo Form::select('estado',$estado,'seleccione...',$e)?>
+<div class="card-body" id="Exportar">
+<?php if ($rollos->items) : ?>
+
+<?php $n=0;foreach($rollos->items as $item){$n++;
+?>
+<div style=" display:inline-table;margin:2px !important; padding:1px; width:45% !important; float:left;" class="box-barras">
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+<tr>
+  <td align="center"><img src="/img/logoSP.png" width="20%"></td>
+</tr>
+<tr>
+  <th><?php echo $item->getTesproductos()->nombre?> 
+  <?php 
+  if(empty($item->codigo))
+  {
+	  if(empty($item->getTesproductos()->codigo_ant))$COD=$item->getTesproductos()->codigo; else $COD=$item->getTesproductos()->codigo_ant;
+   }else
+	{
+		$COD=$item->codigo;
+	}
+	echo $COD?><?php if(!empty($item->tescolores_id))echo "-".$item->getTescolores()->codigo?><?php if(!empty($item->calidad))echo "-".$item->calidad?><?php if(!empty($item->numeroventa))echo "-".$item->numeroventa;?>
+    </th>
+</tr>
+<tr>
+	<td>
+    <?php $codigobarra=$item->id;?>
+    <?Php if($item->estadorollo=='Control de Calidad'){
+		$codigobarra.='-'.$item->numero.'-'.$item->maquina_numero.'-'.Sp::formatFecha('%d%m%y',$item->fechacorte);
+		?>
+    <?php echo "<b>Numero de Rollo:</b> ";if(!empty($item->numero))echo number_format($item->numero,0,'.','');else echo " - ";?>
+    <?php echo "<b>Numero de Maquina:</b> ";if(!empty($item->maquina_numero))echo number_format($item->maquina_numero,0,'.','');else echo " - ";?>
+    <?php echo "<b>Fecha de corte:</b> ";if(!empty($item->fechacorte))echo $item->fechacorte;else echo " - ";?>
+    <?Php }?>
+	<?Php if($item->estadorollo=='Sin procesos' or $item->estadorollo=='Re-Proceso' or $item->estadorollo=='Control de Calidad Venta' or $item->estadorollo=='VENTA'){
+		$codigobarra.='-'.$item->numero.'-'.$item->metros.'-'.$item->peso.'-'.$item->ancho.'-'.$item->anchoutil;
+		?>
+	<?php echo "<b>Numero:</b> ";if(!empty($item->numero))echo number_format($item->numero,0,'.','');else echo " - ";?>
+	<?php echo "<b>Color:</b> ";if(!empty($item->color))echo $item->color;else echo " - ";?>
+	<?php echo "<b>Metros:</b> ";if(!empty($item->metros))echo number_format($item->metros,2,'.','');else echo " - ";?>
+	<?php echo "<b>Peso:</b> ";if(!empty($item->peso))echo number_format($item->peso,2,'.','');else echo " - ";?>
+	<?php echo " <b>Ancho:</b> ";if(!empty($item->ancho))echo number_format($item->ancho,2,'.','');else echo " - ";?>
+	<?php echo " <b>Ancho Util:</b> ";if(!empty($item->anchoutil))echo number_format($item->anchoutil,2,'.','');else echo " - ";?>
+	<?Php }?>
+    <?Php if($item->estadorollo=='Re-Proceso'){
+		echo " <b>Obserbacion:</b> ";if(!empty($item->obserbacion))echo $item->obserbacion;else echo " - ";
+	}?>
+    <?Php if($item->estadorollo=='VENTA'){
+		$codigobarra.='-'.$item->numeroventa;
+		echo " <b>Numero de Venta</b> ";if(!empty($item->numeroventa))echo $item->numeroventa;else echo " - ";
+	}?>
+  </td>
+</tr>
+<tr>
+  <td align="center">
+  <img src="/c_barra.php?text=<?php echo $codigobarra?>&size=70&codetype=Codabar" />
+  </td>
+</tr>
+</table>
+</div>
+<?Php if($n%12==0)echo '<div style="page-break-after: always;">&nbsp;</div>';?>
+<?php /*
+<img src="/c_barra.php?text=<?php echo $item->tesproductos_id?>.<?php echo $item->id?>.<?php echo $item->tescolores_id?>-<?php if(!empty($item->metros))echo number_format($item->metros,2,'.',' ');?>-<?php if(!empty($item->peso))echo number_format($item->peso,2,'.',' ')?>&size=70&codetype=Codabar" />
+*/
+}?>
+
+<?php //View::partial('paginators/extended', false, array('page' => $rollos ,'url' => Router::get('controller_path').'/codigodebarras/')); ?>
+<?php else : // Si no hay items?>
+<h2>No hay ningún registro</h2>
+<?php endif ?>
+<script type="text/javascript">
+$(document).ready(function()
+{
+	$("#estado").change(function(event){
+            var id = $("#estado").find(':selected').val();
+			location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/<?php echo $action_name?>/'+id;
+        });	
+	
+});
+</script>
+<div class="clear"></div>
+</div>

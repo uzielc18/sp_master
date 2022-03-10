@@ -1,0 +1,67 @@
+<style type="text/css">
+.span_float
+{
+	float:right !important;
+	margin-left:0px;
+	margin-right:-5px;
+}
+</style>
+
+<div class="card">
+    <h1><em>Letras Internas</em><span><?php echo $empresa->razonsocial?></span></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="form-actions">
+<?php echo Menu::menuLetras($action_name);?>
+</div>
+<div class="form-actions">
+<?php echo Html::linkAction('letra_adelanto','Letra por Adelanto','class="btn btn-info"')?>
+<?php echo Html::linkAction('internas','Sin registrar Internas','class="btn "');?>
+<?php echo Sp::imprimir('Letras semanal - ','P',array("W"=>1,"P"=>1,"EX"=>1));?> 
+</div>
+<div id="ver_resultado"></div>
+<div class="card-body">
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+<caption>Letras Internas!</caption>
+  <tr>
+  	<td width="36">Nº</td>
+    <td width="134">Proveedor</td>
+	<td width="117">Número Doc.</td>
+	<td width="93">F. Emision</td>
+    <td width="103">F. Vto.</td>
+    <td width="102">Monto</td>
+    <td width="67">Acciones</td>
+  </tr>
+<?php $number=0;
+foreach($letras as $item){ 
+$simbolo="S/. ";
+
+switch ($item->getTessalidasinternas()->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+
+$number++;?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20"><?php echo $number?> <?php echo $item->tesmonedas_id?></td>
+  	<td height="20"><?php echo $item->getTessalidasinternas()->getTesdatos()->razonsocial?></td>
+	<td height="20"><?php echo $item->getTessalidasinternas()->numero?></td>
+	<td height="20"><?php echo Sp::formatFecha('%d / %m / %Y',$item->getTessalidasinternas()->femision)?><?php //echo $item->getTesingresos()->femision?></td>
+    <td><?php echo Sp::formatFecha('%d / %m / %Y',$item->getTessalidasinternas()->fvencimiento)?><?php //echo $item->getTesingresos()->fvencimiento?></td>
+    <td>
+    <?php echo $simbolo?>  <?php echo number_format($item->getTessalidasinternas()->total,2,'.',' ')?>
+	    </td>
+    <td>
+    <?php echo Html::linkAction('pagarinterna/'.$item->id.'/'.$action_name,Html::img("figuras/pagar.png",'PAGAR','style="width: 30px;margin-left:1px;margin-right:1px;"'),'title="Clic !, si el Cliente Canceló la LETRA !"','')?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+
+</div>

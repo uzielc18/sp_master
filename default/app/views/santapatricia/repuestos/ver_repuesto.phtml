@@ -1,0 +1,49 @@
+<?php View::content();?>
+<table width="75%" class="table-striped" border="0" align="center" cellpadding="0" cellspacing="0">
+<caption>Precios de los productos por fechas</caption>
+<?php 
+$a=-1;
+$n=0;
+foreach($precios as $item){
+$n++;$monedas= $item->tesmonedas_id;
+switch ($monedas)
+{
+	case 1: $simbolo='S/. ';
+	; break;
+	case 2: $simbolo='$. ';
+	  break;
+	case 4: $simbolo='S/. ';
+	; break;
+	case 5: $simbolo='$. ';
+	  break;
+	case 0: $simbolo='S/. ';
+	; break;
+}	
+$b=$item->id;
+if($a!=$b){?>
+<thead>
+ <tr class="encabezado">
+    <th colspan="5" align="left"><p>Proveedor : <?php echo $item->razonsocial?></p>
+      <p>Producto :      <?php echo $item->nombre?></p> </th>
+    </tr>
+ <tr>
+    <th width="11%">&nbsp;</th>
+    <th width="29%" align="left">Producto</th>
+    <th width="18%" align="left">Precio</th>
+    <th width="17%" align="left">Fecha</th>
+    <th width="25%" align="left">Color</th>
+  </tr>
+</thead>
+<tbody>
+<?Php }?>
+  <tr>
+    <td><?php //echo $item->id?></td>
+    <td><?php echo $item->nombre?></td>
+    <td align="left"><?php echo $simbolo; echo number_format($item->precio,2,'.','')?></td>
+    <td align="left"><?php echo Sp::formatFecha('%d / %m / %Y',$item->fecha)?></td>
+    <td align="left"><?php echo $item->color?></td>
+  </tr>
+  <?php $a=$item->id;}?>
+</tbody>
+</table>
+<?php if($n==0){echo "<div class='well'>NO HAY COMPRAS</div>";}?>

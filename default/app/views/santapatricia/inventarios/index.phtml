@@ -1,0 +1,21 @@
+<style type="text/css">
+.span_float
+{
+	float:right !important;
+	margin-left:0px;
+	margin-right:-5px;
+}
+</style>
+<div class="card">
+    <h1>Inventarios<span> Inventarios de Almacen</span></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div id="ver_resultado"></div>
+<div class="form-actions">
+<?php foreach($almacenes as $almacen)
+{?><?php echo html::linkAction('cargarlistado/'.$almacen->id,$almacen->nombre,'class="btn btn-secondary"')?><?php }?>
+
+
+</div>

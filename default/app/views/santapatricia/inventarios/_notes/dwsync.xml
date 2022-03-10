@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="buscarcliente.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="crear.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="duplicar.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="editar.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="editar_repuesto.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="grabarcliente.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="index.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="inventario_movimientos.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="inventario_producto.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="inventario_producto_color.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="inventario_producto_color_lote.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="inventario_producto_color_lote_uno.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="inventario_producto_color_uno.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="inventario_producto_resumen.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="inventario_producto_resumen_mes.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="inventario_producto_uno.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="inventario_tipo_ingreso.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="kardex.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="listado.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="modificar.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="modificar_grabar.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="producto.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="reporte_cajas.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="respuesta.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="verinventario.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+<file name="vermovimientos.phtml" server="192.168.1.109" local="130341237000000000" remote="130341237000000000" />
+</dwsync>

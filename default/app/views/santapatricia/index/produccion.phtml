@@ -1,0 +1,16 @@
+<?php echo Ajax::linkAction('produccion','Actualizar','produccion')?>
+<table style="font-size:9px;" width="100%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-condensed">
+                      <tr>
+                        <th width="4%">Maquina</th>
+                        <th width="74%">Producto</th>
+                        <th width="22%">Metros</th>
+                      </tr>
+                      <?Php foreach($producciones as $prod){?>
+                      <tr>
+                        <td><?php echo $prod->maquina?></td>
+                        <td><?php echo $prod->tela?></td>
+                        <td><?php echo $prod->metros?></td>
+                      </tr>
+                      <?Php }?>
+                    </table>
+<p><a href="#" class="btn btn-primary">Ingresar</a></p>

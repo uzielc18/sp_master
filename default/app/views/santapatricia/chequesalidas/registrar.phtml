@@ -1,0 +1,68 @@
+<div class="card">
+    <h1><em>Cheques Emitidos<span><?php //echo Auth::get('nombres')?></span></em></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+
+<div class="form-actions">
+<?php echo Menu::menuCheques_emitidos();?>
+</div>
+<div class="card-body">
+<div id="ver_resultado"></div>
+<?php echo Form::open(NULL,'POST','class="form-horizontal"'); ?>
+
+      <?php echo Form::hidden('salidas.id'); ?>
+      <?php echo Form::hidden('salidas.tesdatos_id'); ?>
+      <?php echo Form::hidden('salidas.aclusuarios_id'); ?>
+      <?php echo Form::hidden('salidas.tesmonedas_id'); ?>
+      <?php echo Form::hidden('salidas.tesdocumentos_id'); ?>
+      <?php echo Form::hidden('cheques.id'); ?>
+      <?php echo Form::hidden('cheques.tessalidas_id'); ?>
+<legend>Registrar Fecha Asignada, para Cobrar!
+  </legend><div class="control-group">
+    <label class="control-label"> <strong>Cliente</strong></label>
+    <div class="controls">
+      <h7><?php //echo $salidas->getTesdatos()->razonsocial; ?><?php if($salidas->tesdatos_id!=0){echo $salidas->getTesdatos()->razonsocial;}else{echo "Interno"; /*$item->tesdatos_id;*/}?></h7>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label"><strong>Número</strong></label>
+    <strong> de Cheque</strong>
+    <div class="controls">
+    	<?php echo Form::text('salidas.numero'); ?>
+    	</div>
+  </div>
+  <div class="control-group">
+    <label class="control-label"><strong>Banco</strong></label>
+    <div class="controls">
+    	<?php echo $salidas->getTescuentascorrientes()->getTesbancos()->nombre?>
+      <?php echo Form::hidden('cheques.tesbancos_id','',$salidas->getTescuentascorrientes()->getTesbancos()->id); ?>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label"><strong>F. Emisión</strong></label>
+    <div class="controls">
+      <?php echo Calendar::text('salidas.femision'); ?>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label"><strong>F. Cobranza</strong></label>
+    <div class="controls">
+      <?php echo Calendar::text('salidas.fvencimiento'); ?>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label"><strong>Monto</strong></label>
+    <div class="controls">
+      <?php echo Form::text('salidas.totalconigv','class="qty" size="6"'); ?>
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+      <button type="submit" class="btn">Registrar</button>
+    </div>
+  </div>
+</form>
+
+</div>

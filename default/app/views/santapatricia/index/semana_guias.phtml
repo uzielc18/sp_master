@@ -1,0 +1,35 @@
+
+          <h3>Guias semanal <?Php echo date('M-Y');?></h3>
+          <ul class="nav nav-tabs">
+                <?php
+          $fecha2 = date('Y-m-d');
+          $fecha1 = strtotime ( '-5 day' , strtotime ( $fecha2 ) ) ;
+          $fecha1 = date ( 'Y-m-d' , $fecha1 );
+          for($i=$fecha1;$i<=$fecha2;$i = date("Y-m-d", strtotime($i ."+ 1 days")))
+          {?>
+             <li <?Php if($i==$fecha)echo 'class="active"'; ?>>
+             <?Php $dia=explode('-',$i); ?>
+               <?php echo Ajax::linkAction('semana_guias/'.$i,$dia[2],'guias_semanal')?></a>
+             </li>
+          <?php }	?>
+                
+              </ul>
+          <i class="PAGADO">Pagado</i> <i class="PENDIENTE">Pendiente</i> <i class="EDITABLE">Creando</i>
+          <table style="font-size:9px;" width="100%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-condensed">
+            <tr>
+              <th width="74%">Empresa</th>
+              <th width="21%">Doc</th>
+              <th width="3%">Fecha</th>
+              <th width="2%">Total</th>
+            </tr>
+            <?Php foreach($ventas as $venta){
+              ?>
+            <tr class="<?php echo strtoupper($venta->estado)?>">
+              <td><?php echo $venta->empresa?></td>
+              <td><?php echo intval($venta->numero)?></td>
+              <td><?php echo Sp::formatFecha("%d/%m/%y",$venta->fecha)?></td>
+              <td align="right"><?php if(!empty($venta->total))echo number_format($venta->total,2,'.','')?></td>
+            </tr>
+            <?Php }?>
+          </table>
+          <p><?php echo Html::link('santapatricia/ventas','Ver mas','class="btn btn-primary"')?></p>

@@ -1,0 +1,252 @@
+<?php
+$simbolo="S/. ";
+if(empty($igv))$igv=0;
+switch ($monedas)
+{
+	case 1: $simbolo='S/. ';$moneda_letras='SOLES'; break;
+	case 2: $simbolo='$. ';$moneda_letras='DOLARES';  break;
+	case 4: $simbolo='S/. ';$moneda_letras='SOLES';  break;
+	case 5: $simbolo='$. ';$moneda_letras='DOLARES';  break;
+	case 0: $simbolo='S/. ';$moneda_letras='SOLES';  break;
+}
+
+
+View::content();
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+
+<style type="text/css">
+/*.container {
+  width: 1124px;
+}*/
+/*.flotante{position:relative; width:350px; margin:0 auto; z-index:99999;} */
+.simbolo
+{
+	position:absolute;
+	float:left;
+	margin-left:-15px !important;
+}
+.table th
+{
+	font-size:12px;
+	text-align:center;
+}
+#items .item-row td{
+	font-size:10px !important;
+	padding-left:15px !important;
+	}
+#items .item-row input[type="text"]{
+	font-size:10px !important;
+	padding:0;
+	}
+#paid
+{
+	width:80% !important;
+}
+#glosa
+{
+	width:99% !important;
+}
+.page ul {
+margin:0 !important;
+}
+</style>
+<div class="card">
+<h1>Detalle de Guia! Envio de Plegador<?php //echo "id--->".Session::get('INVENTARIO_ID')?></h1>
+</div>
+<div class="card-body">
+  <table width="50%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+     <tr>
+     
+     	<th align="left" valign="top">Proveedor:</th>
+        <td align="left" valign="top"> <?php echo $nombre?>
+    </td>
+      </tr>
+     <tr>
+        <th align="left" valign="top">F. Ingreso:</th>
+        <td align="left" valign="top"><?php echo Sp::formatFecha('%d / %m / %Y',$femision)?><?php //echo $femision;?></td>
+      </tr>
+     <tr>
+        
+        <th align="left"><span class="meta-head">Factura Referencia(Guias):</span></th>
+        <td align="left"><?php echo $serie?>
+        
+   	-<?php echo $numero?></tr>
+      <tr>
+        <th width="226" align="left" class="meta-head">Orden Compra:</th>
+        <td width="227" align="left"><?php echo $ordendecompra ?></td>
+     
+      </tr>
+      <tr>
+        <th width="226" align="left" class="meta-head">Titulo:</th>
+        <td width="227" align="left"><?php echo $titulo_hilo ?></td>
+
+      </tr>
+      <tr>
+        <th align="left" class="meta-head">Color:</th>
+        <td align="left"><?php echo $color ?></td>
+
+      </tr>
+      <tr>
+        <th width="226" align="left" class="meta-head">Ancho:</th>
+        <td width="227" align="left"><?php echo $ancho?></td>
+
+      </tr>
+      <tr>
+        <th align="left" class="meta-head">Numero de Hilos:</th>
+        <td align="left"><?php echo $nhilos;?></td>
+      </tr>
+      <tr>
+        <th width="226" align="left" class="meta-head">Metros:</th>
+        <td width="227" align="left"><?php echo $metros ?></td>
+
+      </tr>
+      <tr>
+        <th align="left" class="meta-head">Total Kilos:</th>
+        <td align="left"><?php echo $totalkilos ?></td>
+      </tr>
+    </table>
+    <br />
+    <table width="75%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+		  <tr align="left">
+		      <th width="9%" align="left">Codigo</th>
+		      <th width="18%" align="left">Producto</th>
+		      <th width="26%" align="left">Medida</th>
+		      <?php if($hilo){?><th width="20%" align="left">Nº Caja/Bolsa</th>
+		      <th width="12%" align="left">Bobinas</th><?php }?>
+              <th width="8%" align="left">P/N</th>
+		      <th width="7%" align="left">P/B</th>
+		  </tr>
+          <?php
+			if($DETALLE)
+			{
+				$n=0;
+				$subtotal=0;
+				foreach($detalles as $item){
+						  $n++;
+						  $subtotal=$subtotal+$item->importe;
+					  ?>
+				  <tr id="<?php echo $n?>" align="left">
+				   <td>
+						  <?php echo $item->getTesproductos()->codigo?>
+					</td>
+					  <td class="item-name">
+						  <?php echo $item->getTesproductos()->nombre.' '.$item->getTesproductos()->getProplegadores()->numero?></span>
+					  </td>
+					  <td><?php echo $item->getTesunidadesmedidas()->nombre?></td>
+					  <?php /*?><td><?php echo Form::hidden('tescolores_id-'.$n,'readonly="readonly"',$item->tescolores_id)?> <?php echo Form::text('tescolores'.$n,'class="color" size="10"',$item->getTescolores()->nombre)?></td><?php */?>
+					  <?php if($hilo){?><td> <?php echo Form::text('empaque'.$n,'class="save cajas" data-id="'.$item->id.'" size="10"',$item->empaque)?><div class="flotante" id="cajas-<?php echo $n?>"></div></td>
+					  <td> <?php echo $item->bobinas?></td><?php }?>
+					  <td> <?php echo $item->pesoneto?></td>
+					  <td> <?php echo $item->pesobruto?></td>
+				  </tr>
+				  
+				  <?php
+					  }/*FIN FOREACH*/
+			 }  
+			?>
+  </table>
+  
+  <table class="table-bordered">
+      <tr>
+     	<th colspan="5"><div style="text-align:left;"id="moneda_en_letras"><?php echo $totalenletras?></div></th>
+       </tr>
+  </table>
+  <div id="det_mov">
+  &raquo; Detalle del hilo a ingresar:
+  <?php echo Ajax::form("det_mov",$module_name."/".$controller_name.'/ingresar_mov/'.$movimiento->id)?>
+  <?php echo Form::hidden('detallemov.promovimientos_id','',$movimiento->id);?>
+  <table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered">
+  <tr>
+    <td width="37%"><h4>Hilo<?php echo Form::text('detallemov.tesproductos_id');?></th>
+    	</h4>
+    <td width="15%"><h4>Color<?php echo Form::text('detallemov.tescolores_id');?></th>
+    	</h4>
+    <td width="18%"><h4>Medida<?php echo Form::text('detallemov.tesunidadesmedidas_id');?></th>
+    	</h4>
+    <td width="10%"><h4>Lote <?php echo Form::text('detallemov.lote',"size='6'");?></th>
+    	</h4>
+    <td width="16%"><h4>Cantidad<?php echo Form::text('detallemov.cantidad','class="qty" size=5');?>
+    	</h4></td>
+	<td width="4%"><h4><?php echo Form::submit("INGRESAR",'class="btn"')?>
+		</th>
+	</h4>
+	</tr>
+  </table>
+  <?php echo Form::close()?>
+  <table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered">
+  <thead>
+  <tr>
+    <th width="40%" align="left">Hilo</th>
+    <th width="14%" align="left">Color</th>
+    <th width="16%" align="left">Medida</th>
+    <th width="14%" align="left">Lote</th>
+    <th width="16%" align="left">Cantidad</th>
+  </tr>
+  </thead>
+  <tbody>
+  <?php foreach($detalles_mov as $detalle){?>
+  <tr>
+    <td><?php echo $detalle->getTesproductos()->nombrecorto?></td>
+    <td><?php echo $detalle->getTescolores()->nombre?></td>
+    <td><?php echo $detalle->getTesunidadesmedidas()->nombre?></td>
+    <td><?php echo $detalle->lote?></td>
+    <td><?php echo $detalle->cantidad?></td>
+  </tr>
+  <?php }?>
+  </tbody>
+</table>
+
+  
+  
+  <div class="form-actions">
+    <?php //echo Html::linkAction("terminar/".Session::get('INGRESO_ID').'/ingresos','TERMINAR','class="btn btn-primary grabar_form"') ?> <?php echo Html::linkAction("ingresos/",'CANCELAR','class="btn btn-secondary"') ?> 
+</div><div id="loading" style="display:none;"><img src="/img/spin.gif" /></div>
+     <div style="clear:both"></div>
+</div>
+</page>
+<script type="text/javascript">	
+
+/*INICIO */
+$(document).ready(function()
+{	
+	$("#detallemov_tesunidadesmedidas_id").tokenInput("/santapatricia/ingresos/medidas/", 
+		{			
+		tokenLimit: 1,
+		minChars: 1,
+		onAdd: function (item) {
+		   var VAL=item.id;
+		   $("#detallemov_tesunidadesmedidas_id").val(item.id);
+		},
+		onDelete: function (item) {
+		  $("#detallemov_tesunidadesmedidas_id").val('');
+		}
+	});
+	$("#detallemov_tesproductos_id").tokenInput("/santapatricia/<?php echo $controller_name;?>/buscarhilo/", 
+		{			
+		tokenLimit: 1,
+		minChars: 1,
+		onAdd: function (item) {
+		   var VAL=item.id;
+		   $("#detallemov_tesproductos_id").val(item.id);
+		},
+		onDelete: function (item) {
+		  $("#detallemov_tesproductos_id").val('');
+		}
+	});
+	$("#detallemov_tescolores_id").tokenInput("/santapatricia/ingresos/colores/", 
+		{			
+		tokenLimit: 1,
+		minChars: 1,
+		onAdd: function (item) {
+		   var VAL=item.id;
+		   alert(VAL);
+		   $("#detallemov_tescolores_id").val(item.id);
+		},
+		onDelete: function (item) {
+		  $("#detallemov_tescolores_id").val('');
+		}
+	});
+	
+});
+</script> 

@@ -1,0 +1,209 @@
+<?php
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<style type="text/css">
+/*.no_ver{display: none;}*/
+h3>span
+{font-size: 10px;
+color: #666666;
+font-style: italic;
+display: block;
+margin-top: -20px
+}
+</style>
+<div class="card">
+    <h1>HILO<span>COMPRAS DEL AÑO - HILO EN KILOS</span></h1>
+</div>
+<div class="form-actions">
+<?php echo Menu::menuReportes($action_name);?>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div style="clear:both"></div>
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus="" placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+<?php echo Sp::imprimir('stock hilos - ','P');?>
+
+<div class="form-actions">
+<b>Tipo de hilos</b><small>Solo se muestran las cantidades mayores a 0 *<a id="v" href="javascript:;">clik aqui para ver todos</a></small><br />
+<?php foreach($tipos as $tipo)
+{
+	$activo='';
+	if($tipo->id==$id)$activo=' btn-success';
+	echo Html::linkAction($action_name.'/'.$tipo->id.'/'.$personal_id.'/'.$anio,$tipo->nombre,'class="btn btn-mini'.$activo.'"').' ';
+}
+echo Html::linkAction($action_name.'/0/'.$personal_id.'/'.$anio,'Todos','class="btn btn-mini"').' ';
+//echo Html::linkAction($action_name.'/0','Todos los Hilos','class="btn btn-mini'.$activo.'"').' ';?>
+</div>
+<div style="display:inline-block !important; width:90%;">
+<div class="span3">
+<div class="menu">
+<ul>
+<li>
+<a href="javascript:;">Año 
+<select id="anio">
+<?php
+for($i=2011;$i<=2020;$i++)
+{
+	$selec='';
+	if($anio==$i){
+	$selec=' selected="selected"';
+	}
+	echo '<option value="'.$i.'" '.$selec.'>'.$i.'</option>';
+}
+?>
+</select>
+</a>
+</li>
+</ul> 
+<?php $mes_actual=date('Y-m');?><?php 
+        $td=1;
+		foreach($meses as $clave => $mes):
+        if($anio.'-'.$clave<=$mes_actual){
+        $class='';
+		$td++;
+		${'total'.$clave}=0;
+		$u_mes=$clave;
+		}
+        endforeach;?>
+</div>
+</div>
+<div class="span8 menu">
+<div class="span2"><b>Proveedor:</b></div>
+<div class="span8"><?Php echo Form::text('proveedor','class="span"')?></div>
+</div>
+</div>
+<?Php 
+function getUltimoDiaMes($anio,$u_mes) {
+  return date("d",(mktime(0,0,0,$anio+1,1,$u_mes)-1));
+}
+$dia=getUltimoDiaMes($anio,$u_mes);
+?>
+<br />
+<div class="card-body">
+<?php if(!empty($hilos)){?>
+  <table id="exportar_excel" width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+    <caption>COMPRA DE HILO EN KILOS<span><?php if($personal_id!=0){ echo $proveedor->razonsocial;}?></span></caption>
+    <?php 
+	$a=0;
+	$n=0;
+	$total=0;
+	$saldo=0;
+	foreach($hilos as $hilo):
+	$n++;
+	${'saldo'.$n}=0;
+	$b=$hilo->tid;
+	$class='ver';
+	if($a!=$b){?>
+    <?php if($n==1){?><thead><?php }?>
+    <tr>
+    <th colspan="<?Php echo $td+3;?>" align="left"> &nbsp;<?php echo $hilo->tipo?></th>
+    </tr>
+    <tr>
+      <th width="4%" scope="col">Nº</th>
+      <th width="32%" align="left" scope="col">NOMBRE</th>
+      <th width="51%" align="left" scope="col">COLOR</th>
+	  <?php 
+        foreach($meses as $clave => $mes):
+        if($anio.'-'.$clave<=$mes_actual){
+        ${'total'.$clave}=0;
+        ?>
+        <th width="7%"><?php echo $mes?></th>
+        <?php }
+        endforeach;?>
+        <th width="6%">TOTAL</th>
+        <th align="right">STOCK</th>
+    </tr>
+    <?php if($n==1){?></thead><?php }?>
+    <tbody>
+    <?Php $a=$hilo->tid;
+	}
+	?>
+    <tr class="<?php echo $class;?>">
+      <td><?php echo $n?></td>
+      <td><?php echo $hilo->nombre?> <?php //if(Auth::get('id')==3){echo $hilo->pid.' --- '.$hilo->cid;}?></td>
+      <td><?php echo $hilo->color?></td>
+	  <?php 
+	    $metadatos=$IN->getHilosAnual($id,$personal_id,$anio,$hilo->pid,$hilo->cid);
+        foreach($meses as $clave => $mes):
+        if($anio.'-'.$clave<=$mes_actual)
+		{
+			$td_s=0;
+			foreach($metadatos as $meta):
+        	if((int)$meta->mes==(int)$clave)
+			{
+				$td_s++;?>
+        	<td align="right">
+			<?php ${'total'.$clave}=${'total'.$clave}+number_format($meta->cantidad,2,'.','');?>
+			<?php ${'saldo'.$n}=${'saldo'.$n}+number_format($meta->cantidad,2,'.','');?>
+        	<?php 
+			echo number_format($meta->cantidad,2,'.','');
+			?>
+        	</td>
+        <?php 
+			}
+			endforeach;
+			
+			if($td_s==0)echo "<td align='right'> 0.00</td>";
+		}
+        endforeach;
+	  ?>
+      
+      <th align="right"><?php echo number_format(${'saldo'.$n},2,'.','')?></th>
+      <th align="right"><?Php //echo $hilo->pid.'##'.$hilo->cid.'## 0 ## '.$anio.'-'.$u_mes.'-'.$dia;
+	  echo number_format($DIN->getStockColor($hilo->pid,$hilo->cid),2,'.','');?></th>
+    </tr>
+    <?php endforeach;?>
+    <tfoot>
+    <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+	<?php 
+        foreach($meses as $clave => $mes):
+        if($anio.'-'.$clave<=$mes_actual){
+        $class='';
+        ?>
+        <th><?php 
+		$total=$total+${'total'.$clave};
+		echo ${'total'.$clave}?></th>
+        <?php }
+        endforeach;?>
+    <th align="right"><?php echo number_format($total,2,'.','')?></th>
+    <th></th>
+    </tr>
+    </tfoot>
+    </tbody>
+  </table>
+  <?php }?>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	/*Busqueda del Proveedores*/
+ $("#proveedor").tokenInput("<?php echo "/".$module_name."/proveedores/proveedor"?>", 
+		{
+		tokenLimit: 1,
+		minChars: 2,
+		onAdd: function (item) {
+			location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/<?Php echo $action_name?>/<?php echo $id?>/'+item.id+'/<?php echo $anio?>';
+		},
+		onDelete: function (item) {
+		}
+	}); 
+	$('#txtBuscar').on('search',function(){
+		//le decimos a la funcion que busque en la tabla tblTabla el
+		//valor que contiene el campo actual
+		$.fntBuscarEnTabla($(this).val(),'exportar_excel');
+	});
+	$("#v").click(function() {
+		$( "tr.no_ver" ).toggle();
+	});
+	$("#anio").change(function(event){
+    	var id = $("#anio").find(':selected').val();
+		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/<?Php echo $action_name?>/<?php echo $id?>/<?Php echo $personal_id?>/'+id;
+     });
+});
+</script>

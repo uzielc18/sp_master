@@ -1,0 +1,54 @@
+
+<?php
+$simbolo="S/. ";
+
+switch ($inventario->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+?>
+<table width="100%" id="items"  class="table table-striped">
+    <thead>
+		  <tr>
+		      <th width="7%" align="left"><h3>Codigo</h3></th>
+		      <th width="19%" align="left"><h3>Producto</h3></th>
+		      <th width="10%" align="left"><h3>Inicial</h3></th>
+		      <th width="10%" align="left"><h3>Ingresos</h3></th>
+              <th width="9%" align="left"><h3>Salidas</h3></th>
+		      <th width="8%" align="left"><h3>Stock</h3></th>
+		      <th width="8%" align="left"><h3>Medida</h3></th>
+	      </tr>
+	</thead>
+    	  <?php
+		  $array_producto='';
+		  $id_productoA=0;
+		  
+			  $n=0;
+			  //$igv=0;
+			  foreach($detalles as $item){
+				   $i_coma=',';
+				  if($n==0){$i_coma='';}
+				  if($id_productoA!=$item->tesproductos_id)$array_producto.=$i_coma.'{id: '.$item->tesproductos_id.', name: "'.$item->getTesproductos()->detalle.'"}';
+				  $id_productoA=$item->tesproductos_id;
+				  $n++;
+				  $STOCK=(float)$item->getTesproductos()->getStock($item->tesproductos_id);
+			  ?>
+		  <tr id="<?php echo $n?>" align="left">
+           <td> <?php echo $item->getTesproductos()->codigo?></td>
+		   <td class="item-name"><?php echo $item->getTesproductos()->nombre?> <?php echo $item->getTesproductos()->detalle?></td>
+           <td><?php echo number_format($item->getTesproductos()->getStockInicial($item->tesproductos_id,Session::get("INVENTARIO_ID")),2,'.','')?></td>
+           <td><?php echo number_format($item->getTesproductos()->getTotalingresos($item->tesproductos_id)-$item->getTesproductos()->getStockInicial($item->tesproductos_id,Session::get("INVENTARIO_ID")),2,'.','')?></td>
+           <td><?php echo number_format($item->getTesproductos()->getTotalsalidas($item->tesproductos_id),2,'.','')?></td>
+		   <td>
+		   <?php 
+		   echo number_format($STOCK,'2','.',' ');?>
+           </td>
+		   <td><?php echo $item->getTesunidadesmedidas()->nombre?></td>
+	      </tr>
+		  <?php } ?>
+		  </table>
+<hr />

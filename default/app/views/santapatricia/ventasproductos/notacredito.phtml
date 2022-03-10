@@ -1,0 +1,112 @@
+<?php 
+$monedas= $salida->tesmonedas_id;
+switch ($monedas)
+{
+	case 1: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES'; break;
+	case 2: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 4: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
+	case 5: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 0: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
+}
+?>
+<span class="print btn btn-primary"> <span class="card-body">
+<style type="text/css">
+body,td,th {
+	font-family: "Times New Roman", Times, serif;
+	font-size: 12px;
+	color: #000;
+}
+body {
+	background-color: #FFF;
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+}
+</style>
+</span>Print </span> <?php echo Html::linkAction('nota_creditos','Regresar <i class="icon-hand-left"></i>','class="btn"')?>
+<div class="card-body"><br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<table width="110%" border="0" cellspacing="0" align="left">
+  <tr>
+   <td width="107" align="center"><?php if(!empty($salida->getTesdatos()->codigo_ant)) echo $salida->getTesdatos()->codigo_ant; else echo $salida->getTesdatos()->codigo.'-'.$salida->getTesdatos()->sufijo?></td>
+    <td width="370" align="lefth"><?php echo $salida->getTesdatos()->razonsocial?></td>
+    <td width="108" align="lefth"><?php echo $salida->getTesdatos()->ruc?></td>
+    <td width="89" align="lefth"><?php echo Sp::formatFecha('%d/%m/%Y',$salida->femision)?></td>
+  </tr>
+</table>
+<br />
+<br />
+<table width="110%" border="0" cellspacing="1">
+  <tr>
+    <td width="13%" height="44" align="center"><p>&nbsp;</p></td>
+    <td width="87%" align="left" valign="bottom"><?php echo $salida->direccion_entrega?></td>
+    </tr>
+</table>
+<br />
+<br />
+<table width="705" border="0" cellspacing="1">
+	<tr>
+		<td width="90">&nbsp;</td>
+		<td width="608"><?php echo $salida->glosa?></td>
+	</tr>
+</table>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<table width="113%" border="0" cellspacing="1">
+   <?php 
+  $n=0;
+  $total=0;
+  foreach($detalles as $item){
+	$n++;
+	  ?>
+  <tr>
+    <td width="36" align="center">&nbsp;</td>
+    <td width="549"  height="260" align="left" valign="top"><?php echo $n.' '; echo nl2br($item->concepto)?></td>
+    <td width="106" align="center">&nbsp;</td>
+    </tr>
+    <tr>
+    <td width="36" align="center">&nbsp;</td>
+    <td width="549" align="left"><?php echo nl2br($salida->totalenletras)?> </td>
+    <td width="106" align="center">&nbsp;</td>
+    </tr>
+    <tr>
+    <td width="36" align="center">&nbsp;</td>
+    <td width="549" align="right">SUB TOTAL</td>
+    <td width="106" align="left"><?php echo $simbolo?><?php 
+	$total=$total+$item->importe;
+	echo number_format($item->importe,2,'.','');?></td>
+    </tr>
+  <?php }?>
+</table>
+<br />
+<table width="113%" border="0" cellspacing="1">
+  <tr>
+    <td width="8%" height="48">&nbsp;</td>
+    <td width="8%">&nbsp;</td>
+    <td width="8%">&nbsp;</td>
+    <td width="49%">&nbsp;</td>
+    <td width="12%">IGV.(% <?php echo Session::get('IGV')*100;?>.00)</td>
+    <td width="15%"><?php echo $simbolo?><?php $igv=$total*(Session::get('IGV'));echo number_format($igv,2,'.','')?></td>
+    </tr>
+  <tr>
+  	<td height="26">&nbsp;</td>
+  	<td>&nbsp;</td>
+  	<td>&nbsp;</td>
+  	<td>&nbsp;</td>
+  	<td>&nbsp;</td>
+  	<td><?php echo $simbolo?><?php $TOTAL=$total+$igv;echo number_format($TOTAL,2,'.','');?></td>
+  	</tr>
+</table>
+</div>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+ <html lang="es">
+	<head>
+    	<meta charset='UTF-8' />
+        <title>Santa Patricia</title>
+        <link href="/css/backend/bootstrap.css" rel="stylesheet" type="text/css" media="screen" />
+		<link href="/css/backend/estilos.css" rel="stylesheet" type="text/css" media="screen" />
+   		<script type="text/javascript"></script>
+        <link rel='stylesheet' type='text/css' href='/B1D671CF-E532-4481-99AA-19F420D90332/netdefender/hui/ndhui.css' />
+        <link rel="alternate" media="print" href="/F<?php echo $salida->serie.'-'.$salida->numero?>.rtf">
+        </head>
+    <body>
+    <div id='cabecera' class="navbar navbar-fixed-top">
+ 	<div class="navbar-inner">
+        <div class="container">
+            <a href="/" class="brand" >Bienvenidos a la Intranet</a>
+        </div>
+    </div>
+    </div>  
+	<div class="container">
+            <div id="contenido" class="content">
+            <div class="span12">
+               <?php 
+			   View::content();
+$monedas= $salida->tesmonedas_id;
+switch ($monedas)
+{
+	case 1: $simbolo='S/ ';$moneda_letras='SOLES'; break;
+	case 2: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 4: $simbolo='S/ ';$moneda_letras='SOLES';  break;
+	case 5: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 0: $simbolo='S/ ';$moneda_letras='SOLES';  break;
+}
+if(Session::get('EMPRESAS_ID')==2)
+{
+	$pre_fijo="SC-";
+}else
+{
+	$pre_fijo="SP-";
+}
+
+?>
+<div class="page-header">
+<h1>Datos <?Php echo Session::get('SALIDA_ID');?><span>Datos importantes del documento</span></h1>
+</div>
+<?Php $MOV=explode("-",$salida->npedido);
+$MOV[0];
+?>
+<b>Codigo</b> : <?Php if(!empty($salida->getTesdatos()->codigo_ant)) $codigo=$salida->getTesdatos()->codigo_ant; else $codigo= $salida->getTesdatos()->codigo.'-'.$salida->getTesdatos()->sufijo;
+echo $codigo;?><br />
+<b>Numero de Factura</b> : <?php echo $salida->serie.'-'.$salida->numero?> <br />
+<b>Razonsocial</b> : <?php echo utf8_decode($razonsocial=$salida->getTesdatos()->razonsocial); ?><br />
+<b>Numeroguia</b> : <?php echo $numeroguia=$salida->numeroguia?><br />
+<b>Fecha</b> : <?php echo $fecha=Sp::formatFecha('%d/%m/%Y',$salida->femision)?><br />
+<b>Ruc</b> : <?php echo $ruc=$salida->getTesdatos()->ruc?><br />
+<b>Direccion</b> : <?php echo $direccion=utf8_decode($salida->getTesdatosdirecciones()->direccion.' - '.$salida->getTesdatosdirecciones()->distrito.' - '.$salida->getTesdatosdirecciones()->provincia.' - '.$salida->getTesdatosdirecciones()->departamento); /*if(!empty($salida->direccion_entrega)){echo $direccion=utf8_decode($salida->direccion_entrega);}else{echo $direccion=utf8_decode($empresa->direccion.' - '.$empresa->distrito.' - '.$empresa->provincia.' - '.$empresa->departamento);}*/?><?php //echo $empresa->direccion?><br />
+<b>Condicion de Pago</b> : <?php if(!empty($salida->tescondicionespagos_id))echo $tipopago=$salida->getTescondicionespagos()->nombre;else echo $tipopago='CONTADO';?><br />
+<?php 
+$c_1='';
+$c_2='';
+$c_3='';
+$c_4='';
+$c_5='';
+$c_6='';
+$c_7='';
+/* \n salto de linea */
+?>
+<?php $n_total_r=10;?>
+<?php  $n=0;$total=0;
+foreach($detalles as $item){
+  		$total=$total+$item->totalimporte;
+	  $n++;
+	 ?>
+<?php if(!empty($item->tesproductos_id))if(empty($item->getTesproductos()->codigo_ant))$c_1.=$item->getTesproductos()->codigo ;else $c_1.=$item->getTesproductos()->codigo_ant;
+	  $c_1.="\par\n";
+?>
+<?php $c_2.=number_format($item->totalcantidad,2,'.','');
+	  $c_2.="\par\n";?>
+<?Php $c_3.=$item->getTesunidadesmedidas()->simbolo;
+	  $c_3.="\par\n";?>
+<?php 
+/*$item->getTesproductos()->detalle.' '.*/
+if(!empty($item->tesproductos_id))
+{
+	$color='';
+	//if(!empty($item->tescolores_id))$color=$item->getTescolores()->nombre;
+	if(Session::get('EMPRESAS_ID')==2)
+	{
+		$c_4.=utf8_decode($item->getTesproductos()->nombre);
+	}else
+	{/*imprmir solo detalle sin nombre cuando es tela */
+		if($salida->tesdatos_id!='2122'){
+			/*esto es por mientras estamos valiando por el id hay que buscar otra manera de imprimir*/
+			$c_4.=utf8_decode($item->getTesproductos()->detalle.' '.$item->getTesproductos()->nombre.' '.$color);
+		}else{
+			$c_4.=utf8_decode($item->getTesproductos()->detalle);
+		}
+	}
+}else{
+	 $c_4.=utf8_decode(str_replace("<br />","\par\n",nl2br($item->concepto)));
+}
+if(!empty($salida->ordendecompra) && $MOV[0]=='PA')$c_4.=utf8_decode(', segun O/C Nº'.$salida->ordendecompra.'');
+$c_4.="\par\n";?>
+<?php if(!empty($item->preciounitario))$c_5.=number_format($item->preciounitario,2,'.','');else $c_5='0.00';
+$c_5.="\par\n";?>
+<?php if(empty($item->descuento)){$c_6.="0.00";}else{
+	
+	if(Session::get('EMPRESAS_ID')==2)
+	{
+		$c_6.=number_format($item->descuento,2,'.','');
+	}else{
+	$c_6.=number_format($item->descuento,2,'.','');/*se modifico pra que el descuento se imprima de 0.09 a 9.00*/
+	}
+	}
+      $c_6.="\par\n";
+?>
+<?php $c_7.=number_format($item->totalimporte,2,'.','')."\par\n";?>
+<?php }
+
+?>
+
+<?php 
+   /*muesra la aplicacion a esta factura */
+  if($aplicaciones){
+  foreach($aplicaciones as $aplicacion){
+  $n++;
+  ?>
+  <?php   
+  /*SUB TOTALES*/
+  $c_7.="-----------";
+  $c_7.="\par\n";
+  $c_7.=number_format($total,2,'.','');
+  
+  
+  $c_4.="\par\n";
+  $c_4.="\par\n";
+  $c_4.="PAGO ADELANTADO FACT/".$aplicacion->getTesfacturasadelantos()->getTessalidas()->serie.'-'.$aplicacion->getTesfacturasadelantos()->getTessalidas()->numero;
+	    $c_6.="\par\n";
+		?>
+  <?php 
+	$total=$total-$aplicacion->montototal;
+    $c_7.="\par\n";
+	$c_7.='('.number_format($aplicacion->montototal,2,'.','').')';
+	$c_7.="\par\n";?>
+    
+  <?php }
+   }?>
+ 
+ <?Php 
+ /*MUESTRA EL DETALLE DE LA ORDEN DE COMPRA SI LA FACTURA ESTA ENLAZADA*/
+ if(!empty($salida->ordendecompra) && $MOV[0]=='PA')
+  {
+	  $detalles_orden=$salida->getDetallesorden($salida->ordendecompra);
+	  foreach($detalles_orden as $d_o){
+	  $c_1.=$d_o->getTesproductos()->codigo;
+	  $c_1.="\par\n";
+	  $c_2.=$d_o->cantidad;
+	  $c_2.="\par\n";
+	  $c_3.=$d_o->getTesunidadesmedidas()->simbolo;
+	  $c_3.="\par\n";
+	  $c_4.="\par\n";
+	  $c_4.=$d_o->getTesproductos()->nombre.' '.$d_o->getTesproductos()->detalle;
+	  $c_4.="\par\n";
+	   }
+  }?>
+ 
+ 
+  <?php $c_7.="-----------";
+	    $c_7.="\par\n";?>
+  <?php $c_7.=$simbolo.''.number_format($total,2,'.','');
+	    $c_7.="\par\n";?>
+ 
+<?php /*if(Auth::get('id')==3){?><?php echo $c_1;?><br /><?php echo $c_2;?><br /><?php echo $c_3;?><br /><?php echo $c_4;?><br /><?php echo $c_5;?><br /><?php echo $c_6;?><br /><?php echo $c_7;}*/
+
+echo 'TOTAL: '.$salida->totalconigv;
+if(empty($salida->totalconigv))$salida->totalconigv=0;?>
+
+<b>Monedaletras</b> : <?php echo $monedaletras="SON:".NumerosLetras::NL(number_format($salida->totalconigv,2,'.',''),$moneda_letras);?><br />
+  <?php
+  $le_1="";
+  $le_2="";
+  $le_3="";
+  $le_4="";
+  if($lets){
+  $le_1="#LTR    : ";
+  $le_2="VCTO    : ";
+  $le_3="MON ".$simbolo.": ";
+  $le_4="DIAS    : ";
+	foreach($lets as $let){
+	$q=$let->id;
+	$le_1.=$let->getTessalidas()->numero."\t | ";
+	$le_2.=Sp::formatFecha('%d/%m/%y',$let->getTessalidas()->fvencimiento)."\t | ";
+	$le_3.=number_format($let->getTessalidas()->totalconigv,2,'.','')."\t | ";
+	$le_4.=Sp::Ndias($let->getTessalidas()->fvencimiento,$let->getTessalidas()->femision)."\t\t | ";
+	}
+  }
+?>
+
+<b>Igv</b> : <?php if(empty($salida->igv))$salida->igv=0;echo $igv=$simbolo.''.number_format($salida->igv,2,'.','')?><br />
+<b>Subtotal</b> : <?php echo $sub_total=$simbolo.''.number_format($total,2,'.','')?><br />
+<b>Total</b> : <?php echo $total=$simbolo.''.number_format($salida->totalconigv,2,'.','')?> <br />
+
+<?php
+
+// Lee la plantilla
+$plantilla = file_get_contents('factura.rtf');
+ 
+// Agregamos los escapes necesarios
+$plantilla = addslashes($plantilla);
+//$plantilla = str_replace('\r','\\r',$plantilla);
+//$plantilla = str_replace('\t','\\t',$plantilla); 
+// Datos de la plantilla
+ 
+// Procesa la plantilla
+eval( '$rtf = <<<EOF_RTF
+' . $plantilla . '
+EOF_RTF;
+' );
+
+$archivo_nombre=$pre_fijo."F".$salida->serie."-".$salida->numero.".rtf";
+// Guarda el RTF generado, el nombre del RTF en este caso sera el apellido-nombre.fechaactual.rtf
+file_put_contents("./facturas/".$archivo_nombre,$rtf);
+//chmod("./facturas/".$archivo_nombre, 0444);
+$ruta=base64_encode("./facturas/".$archivo_nombre);
+//chmod("./facturas/".$archivo_nombre, 0444);if(Auth::get('id')==3)
+echo Html::linkAction('descargar/'.$ruta,'descargar','class="btn btn-warning"');
+//echo "<a href=\"/facturas/".$archivo_nombre."\" class='btn btn-info'>descargar</a>";
+?>
+<?php //echo $_SERVER['SERVER_NAME']."/".$ruc."-".$codigo.".rtf";?>
+<!--<embed src="http://<?php //echo $_SERVER['SERVER_NAME']."/".$ruc."-".$codigo.".rtf";?>" type="rtf"></embed> -->
+<div class="cl"></div>
+			</div>
+            </div>
+    </div> 
+    </body>
+</html>
+

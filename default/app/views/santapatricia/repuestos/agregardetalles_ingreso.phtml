@@ -1,0 +1,164 @@
+<?php echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?><div class="card">
+    <h1><em>Ingreso de Repuestos! <span><?php echo Session::get('DOC_NOMBRE')?></span></em></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="card-body">
+<div id="ver_resultado"></div>
+<?php echo Form::open(NULL,'POST','class="form-inline"')?>
+<?php echo Form::hidden('ingreso.id')?>
+<?php echo Form::hidden('ingreso.tesdocumentos_id')?>
+    
+  <div class="hoja">
+	<div class="caja3">
+    	<p>
+    		<input id="CL" />
+   		</p>
+    	<?php /*?><h4>Moneda:</h4><?php echo $ingreso->getTesmonedas()->nombre//echo Form::dbSelect('ingreso.tesmonedas_id','simbolo,nombre',array("tesmonedas",'find','conditions: aclempresas_id='.Session::get('EMPRESAS_ID')));?>&nbsp;
+			<?php if($ingreso->movimiento=="INTE"){?>
+			<span class="add-on"><h4>Total</h4></span>:<?php echo $ingreso->totalconigv;//echo Form::text('ingreso.totalconigv','class="qty" size="10" required="required"');?>&nbsp;
+			<?php }?>
+			<?php echo Form::hidden('ingreso.tesdatos_id')?>
+    		<?php echo Form::hidden('ingreso.npedido','size="8" readonly="readonly"');?>
+    		<h4>Numero:</h4>
+    		<?php echo $ingreso->serie;//echo Form::text('ingreso.serie','size="4"');?>&nbsp;<?php echo $ingreso->numero;//Form::text('ingreso.numero','size="10" required="required"');?>&nbsp;<br />
+    		<?php //echo Form::dbSelect('salida.hilodestino_id','nombre,abr',array("hilodestino",'find'));?>
+    		<br /><?php */?>
+
+	</div>
+	</div>
+
+<?php echo Form::close();?>
+
+<div id="guia">
+<?php echo Ajax::form('guia',$module_name."/repuestos/grabardetalle_ingresos/".$ingreso->id,'form-inline','post')?>
+  <?php echo Form::hidden('detalles.tesunidadesmedidas_id','',13)?>
+  <?php echo Form::hidden('detalles.tescolores_id','',773)?>
+  <table width="76%" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+  <th width="36%" align="left">
+  <div class="input-prepend input-append">
+  <span>Repuesto</span>
+  <?php echo Form::text('detalles.tesproductos_id','size="5"')?>
+  </div>
+  </th>
+  <th width="14%" align="left">
+  <div class="input-prepend input-append">
+  <span>Ubicacion</span>
+  <?php echo Form::text('detalles.ubicacion','size="5"')?>
+  </div>  
+  </th>
+  <th width="13%" align="left">
+  <div class="input-prepend input-append">
+  <span>Cantidad</span>
+  <?php echo Form::text('detalles.cantidad','size="5" class="qty"')?>
+  </div>
+  </th>
+  <th width="12%" align="left">
+  <div class="input-prepend input-append">
+  <span>Precio</span>
+   <?php echo Form::text('detalles.preciounitario','size="5" class="qty "')?>
+  </div>
+  </th>
+  <th width="11%" align="left">
+  <div class="input-prepend input-append">
+  <span>Importe</span>
+  <?php echo Form::text('detalles.importe','size="5" class="qty"')?>
+  </div>
+  </th>
+  <th width="14%" align="left">
+  <button type="submit" class="btn" title="Ingresar">Grabar</button>
+  </th>
+  </tr>
+  </table>
+<?php echo Form::close()?>
+<div class="hoja">
+	<div class="caja3">
+<table class="table table-bordered table-striped" width="75%" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <th width="9%" align="left"><h4>Codigo</h4></th>
+    <th width="11%" align="left"><h4>Unidad</h4></th>
+    <th width="17%" align="left"><h4>Cantidad</h4></th>
+    <th width="11%" align="left"><h4>Precio</h4></th>
+    <th width="11%" align="left"><h4>Importe</h4></th>
+    <th width="53%" align="left"><h4>Descripcion</h4></th>
+    <th width="10%" align="left"><h4>Accion</h4></th>
+  </tr>
+  <?php 
+  $n=0;
+  foreach($detalles as $item){
+	  $n++;
+	  ?> 
+  <tr id="<?php echo $item->id?>">
+    <td><?php echo $n?>.<?php echo $item->getTesproductos()->codigo_ant?></td>
+    <td><?Php echo $item->getTesunidadesmedidas()->simbolo?></td>
+    <td><?php echo $item->cantidad?></td>
+    <td><?php echo number_format($item->preciounitario,2,'.','')?></td>
+    <td><?php echo number_format($item->importe,2,'.','')?></td>
+    <td><?php echo $item->getTesproductos()->nombre?></td>
+    <td title="Eliminar Ingreso!"><?php //echo Ajax::linkAction('eliminardetalleingreso/'.$item->id,'Elminar','guia')?><?php echo Html::linkAction("eliminardetalleingreso/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?></td>
+		
+  </tr>
+  <?php }?>
+</table>
+</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function()
+{	
+	$("#CL").tokenInput("/<?php echo $module_name?>/salidas/buscarproveedor", 
+		{
+			tokenLimit: 1,
+			minChars: 2,
+			<?php if(!empty($ingreso->tesdatos_id)){?>
+			prePopulate: [ 
+						 {id: <?Php echo $ingreso->tesdatos_id?>, name: "<?php echo $ingreso->getTesdatos()->razonsocial?>"},
+						 ],
+			<?php }?>
+			onAdd: function (item){
+			   var VAL=item.id;
+			   $("#salida_tesdatos_id").val(VAL);
+			},
+			onDelete: function (item) {
+			}
+		});
+		$("#detalles_tesproductos_id").tokenInput("/<?php echo $module_name?>/repuestos/getrepuestos", 
+		{
+			tokenLimit: 1,
+			minChars: 2,
+			onAdd: function (item){
+				$("#detalles_ubicacion").val(item.oculto);
+				$("#detalles_preciounitario").val(item.precio);
+			},
+			onDelete: function (item) {
+			}
+		});
+	$("#detalles_cantidad").change(function(){
+		var cantidad=$(this).val();
+		var precio=$("#detalles_preciounitario").val();
+		$("#detalles_importe").val(precio*cantidad);
+		});
+	$("#detalles_preciounitario").change(function(){
+		var precio=$(this).val();
+		var cantidad=$("#detalles_cantidad").val();
+		$("#detalles_importe").val(precio*cantidad);
+		});	
+});
+</script>
+</div>
+    
+  <div class="hoja">
+	<div class="caja3">
+    <div>
+      <?php 
+//echo Html::linkAction("veringreso/", 'Siguente <i class="icon-hand-right"></i>','class="btn btn-primary" onclick="return validar()"') ?>
+    <?php
+	if($ingreso->estadoingreso!='Pendiente')echo Html::linkAction("veringreso/".$ingreso->id, 'Siguiente<i class="icon-ok-sign"></i>','class="btn btn-primary"')?>
+&nbsp;<?php echo Html::linkAction("ingresos", 'Volver ','class="btn"') ?>
+	</div>
+  </div>
+  </div>
+<hr />
+</div>

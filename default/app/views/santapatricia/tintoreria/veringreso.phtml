@@ -1,0 +1,63 @@
+<?php echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<div class="card">
+    <h1>Detalle-Ingreso Rollos <span><?php echo Session::get('DOC_NOMBRE')?></span></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+    
+</div>
+<div class="card-body">
+<div id="ver_resultado"></div>
+  <div class="span2"></div>
+   <div class="span6 input-prepend">
+    	<p><span class="add-on"><b>Pedido:</b></span>
+    		<?php echo Form::text('ingreso.npedido','size="8" readonly="readonly"');?>&nbsp; </p>
+    	<p> <span class="add-on">Serie</span>:
+    		<?php echo Form::text('ingreso.serie','size="4"  readonly="readonly"');?>&nbsp;
+    		<span class="add-on">Numero:</span>
+   		<?php echo Form::text('ingreso.numero','size="10"  readonly="readonly"');?>&nbsp;</p>
+    	<p>
+    		<span class="add-on">Referencia:</span><?php echo $ingreso->numeroguia;?>   		</p>
+    	<p><span class="add-on">Moneda:</span>
+    		<?php echo $ingreso->getTesmonedas()->nombre?>&nbsp;   		</p>
+    	<p><span class="add-on">Destino:</span>TINTORERIA-TI<br />
+    		<span class="add-on">Proveedor</span>:
+    		<?php echo $ingreso->getTesdatos()->razonsocial?><br />
+    		<span class="add-on">Fecha de Ingreso:</span>
+    		<?php echo Calendar::selector('ingreso.finiciotraslado');//finiciotraslado?><br />
+   		</p>
+	</div>  
+<div id="guia">
+<div id="form_ingreso"></div>
+<table width="75%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-hover">
+<caption> Lista de Telas en Guia de Ingreso</caption>
+  <tr>
+    <th width="17%" height="20" align="left">Codigo</th>
+    <th width="11%" rowspan="2" align="left">Cantidad</th>
+    <th width="16%" rowspan="2" align="left">Unidad</th>
+    <th width="56%" rowspan="2" align="left">Descripcion</th>
+  </tr>
+  <tr>
+  	<th align="left"></th>
+  	</tr>
+  <?php 
+  $n=0;
+  foreach($detalles as $item){
+	  $n++;
+	  ?> 
+  <tr id="<?php echo $item->id?>">
+    <td><?php echo $n?>. <?php echo $item->getProrollos()->codigo?>. <?php echo $item->getProrollos()->numero?>-<?php echo $item->getProrollos()->maquina_numero?>-<?php echo $item->getProrollos()->numeroventa?></td>
+    <td><?php echo $item->pesoneto?> Kgs</td>
+    <td>(<?php echo $item->cantidad?>)<?Php echo $item->getTesunidadesmedidas()->simbolo?></td>
+    <td><?php echo $item->getTesproductos()->detalle?> <?Php echo $item->getTescolores()->nombre?></td>
+  </tr>
+  <?php }?>
+</table>
+</div>
+<div class="form-actions">
+<?php 
+if($ingreso->estadoingreso!='Pendiente')echo Html::linkAction("veringreso/".$ingreso->id, 'Finalizar<i class="icon-ok-sign"></i>','class="btn btn-primary"')?>
+&nbsp;<?php echo Html::linkAction("ingresos", 'Listado ','class="btn"') ?>
+</div>
+</div>

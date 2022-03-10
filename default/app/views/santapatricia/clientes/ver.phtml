@@ -1,0 +1,136 @@
+<style type="text/css">
+.ver{
+margin:0 10% 0 10%; !important;
+font-size:12px !important;
+}
+.ver .control-group {
+margin:1px !important;
+border:solid #CCC 1px;
+}
+.ver .control-group label{
+	font-style:inherit;
+	color:#666666;
+	font-weight: bold;
+}
+.ver .control-group label strong{
+	color:#000 !important;
+	font-weight: bold !important;
+}
+.form-horizontal .control-group .controls{
+	margin-top:5px;
+	margin-left:220px !important;
+	color:#333333 !important; 
+}
+</style>     
+<?php View::content() ?>
+<div class="ver">
+<form class="form-horizontal">
+<h3><?php echo $titulo?></h3> 
+         <div class="control-group">
+            <label for="datos_codigo">Codigo:</label>
+            <div class="controls">
+                <?php echo $tesdatos->codigo;?>-*-<?php echo $tesdatos->codigo_ant;?>
+            </div>
+        </div>
+        <div class="control-group" id="areas">
+        <label for="datos_razonsocial">Razon Social:</label>
+        <div class="controls">
+<?php echo $tesdatos->razonsocial; ?>
+		</div>
+        </div>
+        <div class="control-group">
+        <label for="datos_ruc">ruc : </label>
+        <div class="controls">
+		<?php echo $tesdatos->ruc; ?>
+        </div>
+        </div>
+        <div class="control-group">
+        <label for="datos_pais">Pais : </label>
+        <div class="controls">
+		<?php echo $tesdatos->pais; ?>
+        </div>
+        </div>
+            <div class="control-group">                
+                <label for="datos_telefono">Telefono : </label>
+                <div class="controls">
+                    <?php echo $tesdatos->telefono; ?>
+                </div>
+            </div>
+            <div class="control-group">                
+                <label for="tesdatos.celular">Celular : </label>
+                <div class="controls">
+                    <?php echo $tesdatos->celular; ?>
+                </div>
+            </div>
+            <div class="control-group">                
+                <label for="tesdatos.email">Correo : </label>
+                <div class="controls">
+                    <?php echo $tesdatos->email; ?>
+                </div>
+            </div>
+        <div class="control-group">                
+        <label for="datos_direccion">Direccion : </label>
+         <div class="controls">
+          <?php echo $tesdatos->direccion; ?>
+          <label for="datos_departamento">Departamento : </label>
+			<?php echo $tesdatos->departamento; ?>
+            <label for="datos_provincia">Provincia : </label>
+            <?php echo $tesdatos->provincia; ?>
+            <label for="datos_distrito">Distrito : </label>
+            <?php echo $tesdatos->distrito; ?>
+            <label for="datos_distrito_ant">Distrito Anterior : </label>
+            <?php echo $tesdatos->distrito_ant; ?>
+        </div>
+		 <div class="control-group">                
+                <label for="tesdatos.email">Giro de Negocio : </label>
+                <div class="controls">
+                    <?php echo $tesdatos->girodenegocio; ?>
+                </div>
+            </div>
+			<div class="control-group">                
+                <label for="tesdatos.email">Agente de Retencion : </label>
+                <div class="controls">
+                    <?php echo $tesdatos->tipo; ?>
+                </div>
+            </div>
+			<div class="control-group">                
+                <label for="tesdatos.email">Credito Asignado : </label>
+                <div class="controls">
+                    <?php echo $tesdatos->credito; ?>
+                </div>
+            </div>
+            </div>
+            <div class="control-group" align="center">                
+             <label><strong>Datos del Contacto</strong></label>
+            </div>
+            <?php if($tescontactos){?>
+            <div class="control-group">                
+                <label for="tesdatos.email">Nombres : </label>
+                <div class="controls">
+                    <?php echo $tescontactos->nombres; ?>
+                </div>
+            </div>
+            <div class="control-group">                
+                <label for="tesdatos.email">Telefono : </label>
+                <div class="controls">
+                    <?php echo $tescontactos->telefono; ?>
+                </div>
+				<div class="control-group">                
+                <label for="tesdatos.email">Fecha de Nacimiento : </label>
+                <div class="controls">
+                    <?php //echo $tescontactos->fnacimiento; ?>
+					<?php echo Sp::formatFecha('%d / %m / %Y',$tescontactos->fnacimiento)?>
+                </div>
+            </div>
+            </div><?php }else{?>
+            <div class="control-group">                
+                <div class="controls">
+				<?php echo Html::linkAction('editar/'.$campo.'/'.$direccion.'/'.$tesdatos->id.'/'.$page, 'Agregar Contacto') ?>                
+                </div>
+            <?php }?>
+            <div class="form-actions">
+                <?php echo Html::linkAction('editar/'.$campo.'/'.$direccion.'/'.$tesdatos->id.'/'.$page, 'Modificar Datos', 'class="btn btn-primary"') ?>
+				<?php echo Html::linkAction('listado/'.$campo.'/'.$direccion.'/'.$page, 'Listado', 'class="btn"') ?>
+            </div>
+        <?php echo Form::close() ?> 
+</div>

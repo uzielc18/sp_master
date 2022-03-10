@@ -1,0 +1,44 @@
+<?php View::content()?>
+<div id="ingreso">
+
+</div>
+<table width="75%" border="0" align="center" cellpadding="0" cellspacing="1" class="table table-hover">
+<caption> Lista de telas en Guia </caption>
+  <tr>
+    <th width="6%">Codigo</th>
+    <th width="11%" align="right">Cantidad</th>
+    <th width="7%" align="center">Unidad</th>
+    <th width="45%">Descripcion</th>
+    <th width="14%">Precio</th>
+    <th width="17%" align="right">Accion</th>
+  </tr>
+  <?php 
+  $n=0;
+  $t_precio=0;
+  $t_cantidad=0;
+  foreach($detalles as $item){
+	  $n++;
+	  $t_precio=$t_precio+$item->preciounitario;
+	  $t_cantidad=$t_cantidad+$item->cantidad;
+	  ?> 
+  <tr id="<?php echo $item->id?>">
+    <td><?php echo $n.'.'; echo $item->getProrollos()->codigo?>-<?php echo $item->getProrollos()->numeroventa; echo ' '.$item->getProrollos()->getNprocesos($item->prorollos_id);?></td>
+    <td align="right"><?php echo $item->cantidad?></td>
+    <td align="center"><?Php echo $item->getTesunidadesmedidas()->simbolo?></td>
+    <td><?php echo $item->getTesproductos()->detalle?> <?Php echo $item->getTescolores()->nombre?></td>
+    <td align="right"><?php echo $item->preciounitario?></td>
+    <td align="right"><?php echo Ajax::link($module_name.'/rollos/grabarventatelas/0/'.$item->id,'Editar','ingreso','btn','id="'.$item->prorollos_id.'"')?> <?php echo Html::link($module_name.'/rollos/borrarventarollos/'.$item->id.'/'.$item->prorollos_id.'/','Elminar','mostrar','id="'.$item->prorollos_id.'"')?></td>
+  </tr>
+  <?php }?>
+  <tfoot>
+  <tr>
+    <th width="6%">TOTAL</th>
+    <th width="11%" align="right"><?php echo $t_cantidad?></th>
+    <th width="7%" align="center">&nbsp;</th>
+    <th width="45%">&nbsp;</th>
+    <th width="14%" align="right"><?php echo $t_precio?></th>
+    <th width="17%" align="right">&nbsp;</th>
+  </tr>
+  
+  </tfoot>
+</table>

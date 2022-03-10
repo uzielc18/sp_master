@@ -1,0 +1,92 @@
+<?php 
+//echo $salida_id;
+switch ($ab->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+
+?>
+<div class="card">
+<h1>Generacion de Abonos!</h1>
+</div>
+
+<div class="card-body">
+  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <caption>Aun, no ha grabado este Abono!</caption>
+  <tr valign="top">
+    <td colspan="2"><?php echo $empresa->razonsocial?></td>
+    <td width="10%"><strong>Abono :</strong></td>
+    <td width="11%"><?php echo $numero?></td>
+    <td width="12%"><strong>Operacion:</strong></td>
+    <td width="7%"><?php echo $ab->getTesformadepagosabonos()->operacion?></td>
+    <td width="9%"><strong>Asiento:</strong></td>
+    <td width="8%"><?Php echo $asiento?></td>
+    <td width="8%"><strong>Mes:</strong></td>
+    <td width="7%"><?php echo date('m');?></td>
+    <td></td>
+  </tr>
+  <tr valign="top">
+    <td width="11%"><strong>Fecha:</strong></td>
+    <td width="12%"><?php echo date('Y-m-d');?></td>
+    <td><strong>Importe:</strong></td>
+    <td><?php echo $simbolo?> <?php if(!empty($ab->importe))echo number_format($ab->importe,2,'.',' ')?></td>
+    <td><strong>T/C:</strong></td>
+    <td><?php echo $ab->getTestipocambios()->compra;?></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td></td>
+  </tr>
+</table>
+<?php 
+$q=0;
+foreach($tesdetalles as $detalle){
+	$q++;
+	?>
+<div id="detalle-<?php echo $q?>">
+<?php echo Ajax::form('detalle-'.$q,$module_name.'/abonos/ingresoletras/'.$q)?>
+<?php echo Form::hidden('tesdetalles-'.$q.'.id','',$detalle->id);?>
+<?php echo Form::hidden('tesdetalles-'.$q.'.tesabonos_id','',Session::get('A_ID'));?>
+<?php echo Form::hidden('tesdetalles-'.$q.'.tessalidas_id','',$detalle->tessalidas_id);?>
+<?php echo Form::hidden('tesdetalles-'.$q.'.abono','',1);?>
+<?php echo Form::hidden('tesdetalles-'.$q.'.cargos','',0);?>
+<?php echo Form::hidden('tesdetalles-'.$q.'.tesdatos_id','',$detalle->tesdatos_id);?>
+<?php echo Form::hidden('tesdetalles-'.$q.'.estado','',1);?>
+<table width="100%" border="0" cellspacing="1" cellpadding="0">
+  <tr>
+    <th width="19%">Cuenta General</th>
+    <th width="10%">Nº Docuemnto</th>
+    <th width="14%">Fecha Vcto</th>
+    <th width="14%">Codigo Auxiliar</th>
+    <th width="14%">Descripcion</th>
+    <th width="14%">Cargo</th>
+    <th width="15%">Abono</th>
+  </tr>
+  <tr>
+    <td width="19%"><?php echo $detalle->plancontable;
+	 echo Form::hidden('tesdetalles-'.$q.'.plancontable','',$detalle->plancontable); ?></td>
+    <td width="10%"><?php echo $detalle->getTessalidas()->serie?> - <?php echo $detalle->getTessalidas()->numero?></td>
+    <td width="14%"><?php echo $detalle->getTessalidas()->fvencimiento?></td>
+    <td width="14%">-</td>
+    <td width="14%"><?php echo $detalle->getTessalidas()->getTesdatos()->razonsocial;?><?php echo $detalle->getTessalidas()->totalconigv;?></td>
+    <td width="14%">-</td>
+    <td width="15%"><?php echo Form::text('tesdetalles-'.$q.'.monto','',$detalle->monto); ?>
+<?php echo Form::submit('GRABAR','class="btn btn-primary"');?></td>
+  </tr>
+</table>
+<?php echo Form::close()?>
+</div>
+<?php 
+}?>
+
+<?php //echo Ajax::form('pago_con_letras',$module_name.'/vouchers/ingresoletras/')?>
+<?php echo Form::open($module_name.'/abonos/ingresoletras/'.$q)?>
+<?php echo Form::hidden('terminar.id','',$detalle->id);?>
+<?php echo Form::submit('Terminar','class="btn btn-primary"');?>
+<?php echo Form::close()?>
+</div>

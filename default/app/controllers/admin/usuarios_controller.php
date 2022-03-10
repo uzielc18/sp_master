@@ -6,7 +6,7 @@ class UsuariosController extends AdminController {
     
     protected function before_filter() {
         if ( Input::isAjax() ){
-			View::response('view');
+			View::template(null);
             //View::select(NULL, NULL);
         }
     }
@@ -127,7 +127,7 @@ class UsuariosController extends AdminController {
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::toAction('');
+        return Redirect::toAction('');
     }
 
     public function desactivar($id) {
@@ -145,7 +145,7 @@ class UsuariosController extends AdminController {
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::toAction('');
+        return Redirect::toAction('');
     }
 	 public function eliminar($id) {
         try {

@@ -1,0 +1,120 @@
+<div class="card">
+<h1>Produccion Diaria<span>Ingreso de las producciones por turnos</span></h1>
+</div>
+
+<div class="card-body">
+<?php //echo $maquinas1;print_r($maquinas1)?>
+<h3><?php echo $nombre1?></h3>
+<table class="table table-bordered">
+<tr>
+<td>Maquina<br />Fechas</td>
+<?php 
+//"<br />".($maquina->getPromaquinas()->maxproduccion)
+$total_m=0;foreach($maquinas1 as $maquina){$total_m++;echo "<th>";echo $maquina->getPromaquinas()->nombre; echo "</th>";}?>
+</tr>
+<?php $f_1=0;
+foreach($fechas1 as $fecha)
+{
+	$f_2=$fecha->fecha;
+	if($f_1!=$f_2)
+	{
+		$f_1=$fecha->fecha;
+		echo "<tr><td>";
+		echo Sp::formatFecha('%d/%m/%Y',$fecha->fecha); 
+		echo "</td>";
+			foreach($maquinas1 as $maquina)
+			{
+				$td=0;
+				foreach($fechas1 as $valor)
+				{
+					if($fecha->fecha==$valor->fecha && $valor->promaquinas_id==$maquina->promaquinas_id)
+					{
+						$td++;
+						echo "<td align='right' title='".$valor->id."'>$valor->valor</td>";
+					}
+				}
+				if($td==0){
+						echo "<td align='right' title='Aun no hay valores'>00</td>";
+					}
+			}
+		echo "</tr>";
+	}
+}?>
+</table>
+<h3><?php echo $nombre1?></h3>
+<table class="table table-bordered">
+<tr>
+<td>Maquina<br />Fechas</td>
+<?php 
+//."<br />".($maquina->getPromaquinas()->maxproduccion)
+$total_m=0;foreach($maquinas2 as $maquina){$total_m++;echo "<th>";echo $maquina->getPromaquinas()->nombre; echo "</th>";}?>
+</tr>
+<?php $f_1=0;
+foreach($fechas2 as $fecha)
+{
+	$f_2=$fecha->fecha;
+	if($f_1!=$f_2)
+	{
+		$f_1=$fecha->fecha;
+		echo "<tr><td>";
+		echo Sp::formatFecha('%d/%m/%Y',$fecha->fecha); 
+		echo "</td>";
+		foreach($maquinas2 as $maquina)
+		{
+			$td=0;
+			foreach($fechas2 as $valor)
+			{
+				if($fecha->fecha==$valor->fecha && $valor->promaquinas_id==$maquina->promaquinas_id)
+				{
+					$td++;	
+					echo "<td align='right' title='".$valor->id."'>$valor->valor</td>";
+				}
+			}
+			if($td==0)
+			{
+				echo "<td align='right' title='Aun no hay valores'>00</td>";
+			}
+		}
+		echo "</tr>";
+	}
+}?>
+</table>
+<h3><?php echo $nombre1?></h3>
+<table class="table table-bordered">
+<tr>
+<td>Maquina<br />Fechas</td>
+<?php 
+//."<br />".($maquina->getPromaquinas()->maxproduccion)
+$total_m=0;foreach($maquinas3 as $maquina){$total_m++;echo "<th>";echo $maquina->getPromaquinas()->nombre; echo "</th>";}?>
+</tr>
+<?php $f_1=0;
+foreach($fechas3 as $fecha)
+{
+	$f_2=$fecha->fecha;
+	if($f_1!=$f_2)
+	{
+		$f_1=$fecha->fecha;
+		echo "<tr><td>";
+		echo Sp::formatFecha('%d/%m/%Y',$fecha->fecha); 
+		echo "</td>";
+		foreach($maquinas3 as $maquina)
+		{
+			$td=0;
+			foreach($fechas3 as $valor)
+			{
+				if($fecha->fecha==$valor->fecha && $valor->promaquinas_id==$maquina->promaquinas_id)
+				{
+					$td++;	
+					echo "<td align='right' title='".$valor->id."'>$valor->valor</td>";
+				}
+			}
+			if($td==0)
+			{
+				echo "<td align='right' title='Aun no hay valores'>00</td>";
+			}
+		}
+		echo "</tr>";
+	}
+}?>
+</table>
+</div>

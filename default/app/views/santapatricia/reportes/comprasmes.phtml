@@ -1,0 +1,180 @@
+<div class="card">
+    <h1>Compras del Mes</h1>
+</div>
+
+<?php View::content();?>
+<div class="form-actions">
+<?php echo Menu::menuReportes($action_name);?>
+</div>
+<div class="menu">
+<ul><li><a>Año 
+<select id="anio">
+<?php
+for($i=2011;$i<=2020;$i++)
+{
+	$selec='';
+	if($anio==$i){
+	$selec=' selected="selected"';
+	}
+	echo '<option value="'.$i.'" '.$selec.'>'.$i.'</option>';
+}
+?>
+</select>
+</a></li></ul>
+<?php 
+$mes_actual=date('Y-m');
+foreach($meses as $clave => $mes):
+if($anio.'-'.$clave<=$mes_actual){
+$class='';
+if($mes_activo==$clave)$class=' active';
+echo '<ul>';
+echo '<li><a class="enviar'.$class.'" id="mes-'.$mes.'" href="javascript:;" data-id="'.$anio.'-'.$clave.'-01">'.$mes.'</a></li>'; 
+echo '</ul>';
+}
+endforeach;?>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div style="clear:both"></div>
+<?php echo Sp::imprimir('Compras-'.$anio.'-'.$mes_activo,'P');?>
+<div class="card-body">
+<div id="reporte">
+<table width="95%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="exportar_excel"><caption><strong>Textil Santa Patricia SA</strong><br /><strong>COMPRAS <?php echo ucfirst(Sp::formatFecha('%m',$mes_actual)); ?>-<?php echo Sp::formatFecha('%Y',$mes_actual); ?></strong></caption>
+	<tr>
+		<th width="90" align="left">F. Em Doc.</th>
+		<th width="232" align="left">Cliente</th>
+		<th width="40" align="left">Doc.</th>
+		<th width="70" align="left">Nro. Doc.</th>
+		<th width="59" align="right">Dolares</th>
+		<th width="49" align="right">T/C</th>
+		<th width="71" align="right">Sub-Total</th>
+		<th width="46" align="right">IGV</th>
+		<th width="55" align="right">Total S/.</th>
+	</tr>
+    <?php 
+	$T_dolares=0;
+	$T_soles=0;
+	$T_igv=0;
+	$T_subtotal=0;
+	$monto_igv=0;
+	foreach($ingresos as $item){
+		$monto_soles=0;
+		$monto_dolares=0;
+		$monto_igv=0;
+		$monedas= $item->tesmonedas_id;
+switch ($monedas)
+{
+	case 1: $simbolo='S/. ';
+	$monto_soles=$item->totalconigv;
+	$monto_dolares=($item->totalconigv-$item->igv)/$item->getTestipocambios()->compra;
+	$monto_igv=$item->igv;
+	; break;
+	case 2: $simbolo='$. ';
+	$monto_soles=($item->totalconigv-$item->igv)*$item->getTestipocambios()->compra;
+	$monto_dolares=$item->totalconigv;
+	$monto_igv=$item->igv*$item->getTestipocambios()->compra;
+	  break;
+	case 4: $simbolo='S/. ';
+	$monto_soles=$item->totalconigv;
+	$monto_dolares=($item->totalconigv-$item->igv)/$item->getTestipocambios()->compra;
+	$monto_igv=$item->igv;
+	; break;
+	case 5: $simbolo='$. ';
+	$monto_soles=($item->totalconigv-$item->igv)*$item->getTestipocambios()->compra;
+	$monto_dolares=$item->totalconigv;
+	$monto_igv=$item->igv*$item->getTestipocambios()->compra;
+	  break;
+	case 0: $simbolo='S/. ';
+	$monto_soles=$item->totalconigv;
+	$monto_dolares=($item->totalconigv-$item->igv)/$item->getTestipocambios()->compra;
+	$monto_igv=$item->igv;
+	; break;
+}	
+		if($item->tesdocumentos_id==7){
+		$T_dolares=$T_dolares+$monto_dolares;
+		$T_subtotal=$T_subtotal+($monto_soles-$monto_igv);
+		$T_igv=$T_igv+$monto_igv;
+		$T_soles=$T_soles+$monto_soles;}
+		if($item->tesdocumentos_id==13)
+		{
+		/*$T_dolares=$T_dolares+$monto_dolares;
+		$T_subtotal=$T_subtotal+($monto_soles-$monto_igv);
+		echo $monto_igv;
+		echo "---";
+		echo $T_igv=$T_igv-$monto_igv;
+		$T_soles=$T_soles+$monto_soles;
+		*/
+		}
+		if($item->tesdocumentos_id==14)
+		{
+		$T_dolares=$T_dolares+$monto_dolares;
+		$T_subtotal=$T_subtotal+($monto_soles-$monto_igv);
+		$T_igv=$T_igv+$monto_igv;
+		$T_soles=$T_soles+$monto_soles;
+		}
+		
+		?>
+	<tr>
+		<td><?php echo Sp::formatFecha('%d/%m/%Y',$item->femision)?></td>
+		<td><?php echo $item->getTesdatos()->razonsocial?> <?php if(Auth::get('id')==3)echo $item->tesdocumentos_id;?></td>
+		<td><?php echo $item->getTesdocumentos()->abr?></td>
+		<td><?php echo $item->numero;?></td>
+        <td align="right"><?php if($item->tesdocumentos_id==13)echo "-";if(!empty($monto_dolares))echo number_format($monto_dolares,2,'.','')?>
+		<td align="right"><?php echo $item->getTestipocambios()->compra?></td>
+		<td align="right"><?php if($item->tesdocumentos_id==13)echo "-";
+		echo  number_format($monto_soles-$monto_igv,2,'.','')?></td>
+		<td align="right"><?php if($item->tesdocumentos_id==13)echo "-";
+		if(!empty($monto_igv))echo  number_format($monto_igv,2,'.','');else echo $monto_igv;?></td>
+		<td align="right"><?php if($item->tesdocumentos_id==13)echo "-";
+		if(!empty($monto_soles))echo number_format($monto_soles,2,'.','')?></td>
+	</tr>
+    <?php }?>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td align="right">&nbsp;</td>
+		<td align="right">&nbsp;</td>
+		<td align="right">&nbsp;</td>
+		<td align="right">&nbsp;</td>
+		<td align="right">&nbsp;</td>
+	</tr>
+    <tfoot>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td style="border-top:1px solid #333 !important;">Totales</td>
+		<td align="right" style="border-top:1px solid #333 !important;"><?Php echo number_format($T_dolares,2,'.','')?></td>
+		<td align="right" style="border-top:1px solid #333 !important;">&nbsp;</td>
+		<td align="right" style="border-top:1px solid #333 !important;"><?Php echo number_format($T_subtotal,2,'.','')?></td>
+		<td align="right" style="border-top:1px solid #333 !important;"><?Php echo number_format($T_igv,2,'.','')?></td>
+		<td align="right" style="border-top:1px solid #333 !important;"><?Php echo number_format($T_soles,2,'.','')?></td>
+	</tr>
+    </tfoot>
+</table>
+</div>
+<script type="text/javascript">
+$(document).ready(function()
+{
+	$("#anio").change(function(event)
+	{
+		var id = $("#anio").find(':selected').val();
+		location.href = '/<?php echo $module_name?>/reportes/comprasmes/'+id;
+    });
+	$(".enviar").click(function()
+	{
+		var fecha = $(this).attr('data-id');
+		var F=fecha.split('-');
+		location.href = '/<?php echo $module_name?>/reportes/comprasmes/'+F[0]+'/'+F[1];
+	});
+	$(".botonExcel").click(function(event)
+	{
+		$("#datos_a_enviar").val( $("<div>").append( $("#exportar_excel").eq(0).clone()).html());
+		$("#FormularioExportacion").submit();
+	});
+});
+</script>
+</div>

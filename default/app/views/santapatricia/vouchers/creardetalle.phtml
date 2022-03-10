@@ -1,0 +1,106 @@
+<script type="text/javascript">
+$(document).ready(function(){
+    $('.selec').click(function()
+        {
+        var selectedItems = new Array();
+        $("input[@name='INGRESOS[]']:checked").each(function(){
+            selectedItems.push($(this).val());
+        });
+        
+        $("#i").val(selectedItems);
+    });
+});
+</script>
+<div class="card">
+<h1>Documentos Ingresados!</h1>
+</div>
+<?php View::content()?>
+<div class="card-body">
+<strong> Proveedor :- </strong><?Php if(Session::get('proveedor_id')!=0)echo $tesdatos->razonsocial;else echo "Todos";?>,
+ <strong> Forma de Pago: - </strong> <?php echo $vc->getVoucherformadepagos()->nombre?>, <strong>Moneda: - </strong><?php echo $vc->getTesmonedas()->nombre?> <?php echo Html::linkAction('editar/',Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'))?>
+	<hr />
+<?php 
+if($vc->voucherformadepagos_id!=10)
+{
+	echo Form::open($module_name.'/vouchers/grabardetalle','post');
+}else{
+	echo Form::open($module_name.'/vouchers/grabardetalledetraccion','post','title="Editar Forma de Pago"');
+	}?>
+<?php if($vc->voucherformadepagos_id!=13){
+	echo $vc->voucherformadepagos_id;?>
+<?php echo Form::hidden('i');?>
+<table width="99%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+<caption>Seleccionar Documentos Pendientes de Cancelacion (Check)</caption>
+  <tr>
+  	<th width="23" align="left">Nº</th>
+	<th width="58" align="left">F. Emision Doc.</th>
+    <th width="97" align="left">Numero</th>
+    <th width="247" align="left">Proveedor</th>
+    <th width="91" align="left">Moneda</th>
+    <th width="132" align="left">Total</th>
+    <?php if($vc->voucherformadepagos_id==10){?><th width="73">Detraccion</th><th width="79">Tipo Cambio</th><?php }?>
+    <th width="113" align="left">Seleccionar</th>
+  </tr>
+<?php $n=0;
+foreach($ingresos as $item){ 
+$n++;
+switch ($item->tesmonedas_id)
+{
+	case 1: $simbolo='S/. ';break;
+	case 2: $simbolo='$. ';break;
+	case 4: $simbolo='S/. ';break;
+	case 5: $simbolo='$. ';break;
+	case 0: $simbolo='S/. ';break;
+}
+$resta=$item->getRestas($item->id);
+
+	$new_valores=explode('-',$resta);
+if($new_valores[1]>=0.5){
+?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20"><?php echo $n?> <?php echo $item->id?></td>
+	<td><?php echo $item->femision?>
+    <td><?php echo $item->getTesdocumentos()->abr?>/<?php echo $item->serie.'-'.$item->numero?></td>
+    <td><?php echo $item->getTesdatos()->razonsocial?>
+	<?php 
+	echo $new_valores[0];
+	?>
+    </td>
+    <td><?php echo $item->getTesmonedas()->nombre?></td>
+    <td>
+	<?php  
+	if($new_valores[1]==number_format($item->totalconigv,2,'.','')){
+	if(!empty($item->totalconigv))echo $simbolo.number_format($item->totalconigv,2,'.','');
+	}else{
+	echo $simbolo.$new_valores[1];
+	}
+	?>
+    </td>
+    <?php if($vc->voucherformadepagos_id==10){?><td> <?php echo 'S/. '; echo number_format($item->detraccion,2,'.','');?></td><td><?php echo $item->getTestipocambios()->compra?></td><?php }?>
+   <td  title="Dar Check, si quiere cancelar este Documento"><input type="checkbox" name="INGRESOS[]" class="selec" value="<?php echo $item->id?>" />
+    </td>
+  </tr>
+<?php }
+
+}?>
+</table>
+<?php }else{
+/*Para Transferencia de cheque a caja*/	?>
+<?php echo Form::hidden('detalle.id')?>
+<div class="input-prepend input-append">
+  <span class="add-on" title="Buscar Producto">Monto</span>
+  <?php echo Form::text('detalle.monto')?>
+  <span class="add-on" title="Buscar Producto">Detalle</span>
+  <?Php echo $vc->getVoucherformadepagos()->nombre?>
+  <span class="add-on" title="Buscar Producto">Nº Correlativo</span>
+  <?php 
+  if(empty($detalle->correlativo))$cr=$DD->getCorrelativo();else$cr=$detalle->correlativo;
+  echo Form::text('detalle.correlativo','',$cr)?>
+  </div>
+
+<?php }?>
+<div class="form-actions">
+    <?php echo Form::Submit('Enviar Detalles','class="btn btn-primary"') ?>
+</div>
+<?php echo Form::close()?>
+</div>

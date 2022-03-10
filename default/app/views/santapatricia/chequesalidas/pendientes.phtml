@@ -1,0 +1,59 @@
+<div class="card">
+    <h1>Cheques Pendientes de Cobro!<span><?php //echo Auth::get('nombres')?></span></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="form-actions" id="active"><?php echo Menu::menuCheques_emitidos();?>
+<?php /*?><span class="print btn btn-primary"> Print </span> 
+<a href="javascript:;" class="btn botonExcel">Enviar a Excel<img src="/img/export_to_excel.gif" class="" /></a>
+<form action="/utiles/excel" method="post" target="_blank" id="FormularioExportacion" class="form-inline">
+<input type="hidden" id="datos_a_enviar" name="datos_a_enviar"/>
+<input type="hidden" id="nombre" name="nombre" value="Cheques<?php echo date("Y-m")?>"/>
+</form>
+<?php */?>
+</div>
+<div class="card-body">
+<div id="ver_resultado"></div>
+<table id="exportar_excel" width="99%" class="table table-bordered table-striped">
+<caption>Cheques del Mes!</caption>
+  <tr>
+  	<th width="17" align="left">Nº</th>
+  	<th width="58" align="center">F. Emision.</th>
+    <th width="180" align="left">Cliente</th>
+    <th width="58" align="left">Banco</th>
+    <th width="77">Cobrar. Desde!</th>
+    <th width="67">Nro. Doc.</th>
+    <th width="57">Total</th>
+    <th width="64">Accion</th>
+  </tr>
+<?php $number=0;
+foreach($cheques as $item){ 
+$simbolo="S/. ";
+
+switch ($item->getTessalidas()->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+
+$number++;?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20"><?php echo $number?></td>
+  	<td height="20" align="center"><?php echo Sp::formatFecha('%d / %m / %Y',$item->getTessalidas()->femision)?></td>
+  	<td height="20"><?php if($item->getTessalidas()->tesdatos_id!=0){echo $item->getTessalidas()->getTesdatos()->razonsocial;}else{echo "Interno"; /*$item->tesdatos_id;*/}?></td>
+  	<td><?php echo $item->getTesbancos()->nombre?></td>
+    <td><?php echo Sp::formatFecha('%d/%m/%Y',$item->fecha_cobro)?></td>
+    <td><?php echo $item->numerodecheque?> (<?php if(!empty($item->estadocheque))echo $item->estadocheque;else echo "Sin registrar";?>)</td>
+    <td align="right" valign="top"><?php if($item->monto!='NaN.00' && !empty($item->monto))echo $simbolo.number_format($item->monto,2,'.','');else echo('S/ 00.00')?></td>
+    <td title="Clic! Si fue cobrado por el Interezado!" align="center"><?php echo Html::linkAction('cobrar/'.$item->id,Html::img("figuras/pagar.png",'Pagar','style="width: 30px;margin-left:1px;margin-right:1px;"'),'class="btn"');?>
+	<?php //echo Html::linkAction('stornar/'.$item->id,Html::img("figuras/protestar.png",'Stornar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'class="btn" title="Stornar cheque !!!!" onclick="return confirm(\'¿Está seguro de estornar el cheque?\')"');?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+
+</div>

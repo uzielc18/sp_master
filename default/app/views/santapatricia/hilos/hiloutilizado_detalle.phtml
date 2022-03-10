@@ -1,0 +1,29 @@
+<table width="75%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered">
+  <tr>
+    <th width="10%" align="left">Doc	</th>
+    <th width="27%" align="left">Referencia</th>
+    <th width="37%" align="left">Producto</th>
+    <th width="14%" align="left">Caja</th>
+    <th width="12%" align="left">kilos</th>
+  </tr>
+ <?php
+ $suma=0;
+ foreach($hilos as $item){
+ $suma=$suma+$item->kilos;	 
+	 ?>
+  <tr>
+    <td><?php echo $item->doc?></td>
+    <td><?php echo $item->referencia?></td>
+    <td><?php echo $item->tela?></td>
+    <td><?php echo $item->cajas?></td>
+    <td><?php echo number_format($item->kilos,2,'.','')?></td>
+  </tr>
+  <?Php }?>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>TOTAL</td>
+    <td><?php echo number_format($suma,2,'.','')?></td>
+  </tr>
+</table>

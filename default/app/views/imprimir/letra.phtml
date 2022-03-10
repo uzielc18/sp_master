@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+ <html lang="es">
+	<head>
+    	<meta charset='UTF-8' />
+        <title>Santa Patricia</title>
+        <link href="/css/backend/bootstrap.css" rel="stylesheet" type="text/css" media="screen" /> 
+		<link href="/css/backend/estilos.css" rel="stylesheet" type="text/css" media="screen" />
+   		<script type="text/javascript"></script>
+        <!--link rel='stylesheet' type='text/css' href='/B1D671CF-E532-4481-99AA-19F420D90332/netdefender/hui/ndhui.css' /-->
+        </head>
+    <body>
+    <div id='cabecera' class="navbar navbar-fixed-top">
+ 	<div class="navbar-inner">
+        <div class="container">
+            <a href="/" class="brand" >Bienvenidos  a la Intranet</a>
+        </div>
+    </div>
+    </div>  
+	<div class="container">
+            <div id="contenido" class="content">
+            <div class="span12">
+               <?php 
+if(Session::get('EMPRESAS_ID')==2)
+{
+	$pre_fijo="SC-";
+}else
+{
+	$pre_fijo="SP-";
+}
+
+?>
+<div class="page-header">
+<h1>Datos <span>Datos importantes del documento</span></h1>
+</div>
+<?php 
+$i=1;
+foreach($letras as $letra):
+
+?>
+<?php 
+if($i==1){
+	$a=$letra->numero;	
+	$b=strlen($a);
+	if($b>=6){$a=substr($a, 0, -2);}
+	if(!empty($letra->nrenovacion))$a.=$item->nrenovacion; else $a.="00";
+	echo $numero1=$a;
+	}
+
+?> <br />
+<?php 
+$factura='';
+if(!empty($letra->factura))$factura=$letra->getFacturas($letra->factura);
+echo $factura; ?> <br />
+<?php echo $giro='LIMA';?>
+<?php echo $a=$letra->a?><br />
+<?php echo $b=$letra->b?><br />
+<?php echo $c=$letra->c?><br />
+<?php 
+if($i==1)echo $d1=$letra->d;?><br />
+<?php  
+if($i==1)echo $e1=$letra->e;?><br />
+<?php 
+if($i==1)echo $f1=$letra->f;?><br />
+<?php 
+if($i==1)echo $importe1=number_format($letra->total,2,'.',',');?><br />
+<?php
+echo $importe1=$letra->simbolo.' '.$importe1;
+$NUMERO =new NumerosLetras();
+if($i==1)echo $moned_en_letras1=$NUMERO->NL($letra->total,$letra->moneda);?><br /> 
+<?php echo $razonsocial=$letra->razonsocial?> <?php echo $ruc=$letra->ruc?><br />
+<?php echo $telefonos=$letra->telefonos?> <?php echo $direccion=$letra->direccion?><br />
+<?php $aval=$letra->aval?>
+<?php $avalruc=$letra->avalruc?>
+<?php $avaltelefono=$letra->avaltelefono?>
+<?php $avaldireccion=$letra->avaldireccion?>
+
+<?php //$n=$i++;
+endforeach;
+$n=1;
+?>
+<?php
+// Lee la plantilla
+$plantilla = file_get_contents('letra1.rtf');
+ 
+// Agregamos los escapes necesarios
+$plantilla = addslashes($plantilla);
+//$plantilla = str_replace('\r','\\r',$plantilla);
+//$plantilla = str_replace('\t','\\t',$plantilla); 
+// Datos de la plantilla
+ 
+// Procesa la plantilla
+eval( '$rtf = <<<EOF_RTF
+' . $plantilla . '
+EOF_RTF;
+' );
+
+$archivo_nombre=$pre_fijo."LTR-".$numero1.".rtf";
+// Guarda el RTF generado, el nombre del RTF en este caso sera el apellido-nombre.fechaactual.rtf
+file_put_contents("./letras/".$archivo_nombre,$rtf);
+$ruta=base64_encode("./letras/".$archivo_nombre);
+//chmod("./facturas/".$archivo_nombre, 0444);
+if(Auth::get('id')==3)
+{	
+echo Html::linkAction('descargar/'.$ruta,'descargar','class="btn btn-warning"');
+}
+echo "<a href=\"/letras/".$archivo_nombre."\" class='btn btn-info'>descargar</a>";
+
+
+
+?>
+<div class="cl"></div>
+			</div>
+<div class="cl"></div>
+            </div>
+<div class="cl"></div>
+    </div> 
+    </body>
+</html>
+

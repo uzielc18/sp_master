@@ -1,0 +1,138 @@
+<div class="card"><h1>Venta - <?php echo Session::get('DOC_NOMBRE')?></h1></div>
+<?php 
+$monedas= $salida->tesmonedas_id;
+switch ($monedas)
+{
+	case 1: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES'; break;
+	case 2: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 4: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
+	case 5: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 0: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
+}
+
+?>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="card-body">
+<?php if($salida->estadosalida=='ANULADO'){?><div class="texto"> ANULADO </div><?php }?>
+<div id="ver_resultado"></div>
+
+<table width="75%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered">
+<caption>Detalle de la factura</caption>
+  <tr>
+    <th width="22%" align="left">Pedido:</th>
+    <td width="34%"><?php echo $salida->npedido;?></td>
+    <th width="34%" align="left">Serie-Numero:</th>
+    <td width="10%"><?php echo $salida->serie;?>-<?php echo $salida->numero;?></td>
+  </tr>
+  <tr>
+    <th align="left">Moneda:</th>
+    <td><?php echo $salida->getTesmonedas()->nombre;?></td>
+    <th align="left">Fecha de Traslado:</th>
+    <td><?php echo $salida->finiciotraslado;//finiciotraslado?></td>
+  </tr>
+  <tr>
+    <th align="left">Cliente:</th>
+    <td colspan="3"><?php echo $salida->getTesdatos()->razonsocial?> <?php echo ($salida->getTesdatos()->ar=='SI') ? ' <b class="text-error">Es Agente de Retencion</b>': '';?></td>
+  </tr>
+  <tr>
+    <th align="left">Direccion de Entrega:</th>
+    <td colspan="3"><?php echo $salida->direccion_entrega;//finiciotraslado?></td>
+  </tr><?php if(Session::get('DOC_ID')==15){?>
+  <tr>
+    <th align="right">Conductor:</th>
+    <td>
+      <?php echo $prodetalletransportes->getProtransportistas()->nombre;?>
+    </td>
+    <th align="right">Transporte:</th>
+    <td><?php echo $prodetalletransportes->getProtransportes()->modelo;?></td>
+  </tr><?php }?>
+</table>
+<div id="guia">
+<table width="81%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-hover">
+<caption>Detalle del documento </caption>
+  <tr>
+    <th width="13%" align="left">Codigo</th>
+    <th width="23%" align="left">Descripcion</th>
+    <th width="14%" align="left">Cantidad</th>
+    <th width="17%" align="left">Unidad</th>
+    <?php //if(Session::get('DOC_ID')==7){?>
+    <th width="11%" align="left">P. U</th>
+    <th width="10%" align="right">Desto</th>
+    <th width="12%" align="right">Importe</th>
+	<?Php //}?>
+  </tr>
+  <?php
+  $n=0;
+  $total=0;
+  foreach($detalles as $item){
+	  $n++;
+	  ?> 
+  <tr id="<?php echo $item->id?>">
+    <td><?php echo $n?>.
+	<?php 
+	if(empty($item->getProrollos()->prorollos_id))
+	{
+		//echo $item->prorollos_id
+		echo $item->getProrollos()->numero?>-M
+		<?php echo $item->getProrollos()->maquina_numero;
+	}else{
+	echo $item->getProrollos()->codigo?>-
+	<?php echo $item->getProrollos()->numeroventa; 
+	echo ' '.$item->getProrollos()->getNprocesos($item->prorollos_id);
+	}?></td>
+    <td><?php echo $item->getTesproductos()->nombre?> <?php echo $item->getTesproductos()->detalle?> <?Php if(!empty($item->tescolores_id))echo $item->getTescolores()->nombre?></td>
+    <td><?php echo $item->cantidad?></td>
+    <td><?Php echo $item->getTesunidadesmedidas()->simbolo?></td>
+    <?php //if(Session::get('DOC_ID')==7){?>
+    <td><?php echo $simbolo?><?php echo number_format($item->preciounitario,2,'.','');?></td>
+    <td align="right"><?php if(empty($item->descuento))echo "0.00";else echo $item->descuento/100?></td>
+    <td align="right"><?php echo $simbolo?><?php 
+	if(empty($item->importe)){$total=$total+$item->preciounitario*$item->cantidad; echo $item->preciounitario*$item->cantidad; }else{ echo number_format($item->importe,2,'.','');$total=$total+number_format($item->importe,2,'.','');}?></td>
+    <?php //}?>
+  </tr>
+  <?php }?>
+
+ 
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td align="right"><strong>Sub Total</strong></td>
+    <td align="right"><?php echo $simbolo?><?php echo $total;//echo number_format($total,2,'.','');?></td>
+  </tr> 
+ <?Php foreach($valores as $valor):
+ $total=$valor->valor;
+ ?>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td align="right"><strong><?php echo $valor->nombre?></strong></td>
+    <td align="right"><strong><?Php echo number_format($valor->valor,2,'.','')?></strong></td>
+  </tr>
+  <?php endforeach;?>
+  <tr>
+  <td colspan="7">
+  <?php echo nl2br($salida->glosa)?>
+<?php echo $texto=NumerosLetras::NL($total,$moneda_letras);?></td>
+  </tr>
+  <?php //}?>
+</table>
+ 
+<button onclick="myFunction()" class="btn btn-info"> IMPRIMIR </button> <?php echo Html::linkAction('exportacion/'.$salida->id,' Editar Exportacion','class="btn"')?>
+<?php 
+$hrf='exportaciones';
+?>
+<script>
+function myFunction() {
+    window.open("http://"+document.domain+"/imprimir/<?php echo $hrf?>", "_blank", "toolbar=NO, scrollbars=yes, resizable=yes, top=100, left=250, width=600, height=400");
+}
+</script>
+</div>
+</div>

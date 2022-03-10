@@ -1,0 +1,27 @@
+<?php View::content()?>
+<div class="card">
+    <h1>Listado de cajas en trama</h1>
+</div>
+<div class="form-actions">
+</div>
+<?php //echo Sp::imprimir('Abonos Adelanto - ','P');?> 
+<div id="ver"></div>
+<div class="card-body">
+<table class="table table-condensed">
+<caption>Cajas en proceso de ingreso</caption>
+  <tr>
+    <th width="37">T/caja</th>
+    <th width="17">N#</th>
+    <th width="33">Stock</th>
+    <th width="51">Producto</th>
+  </tr>
+  <?php foreach($libres as $item){?>
+  <tr title="<?php echo $item->getTesdetalleingresos()->getTesingresos()->getTesdatos()->razonsocial?>">
+    <td><?php echo $item->nombre?></td>
+    <td><?php echo $item->numerodecaja?></td>
+    <td><?php $S=explode('-',$item->getStockCC($item->id));echo $S[0].' kg'; echo '<br />'.$S[1].' conos';?></td>
+    <td><?php echo $item->getTesdetalleingresos()->getTesproductos()->nombrecorto?> (<?php echo $item->getTesdetalleingresos()->getTescolores()->nombre?> )</td>
+  </tr>
+  <?php }?>
+</table>
+</div>

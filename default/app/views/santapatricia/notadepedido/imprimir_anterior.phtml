@@ -1,0 +1,113 @@
+<?php
+$simbolo="S/. ";
+View::content();
+?>
+<div class="card">
+<h1>Vista para imprimir</h1>
+</div>
+<div class="form-actions">
+<?php echo Html::linkAction("listado/Produccion", 'Listado de Pedidos','class="btn btn-secondary"');?> 
+</div>
+
+<?php echo Sp::imprimir('Pedidos pendientes - ','P');?> 
+<div class="card-body" id="exportar_excel">
+<table width="75%" class="table-bordered" align="center">
+   <thead>
+    <tr>
+    	<th colspan="4" align="left" valign="top"><?php echo $empresa->razonsocial?></th>
+    	<th width="13%" align="left" valign="top">&nbsp;</th>
+    	<th width="12%" align="left" valign="top">Area:</th>
+    	<th width="13%" colspan="2" align="left" valign="top">Diseño</th>
+    </tr>
+    <tr>
+      <th width="6%" align="left" valign="top"><?php echo date("d/m/Y");?> <?php echo date("H:i:s");?></th>
+      <th colspan="4" align="left" valign="top">&nbsp;</th>
+      <th align="left" valign="top">Pedido:</th>
+      <th colspan="2" align="left" valign="top">Trama</th>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Estado: </th>
+      <th width="16%" align="left" valign="top">Pendiente</th>
+      <th width="25%" align="left" valign="top">&nbsp;</th>
+      <th width="15%" align="left" valign="top">&nbsp;</th>
+      <th align="left" valign="top">&nbsp;</th>
+      <th align="left" valign="top">&nbsp;</th>
+      <th colspan="2" align="left" valign="top">&nbsp;</th>
+    </tr>
+  </thead>
+</table>
+<br />
+<table width="100%"  class="table-bordered">
+     <tbody> 
+		  <?php 
+		  		
+			  $codigo_a='NN0000';	
+			  $n=0;
+			  $totalP=0;
+			  $totalC=0;
+			  foreach($detalles as $item){
+				  $n++;
+				$codigo_b=$item->codigo;
+				if($codigo_a!=$codigo_b){
+					?>
+                 <tr>
+		 	<th colspan="2" align="left" valign="top" style="border-top:#666 double 1px;">Nº. Pedido: <?php echo $item->codigo?></th>
+		 	<th width="49%" align="left" valign="top" style="border-top:#666 double 1px;"><span class="description">Articulo: <?php echo $item->tela?></span></th>
+		 	<th width="16%" valign="top" align="left" style="border-top:#666 double 1px;">M-<?php echo $item->numero?></th>
+	 	</tr>   
+                    
+          <?php	}  ?>  
+		  <tr id="<?php echo $n?>" class="item-row">
+             <td colspan="2" valign="top"><?php /*if(empty($item->getTesproductos()->codigo_ant))echo $item->getTesproductos()->codigo; else echo $item->getTesproductos()->codigo_ant;*/  ?><?php //echo $item->getTesproductos()->nombre?> <?php echo $item->getTesproductos()->detalle?></td>
+		     <td valign="top" class="description"><?php echo $item->getTescolores()->nombre?></td>
+		 	 <td align="left"><?php echo number_format($item->cantidad,2,'.','');?>
+	 	     <?php $totalC=$totalC+$item->cantidad;?>
+	 	     <?php echo $item->getTesunidadesmedidas()->simbolo?></td>
+	      </tr>
+		  
+		  <?php
+			 $codigo_a=$item->codigo; }/*FIN FOREACH*/?>
+              </tbody>
+	  </table>
+      <br />
+  <table width="100%" border="0" cellspacing="1" cellpadding="0" class="table-bordered table-stripe">
+  <tr>
+    <td colspan="7" align="right">FECHA:</td>
+    <td width="16%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan="7" align="right">HORA:</td>
+    <td>&nbsp;</td>
+  </tr>
+  </table>
+  <table width="100%" class="table table-bordered">
+  <tr>
+    <th width="9%">Nº B/C</th>
+    <th width="10%">Conos</th>
+    <th width="10%">Peso</th>
+    <th width="19%">MATERIAL</th>
+    <th width="13%">COLOR</th>
+    <th width="10%">LOTE</th>
+    <th width="13%">MAQ.</th>
+    <th>ARTICULO</th>
+  </tr>
+  <?php 
+  $n=0;
+  ?>
+ 
+  <?php for($i=1;$i<=(10-$n);$i++){?>
+  <tr>
+    <td></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <?php }?>
+</table>
+
+  </div>
+</div>

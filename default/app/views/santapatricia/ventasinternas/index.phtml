@@ -1,0 +1,112 @@
+<div class="card">
+    <h1>Boletas de venta<span>Reporte de ventas por mes.</span></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="form-actions">
+<?php echo Html::linkAction("guias/15", 'Listado de guias ','class="btn btn-primary"') ?>
+</div>
+<div class="menu">
+<ul>
+<li>
+<a href="javascript:;">
+Año 
+<select id="anio">
+<?php
+for($i=2011;$i<=2020;$i++)
+{
+	$selec='';
+	if($anio==$i){
+	$selec=' selected="selected"';
+	}
+	echo '<option value="'.$i.'" '.$selec.'>'.$i.'</option>';
+}
+?>
+</select>
+</a>
+</li>
+</ul>
+<?php 
+$mes_actual=date('Y-m');
+foreach($meses as $clave => $mes):
+if($anio.'-'.$clave<=$mes_actual){
+$class='';
+if($mes_activo==$clave)$class=' active';
+echo '<ul>';
+echo '<li><a class="enviar'.$class.'" id="mes-'.$mes.'" href="javascript:;" data-id="'.$anio.'-'.$clave.'-01">'.$mes.'</a></li>'; 
+echo '</ul>';
+}
+endforeach;?>
+</div>
+<?php echo Sp::imprimir('Guias internas -','p',array("W"=>"W","EX"=>"EX","P"=>"P"));?>
+<div class="card-body">
+<div id="ver_resultado"></div>
+<table width="95%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped" id="exportar_excel">
+<caption>Guias internas del mes!</caption>
+  <tr>
+  	<th width="26">Nº</th>
+    <th width="157">Cliente</th>
+    <th width="79">Número Doc.</th>
+    <th width="316">Productos</th>
+    <th width="82" align="right">Total</th>
+  </tr>
+<?php $number=0;
+foreach($ventas as $item){ 
+$simbolo="S/. ";
+
+switch ($item->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+
+$number++;?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20"><?php echo $number?></td>
+  	<td height="20"><?php echo $item->getTesdatos()->razonsocial?></td>
+    <td><?php echo $item->serie?>-<?php echo $item->numero?></td>
+    <td>
+    <small style="color:#666; font-size:10px !important; font-style:italic; ">
+	<?php
+    
+	$n=0;$m=0;
+	foreach($item->getTesdetallesalidasinternas() as $det)
+	{
+		if($det->tesproductos_id!=0){$n++;
+		echo $det->getTesproductos()->nombre;if(count($item->getTesdetallesalidasinternas())>$n){echo ", ";}
+		}else{
+			echo $det->concepto;
+			}
+	}
+	?>
+    </small>
+    </td>
+    <td align="right"><?php if(!empty($item->total))echo $simbolo.number_format($item->total,2,'.','');else echo('S/ 00.00')?></td>
+  </tr>
+<?php }?>
+</table>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#anio").change(function(event){
+    	var id = $("#anio").find(':selected').val();
+		location.href = '/<?php echo $module_name?>/ventasinternas/index/'+id;
+     });
+	$(".enviar").click(function()
+	{
+		var fecha = $(this).attr('data-id');
+		var F=fecha.split('-');
+		location.href = '/<?php echo $module_name?>/ventasinternas/index/'+F[0]+'/'+F[1];
+	});
+	$(".botonExcel").click(function(event)
+	{
+		$("#datos_a_enviar").val( $("<div>").append( $("#exportar_excel").eq(0).clone()).html());
+		$("#FormularioExportacion").submit();
+	});
+});
+</script>

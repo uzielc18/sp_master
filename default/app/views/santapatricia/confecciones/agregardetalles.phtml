@@ -1,0 +1,177 @@
+<?php echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?><div class="card">
+    <h1><em>Crear Salida<span><?php echo Session::get('DOC_NOMBRE')?></span></em></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="card-body">
+<div id="ver_resultado"></div>
+<?php echo Form::open(NULL,'POST','class="form-inline"')?>
+<?php echo Form::hidden('salida.id')?>
+<?php echo Form::hidden('prodetalletransportes.id')?>
+<?php echo Form::hidden('prodetalletransportes.tessalidas_id')?>
+    
+    <div class="input-prepend">
+    <span class="add-on">Pedido</span>
+    <?php echo Form::text('salida.npedido','size="8" readonly="readonly"');?>&nbsp;
+    <span class="add-on">Serie</span>
+    <?php echo Form::text('salida.serie','size="4" readonly="readonly"');?>&nbsp;
+    <span class="add-on">Numero</span>
+    <?php echo Form::text('salida.numero','size="10"  readonly="readonly"');?>&nbsp;
+    <span class="add-on">Moneda</span>
+    <?php echo Form::dbSelect('salida.tesmonedas_id','simbolo,nombre',array("tesmonedas",'find','conditions: aclempresas_id='.Session::get('EMPRESAS_ID')));?>&nbsp;
+    <span class="add-on">Destino:</span>
+    <select><option>TINTORERIA-TI</option></select>
+	<?php //echo Form::dbSelect('salida.hilodestino_id','nombre,abr',array("hilodestino",'find'));?><br />
+    <span class="add-on">Proveedor</span>
+    	<input id="CL" />
+      <?php echo Form::hidden('salida.tesdatos_id')?><br />
+    <span class="add-on">Direccion de Entrega</span>
+      <?php echo Form::text('salida.direccion_entrega','class="span8"');//finiciotraslado?><br />
+    <span class="add-on">Fecha de Traslado</span>
+      <?php echo Calendar::selector('salida.finiciotraslado');//finiciotraslado?><br />
+    <span class="add-on">Conductor</span>
+      <?php echo Form::text('prodetalletransportes.protransportistas_id')?>
+    <span class="add-on">Transporte</span>
+      <?php echo Form::text('prodetalletransportes.protransportes_id')?>
+	</div>      
+  <div class="control-group">
+    <div class="controls">
+       <button type="submit" class="btn btn-primary">Modificar</button> <?php echo Html::linkAction('salidas','Cancelar','class="btn"')?>
+    </div>
+  </div>
+<?php echo Form::close();?>
+<div id="guia">
+<table width="75%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-hover">
+<caption><pre>Lista de Telas en Guia</pre></caption>
+  <tr style="font-size:12px; color:#333; font-weight:bold;">
+    <th width="9%">Codigo</th>
+    <th width="17%">Cantidad</th>
+    <th width="11%">Unidad</th>
+    <th width="53%">Descripcion</th>
+    <th width="10%">Accion</th>
+  </tr>
+  <?php 
+  $n=0;
+  foreach($detalles as $item){
+	  $n++;
+	  ?> 
+  <tr id="<?php echo $item->id?>">
+    <td><?php echo $n.'.'; echo $item->getProrollos()->codigo?>-<?php echo $item->getProrollos()->numeroventa; echo ' '.$item->getProrollos()->getNprocesos($item->prorollos_id);?></td>
+    <td><?php echo $item->cantidad?></td>
+    <td><?Php echo $item->getTesunidadesmedidas()->simbolo?></td>
+    <td><?php echo $item->getTesproductos()->nombre?> <?php echo $item->getTesproductos()->detalle?> <?Php echo $item->getTescolores()->nombre?></td>
+    <td><?php //echo Ajax::link($module_name.'/rollos/grabarventatelas/0/'.$item->id,'Editar','ingreso','btn','id="'.$item->prorollos_id.'"')?> <?php echo Html::link($module_name.'/rollos/borrarsalidatransformaciones/'.$item->id.'/'.$item->prorollos_id.'/','Elminar','mostrar','id="'.$item->prorollos_id.'"')?></td>
+  </tr>
+  <?php }?>
+</table>
+</div>
+<div class="form-actions">
+<?php 
+echo Html::linkAction("versalida/", 'Siguente<i class="icon-hand-right"></i>','class="btn btn-primary"') ?>&nbsp;<?php //echo Html::linkAction("salidas", 'Volver ','class="btn"') ?>
+</div>
+<hr />
+
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus="" placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+
+<table id="rollos" width="75%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-hover">
+<caption><pre>Lista de Telas en Almacen</pre></caption>
+  <tr style="font-size:12px; color:#333; font-weight:bold;">
+    <th width="30%">Producto</th>
+    <th width="12%">Color</th>
+    <th width="11%"># Rollo</th>
+    <th width="8%">Peso</th>
+    <th width="5%">Metros</th>
+    <th width="4%">O. C.</th>
+    <th width="9%">Accion</th>
+  </tr>
+ <?Php foreach($rollos as $rollo){
+	 ?> 
+  <tr id="caja-<?php echo $rollo->id?>">
+    <td><?php echo $rollo->getTesproductos()->codigo_ant?> <?php echo $rollo->getTesproductos()->nombre?> <?php echo $rollo->getTesproductos()->detalle?>  <?php //echo $rollo->estadorollo?></td>
+    <td><?php echo $rollo->getTescolores()->nombre?></td>
+    <td><?php if(empty($rollo->prorollos_id)){echo $rollo->numero?>-M<?php echo $rollo->maquina_numero;}else{echo $rollo->codigo?>-<?php echo $rollo->numeroventa;}?></td>
+    <td><?php if(!empty($rollo->peso))echo number_format($rollo->peso,2,'.',' ')?> Kg</td>
+    <td><?php if(!empty($rollo->metros))echo number_format($rollo->metros,2,'.',' ')?> m</td>
+    <td><?php echo $rollo->ordencompra?></td>
+    <td width="9%"><?php echo Ajax::link($module_name.'/rollos/grabarsalidatransformaciones/'.$rollo->id,'ENVIAR','guia','ocultar','id="'.$rollo->id.'"')?></td>
+  </tr>
+ <?php }?>
+</table>
+</div>
+<script type="text/javascript">
+$(document).ready(function()
+{
+		
+//hacemos la busqueda en el evento search del control de busqueda
+	$('#txtBuscar').on('search',function(){
+		//le decimos a la funcion que busque en la tabla tblTabla el
+		//valor que contiene el campo actual
+		$.fntBuscarEnTabla($(this).val(),'rollos');
+		
+	});
+	
+	
+});
+</script>
+<script type="text/javascript">
+$(document).ready(function()
+{
+	
+	$(".ocultar").live("click",function(){
+		var id=$(this).attr('id');
+		$("#caja-"+id).hide();
+		
+		});
+	
+	$("#CL").tokenInput("/<?php echo $module_name?>/salidas/buscarproveedor", 
+		{
+			tokenLimit: 1,
+			minChars: 2,
+			<?php if(!empty($salida->tesdatos_id)){?>
+			prePopulate: [ 
+						 {id: <?Php echo $salida->tesdatos_id?>, name: "<?php echo $salida->getTesdatos()->razonsocial?>"},
+						 ],
+			<?php }?>
+			onAdd: function (item){
+			   var VAL=item.id;
+			   $("#salida_tesdatos_id").val(VAL);
+			   var DIR=item.name.split('(');
+			   $("#salida_direccion_entrega").val(DIR[1]);
+			   //$("#BC").hide();
+			   //GrabarCliente();
+			},
+			onDelete: function (item) {
+			}
+		});
+		
+		/*transporte*/
+		$("#prodetalletransportes_protransportes_id").tokenInput("/<?php echo $module_name?>/salidas/transportes", 
+		{
+			tokenLimit: 1,
+			minChars: 2,
+			<?php if(!empty($prodetalletransportes->protransportes_id)){?>
+			prePopulate: [ 
+						 {id: <?php echo $prodetalletransportes->protransportes_id?>, name: "<?php echo $prodetalletransportes->getProtransportes()->marca.' '.$prodetalletransportes->getProtransportes()->numeroplaca?>"},
+						 ],
+			<?php }?>
+		});
+		
+		/*transportistas*/
+		
+		$("#prodetalletransportes_protransportistas_id").tokenInput("/<?php echo $module_name?>/salidas/transportistas", 
+		{
+			tokenLimit: 1,
+			minChars: 2,
+			<?php if(!empty($prodetalletransportes->protransportistas_id)){?>
+			prePopulate: [ 
+						 {id: <?php echo $prodetalletransportes->protransportistas_id?>, name: "<?php echo $prodetalletransportes->getProtransportistas()->nombre?> <?php echo $prodetalletransportes->getProtransportistas()->numerobrevete?>"},
+						 ],
+			<?php }?>
+		});
+});
+</script>

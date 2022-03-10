@@ -1,0 +1,81 @@
+<div class="card">
+    <h1><?php echo $titulo?></h1>
+</div>       
+<?php View::content() ?>
+
+        <?php echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
+        <div class="control-group">
+            <label class="control-label" for="datos_aclempresas_id">Empresa* : </label>
+            <div class="controls">
+                <?php echo Form::text('EMP','size="40" readonly="readonly"',$empresas->nombre) ?>
+            </div>
+        </div>
+        <div class="control-group" id="areas">
+        <label class="control-label" for="datos_plareas_id">Areas* : </label>
+<?php echo Form::dbSelect('datos.plareas_id', 'nombre',array('plareas','find','conditions: activo=1 and aclempresas_id='.$empresa)) ?>
+        </div>
+        <div class="control-group">
+        <label class="control-label" for="datos_plcargos_id">Cargos* : </label>
+        <?php echo Form::dbSelect('datos.placargos_id', 'nombre',array('placargos','find','conditions: activo=1 and aclempresas_id='.$empresa)) ?>
+        </div>
+            <div class="control-group">                
+                <label class="control-label" for="datos_nombres">Nombre Completo* : </label>
+                <div class="controls">
+                    <?php echo Form::text('datos.nombre','size="40"') ?>
+                </div>
+            </div>
+            <div class="control-group">                
+                <label class="control-label" for="datos_appaterno">Apellido Paterno* : </label>
+                <div class="controls">
+                    <?php echo Form::text('datos.appaterno','size="40"') ?>
+                </div>
+            </div>
+            <div class="control-group">                
+                <label class="control-label" for="datos.apmaterno">Apellido materno* : </label>
+                <div class="controls">
+                    <?php echo Form::text('datos.apmaterno','size="40"') ?>
+                </div>
+            </div>
+            <div class="control-group">                
+                <label class="control-label" for="datos.dni">DNI* : </label>
+                <div class="controls">
+                    <?php echo Form::text('datos.dni','size="40"') ?>
+                </div>
+            </div>
+            <div class="control-group">                
+                <label class="control-label" for="datos_correo">Correo Electronico* : </label>
+                <div class="controls">
+                    <?php echo Form::text('datos.correo','size="40"') ?>
+                </div>
+            </div>
+            <div class="control-group">                
+                <label class="control-label" for="datos.telefono">Telefonos : </label>
+                <div class="controls">
+                    <?php echo Form::text('datos.telefono','size="40"') ?>
+                </div>
+            </div>
+            <div class="control-group">                
+                <label class="control-label" for="datos.celular">Celulares : </label>
+                <div class="controls">
+                    <?php echo Form::text('datos.celular','size="40"') ?>
+                </div>
+            </div>
+            <div class="control-group">                
+                <label class="control-label" for="datos.fnacimiento">Fecha Nacimiento : </label>
+                <div class="controls">
+                <?php
+				 echo Calendar::selector('datos.fnacimiento')?>
+                </div>
+            </div>
+            <div class="control-group">                
+                <label class="control-label"for="datos.direccion">Direccion : </label>
+                <div>
+				<?php echo Form::text('datos.direccion','size="60"') ?>
+                </div>
+            </div>
+            <div class="form-actions">
+                <?php echo Form::submit($boton.'Cambios', 'name="datos_personas" class="btn btn-primary"') ?>
+                <?php echo Html::linkAction('listado', 'Cancelar', 'class="btn"') ?>
+            </div>
+        <?php echo Form::close() ?> 
+</div>

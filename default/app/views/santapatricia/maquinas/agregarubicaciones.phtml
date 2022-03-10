@@ -1,0 +1,50 @@
+<div class="card">
+    <h1><em>Ubicaciones por maquina</em></h1>
+</div>
+<div class="form-actions">
+<?php echo Html::linkAction("",'Volver','class="btn"') ?>     
+</div> 
+<?php View::content() ?>  
+<div class="card-body">
+<?php echo Form::open();?>
+<?php echo Form::hidden('ubicacion.id')?>
+<table width="50%" class="table-bordered" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <th width="29%" align="right" valign="top" >MAQUINA :</th>
+    <td width="71%" >
+	<?php echo $maquina->nombre?>
+	<?php echo Form::hidden('ubicacion.promaquinas_id','',$maquina->id)?></td>
+  </tr>
+  <tr>
+    <th align="right" valign="top">PARTE :</th>
+    <td>
+	<?php echo Form::text('ubicacion.nombre','')?></td>
+  </tr>
+  <tr>
+    <th align="right" valign="top">DESCRIPCION :</th>
+    <td><?php echo Form::textArea('ubicacion.descripcion','cols="40" rows="5"')?></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center"><?php echo Form::submit('Enviar','class="btn btn-primary"')?></td>
+    </tr>
+</table>
+<?php Form::close()?>
+<hr>
+<table width="50%" class="table-condensed table-striped" border="0" align="center" cellpadding="1" cellspacing="1">
+  <tr>
+    <th width="11%" scope="col" align="left"><h4>Nº</h4></th>
+    <th width="28%" scope="col" align="left"><h4>Nombre</h4></th>
+    <th width="49%" scope="col" align="left"><h4>Descripción</h4></th>
+    <th width="12%" scope="col" align="left"><h4>Acciones</h4></th>
+  </tr>
+<?php foreach($ubicaciones as $item):?>
+  <tr>
+    <td><?php echo $item->id?></td>
+    <td><?php echo $item->nombre?></td>
+    <td><?php echo $item->descripcion?></td>
+    <td><?php echo Html::linkAction('editarubicaciones/'.$maquina->id.'/'.$item->id,'Editar');?></td>
+  </tr>
+  <?php endforeach;?>
+</table>
+
+</div>

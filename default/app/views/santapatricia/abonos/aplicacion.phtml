@@ -1,0 +1,114 @@
+<div id="aplicacion">
+<script type="text/javascript">
+$(document).ready(function()
+{
+	 $('.selec').click(function()
+        {
+        var selectedItems = new Array();
+        $("input[@name='INGRESOS[]']:checked").each(function(){
+            selectedItems.push($(this).val());
+        });
+        
+        $("#l").val(selectedItems);
+    });
+	//alert($("#inventarios").serialize());
+		
+		if($("#cliente_id").val()){
+		 $.ajax({
+				type:"POST",
+				url:"/<?php echo $module_name?>/ingresos/grabar/1",
+				data:$("#inventarios").serialize(),
+				beforeSend:function(){
+				  $("#loading").show();
+				},
+				success:function(response){
+					$("#loading").hide();
+					$("#id").val(response);
+					//alert(response);
+				}
+	 
+				});
+		 }else
+		 {
+			 return FALSE;
+		}
+	 
+
+});
+</script>
+<?php if($tessalidas_id==0){?>
+
+<div>
+<div id="app">
+<?php if($adelantos){?>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <th>Numero</th>
+    <th>Provedor</th>
+    <th>Monto </th>
+    <th>accion</th>
+    </tr>
+    <?php foreach($adelantos as $adelanto){
+		  $total_applicaciones=$adelanto->getTotalAplicacion($adelanto->id);
+		?>
+  <tr>
+    <td> <?php echo $adelanto->serie.'-'.$adelanto->numero?> </td>
+    <td>  <?php //echo $adelanto->getTesingresos()->getTesdatos()->razonsocial.' '.$adelanto->getTesingresos()->getTesdatos()->ruc?>  </td>
+    <td><?php if(empty($adelanto->monto_n)){?><?php echo number_format($adelanto->monto-$total_applicaciones,2,'.',' ');}else{?><?php 
+	echo number_format($adelanto->monto_n-$total_applicaciones,2,'.',' ');?><?php }?></td>
+    <td><?php echo '<input type="checkbox" name="LETRAS[]" class="selec" value="'.$adelanto->id.'" />';?>
+     </td>
+    </tr>
+    <?php }?>
+</table>
+
+<?php echo Ajax::form('aplicacion')?>
+<?php echo Form::hidden('tesaplicacionletraingresos.id','',0);?>
+<?php echo Form::hidden('l');?>
+<?php echo Form::text('totalconigv','',number_format($total,2,'.',''))?>
+<?php echo Form::submit('GRABAR','class="btn btn-primary"');?>
+<?php echo Form::close()?>
+
+<?php }else{ 
+/*PARA INGRESAR LAS LAETRAS O CAMBIAR LAS DE DOLARES A SOLES*/
+echo Html::link($module_name.'/letras/','Verifique si tiene letras para cambiar a soles');}?>
+
+</div>
+<?php }?>
+<?php if($tessalidas_id!=0){?>
+<div id="detalle">
+<?php echo Form::open('')?>
+<?php echo Form::hidden('tesdetallevauchers.id');?>
+<?php echo Form::hidden('tesdetallevauchers.tesvauchers_id','',Session::get('V_ID'));?>
+<?php echo Form::hidden('tesdetallevauchers.tesingresos_id','');?>
+<?php echo Form::hidden('tesdetallevauchers.tessalidas_id','');?>
+<?php echo Form::hidden('tesdetallevauchers.abono','');?>
+<?php echo Form::hidden('tesdetallevauchers.cargos','');?>
+<?php echo Form::hidden('tesdetallevauchers.tesdatos_id','');?>
+<?php echo Form::hidden('tesdetallevauchers.estado','',1);?>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <th width="19%">Cuenta General</th>
+    <th width="10%">Nº Docuemnto</th>
+    <th width="14%">Fecha Vcto</th>
+    <th width="14%">Codigo Auxiliar</th>
+    <th width="14%">Descripcion</th>
+    <th width="14%">Cargo</th>
+    <th width="15%">Abono</th>
+  </tr>
+  <tr>
+    <td width="19%"><?php echo $tesdetallevauchers->getTesingresos()->cuentaporpagar;
+	 echo Form::hidden('tesdetallevauchers.plancontable','',$tesdetallevauchers->getTesingresos()->cuentaporpagar); ?></td>
+    <td width="10%"><?php echo $tesdetallevauchers->getTesingresos()->numero;?></td>
+    <td width="14%">-</td>
+    <td width="14%"><?php echo $tesdetallevauchers->getTesingresos()->getTesdatos()->ruc;?></td>
+    <td width="14%"><?php echo $tesdetallevauchers->getTesingresos()->getTesdatos()->razonsocial;?></td>
+    <td width="14%">-</td>
+    <td width="15%"><?php echo Form::text('tesdetallevauchers.monto','',number_format($total,2,'.','')); ?></td>
+  </tr>
+</table>
+<?php echo Form::submit('GRABAR','class="btn btn-primary"');?>
+<?php echo Form::close()?>
+</div>
+<?php }?>
+</div>

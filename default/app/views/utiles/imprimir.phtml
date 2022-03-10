@@ -1,0 +1,59 @@
+<?php 
+$espacio =1340;
+$espacio_letra = 15;
+$handle = printer_open('\\\\192.168.1.21\\Epson LX-300');
+
+//usar la configuracion de abajo de este parrafo si la impresora esta instalada en el mismo servidor o en todo caso se pone la IP de la maquina //donde esta instalada la impresora, recuerden que la impresora debe estar compartida en red.
+//$handle = printer_open('EPSON LQ-590 ESC/P2');
+//$handle = printer_open('hp psc 1300 series');
+
+printer_start_doc($handle, 'Mi Documento');
+printer_start_page($handle);
+$font = printer_create_font('Arial',23,12,300,false,false, false,0);
+printer_select_font($handle, $font);
+$mostrar='Nombre de LA empresa';
+$mostrar2= '001225456894';
+$mostrar3= 'Calle llas flores 123223222';
+$fecha= FraseFecha('15-11-2012');
+$descripcion= strtoupper('Valor para la venmta de o la impreson de una factura');
+$subtotal = '258';
+$igv = '58';
+$total = '369';
+$pagado =strtoupper('Trecientos sesentainueve');
+$costo_igv = '18';
+$soles = 'S/. ';
+$fecha_cancelado = '15 de niviembre del 2012';
+$numero_st = strlen($subtotal) -3;
+$numero_igv = strlen($igv) -3;
+$numero_total = strlen($total) -3;
+
+$espacio_subtotal = $espacio - ($espacio_letra * $numero_st);
+$espacio_igv = $espacio -($espacio_letra * $numero_igv);
+$espacio_total = $espacio - ($espacio_letra * $numero_total);
+
+printer_draw_text($handle,$mostrar,130,250);
+//x –>margen a la izquierda
+//y — margen top
+printer_draw_text($handle,$mostrar2,130,300);
+printer_draw_text($handle,$mostrar3,130,350);
+
+printer_draw_text($handle,$fecha,1050,315);
+
+printer_draw_text($handle,$descripcion,240,500);
+printer_draw_text($handle,$pagado,240,810);
+printer_draw_text($handle,$fecha_cancelado,560,888);
+printer_draw_text($handle,$subtotal,$espacio_subtotal,490);
+printer_draw_text($handle,$subtotal,$espacio_subtotal,850);
+printer_draw_text($handle,$soles,1195,850);
+printer_draw_text($handle,$igv,$espacio_igv,900);
+printer_draw_text($handle,$costo_igv,1135,900);
+printer_draw_text($handle,$soles,1195,900);
+printer_draw_text($handle,$total,$espacio_total,950);
+printer_draw_text($handle,$soles,1195,950);
+
+printer_delete_font($font);
+printer_end_page($handle);
+printer_end_doc($handle);
+printer_close($handle);
+
+?>

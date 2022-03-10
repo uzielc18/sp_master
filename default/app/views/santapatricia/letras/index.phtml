@@ -1,0 +1,97 @@
+<div class="card">
+    <h1>Listado de Obligaciones<span><?php echo $empresa->razonsocial?></span></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content(); echo Session::get('DOC_CODIGO'); ?>
+</div>
+<div class="card-body">
+<div id="ver_resultado"></div>
+<table width="75%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+<caption>Letras con Numero Unico de Pago</caption>
+  <tr>
+  	<th width="17" align="left">Nº</th>
+    <th width="176" align="left">Proveedor</th>
+    <th width="58" align="left">Número Doc.</th>
+    <th width="62" align="left">Numero unico</th>
+	<th width="76" align="left">F. Emision</th>
+    <th width="60" align="left">F. Vto</th>
+    <th width="96" align="left">Banco</th>
+    <th width="35" align="left">Total</th>
+    <th width="64" align="left">Acciones </th>
+  </tr>
+<?php $number=0;
+foreach($letras as $item){ 
+$simbolo="S/. ";
+
+switch ($item->getTesingresos()->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+
+$number++;?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20"><?php echo $number?><?php //echo $item->estadodeletra?></td>
+  	<td height="20"><?php echo $item->getTesingresos()->getTesdatos()->razonsocial?></td>
+    <td><?php echo $item->getTesingresos()->serie?><?php echo $item->getTesingresos()->numero?></td>
+    <td><?php echo $item->numerounico?></td>
+	<td><?php echo Sp::formatFecha('%d / %m / %Y',$item->getTesingresos()->femision)?><?php //echo $item->getTesingresos()->femision?></td>
+		<?php //echo Sp::formatFecha('%d / %m / %Y',$femision)?>
+    <td><?php echo Sp::formatFecha('%d / %m / %Y',$item->getTesingresos()->fvencimiento)?><?php //echo $item->getTesingresos()->fvencimiento?></td>
+    <td><?php echo $item->bancos?></td>
+    <td><?php if($item->getTesingresos()->totalconigv!='NaN.00' && !empty($item->getTesingresos()->totalconigv))echo $simbolo.number_format($item->getTesingresos()->totalconigv,2,'.','');else echo('S/ 00.00')?></td>
+  	
+   <td>
+	<?php echo Html::linkAction('ingresarnumero/'.$item->id.'/',Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Editar Datos del Documento"','')?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+<div class="form-actions">
+<?php //echo Html::linkAction("cargaringreso/0", 'Nueva '.Session::get('DOC_NOMBRE'),'class="btn btn-primary"') ?>&nbsp;<?php echo Html::linkAction("", 'Volver ','class="btn"') ?>
+</div>
+
+<table width="75%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+<caption>Letras sin Numero Unico de Pago</caption>
+  <tr>
+  	<th width="36" align="left">Nº</th>
+    <th width="134" align="left">Proveedor</th>
+	<th width="117" align="left">Número Doc.</th>
+	<th width="93" align="left">F. Emision</th>
+    <th width="103" align="left">F. Vto.</th>
+    <th width="102" align="left">Monto</th>
+    <th width="67" align="left">Acciones </th>
+  </tr>
+<?php $number=0;
+foreach($ingresos as $item){ 
+$simbolo="S/. ";
+
+switch ($item->getTesingresos()->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+
+$number++;?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20"><?php echo $number?> <?php echo $item->tesmonedas_id?> <?php echo $item->estadodeletra?></td>
+  	<td height="20"><?php echo $item->getTesingresos()->getTesdatos()->razonsocial?></td>
+	<td height="20"><?php echo $item->getTesingresos()->serie?><?php echo $item->getTesingresos()->numero?></td>
+	<td height="20"><?php echo Sp::formatFecha('%d / %m / %Y',$item->getTesingresos()->femision)?><?php //echo $item->getTesingresos()->femision?></td>
+    <td><?php echo Sp::formatFecha('%d / %m / %Y',$item->getTesingresos()->fvencimiento)?><?php //echo $item->getTesingresos()->fvencimiento?></td>
+    <td>
+    <?php echo $simbolo?>  <?php echo number_format($item->getTesingresos()->totalconigv,2,'.',' ')?>
+	    </td>
+    <td>
+    <?php echo Html::linkAction('ingresarnumero/'.$item->id.'/',Html::img("figuras/facturar.png",'VER','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Clic! para registrar NUMERO UNICO DE LA LETRA !"','')?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+</div>

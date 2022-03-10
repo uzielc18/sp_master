@@ -1,0 +1,95 @@
+<script type="text/javascript">
+$(document).ready(function(){
+
+		$("#tipoproducto").change(function(){
+                var op = $("#tipoproducto option:selected").val();
+                document.location = "/santapatricia/hilos/index/<?php echo $id?>/"+op;
+        });
+});
+</script>
+
+<?php View::content() ?>
+<div class="card">
+    <h1>Hilos</h1>
+ </div>
+	<div class="form-actions">
+    Seleccione el tipo de Material del Hilo <?php echo Form::dbSelect('tipoproducto','nombre',array("testipoproductos",'find','conditions: estado=1 AND activo=1 and teslineaproductos_id='.$id),'Cambiar tipo de producto','',$tipos_id);?>	
+    </div>
+   <div class="card-body">
+<?php
+if($tipos_id==0){
+foreach($tipos as $tipo){
+?>
+<h4><?php echo $linea->nombre?> - <?php echo $tipo->nombre?></h4>
+<div class="form-actions"><?php echo Ajax::linkAction("crear/".$tipo->id, 'Crear Producto','producto_nuevo-'.$tipo->id, 'btn btn-primary') ?> <?php echo $tipo->detalle?> // <?php echo $tipo->abr?>-<?php echo $tipo->id?></div>
+<div id="producto_nuevo-<?php echo $tipo->id?>"></div>
+<table width="75%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+  <thead>
+  <tr>
+  	<th>Nº</th>
+    <th>Codigo</th>
+    <th>Titulo</th>
+    <th>Sistema</th>
+    <th>Nombre (busquedas).</th>
+    <th>Detalle</th>
+    <th>Acciones</th>
+  </tr>
+  </thead>
+  <tbody id="listado-<?php echo $tipo->id?>">
+<?php $n=0;
+$PRO=$PR->find('conditions: estado=1 and activo=1 and testipoproductos_id='.$tipo->id);
+foreach($PRO as $item){ $n++;?>
+  <tr>
+  	<td><?php echo $n?></td>
+    <td><?php echo $item->prefijo?><?php echo $item->codigo?></td>
+    <td><?php echo $item->nombre?></td>
+    <td><?php if(!empty($item->hilosistema_id))echo $item->getHilosistema()->abr.''?></td>
+    <td><?php echo $item->nombrecorto?></td>
+    <td><?php echo $item->detalle?></td>
+	<td><?php echo Ajax::linkAction('editar/'.$item->id.'/'.$linea->id.'/'.$tipo->id,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'producto_nuevo-'.$tipo->id)?>
+	<?php echo Html::linkAction('borrar/'.$item->id.'/'.$linea->id.'/'.$tipo->id,Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?></td>
+
+  </tr>
+<?php }?>
+	</tbody>
+</table>
+<?php
+	}
+}else{
+	?>
+<h4><?php echo $linea->nombre?> - <?php echo $tipo->nombre?></h4>
+<div class="form-actions"><?php echo Ajax::linkAction("crear/".$tipo->id, 'Crear Producto','producto_nuevo-'.$tipo->id, 'btn btn-primary') ?> <?php echo $tipo->detalle?> // <?php echo $tipo->abr?>-<?php echo $tipo->id?>
+</div>
+<div id="producto_nuevo-<?php echo $tipo->id?>"></div>
+<table width="75%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+  <thead>
+  <tr>
+  	<th>Nº</th>
+    <th>Codigo</th>
+    <th>Titulo</th>
+    <th>Sistema</th>
+    <th>Nombre (busquedas).</th>
+    <th>Detalle</th>
+    <th>Acciones</th>
+  </tr>
+  </thead>
+  <tbody id="listado-<?php echo $tipo->id?>">
+<?php $n=0;
+$PRO=$productos;
+foreach($PRO as $item){ $n++;?>
+  <tr>
+  	<td><?php echo $n?></td>
+    <td><?php echo $item->prefijo?><?php echo $item->codigo?></td>
+    <td><?php echo $item->nombre?></td>
+    <td><?php if(!empty($item->hilosistema_id))echo $item->getHilosistema()->abr.' '?></td>
+    <td><?php echo $item->nombrecorto?></td>
+    <td><?php echo $item->detalle?></td>
+    <td><?php echo Ajax::linkAction('editar/'.$item->id.'/'.$linea->id.'/'.$tipo->id,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'producto_nuevo-'.$tipo->id)?>
+    <?php echo Html::linkAction('borrar/'.$item->id.'/'.$linea->id.'/'.$tipo->id,Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?></td>
+
+  </tr>
+<?php }?>
+	</tbody>
+</table>
+ <?php }?>
+ </div>

@@ -1,0 +1,206 @@
+<?php View::content();?>
+<style type="text/css">
+.span_float
+{
+	float:right !important;
+	margin-left:0px;
+	margin-right:-5px;
+}
+.encabezado{
+	border-top:none !important;
+	}
+</style>
+<div class="card">
+	<h1>Reporte Adelantos y su Aplicaciones <span>Reportes para exportal a excel</span></h1>
+    </div><div class="form-actions" title="Regresar!">
+    <?php echo Menu::menuReportes($action_name);?>
+	</div>
+ <div class="input-prepend input-append">
+  <span class="add-on" title="Buscar Proveedor"><strong>Busque el Cliente</strong></span>
+  <input type="text" id="demo-input-datos" name="blah" class="input-medium search-query" />
+</div>
+<?php 
+$l='';
+if($dato){echo $l=$dato->razonsocial;}
+echo Sp::imprimir('Facturas Adelanto y Aplicaciones - '.$l,'P');?>
+<?php //echo date("W");?> 
+<div class="card-body" id="uno">
+<table width="75%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered" id="exportar_excel">
+      <tr>
+        <th width="2%">&nbsp;</th>
+        <th ><?Php echo date("d/m/Y")?></th>
+        <th colspan="2"><?php echo $empresa->razonsocial?></th>
+        <th>&nbsp;</th>
+        <th width="3%">&nbsp;</th>
+      </tr>
+      <tr>
+        <th width="2%">&nbsp;</th>
+        <th><?Php echo date("H:i:s");?></th>
+        <th colspan="2">Facturas y sus aplicaciones</th>
+        <th><?Php echo date("d/m/Y")?></th>
+        <th width="3%">&nbsp;</th>
+      </tr>
+      <tr>
+        <td colspan="6" bgcolor="#C4C4C4">&nbsp;</td>
+      </tr>
+<?php $number=0;
+$a=0;
+$array_datos='';
+$total_soles=0;
+$resto_aplicacion=0;
+$doc_a=0;
+$doc_contador=0;
+foreach($ventas as $item){ 
+$maximo=count($ventas);
+$simbolo="S/. ";
+$number++;
+$doc_contador++;
+/* muestra el total de abono */
+$abono=0;
+$b=$item->datos_id;
+if($b!=$a)
+{
+/*reinicia la moneda a cero*/$doc_a=0;
+$a=$item->datos_id;
+$i_coma=',';
+if($number==1){$i_coma='';}
+$array_datos.=$i_coma.'{id: '.$item->datos_id.', name: "'.$item->razonsocial.'"}';
+?>
+<?php
+if($number!=1){
+?>
+	<tr>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>TOTAL</th>
+        <th align="right" style="font-size:11px; color:#333333;"><?Php echo number_format($total_soles,2,'.','');?></th>
+        <th align="right" style="font-size:11px; color:#333333;">
+          <?Php //echo $TOTAL."-".$total_soles."=="; 
+		echo number_format($TOTAL-$total_soles,2,'.','');?>
+        </th>
+        <th>&nbsp;</th>
+      </tr>
+      <tr>
+        <td colspan="6" bgcolor="#C4C4C4">&nbsp;</td>
+      </tr>
+   <?php }?>
+      <tr>
+        <th>&nbsp;</th>
+        <th align="left" class="encabezado">CLIENTE:</th>
+        <th colspan="3" align="left" class="encabezado"><?php echo $item->razonsocial;?></th>
+        <th>&nbsp;</th>
+      </tr>
+      <tr>
+        <th>&nbsp;</th>
+        <th align="left" class="encabezado">CODIGO:</th>
+        <th colspan="3" align="left" class="encabezado"><?php if(empty($item->codigo_ant))echo $item->codigo.'-'.$item->sufijo;else echo $item->codigo_ant ?></th>
+        <th>&nbsp;</th>
+      </tr>
+      <tr>
+        <th>&nbsp;</th>
+        <th align="left" class="encabezado">CODIGO VENDEDOR:</th>
+        <th colspan="3" align="left" class="encabezado"><?php echo $item->tesvendedores_id?></th>
+        <th>&nbsp;</th>
+      </tr>
+      <tr>
+        <th>&nbsp;</th>
+        <th width="15%" class="encabezado">FECHA*aplicaion</th>
+        <th width="18%" class="encabezado">Nº FACTURA</th>
+        <th width="17%" class="encabezado">IMPORTE</th>
+        <th width="17%" class="encabezado">SALDO</th>
+        <th>&nbsp;</th>
+      </tr>
+  <?php 
+$total_soles=0;$doc_contador=0; }?> 
+<?php /*validar el documento de adelanto*/
+$doc_b=$item->doc_id;
+if($doc_a!=$doc_b){
+	$doc_a=$item->doc_id;
+	if($doc_contador!=0)
+	{
+?>
+      <tr>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>TOTAL</th>
+        <th align="right" style="font-size:11px; color:#333333;"><?Php echo number_format($total_soles,2,'.','');?></th>
+        <th align="right" style="font-size:11px; color:#333333;">
+          <?Php //echo $TOTAL."-".$total_soles."=="; 
+		echo number_format($TOTAL-$total_soles,2,'.','');?>
+        </th>
+        <th>&nbsp;</th>
+      </tr>
+   <?php }?>
+      <tr>
+        <td>&nbsp;</td>
+        <th colspan="3" align="left">Documento de adelanto <?php echo $item->doc?> <?php echo $item->numero_adelanto?> (<?php echo $item->doc_id?>)</th>
+        <th align="right" style="font-size:11px; color:#333333;"><?php 
+/**switch ($item->tesmonedas_id)
+{
+	case 1: $simbolo='S/. ';$TOTAL=$item->totaladelanto_s;break;
+	case 2: $simbolo='$. ';$TOTAL=$item->totaladelanto;break;
+	case 4: $simbolo='S/. ';$TOTAL=$item->totaladelanto_s;break;
+	case 5: $simbolo='$. ';$TOTAL=$item->totaladelanto; break;
+	case 0: $simbolo='S/. ';$TOTAL=$item->totaladelanto;break;
+}*/
+$simbolo='S/. ';$TOTAL=$item->totaladelanto_s;
+if(empty($item->totaladelanto_s)){$simbolo='$. ';$TOTAL=$item->totaladelanto;}
+		
+		//echo 'monedas_id=>'.$item->tesmonedas_id;
+		echo $simbolo;
+		echo number_format($TOTAL,2,'.','')?></th>
+        <td>&nbsp;</td>
+      </tr>
+<?php 
+	 $total_soles=0;$doc_contador=0;
+	 }
+
+	 ?>
+     <tr title="(<?php echo $item->origen?>-<?php echo $item->app_id?>) estado : <?php echo $item->estadosalida?> semana: <?php echo $item->semana?> ">
+        <td>&nbsp;</td>
+        <td><?php echo Sp::formatFecha('%d/%m/%Y',$item->fecha)?></td>
+        <td><?php echo $item->numero?></td>
+        <td align="right"><?php 
+		/*echo $total_soles;
+		echo "<br />";*/
+		$total_soles=$total_soles+$item->montoaplicacion;
+		
+		if(!empty($item->montoaplicacion))echo number_format($item->montoaplicacion,2,'.','')?></td>
+        <td align="right"></td>
+        <td>&nbsp;</td>
+      </tr>
+      <?php 
+	  if($number==$maximo){?>
+      <tr>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>TOTAL</th>
+        <th align="right" style="font-size:11px; color:#333333;"><?Php echo number_format($total_soles,2,'.','');?></th>
+        <th align="right" style="font-size:11px; color:#333333;">
+          <?Php //echo $TOTAL."-".$total_soles."=="; 
+		echo number_format($TOTAL-$total_soles,2,'.','');?>
+        </th>
+        <th>&nbsp;</th>
+      </tr>
+      <?php }?>
+ <?php }?>
+</table>
+</div>
+<script type="text/javascript">
+$(document).ready(function()
+{
+	$("#demo-input-datos").tokenInput([<?php echo $array_datos?>],
+		{
+		  minChars: 1,
+		  tokenLimit: 1,
+		  onAdd:function(item){
+			$("#uno").load("/<?php echo $module_name?>/<?php echo $controller_name?>/<?php echo $action_name?>_uno/" + item.id);
+		  },
+		  onDelete: function (item) {
+			  $("#uno").load("/<?php echo $module_name?>/<?php echo $controller_name?>/<?php echo $action_name?>_uno/0");
+		  }
+	});
+});
+</script>
+<?php echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>

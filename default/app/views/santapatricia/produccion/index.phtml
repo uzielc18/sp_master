@@ -1,0 +1,48 @@
+<div class="card">
+
+<h1>Elegir una Maquina para Cargar Plegador/es - Iniciar Produccion</h1>
+</div>
+<?php View::content();?>
+<div class="form-actions">
+<?php echo Menu::menuProduccion('');?>
+</div>
+<div class="card-body">
+
+<ul class="tres_columnas">
+<?php foreach($maquinas as $doc):
+$a=strlen($doc->nombre);
+if($a>30)
+{
+	$nombre=substr($doc->nombre, 0, 30).'... ';
+}else
+{
+	$nombre=$doc->nombre;
+}
+?>
+  <li class="columnas orange">
+  <?php if(Auth::get('id')==3 || Auth::get('aclroles_id')==4)
+  {
+	  if($doc->validarP()<3){
+		   echo '<div style="float: right;margin-right: 50%">'.Html::link('santapatricia/eficiencias/cargarmaquina/'.$doc->id,'Eficiencia','style="color:red;width:0;"').'</div>';
+	  }
+  }?>
+  <h3><?php echo $doc->nombre?></h3>
+  
+  <div class="infomarcion">
+   <?php if($doc->estadomaquina=="Produccion"){
+	  //echo $doc->id;
+	  ?><?php  $pr=$PR->getProduccion($doc->id);echo $pr->estadoproduccion?>: <?php //print_r($pr);
+	  echo $pr->titulo.' '.$pr->guianumero?><br />
+  Plegadores No.: <?php foreach($pr->getProplegadoresenuso() as $pp): echo $pp->getProplegadores()->numero.' ';
+	   endforeach;?><?php }/*else{?>
+	   <br /><br />Programacion: <?php $pr=$PR->getProgramacion($doc->id);  
+	  if($pr!=0){echo $pr->titulo.' '.$pr->guianumero?><br />Plegadores: <?php foreach($pr->getProplegadoresenuso() as $pp): echo $pp->getProplegadores()->numero.' ';
+	   endforeach;}>
+	  <?php }/*/?>
+      </div>
+	 <?php echo Html::linkAction('cargarmaquina/'.$doc->id,'Ingresar produccion para esta maquina','')?>
+  </li>
+<?php endforeach;?>
+</ul>
+<div class="clear"></div>
+</div>

@@ -1,0 +1,270 @@
+<?php 
+$monedas= $salida->tesmonedas_id;
+switch ($monedas)
+{
+	case 1: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES'; break;
+	case 2: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 4: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
+	case 5: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 0: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
+}
+
+?>
+<div class="card">
+    <h1><em>Datos de la Guia<span><?php echo Session::get('DOC_NOMBRE')?></span></em></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="card-body">
+<div id="ver_resultado"></div>
+    <legend>Venta - <?php echo Session::get('DOC_NOMBRE')?></legend>
+    <div class="span5">
+    <div class="input-prepend">
+      <span class="add-on">Pedido:</span> <?php echo $salida->npedido;?>
+      <span class="add-on">Serie</span>: <?php echo $salida->serie;?><span>-</span> <?php echo $salida->numero;?>
+      <span class="add-on">Numero de Guia</span>:
+      <?php echo $salida->numeroguia;?>
+      <span class="add-on">Numero de factura</span>:
+      <?php echo $salida->numerofactura;?>
+      <span class="add-on">Moneda:</span>
+        <?php echo $salida->getTesmonedas()->nombre;?>
+      <span class="add-on">Condicion Pago:</span>
+        <?php echo $salida->getTescondicionespagos()->nombre?>
+        <span class="add-on">Cliente:</span>
+        :<?php echo $salida->getTesdatos()->razonsocial?>
+        <span class="add-on">Direccion de Entrega:</span>
+        <?php echo $salida->direccion_entrega;//finiciotraslado?>>
+        <span class="add-on">Fecha de Traslado:</span>
+        <?php echo Sp::formatFecha('%d/%m/%Y',$salida->finiciotraslado);?>
+    <span class="add-on">Fecha de Emision:</span>
+        <?php echo Sp::formatFecha('%d/%m/%Y',$salida->femision);?><br />
+    <?php if(Session::get('DOC_ID')!=7){?>
+    <span class="add-on">Conductor:</span>
+    <?php echo $prodetalletransportes->getProtransportistas()->nombre;?>
+	<span class="add-on">Transporte</span>:<?php echo $prodetalletransportes->getProtransportes()->modelo;?>
+	<?php }?>
+    	</div>
+    </div>
+
+
+<div id="guia">
+<table width="75%" border="0" align="center" cellpadding="0" cellspacing="1" class="table table-hover">
+<caption>Detalle de Guia</caption>
+  <tr>
+    <th width="6%">Codigo</th>
+    <th width="39%">Descripcion</th>
+    <th width="7%">Unidad</th>
+    <th width="13%">Cantidad</th>
+    <?php if(Session::get('DOC_ID')==7){?>
+    <th width="11%">Precio Unitario</th>
+    <th width="15%">Descuento</th>
+    <th width="9%">Importe</th>
+	<?Php }?>
+  </tr>
+  <?php
+  $n=0;
+  $total=0;
+  foreach($detalles as $item){
+	  $n++;
+	  ?> 
+  <tr id="<?php echo $item->id?>">
+    <td><?php echo $n?>. P/A</td>
+    <td><?php echo $item->concepto;?></td>
+    <td>UNI</td>
+    <td><?php if(Session::get('DOC_ID')==15)echo $item->pesoneto;else echo $item->cantidad?></td>
+    <?php if(Session::get('DOC_ID')==7){?>
+    <td><?php echo $simbolo?><?php echo number_format($item->importe,2,'.','');?></td>
+    <td><?php if(empty($item->descuento))echo "0.00";else echo $item->descuento/100?></td>
+    <td><?php echo $simbolo?><?php 
+	$total=$total+$item->importe;
+	echo number_format($item->importe,2,'.','');?></td>
+    <?php }?>
+  </tr>
+  <?php }?>
+
+  <?php if(Session::get('DOC_ID')==7){?>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>Sub total</td>
+    <td><?php echo $simbolo?><?php echo number_format($total,2,'.','');?></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>IGV</td>
+    <td><?php echo $simbolo?><?php $igv=$total*(Session::get('IGV'));echo number_format($igv,2,'.','')?></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>TOTAL</td>
+    <td><?php echo $simbolo?><?php $TOTAL=$total+$igv;echo number_format($TOTAL,2,'.','');?></td>
+  </tr>
+  <tr>
+  <td colspan="7">
+<?php echo $texto=NumerosLetras::NL($total+$igv,$moneda_letras);?></td>
+  </tr>
+  <?php }?>
+</table>
+<?php if(Session::get('DOC_ID')==7){?>
+<script type="text/javascript">
+function cargar()
+	{
+		$("#pago_con_letras").load('/<?php echo $module_name?>/cancelacionfacturas/unafactura/<?php echo $salida->id?>/'+<?php echo $letras?>);
+	}
+$(document).ready(function()
+{
+
+	$("#editar_letras").click(function(){
+		alert('hola');
+		cargar();
+	});
+});
+	</script>
+    <?php 
+	if($salida->tescondicionespagos_id==2){
+	if($letras>0){?>
+	<script type="text/javascript">
+	$(document).ready(cargar);
+	</script>
+	<div id="pago_con_letras">
+    </div>
+	
+	<?php }elseif($l_f==0){?>
+    <strong><em>Nro. de Letras a Ingresar !<br /></em></strong><?php echo Form::text('letras');?> <a href="javascript:;" class="btn btn-primary" id="enviar_numero_de_letras">Enviar</a>
+    <script type="text/javascript">
+$(document).ready(function()
+{
+	//alert('1');
+	$("#enviar_numero_de_letras").click(function(){
+		var numero_letras= $("#letras").val();
+		$("#pago_con_letras").html('');
+		alert('Ud. Esta generando '+numero_letras+' Letras');
+		$("#pago_con_letras").load('/<?php echo $module_name?>/cancelacionfacturas/unafactura/<?php echo $salida->id?>/'+numero_letras);
+		$("#n_let").hide();
+		});
+});
+</script>
+<?php echo Form::open(NULL,'POST','class="form-inline"')?>
+<?php echo Form::hidden('salida.id')?>
+<?php echo Form::hidden('salida.aclusuarios_id')?>
+<?php echo Form::hidden('salida.tesmonedas_id')?>
+<?php echo Form::hidden('salida.tesdatos_id')?>
+<?php echo Form::hidden('salida.tesdocumentos_id')?>
+<?php echo Form::hidden('salida.testipocambios_id')?>
+<?php echo Form::hidden('salida.estadosalida','','Pendiente')?>
+<?php echo Form::hidden('salida.totalconigv');?>
+<?php echo Form::hidden('salida.igv');?>
+<?php echo Form::hidden('salida.totalenletras');?>
+<?php if($salida->estadosalida=='Editable'){?><button type="submit" class="btn btn-primary">Finalizar Sin crear Letras</button> 
+<?php echo Html::linkAction('factura_adelanto/'.Session::get('SALIDA_ID'),'Editar','class="btn btn-success"');?><?Php }else{?><?php echo Html::linkAction('guias/'.Session::get('DOC_ID'),'Listado','class="btn"')?> 
+<?php }?>
+<?php echo Form::close();?>
+	<div id="pago_con_letras">
+    </div>
+<?php }else{?>
+<div id="pago_con_letras">
+<table width="50%" border="0" cellspacing="1" cellpadding="0">
+  <tr>
+    <th width="13%" align="left">Nro. Letra</th>
+    <th width="29%" align="left">F. Emision</th>
+    <th width="35%" align="left">F. Vencimiento</th>
+    <th width="7%" align="left">Monto</th>
+    </tr>
+   <?php
+foreach($lets as $let){
+$q=$let->id;
+$factura_id=$let->factura_id;
+	?>
+  <tr>
+    <td>
+      <?php echo $let->getTessalidas()->numero?> </td>
+    <td><?php echo Sp::formatFecha('%d/%m/%Y',$let->getTessalidas()->femision);?></td>
+    <td><?php echo Sp::formatFecha('%d/%m/%Y',$let->getTessalidas()->fvencimiento);?></td>
+    <td> 
+     <?php echo number_format($let->getTessalidas()->totalconigv,2,'.','')?>
+     </td>
+    </tr>
+	<?php }?>
+</table>
+<button onclick="myFunction_l()" class="btn btn-info"> IMPRIMIR LETRAS </button>
+<?php 
+echo $factura_id;
+$hrf_l='letras';?>
+<script>
+function myFunction_l() {
+    window.open("http://"+document.domain+"/imprimir/<?php echo $hrf_l?>/<?php echo $factura_id?>/<?php echo $salida->tesdatos_id?>", "_blank", "toolbar=NO, scrollbars=yes, resizable=yes, top=100, left=250, width=600, height=400");
+}
+</script>
+ </div>
+<?php 
+//echo $salida->estadosalida;
+if($salida->estadosalida=="Editable"){?><a href="javascript:;" id="editar_letras" class="btn btn-primary">Editar la Informacion de las letras</a><?php }?>
+<?php }
+	}?>
+<?php 
+//echo $salida->tescondicionespagos_id;
+if($l_f>0 || $salida->tescondicionespagos_id!=2){?>
+<?php echo Form::open(NULL,'POST','class="form-inline"')?>
+<?php echo Form::hidden('salida.id')?>
+<?php echo Form::hidden('salida.aclusuarios_id')?>
+<?php echo Form::hidden('salida.tesmonedas_id')?>
+<?php echo Form::hidden('salida.tesdatos_id')?>
+<?php echo Form::hidden('salida.tesdocumentos_id')?>
+<?php echo Form::hidden('salida.testipocambios_id')?>
+<?php echo Form::hidden('salida.estadosalida','','Pendiente')?>
+<?php echo Form::hidden('salida.totalconigv');?>
+<?php echo Form::hidden('salida.igv');?>
+<?php echo Form::hidden('salida.totalenletras');?>
+<?php if(Auth::get('aclroles_id')==4 || Auth::get('aclroles_id')==8 || Auth::get('aclroles_id')==2){
+	?>* Si desea Cancelar la factura sin generar ningun abono seleccione "Cancelar" <?php echo Form::select('salida.estadosalida',array('PAGADO'=>'Cancelar','Pendiente'=>'Pendiente'),'','Pendiente');}?>
+<?php if($salida->estadosalida=='Editable'){?><button type="submit" class="btn btn-primary">Finalizar</button> 
+<?php echo Html::linkAction('factura_adelanto/'.Session::get('SALIDA_ID'),'Editar','class="btn btn-primary"');?><?Php }else{?><?php echo Html::linkAction('guias/'.Session::get('DOC_ID'),'Listado','class="btn"')?> 
+ <?php }?>
+<?php echo Form::close();
+}
+}else{
+?>
+<?php echo Form::open(NULL,'POST','class="form-inline"')?>
+<?php echo Form::hidden('salida.id')?>
+<?php echo Form::hidden('salida.aclusuarios_id')?>
+<?php echo Form::hidden('salida.tesmonedas_id')?>
+<?php echo Form::hidden('salida.tesdatos_id')?>
+<?php echo Form::hidden('salida.tesdocumentos_id')?>
+<?php echo Form::hidden('salida.testipocambios_id')?>
+<?php echo Form::hidden('salida.estadosalida','','Pendiente')?>
+<?php echo Form::hidden('salida.totalconigv');?>
+<?php echo Form::hidden('salida.igv');?>
+<?php echo Form::hidden('salida.totalenletras');?>
+<?php if($salida->estadosalida=='Editable'){?><button type="submit" class="btn btn-primary">Finalizar</button> 
+<?php echo Html::linkAction('factura_adelanto/'.Session::get('SALIDA_ID'),'Editar','class="btn btn-primary"');?><?Php }else{?><?php echo Html::linkAction('guias/'.Session::get('DOC_ID'),'Listado','class="btn"')?>
+<?php }?>
+<?php echo Form::close();?>
+  	<?php }?>
+
+
+<button onclick="myFunction()" class="btn btn-info"> IMPRIMIR </button>
+<?php 
+$hrf='facturas';
+if(Session::get('DOC_ID')==15)$hrf='guias';?>
+<script>
+function myFunction() {
+    window.open("http://"+document.domain+"/imprimir/<?php echo $hrf?>", "_blank", "toolbar=NO, scrollbars=yes, resizable=yes, top=100, left=250, width=600, height=400");
+}
+</script>    
+</div>
+
+	<div style=" clear:both;"></div>
+</div>
+

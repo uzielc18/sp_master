@@ -1,0 +1,99 @@
+<?php View::content();?><script type="text/javascript">
+$(document).ready(function(){
+    $('.selec').click(function()
+        {
+        var selectedItems = new Array();
+        $("input[@name='SALIDA[]']:checked").each(function(){
+            selectedItems.push($(this).val());
+        });
+        
+        $("#s").val(selectedItems);
+    });
+});
+</script>
+<div class="card">
+<h1>Documentos a Cancelar!<?Php echo Session::get('RETENCION');?></h1>
+</div>
+<div class="card-body">
+<strong> Cliente :- </strong><?Php if(Session::get('cliente_id')!=0)echo $tesdatos->razonsocial;else echo "Todos";?>,
+ <strong> Forma de Pago: - </strong> <?php echo $ab->getTesformadepagosabonos()->nombre?>, <strong>Moneda: - </strong><?php echo $ab->getTesmonedas()->nombre?> <?php echo Html::linkAction('listado_app/',Html::img("figuras/renovacion.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'))?>
+	<hr />
+<?php 
+echo Form::open($module_name.'/abonos/grabardetalle_app','post');
+?>
+<?php if($ab->tesformadepagosabonos_id!=13){
+ $ab->tesformadepagosabonos_id;?>
+<?php echo Form::hidden('s');?>
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+<caption>Seleccionar Documentos Pendientes de Cancelacion (Check)</caption>
+  <tr>
+  	<th align="left">Nº</th>
+	<th align="left">F. Emision Doc.</th>
+    <th align="left">Numero</th>
+    <th align="left">Proveedor</th>
+    <th align="left">Moneda</th>
+    <th align="left">Total</th>
+    <?php if($ab->tesformadepagosabonos_id==10){
+		?><th width="0" height="0">Detraccion</th>
+	<?php }?>
+    <th align="left">Seleccionar</th>
+  </tr>
+<?php $n=0;
+foreach($salidas as $item){ 
+$n++;
+$monto_A=0;
+
+switch ($item->tesmonedas_id)
+{
+	case 1: $simbolo='S/. ';
+	 break;
+	case 2: $simbolo='$. ';
+	 break;
+	case 4: $simbolo='S/. '; 
+	break;
+	case 5: $simbolo='$. '; 
+	break;
+	case 0: $simbolo='S/. '; 
+	break;
+}
+if($item->origen=='RUC')
+  {
+	 $monto_A=$item->getAdelantos($item->id);
+  }
+  if($item->origen=='INT')
+  {
+	 $monto_A=$item->getAdelantos($item->id,'tessalidasinternas_id');
+  }
+ $desabled='';
+ if($ab->tesformadepagosabonos_id==10 && $item->origen=='INT'){ $desabled='disabled="disabled"';}
+?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20"><?php echo $n?></td>
+	<td><?php echo $item->fvencimiento?><?php //if(Auth::get('id')==3)echo $item->estadosalida?>
+    <td><?php echo $item->getTesdocumentos()->abr?>/ <?php echo $item->serie.'-'.$item->numero?></td>
+    <td><?php echo $item->getTesdatos()->razonsocial?>
+	<?php 
+	//echo $item->estadosalida;
+	if($monto_A!=0)echo " ( pago adelantado ".$simbolo.number_format($monto_A,2,'.','')." )";
+	?></td>
+    <td><?php echo $item->getTesmonedas()->nombre?></td>
+    <td><?php echo $simbolo; echo number_format($item->totalconigv-$monto_A,2,'.','');?></td>
+    <?php if($ab->tesformadepagosabonos_id==10)/*DETRACCION*/
+	{
+		?><td> <?php echo $simbolo; echo number_format($item->totalconigv*Session::get('DETRACCION'),2,'.','');?></td>
+<?php }?>
+   <td  title="Dar Check, si quiere cancelar este Documento">
+   <?php 
+    $disabled='';
+   if($ab->tesformadepagosabonos_id==3 && $item->tesdocumentos_id==34){$disabled='';}else{if($ab->tesformadepagosabonos_id==3){$disabled=' disabled="disabled"';}else{$disabled='';}}?>
+<input type="checkbox" name="SALIDA[]" class="selec"<?php echo $disabled ?> value="<?php echo $item->id?>-<?php echo $item->origen?>" <?php echo $desabled?> />
+    </td>
+  </tr>
+<?php }?>
+</table>
+<?php }?>
+<div class="form-actions">
+    <?php echo Form::Submit('Enviar Detalles','class="btn btn-primary"') ?>
+</div>
+<?php echo Form::close()?>
+</div>

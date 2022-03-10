@@ -1,0 +1,36 @@
+<?php 
+//Tag::css('backend/bootstrap');
+//Tag::css('backend/estilos');
+//echo Html::includeCss();
+//$stylesheet1 = file_get_contents('css/backend/bootstrap.css');
+//$stylesheet2 = file_get_contents('css/backend/estilos.css');
+ini_set('max_execution_time',360000);
+set_time_limit(360000) ;
+ignore_user_abort(true) ;
+
+
+Load::lib('mpdf');
+$empresa=Session::get('EMPRESAS_NOMBRE');
+//$nombre='Reporte';
+$content = $p;
+$mpdf = new MPDF();
+$mpdf->SetHeader($empresa.'|'.$nombre.'|{DATE j-m-Y}');
+$mpdf->SetFooter($nombre.'||{PAGENO}/{nbpg}');
+
+$mpdf->defaultheaderfontsize=8;
+$mpdf->defaultheaderfontstyle='B';
+$mpdf->defaultheaderline=0;
+$mpdf->defaultfooterfontsize=8;
+$mpdf->defaultfooterfontstyle='BI';
+$mpdf->defaultfooterline=0;
+//$mpdf->SetAutoFont(10);
+//$mpdf->WriteHTML($stylesheet,1);
+//$mpdf->WriteHTML($stylesheet,2);
+//$mpdf->useDefaultCSS2 = true;
+$mpdf->SetDefaultFontSize(10);
+$mpdf->tableMinSizePriority=true;
+
+$mpdf->WriteHTML($content,2);
+$mpdf->Output();
+exit;
+?>

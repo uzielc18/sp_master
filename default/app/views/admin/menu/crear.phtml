@@ -20,37 +20,37 @@
                 <div class="form-group row">
                     <label for="menu_aclmenus_id" class="col-sm-3">Menu Padre : </label>
                     <div class="col-sm-9">
-                        <?php echo Form::dbSelect('aclmenus.aclmenus_id', 'nombre', array('aclmenus', 'find', 'activo = 1'), 'Ninguno', 'class="form-control select2"') ?>
+                        <?php echo Form::dbSelect('aclmenus.aclmenus_id', 'nombre', array('aclmenus', 'find', 'activo = 1'), 'Ninguno', 'class="form-control form-control-sm select2"') ?>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="menu_aclrecursos_id" class="col-sm-3">Recurso al que Accede : </label>
                     <div class="col-sm-9">
-                        <?php echo Form::dbSelect('aclmenus.aclrecursos_id', 'recurso', NULL, NULL, 'class="form-control select2"') ?>
+                        <?php echo Form::dbSelect('aclmenus.aclrecursos_id', 'recurso', NULL, NULL, 'class="form-control form-control-sm select2"') ?>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="menu_nombre" class="col-sm-3">Texto a Mostrar : </label>
                     <div class="col-sm-9">
-                        <?php echo Form::text('aclmenus.nombre', 'class="form-control"') ?>
+                        <?php echo Form::text('aclmenus.nombre', 'class="form-control form-control-sm"') ?>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="menu_url" class="col-sm-3">Url del Menu : </label>
                     <div class="col-sm-9">
-                        <?php echo Form::text('aclmenus.url', 'class="form-control"') ?>
+                        <?php echo Form::text('aclmenus.url', 'class="form-control form-control-sm"') ?>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="menu_posicion" class="col-sm-3">Posicion en el Menu : </label>
                     <div class="col-sm-9">
-                        <?php echo Form::text('aclmenus.posicion', 'class="form-control"') ?>
+                        <?php echo Form::text('aclmenus.posicion', 'class="form-control form-control-sm"') ?>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="menu_clases" class="col-sm-3">Clases del Menu : </label>
                     <div class="col-sm-9">
-                        <?php echo Form::text('aclmenus.clases', 'class="form-control"') ?>
+                        <?php echo Form::text('aclmenus.clases', 'class="form-control form-control-sm"') ?>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -98,7 +98,7 @@
             </div>
             <div class="col-lg-5">
                 <section>
-                    <h2 class="page-header">Web Application Icons</h2>
+                    <h2 class="title">Web Application Icons</h2>
 
                     <div class="row fontawesome-icon-list">
 

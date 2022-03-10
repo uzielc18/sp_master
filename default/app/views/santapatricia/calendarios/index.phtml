@@ -1,0 +1,77 @@
+<?Php View::content()?>
+<script type='text/javascript'>
+
+	$(document).ready(function() {
+
+		var date = new Date();
+		var d = date.getDate();
+		var m = date.getMonth();
+		var y = date.getFullYear();
+
+		$('#calendar').fullCalendar({
+            header: {
+				left: 'prev,next today',
+				center: 'title',
+				right: 'month,agendaWeek,agendaDay'
+			},
+			eventSources:[
+			{
+				url: '/<?Php echo $module_name?>/calendarios/getCumple/',
+				color: '#FF9C2C',
+				textColor: 'white'  // an option!
+        	},
+			{
+				url: '/<?Php echo $module_name?>/calendarios/get_eventos/',
+				color: 'blue',
+				textColor: 'white'  // an option!
+        	},
+			{
+				url: '/<?Php echo $module_name?>/calendarios/get_eventos_diarios/',
+				color: '#11ABEB',
+				textColor: 'white'  // an option!
+        	},
+			{
+				url: '/<?Php echo $module_name?>/calendarios/get_eventos_semanales/',
+				color: '#EB8511',
+				textColor: 'white'  // an option!
+        	},
+			{
+				url: '/<?Php echo $module_name?>/calendarios/get_eventos_mensuales/',
+				//color: '#FF9C2C',
+				//textColor: 'white'  // an option!
+        	},
+			{
+				url: '/<?Php echo $module_name?>/calendarios/get_eventos_anuales/',
+				color: '#5B605F',
+				textColor: 'white'  // an option!
+        	}
+			//get_eventos_mensuales
+			]
+		});
+        //$('#calendar').fullCalendar('next');
+
+	});
+
+</script>
+<style type='text/css'>
+
+	#calendar {
+		width: 100%;
+		margin: 0 auto;
+		}
+
+</style>
+
+<div class="card">
+    <h1>Calendario<span>Calendario de Eventos y Cumpleaños</span></h1>
+</div>
+<div class="form-actions"><?php foreach($tipos as $tipo){echo Html::linkAction('cargartipo/'.$tipo->id.'/crear','Crear '.$tipo->nombre,'class="btn"'); } ?></div>
+<div class="card-body">
+<div id='calendar'></div>
+</div>
+<?php 
+Tag::css('fullcalendar/fullcalendar');
+Tag::css('fullcalendar/fullcalendar.print','media="print"');
+echo Html::includeCss();
+echo Tag::js('jquery/fullcalendar/fullcalendar');
+?>

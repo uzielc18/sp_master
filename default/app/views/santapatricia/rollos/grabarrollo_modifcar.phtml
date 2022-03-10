@@ -1,0 +1,75 @@
+
+<?php 
+$n=$rollo->id;
+echo Ajax::form('rollo'.$n,'santapatricia/rollos/grabarrollo_modificar/'.$rollo->id)?>
+<?php echo Form::text('a','',$n)?>
+<?php echo Form::hidden('prorollos'.$n.'.id','',$rollo->id);?>
+<?php echo Form::hidden('prorollos'.$n.'.enalmacen','','1');?>
+<?php //echo($rollo->prorollos_id)?><?php //echo($rollo->tesproductos_id)?>
+<?php echo Form::hidden('prorollos'.$n.'.prodetalleproduccion_id','',$rollo->prodetalleproduccion_id);?>
+<table width="97%" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <td width="94" align="left" valign="top">Codigo:</td>
+    <td width="25" valign="top"><?php
+	echo Form::text('prorollos'.$n.'.codigo','',$rollo->codigo);?></td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">Numero Venta:
+    <br />
+    Numero </td>
+    <td valign="top"><?php 
+	echo Form::text('prorollos'.$n.'.numeroventa','size="15"',$rollo->numeroventa);?><?php echo Form::text('prorollos'.$n.'.numero','size="15"',$rollo->numero
+	);?></td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">Numero </td>
+    <td valign="top"><?php echo Form::text('prorollos'.$n.'.numero','size="15"',$rollo->numero
+	);?></td>
+  </tr>
+  <tr>
+    <td>Metros</td>
+    <td><?php 
+	echo Form::text('prorollos'.$n.'.metros',' class="calc"',$rollo->metros);?></td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">Peso en kilos:</td>
+    <td valign="top"><?php 
+	echo Form::text('prorollos'.$n.'.peso','size="5" class="calc"',$rollo->peso);?></td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">Ancho en metros:</td>
+    <td valign="top"><?php echo Form::text('prorollos'.$n.'.ancho','size="5"',$rollo->ancho);?></td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">Color:</td>
+    <td valign="top"><?php echo Form::text('prorollos'.$n.'.color','',$rollo->color);?></td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">Calidad:</td>
+    <td valign="top"><?php 
+	echo Form::select('prorollos'.$n.'.calidad',array('1'=>'Primera','2'=>'Segunda','3'=>'Tercera'),'Seleccione...',$rollo->calidad);?></td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">Fecha de corte:</td>
+    <td valign="top"><?php echo Calendar::text('prorollos'.$n.'.fechacorte','style="width:90%"',$rollo->fechacorte);?></td>
+  </tr>  
+  <tr>
+    <td valign="top">
+    Origen:<br />
+    Enviar a: </td>
+    <td valign="top"><?php
+	if(empty($rollo->estadorollo)){$estado='VENTA';}else{$estado=$rollo->estadorollo;}
+	echo $rollo->estadorollo;
+	 echo Form::select('prorollos'.$n.'.estadorollo',array('VENTA'=>'Almacen venta','Re-Proceso'=>'Re-Proceso'),'Seleccione...',$estado);?></td>
+  </tr>
+  <tr id="ver<?php echo $n?>" <?php if(empty($rollo->observacion_control)){?>style="display:none;"<?php }?>>
+    <td>Describa el Problema: </td>
+    <td>
+	<?php echo Form::textArea('prorollos'.$n.'.observacion_control','',$rollo->observacion_control);?>
+	</td>
+  </tr>
+  <tr>
+    <td colspan="2"><?php echo Form::submit('Grabar','id="'.$n.'" class="btn btn-primary"')?></td>
+  </tr>
+</table>
+<?php echo Form::close()?>

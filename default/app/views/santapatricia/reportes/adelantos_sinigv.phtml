@@ -1,0 +1,91 @@
+<style type="text/css">
+/*.container {
+  width: 1124px;
+}*/
+#items,input,tesarea,th,td{
+	font-size:11px !important;
+}
+.item-row td{
+	padding-left:15px !important;
+	}
+#paid
+{
+	width:80% !important;
+}
+.meta td{
+	font-size:14px !important;
+	
+	}
+ul.token-input-list{ width:150px !important;}
+</style>
+<div class="card">
+    <h3>Ventas del Mes <span><?php //echo Auth::get('nombres')?></span></h3>
+</div>
+<div class="form-actions" title="Regresar!">
+    <?php echo Menu::menuReportes($action_name);?>
+<?php echo Html::linkAction('facturasadelanto','VER TODAS','class="btn"')?>
+<?php echo Html::linkAction('adelantos','CON IGV','class="btn"')?>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div style="clear:both"></div> 
+<?php echo Sp::imprimir('Reporte de adelantos','P');?>
+
+<div class="card-body" id="reporte">
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+<?php $a='';
+foreach($ventas as $item){ 
+$b=$item->doc;
+if($a!=$b){?>
+<thead>
+<tr>
+<th colspan="6"><?php if($item->testipodatos_id==1)echo " P/A (Proveedores)";else echo "P/A (Clientes)"; ?></th>
+</tr>
+<tr>
+<th colspan="6" align="left">
+DOCUMENTO: <?php echo $item->doc?>
+</th>
+</tr>
+<tr>
+	<th colspan="6" align="left"></tr>
+<tr>
+<th width="15%" align="left">Fecha</th>
+<th width="11%"  align="left">Nro. Documento</th>
+<th width="34%"  align="left">Empresa</th>
+<th width="12%" align="right">Monto Total.</th>
+<th width="16%" align="right">Total Aplicacion</th>
+<th width="12%" align="right">Saldo Actual</th>
+</tr>
+<tr>
+	<th colspan="6" align="left"></th>
+</tr>
+</thead>
+<tbody>
+<?php }
+?>
+<tr title="origen: <?php echo $item->origen?>(<?php echo $item->doc_id?>)">
+  <td><?php echo Sp::formatFecha('%d/%m/%Y',$item->fecha)?></td>
+  <td><?php echo $item->numero_adelanto?></td>
+  <td><?php echo $item->razonsocial?></td>
+  <td align="right">
+  <?php if(!empty($item->totaladelanto_s))$monto=$item->totaladelanto_s;else $monto=$item->totaladelanto;?> 
+  <?php 
+  //$monto=($monto+($monto*Session::get('IGV')));
+  echo number_format($monto,2,'.','');
+  ?></td>
+  <td align="right">
+  <?php if(!empty($item->montoaplicacion))$monto_a=$item->montoaplicacion; else $monto_a=0;?>
+  <?php 
+  //$monto_a=($monto_a+($monto_a*Session::get('IGV')));
+  echo number_format($monto_a,2,'.','')?>
+  </td>
+  <td align="right"><?php echo number_format($monto-$monto_a,2,'.','')?></td>
+</tr>
+<?php 
+$a=$item->doc;
+}?>
+</tbody>
+</table>
+
+</div>

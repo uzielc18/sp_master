@@ -1,0 +1,39 @@
+<div class="card">
+    <h1>Choferes de la Empresa Santa Patricia</h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="form-actions">
+    <?php echo Html::linkAction("crear", 'Crear Transportista','class="btn btn-primary"') ?>
+</div>
+<div class="card-body">
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+  <tr>
+  	<th width="17">Nº</th>
+    <th width="67">Codigo</th>
+    <th width="107">Nombres y Apellidos</th>
+    <th width="28">DNI</th>
+    <th width="67">Area</th>
+    <th width="79">Numero de Brevete</th>
+    <th width="72">Acciones</th>
+  </tr>
+<?php $n=0;
+foreach($transportistas->items as $item){ $n++;?>
+  <tr>
+  	<td><?php echo $n?></td>
+    <td><?php echo $item->getAcldatos()->id?>-<?php echo $item->getAcldatos()->dni?></td>
+    <td><?php if($item->getAcldatos()->id!=37){echo $item->getAcldatos()->nombre?> <?php echo $item->getAcldatos()->appaterno?> <?php echo $item->getAcldatos()->apmaterno;}else{echo $item->nombre;}?></td>
+    <td><?php echo $item->getAcldatos()->dni?></td>
+    <td><?php echo $item->getAcldatos()->getPlareas()->nombre?></td>
+    
+    <td><?php echo $item->categoria.'-'.$item->numerobrevete ?></td>
+    <td><?php if($item->getAcldatos()->id!=37){echo Html::linkAction('editar/'.$item->id,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'');}else{echo Html::linkAction('editar_externo/'.$item->id,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'');}?>
+    <?php echo Html::linkAction("borrar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+    <?php echo Html::linkAction("detalles/$item->id/Transportista/",Html::img("figuras/ver.png",'Eliminar','style="width: 20px;margin-left:1px;margin-right:1px;"'));?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+<?php View::partial('paginators/extended', false, array('page' => $transportistas ,'url' => Router::get('controller_path').'/listado')); ?>
+</div>

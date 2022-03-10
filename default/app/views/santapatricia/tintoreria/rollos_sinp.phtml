@@ -1,0 +1,95 @@
+
+<?php View::content()?>
+<div class="card" align="center">
+<?php echo Menu::menuControl($action_name);?>
+</div>
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus="" placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+<div id="ver"></div>
+<table width="100%" class="table table-bordered table-striped" id="rollos">
+<thead>
+  <tr>
+    <th width="120" align="left">Nro.</th>
+    <th width="42" align="left">Nro venta.</th>
+    <th width="136" align="left">Articulo</th>
+    <th width="45" align="left">Color</th>
+    <th width="56" align="left">MTS</th>
+    <th width="85" align="left">Peso</th>
+    <th width="24" align="left">O.C</th>
+    </tr>
+</thead>
+<tbody>
+  <?php $n=0;foreach($rollos as $item){$n++;
+?>
+  <tr title="<?php //echo $item->getTesdetalleingresos()->getTesingresos()->getTesdatos()->razonsocial?>">
+    <td><?php /*echo $item->id.'***';*/  echo $n?>. <?php if(empty($item->codigo)){
+	if(empty($item->getTesproductos()->codigo_ant))$COD=$item->getTesproductos()->codigo; else $COD=$item->getTesproductos()->codigo_ant;
+	}else
+	{
+		$COD=$item->codigo;
+	}
+	echo $COD?>-<?php if(!empty($item->tescolores_id))echo $item->getTescolores()->codigo?>-<?php echo $item->calidad?>-<?php echo $item->numeroventa;?></td>
+    <td><?php echo $item->numeroventa;?></td>
+    <td><?php echo $item->getTesproductos()->nombre?>-<?php echo $item->getTesproductos()->detalle?></td>
+    
+    <td><?php echo $item->color;//if(!empty($item->tescolores_id))echo $item->getTescolores()->nombre?></td>
+    <td><?php if(!empty($item->metros))echo number_format($item->metros,2,'.',' ');?></td>
+    <td><?php if(!empty($item->peso))echo number_format($item->peso,2,'.',' ')?></td>
+    <td><?php if(!empty($item->tesordendecompras_id))echo $item->getTesordendecompras()->numero_interno;else echo "Sin O.C.";?></td>
+    </tr>
+  <?php }?>
+</tbody>
+</table>
+<script type="text/javascript">
+$(document).ready(function()
+{
+		
+//hacemos la busqueda en el evento search del control de busqueda
+	$('#txtBuscar').on('search',function(){
+		//le decimos a la funcion que busque en la tabla tblTabla el
+		//valor que contiene el campo actual
+		$.fntBuscarEnTabla($(this).val(),'rollos');
+		
+	});
+	
+	
+});
+</script>
+<script type="text/javascript">
+$(document).ready(function()
+{
+$(".enviar").live("click",function(){
+	
+	var id =$(this).attr('id');
+	var numero = $("#numero-"+id).val();/*producto_id*/
+	var producto_id = $("#producto_id-"+id).val();
+	if(confirm("Esta por generar "+numero+" rollos del rollo principal "+" ("+id+")")){
+	if(numero>1){
+	$.ajax({
+            type:"POST",
+            url:"/<?php echo $module_name?>/tintoreria/divir_venta/"+id+"/"+numero,
+            beforeSend:function(){
+              $("#loading").show();
+            },
+            success:function(response){
+                $("#loading").hide();
+				alert(response);
+				url = "/<?php echo $module_name?>/tintoreria/ver_divir_venta/"+id+'/'+producto_id+'/'+response;  
+				$(location).attr('href',url); 
+            }
+ 
+          	});
+		
+	}else
+	{
+		alert('Ingreso un numero mayor a 1');
+	}
+	}else
+	{
+		return false;
+	}
+	});
+});
+</script>

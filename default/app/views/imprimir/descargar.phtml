@@ -1,0 +1,18 @@
+<?Php // escribo las cabeceras de archivo, sirven para que el navegador sepa 
+// que lo que va a recibir no es una página web
+$archivo=base64_decode($ruta);
+header('Content-type: application/rtf'); // noten que application/pdf' indica que es un PDF
+header('Content-Transfer-Encoding: binary');
+// la variable $pdf tiene la ruta completa al archivo a ser enviado
+header('Content-length: '.filesize($archivo)); // el tamaño del archivo
+header('Content-Disposition: attachment; filename="'.basename($archivo).'"'); // nombre del archivo
+ 
+// aquí esta la magia
+$fp = fopen($archivo, "rb"); // abre el archivo
+$buffer = fread($fp, filesize($archivo)); // escribe el archivo a una variable
+print $buffer; // al "imprimir" se esta enviando el archivo
+fclose($fp); // cierra la lectura
+ 
+// cuando termina de "imprimirlo" es por que ya lo envió y simplemente lo borro
+unlink($archivo);
+?>

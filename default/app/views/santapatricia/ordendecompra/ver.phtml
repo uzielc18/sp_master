@@ -1,0 +1,191 @@
+<?php
+$simbolo="S/. ";
+
+switch ($monedas)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+
+
+View::content();
+?>
+<div class="card">
+<h1>Ver orden de compra<span>Vista para imprimir la orden de compra</span></h1></div>
+<div class="form-actions">
+<?php echo Html::linkAction("listado/$orden->origenorden", 'Listado de ordenes','class="btn btn-secondary"');?></div>
+<div class="hoja">
+    <div class="caja1">
+      <div class="caja_iz">
+       <?php if($origenorden=='interno'){?>
+        <img id="image" src="/img/logoSP.png" alt="logo">
+      	<span>
+        <?php echo $empresa->direccion?><br />
+       Telefono: <?php echo $empresa->telefonos?>.
+      	</span>
+    <?php }else{?>
+     <h1><?php echo $orden->getTesdatos()->razonsocial?> </h1>
+     <span><br />
+     Ruc: <?php echo $orden->getTesdatos()->ruc?> <br />
+	Direccion:<?php //echo $orden->getTesdatos()->departamento?><?php //echo $orden->getTesdatos()->provincia?><?php echo $orden->getTesdatos()->direccion?>-<?php echo $orden->getTesdatos()->distrito?>
+	<br />
+    Contacto: <?php echo ($orden->getTesdatos()->dato_id($orden->getTesdatos()->id)->contacto);?>
+        	</span>
+     <?php }?>
+     
+      </div>
+      <div class="caja_ce"></div>
+      <div class="caja_de">
+      <h1 align="center">Orden de Compra</h1>
+      <table border="0" align="center" cellpadding="0" cellspacing="0" class="table">
+      <tr><th>Ord. Comp.</th><th>-</th><th>Fecha de Emision</th></tr>
+      <tr>
+        <td align="center"><?php echo $codigo?></td><th>-</th><td align="center"><?php echo $fecha;?></td></tr>
+      </table></div>
+      <div style="clear:both;"></div>
+    </div>
+  <div class="caja2">
+    	<div class="mitad">
+        <h2>dirigido a:</h2>
+        <span>
+        <?php if($origenorden!='interno'){?>
+        <?php echo $empresa->razonsocial?><br />
+        <?php echo $empresa->direccion?><br />
+        Ate - Lima - Péru.<br />
+       Telefono: <?php echo $empresa->telefonos?>.
+    <?php }else{?>
+        	<?php echo $orden->getTesdatos()->razonsocial?> 
+    <br />Ruc: <?php echo $orden->getTesdatos()->ruc?> <br />
+	Direccion:<?php echo $orden->getTesdatos()->departamento?>-<?php echo $orden->getTesdatos()->provincia?>-<?php echo $orden->getTesdatos()->distrito?>-<?php echo $orden->getTesdatos()->direccion?><br />
+    Contacto: <?php echo ($orden->getTesdatos()->dato_id($orden->getTesdatos()->id)->contacto);?>
+     <?php }?>
+        	</span>
+        </div>
+    <div class="mitad">
+      <h2>Facturar a:</h2>
+      <span>
+        	<?php if($origenorden=='interno'){?>
+        <?php echo $empresa->razonsocial?> - Ruc:<?php echo $empresa->ruc?><br />
+        <?php echo $empresa->direccion?><br />
+    <?php }else{?>
+        	<?php echo $orden->getTesdatos()->razonsocial?> 
+    <br />
+    Ruc: <?php echo $orden->getTesdatos()->ruc?> <br />
+	Direccion:<?php //echo $orden->getTesdatos()->departamento?><?php //echo $orden->getTesdatos()->provincia?><?php echo $orden->getTesdatos()->direccion?>-<?php echo $orden->getTesdatos()->distrito?><br />
+    Contacto: <?php echo ($orden->getTesdatos()->dato_id($orden->getTesdatos()->id)->contacto);?>
+     <?php }?>
+        	</span>
+    </div>
+    <div style="clear:both;"></div>
+    <br />
+    <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" class="table">
+      <tr><th width="20%">Cotizacion</th>
+      <th width="17%">Forma de pago</th>
+      <th width="15%">Moneda</th>
+      <th width="20%">Fecha de entrega</th>
+      <th width="28%">Lugar de entrega</th></tr>
+      <tr>
+        <td>&nbsp;</td><td><?php echo $formapago;?></td><td><?php echo $monedas_nombre?></td><td><?php echo $fechaentrega ?></td><td><?php echo $direccionentrega?></td></tr>
+    </table>
+    <div style="clear:both;"></div>
+  </div>
+    <hr />
+	<div class="caja3">
+	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table">
+		 <tr>
+          	  <th width="6%" align="left">Item</th>
+              <th width="8%" align="left">Codigo</th>
+		      <th width="25%" align="left">Producto</th>
+		      <th width="20%" align="left">Descripcion</th>
+		      <th width="8%" align="left">Costo Unit</th>
+		      <th width="10%" align="left">Cantidad</th>
+		      <th width="14%" align="left">Medida</th>
+		      <th width="9%" align="left">Precio</th>
+	  </tr>
+		  <?php 
+			  $n=0;
+			  $subtotal=0;
+			  foreach($detalles as $item){
+				  $n++;
+				  $subtotal=$subtotal+$item->total;
+			  ?>
+		  <tr id="<?php echo $n?>" class="item-row">
+          	 <td><?php echo $n;?></td>
+             <td><?php echo $item->getTesproductos()->codigo?></td>
+		     <td class="item-name">
+                 <?php echo $item->getTesproductos()->nombre?></td>
+		      <td class="description">
+              <?php echo $item->getTesordendecompras()->descripcion?></td>
+		      <td>
+              <span class="simbolo"><?php echo $simbolo?></span><?php echo number_format($item->precio,2,'.','')?>
+              </td>
+		      <td>
+              <?php echo $item->cantidad;?>
+              </td>
+              <td>
+              <?php echo $item->getTesunidadesmedidas()->nombre?>
+              </td>
+		      <td><span class="simbolo"><?php echo $simbolo?></span><span id='total-<?php echo $n?>' class="price"><?php echo number_format($item->total,2,'.','')?></span></td>
+		  </tr>
+		  
+		  <?php
+			  }/*FIN FOREACH*/?>
+	  </table>
+      <div class="total_letras"><?php echo $totalenletras?> 
+        <p>&nbsp;</p>
+      </div>
+      <BR />
+      <br />
+           <div class="caja_de">
+    <table class="meta" width="100%">
+		  <tr>
+		      <td width="73%" align="right" class="total-line"><strong>Subtotal : </strong></td>
+		      <td width="27%" align="left" class="total-value"><?php echo $simbolo?><span id="subtotal"><?php echo number_format($subtotal,2)?></span></td>
+		  </tr>
+		  <tr>
+		      <td align="right" class="total-line"><strong>Descuento : </strong></td>
+
+		      <td align="left" class="total-value"><?php echo $simbolo?> <?php if(!empty($paid))echo $paid;else echo "00.00";?></td>
+		  </tr>
+		  <tr>
+		      <td align="right" class="total-line"><strong>Total : </strong></td>
+		      <td align="left" class="total-value"><?php echo $simbolo?><span id="paid_total"><?php echo number_format($subtotal-$paid,2,'.','')?></span></td>
+		  </tr>
+		  <tr>
+		      <td align="right" class="total-line"><strong>IGV : </strong></td>
+		      <td align="left" class="total-value"><span class="simbolo"><?php echo $simbolo?></span><span id="igv_due"><?php echo number_format($igv,2,'.','')?></span></td>
+		  </tr>
+		  <tr>
+		      <td align="right" class="total-line balance"><strong>Total a Pagar : </strong> </td>
+		      <td align="left" class="total-value balance"><span class="simbolo"><?php echo $simbolo?></span><span class="due"><?php echo number_format($totalconigv,2,'.','')?></span></td>
+		  </tr>
+		</table>
+        </div>
+      <div style="clear:both;"></div>
+      <div class="cajapie">
+      <table width="100%">
+          <tr>
+		      <th align="left">INDICACIONES ESPECIALES</th>
+	    </tr>
+		  <tr>
+	        <td><?php echo $pre_descripcion;?></td> 
+		  </tr>
+          </table>
+          <?php if($origenorden=='interno'){?>
+      <table width="100%">
+		  <tr>
+	        <td align="center"><br /><br /><br /><span style="border-top:solid 1px #000000;">Elaborado por: </span><br />
+            <?php echo $orden->getAclusuarios()->getAcldatos()->nombre?> <?php echo $orden->getAclusuarios()->getAcldatos()->appaterno?></td>
+            <td align="center"><br /><br /><br /><span style="border-top:solid 1px #000000;">Aprobado por:</span>
+            
+            </td>
+            <td align="center"><br /><br /><br /><span style="border-top:solid 1px #000000;">Recibi conforme</span></td> 
+	    </tr>
+        </table>
+      <?php }?>
+      </div>
+    </div>
+</div>

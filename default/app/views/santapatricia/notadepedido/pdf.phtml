@@ -1,0 +1,133 @@
+<?php
+$simbolo="S/. ";
+
+
+View::content();
+/*
+        Tag::css('tabla/TableTools');
+        echo Html::includeCss();
+        echo Tag::js('jquery/tablas/jquery.dataTables.min');
+        echo Tag::js('jquery/tablas/ZeroClipboard');
+        echo Tag::js('jquery/tablas/TableTools');*/
+?>
+<script type="text/javascript" charset="utf-8">
+			/*$(document).ready( function () {
+				$('#example').dataTable( {
+					"bPaginate": false,
+					"bLengthChange": false,
+					"bFilter": true,
+					"bSort": false,
+					"bInfo": false,
+					"bAutoWidth": false,
+					
+					"sDom": 'T<"clear">lfrtip',
+					"oTableTools": {
+						"sSwfPath": "/javascript/jquery/tablas/swf/copy_csv_xls_pdf.swf"
+					}
+				} );
+			} );*/
+		</script>
+<div class="form-actions">
+<?php echo Html::linkAction("listado/", 'Listado de Pedidos','class="btn btn-secondary"');?>
+</div>
+<div class="hoja">
+	<div class="caja3">
+	<table width="100%" id="example">
+    <thead>
+    <tr>
+    	<th colspan="5" align="left"><img id="image" src="/img/logoSP.png" alt="logo"></th>
+    	<th width="17%" align="right" valign="bottom">Fecha:</th>
+    	<th colspan="2" align="left" valign="bottom"><?php echo Sp::formatFecha('%d/%m/%Y',$pedido->fecha_at)?></th>
+    	</tr>
+        <tr>
+          <th align="right" valign="top" class="meta-head"> Tipo:</th>
+          <td valign="top"><?php echo $pedido->tipo;?></td>
+          <th align="right" valign="top" class="meta-head">Usuario:</th>
+          <td colspan="2" valign="top"><?php echo $pedido->getAclusuarios()->getAcldatos()->nombre?> <?php echo $pedido->getAclusuarios()->getAcldatos()->appaterno?> <?php echo $pedido->getAclusuarios()->getAcldatos()->apmaterno?></td>
+          <th align="right" valign="top">Codigo #:</th>
+          <td valign="top"><?php echo $pedido->codigo;?></td>
+            <td valign="top">&nbsp;</td>
+    	</tr>
+        <tr>
+          <th align="right" valign="top">Estado:</th>
+          <td valign="top"><?php echo $pedido->estadonota;?></td>
+          <th align="right" valign="top">Descripcion:</th>
+          <td colspan="2" valign="top"><?php echo $pedido->descripcion;?></td>
+          <th align="right" valign="top">Observacion:</th>
+          <td colspan="2" valign="top"><?php echo $pedido->observacion;?></td>
+        </tr>
+        <tr>
+    	<th align="right" valign="top">Origen:</th>
+    	<th valign="top"><?php echo $pedido->origen;?></th>
+        <th align="right" valign="top">Cliente:</th>
+        <td colspan="5" valign="top"><?php if(!empty($pedido->tesdatos_id))echo $pedido->getTesdatos()->razonsocial.' ruc: '.$pedido->getTesdatos()->ruc.' ('.$pedido->getTesdatos()->departamento.' '.$pedido->getTesdatos()->provincia.' '.$pedido->getTesdatos()->distrito.' '.$pedido->getTesdatos()->direccion.')';?></td>
+        </tr>
+        <tr>
+          	  <th colspan="8">&nbsp;</th>
+	  	</tr>
+		 <tr>
+          	  <th width="7%">Item</th>
+              <th width="7%">Codigo</th>
+		      <th width="21%">Producto</th>
+		      <th width="19%">Descripcion</th>
+		      <th width="8%">Costo Unit</th>
+		      <th width="17%">Cantidad</th>
+		      <th width="10%">Medida</th>
+		      <th width="11%">Precio</th>
+	  </tr>
+      </thead>
+           <tbody> 
+		  <?php 
+			  $n=0;
+			  $totalP=0;
+			  $totalC=0;
+			  foreach($detalles as $item){
+				  $n++;
+			  ?>  
+		  <tr id="<?php echo $n?>" class="item-row">
+          	 <td><?php echo $n;?></td>
+             <td><?php echo $item->getTesproductos()->codigo?></td>
+		     <td class="item-name">
+                 <?php echo $item->getTesproductos()->nombre?></td>
+		      <td class="description">
+              <?php echo $item->descripcion?></td>
+		      <td>
+              <span class="simbolo"><?php echo $simbolo?></span><?php echo number_format($item->getTesproductos()->precio,2,'.','')?>
+              </td>
+		      <td>
+              <?php echo $item->cantidad;?>
+              <?php $totalC=$totalC+$item->cantidad;?>
+              </td>
+              <td>
+              <?php echo $item->getTesunidadesmedidas()->nombre?>
+              </td>
+		      <td><span class="simbolo"><?php echo $simbolo?></span><span id='total-<?php echo $n?>' class="price"><?php echo number_format($item->getTesproductos()->precio*$item->cantidad,2,'.','')?>
+              </span>
+              <?php $totalP=$totalP+($item->getTesproductos()->precio*$item->cantidad);?></td>
+		  </tr>
+		  
+		  <?php
+			  }/*FIN FOREACH*/?>
+              </tbody>
+           <tfoot>
+           <tr>
+            <td>&nbsp;</td>
+             <td>&nbsp;</td>
+		     <td class="item-name">&nbsp;</td>
+		      <td class="description">&nbsp;
+              </td>
+		      <td>
+              TOTAL
+              </td>
+		      <td>
+              <?Php echo number_format($totalC,2,'.','')?>
+              </td>
+              <td>
+              TOTAL
+              </td>
+		      <td><span class="simbolo"><?php echo $simbolo?></span><span id='total-<?php echo $n?>' class="price"><?php echo number_format($totalP,2,'.','')?></span></td>
+           </tr>
+           </tfoot>
+	  </table>
+     </div>
+</div>

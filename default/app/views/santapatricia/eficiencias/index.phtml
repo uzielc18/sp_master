@@ -1,0 +1,197 @@
+<?php View::content()?>
+<div class="card">
+<h1>Produccion Diaria<span>Ingreso de las producciones por turnos</span></h1>
+</div>
+
+<div class="form-actions">
+<?php echo Menu::efe($action_name)?> <?php echo Html::linkAction('selector','Seleccionar Tipo de Maquinas','class="btn btn-primary"');?>
+</div>
+ 
+<div class="menu">
+<ul>
+<li>
+<a href="javascript:;">Año 
+<select id="anio">
+<?php
+for($i=2011;$i<=2020;$i++)
+{
+	$selec='';
+	if($anio==$i){
+	$selec=' selected="selected"';
+	}
+	echo '<option value="'.$i.'" '.$selec.'>'.$i.'</option>';
+}
+?>
+</select>
+</a>
+</li>
+</ul> 
+<?php 
+$mes_actual=date('Y-m');
+foreach($meses as $clave => $mes):
+if($anio.'-'.$clave<=$mes_actual){
+$class='';
+if($mes_activo==$clave)$class=' active';
+echo '<ul>';
+echo '<li><a class="enviar'.$class.'" id="mes-'.$mes.'" href="javascript:;" data-id="'.$anio.'-'.$clave.'-01">'.$mes.'</a></li>'; 
+echo '</ul>';
+}
+endforeach;?>
+
+</div>
+
+<?php echo Sp::imprimir('Eficiencias - ','P',array("W"=>"1","P"=>"1","PDF"=>"1"));?> 
+
+<div class="clear"></div>
+
+<div class="">
+	<div class="tabbable">
+ <!-- Only required for left/right tabs -->
+	<ul class="nav nav-tabs">
+	  <?php for($i=1;$i<=$vals;$i++)
+    {
+        $val_n='';
+        $val_m='';
+        $val_f='';
+        $val_n='nombre'.$i;
+        $val_m='maquinas'.$i;
+        $val_f='fechas'.$i;
+    ?>
+        <li <?php if($i==1){?>class="active"<?php }?>><a href="#tab<?Php echo $i?>" data-toggle="tab"><?php echo ${$val_n}?></a></li>
+    <?php }?>
+      </ul>
+	<div class="tab-content page">
+	 <?php for($i=1;$i<=$vals;$i++)
+    {
+        $val_n='';
+        $val_m='';
+        $val_f='';
+        $val_n='nombre'.$i;
+        $val_m='maquinas'.$i;
+        $val_f='fechas'.$i;
+    ?>
+    <?php //echo $maquinas1;print_r($maquinas1)?>
+        <div class="tab-pane <?php if($i==1){echo "active"; }?>" id="tab<?Php echo $i?>">
+   			 <h3><?php echo ${$val_n}?></h3>
+   		 <table class="table table-bordered">
+    <tr>
+    <td>Maquina<br />Fechas</td>
+    <?php 
+    //"<br />".($maquina->getPromaquinas()->maxproduccion)
+    $total_m=0;foreach(${$val_m} as $maquina){$total_m++;echo "<th>";echo $maquina->getPromaquinas()->nombre; echo "</th>";}?>
+    </tr>
+    <?php $f_1=0;
+    foreach(${$val_f} as $fecha)
+    {
+        $f_2=$fecha->fecha;
+        if($f_1!=$f_2)
+        {
+            $f_1=$fecha->fecha;
+            echo "<tr><td>";
+            echo Sp::formatFecha('%d/%m/%Y',$fecha->fecha); 
+            echo "</td>";
+                foreach(${$val_m} as $maquina)
+                {
+                    $td=0;
+                    foreach(${$val_f} as $valor)
+                    {
+                        if($fecha->fecha==$valor->fecha && $valor->promaquinas_id==$maquina->promaquinas_id)
+                        {
+                            $td++;
+                            echo "<td align='right' title='".$valor->id."'>$valor->valor</td>";
+                        }
+                    }
+                    if($td==0){
+                            echo "<td align='right' title='Aun no hay valores'>00</td>";
+                        }
+                }
+            echo "</tr>";
+        }
+    }?>
+    </table>
+        </div>
+    <?php 
+        //print_r(${$val_m});
+        //print_r(${$val_f});
+    }
+    ?>
+</div>
+</div>
+</div>
+<style type="text/css">
+.menu {position:relative;}
+.menu ul {padding:0; margin:0; list-style:none; float:left;}
+.menu ul ul {position:absolute;
+-webkit-transition: 0.5s;
+-moz-transition: 0.5s;
+-ms-transition: 0.5s;
+-o-transition: 0.5s;
+transition: 0.5s;
+transition-delay: 0.5s;
+-o-transition-delay: 0.5s;
+-moz-transition-delay: 0.5s;
+-ms-transition-delay: 0.5s;
+-webkit-transition-delay: 0.5s;
+}
+.menu ul ul ul {position:absolute; left:150px; top:0;}
+.menu ul ul ul.rgt {position:absolute; left:auto; right:150px; top:0;}
+
+.menu ul li {float:left; position:relative;
+-webkit-transition: 0.25s;
+-moz-transition: 0.25s;
+-ms-transition: 0.25s;
+-o-transition: 0.25s;
+}
+
+.menu ul li a {display:block; height:29px; padding:2px 10px; background:#ddd; font:normal 12px/29px arial, sans-serif; color:#000; text-decoration:none; margin-bottom:1px; margin-right:1px;
+-o-border-radius: 10px;
+-moz-border-radius: 10px;
+-ms-border-radius: 10px;
+-webkit-border-radius: 10px;
+border-radius: 10px;
+}
+.menu ul li a.fly {background:#ddd no-repeat right center;}
+.menu ul li:hover > a {background-color:#999; color:#fff;}
+.menu ul li:hover > a.fly {background:#999 no-repeat right center;}
+.menu ul li a.active {background-color:#999; color:#fff;}
+.reporte
+{
+	display:block;
+	margin-top:20px;
+}
+.reporte h2 span{color:#333333;}
+.reporte h2
+{
+	padding:0 20%;
+	border-bottom:#000000 solid 1px;
+}
+.reporte h2 span{
+	font-weight:lighter;
+	}
+.sin_reporte{
+	border-bottom:#666666 1px solid; padding:5px;}
+.sin_reporte span
+{
+	padding:35%;
+}
+</style>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#anio").change(function(event){
+    	var id = $("#anio").find(':selected').val();
+		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/<?php echo $action_name?>/'+id;
+     });
+	$(".enviar").click(function()
+	{
+		var fecha = $(this).attr('data-id');
+		var F=fecha.split('-');
+		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/<?php echo $action_name?>/'+F[0]+'/'+F[1];
+	});
+	$(".botonExcel").click(function(event)
+	{
+		$("#datos_a_enviar").val( $("<div>").append( $("#exportar_excel").eq(0).clone()).html());
+		$("#FormularioExportacion").submit();
+	});
+});
+</script>

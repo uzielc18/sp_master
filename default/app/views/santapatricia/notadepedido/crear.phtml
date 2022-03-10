@@ -1,0 +1,87 @@
+<?php
+View::content();
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<script type="text/javascript">
+/*envio dew Formulario PROFORMAS*/
+ function GRABAR()
+ {
+	 var dataString=$("#proformas").serialize();
+	// alert(dataString);
+          $.ajax({
+            type:"POST",
+            url:"/<?php echo $module_name?>/notadepedido/grabar/",
+            data:dataString,
+            beforeSend:function(){
+              $("#loading").show();
+            },
+            success:function(response){
+                $("#loading").hide();
+				$("#id").val(response);
+				//alert(response);
+            }
+           	});
+ 
+ }
+
+
+$(document).ready(function()
+{	  
+	
+  $('.grabar').blur(function(){
+    GRABAR();
+  });   
+});
+</script>
+<div class="card">
+<h1>Crear Nota de pedido</h1>
+</div>
+<div class="form-actions">
+<?php echo Html::linkAction("listado/", 'Listado','class="btn btn-primary"') ?>
+    <?php
+	$estado='Pendiente'; 
+	if(Session::get('tipo_nota')=='ingreso')$estado='Ingresado';
+	echo Html::linkAction("terminar/".Session::get('NOTA_ID')."/".$estado.'/'.$origen, 'Terminar ','class="btn btn-primary grabar_form"') ?>&nbsp;<?php echo Html::linkAction("listado/".$origen, 'Cancelar ','class="btn btn"') ?>
+</div>
+   
+<div class="card-body">   
+
+<?php 
+/*Fin de Validacion de Origen*/
+//es diferente de Origen	
+echo Form::open('','post','id="proformas"');?>
+     <?php echo Form::hidden('id');?>
+ <table width="70%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered">
+             <tr>
+                    <th width="16%" align="left" class="meta-head">Usuario</th>
+                    <th width="38%" align="left"><?php echo $dato->nombre?> <?php echo $dato->appaterno?> <?php echo $dato->apmaterno?></th>
+                    <th width="19%" align="left"><span class="meta-head">Código #</span></th>
+                    <th width="27%" align="left"><?php echo Form::hidden('estadonota','class="grabar"','Sin enviar');?><?php echo Form::text('codigo','readonly="readonly" class="grabar"')?></th>
+                </tr>
+                <tr>
+                    <th align="left" class="meta-head">Origen</th>
+                    <th align="left"><?php echo Form::hidden('origen');?><?php echo $origen?></th>
+                    <th align="left">Tipo</th>
+                    <th align="left"><?php echo Session::get('tipo_nota');?></th>
+                </tr>
+                <tr>
+                    <th align="left" class="meta-head">Fecha</th>
+                    <th colspan="3" align="left"><?php echo Calendar::selector('fecha');?></th>
+                </tr>
+                <tr>
+					<th align="left">Descripcion</th>
+                    <th align="left"><?php echo Form::textArea('descripcion','class="grabar " placeholder="Descripcion" rows="3" cols="30"');?></th>
+                    <th align="left">Observacion</th>
+                    <th align="left"><?php echo Form::textArea('observacions','class="grabar " placeholder="Observacion" rows="3" cols="30"');?></th>
+                </tr>
+     
+     </table>
+            <div class="form-actions">
+            <a href="javascript:;" class="btn btn-primary grabar">GRABAR</a>
+			<?php echo Html::linkAction("revisar/Produccion", 'Siguente','class="btn btn-info"') ?>
+            </div>
+            
+            <?php echo Form::close();
+			/*Fin de Validacion de Origen*/
+			?>
+</div>

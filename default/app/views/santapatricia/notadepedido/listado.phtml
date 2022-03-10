@@ -1,0 +1,134 @@
+<?php $simbolo="S/. "?>
+<script type="text/javascript">
+$(document).ready(function(){
+
+		$("#origen").change(function(){
+                var op = $("#origen option:selected").val();
+                document.location = "/<?php echo $module_name?>/notadepedido/listado/"+op;
+        });
+});
+</script>
+<style type="text/css">
+.span_float
+{
+	float:right !important;
+	margin-left:0px;
+	margin-right:-5px;
+}
+</style>
+<div class="card">
+    <h1>Ingreso Nota de Pedido</h1>
+</div>
+
+<div class="form-actions">
+	<em>Seleccione el Origen del Pedido:</em> <?php echo Form::select('origen',array('Produccion'=>'Produccion','Muestra'=>'Muestra','Chenille'=>'Chenille'));?>	
+    <?php if($origen=='Produccion')
+	{
+	}elseif($origen=='Muestra')
+	{
+		echo Html::linkAction("cargarnota/0/crearm/".$origen, 'Crear Nota','class="btn btn-primary"');
+	}elseif($origen=='Chenille' && Session::get('tipo_nota')=='salida')
+	{
+		echo Html::linkAction("cargaringreso/0/crear_s_ch/".$origen, 'Crear Nota','class="btn btn-primary"');
+	}elseif($origen=='Chenille' && Session::get('tipo_nota')=='ingreso')
+	{
+		echo Html::linkAction("cargaringreso/0/ingreso_hilo/".$origen, 'Crear Nota','class="btn btn-primary"');
+	}?>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+
+<div id="ver_resultado"></div>
+<div class="card-body">
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+  <thead>
+  <tr>
+  	<th width="62" align="left">Nº</th>
+    <th width="109" align="left">Creador </th>
+    <th width="46" align="left"> Fecha</th>
+    <th width="97" align="left">Descripción</th>
+    <th width="89" align="left">Observación</th>
+    <th width="74" align="left">Estado</th>
+    <th width="58" align="left">Origen </th>
+    <th width="45" align="left">Total</th>
+    <th width="64" align="center">Acciones </th>
+  </tr>
+ </thead>
+<?php $n=0;
+foreach($notas as $item){ 
+	$or='';
+	if($item->origen=='Muestra')$or='crearm';
+	$n++;
+	/*para ingresos de chenille es decir el listado de guias*/
+	if($origen=='Chenille' && Session::get('tipo_nota')=='ingreso'){
+	?>
+<tr id="<?php echo $item->id?>">
+    <td><?php echo $item->serie?>-<?php echo $item->numero?></td>
+   <td>
+    <?php 
+	echo $item->getAclusuarios()->getAcldatos()->nombre.' '.$item->getAclusuarios()->getAcldatos()->appaterno.' '.$item->getAclusuarios()->getAcldatos()->apmaterno;?>
+    </td>
+    <td><?php echo Sp::formatFecha('%d/%m/%Y',$item->fecha_at)?></td>
+    <td>
+    <small style="color:#666; font-size:10px !important; font-style:italic; ">
+	<?php
+    $b=0;
+	$n=0;$m=0;
+	$url='';
+	foreach($item->getTesdetalleingresos() as $det)
+	{
+		$url='/ver';
+		if(Session::get('DOC_ID')==36)$url="/varios";
+		$b++;
+		if($det->tesproductos_id!=0){$n++;
+		echo $det->getTesproductos()->detalle;if(count($item->getTesdetalleingresos())>$n){echo ", ";}
+		}else{
+			echo $det->concepto;
+			}
+	}
+	if($item->estadoingreso=='Registrado')$b=1;
+	?>
+    </small>
+    </td>
+    <td><?Php echo $item->glosa?></td>
+    <td><?Php echo $item->estadoingreso?></td>
+    <td><?php echo $origen?> <?Php if($origen=="Produccion"){echo $item->getReferencia($item->referencia);}?></td>
+    <td><?php echo $simbolo?>0.00</td>
+   <td align="center">
+   <?php echo Html::linkAction('cargaringreso/'.$item->id.'/ver_i/'.$origen,Html::img("figuras/ver.png",'VER','style="width: 20px;margin-left:1px;margin-right:1px;"'),'')?>
+	<?php if($item->estadoingreso=='Editable' || Auth::get('aclroles_id')==4 || Auth::get('aclroles_id')==2)echo Html::linkAction('cargaringreso/'.$item->id.'/ingreso_hilo/'.$origen,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'')?>
+    <?php if($b==0)echo Html::linkAction("eliminar_i/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:1px;margin-right:1px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+    <?php //echo Html::linkAction("ver/$item->id/$page",Html::img("figuras/ver.png",'Eliminar','style="width: 20px;margin-left:1px;margin-right:1px;"'));?>
+    </td>
+  </tr>
+  
+<?php }else{
+	
+	/**/
+	$url='crear';
+	if($origen=='Chenille' && Session::get('tipo_nota')=='salida')$url='crear_s_ch';
+	?>
+  <tr id="<?php echo $item->id?>">
+  	<td><?php echo $item->codigo?></td>
+   <td>
+    <?php 
+	echo $item->getAclusuarios()->getAcldatos()->nombre.' '.$item->getAclusuarios()->getAcldatos()->appaterno.' '.$item->getAclusuarios()->getAcldatos()->apmaterno;?>
+    </td>
+    <td><?php echo Sp::formatFecha('%d/%m/%Y',$item->fecha_at)?></td>
+    <td><?php if($item->origen=='Muestra') if(!empty($item->tesdatos_id))echo 'Cliente: '.$item->getTesdatos()->razonsocial.' ruc: '.$item->getTesdatos()->ruc.'<br />'; echo $item->descripcion?></td>
+    <td><?php echo $item->observacion?></td> 
+    <td><?php echo $item->estadonota?></td>
+    <td><?php echo $origen?> <?Php if($origen=="Produccion"){echo $item->getReferencia($item->referencia);}?></td>
+    <td><?php echo $item->total?></td>
+    <td>
+    <?php if($item->total==0)echo Html::linkAction("eliminar/$item->id/",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:1px;margin-right:1px;"'));?>
+	<?php echo Html::linkAction('cargarnota/'.$item->id.'/'.$url.'/'.$origen,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Editar la hoja de ruta del plegador"')?>
+  <?php if($item->tipo=='salida' && $item->estado='Pendiente')echo Html::linkAction("cargarnota/$item->id/revisar/".$origen,Html::img("figuras/visto_bueno.png",'Visto Bueno','style="width: 20px;margin-left:1px;margin-right:1px;"'));?>
+    <?php echo Html::linkAction("cargarnota/$item->id/ver/".$origen,Html::img("figuras/ver.png",'Ver','style="width: 20px;margin-left:1px;margin-right:1px;"'));?>
+    </td>
+  </tr>
+<?php }
+}?>
+</table>
+</div>

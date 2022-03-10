@@ -1,0 +1,194 @@
+<?php
+$simbolo="S/. ";
+View::content();
+?>
+<div class="card"> <h1>Fichas para imprimir</h1> <span>Fichas para imprimir por mes</span> </div>
+<div class="form-actions">
+<?php echo Html::linkAction("plegadoresmov/", 'Terminar','class="btn btn-secondary"');?>
+</div>
+<?php echo Sp::imprimir('Fichas de plegadores - ','P');?> 
+<div class="menu">
+<ul>
+<li>
+<a href="javascript:;">Año 
+<select id="anio">
+<?php
+for($i=2011;$i<=2020;$i++)
+{
+	$selec='';
+	if($anio==$i){
+	$selec=' selected="selected"';
+	}
+	echo '<option value="'.$i.'" '.$selec.'>'.$i.'</option>';
+}
+?>
+</select>
+</a>
+</li>
+</ul> 
+<?php 
+$mes_actual=date('Y-m');
+foreach($meses as $clave => $mes):
+if($anio.'-'.$clave<=$mes_actual){
+$class='';
+if($mes_activo==$clave)$class=' active';
+echo '<ul>';
+echo '<li><a class="enviar'.$class.'" id="mes-'.$mes.'" href="javascript:;" data-id="'.$anio.'-'.$clave.'-01">'.$mes.'</a></li>'; 
+echo '</ul>';
+}
+endforeach;?>
+
+</div>
+<div class="card-body" id="exportar_excel">
+<?php 
+$n=0;
+if($ingresos)
+{
+	foreach($ingresos as $ingreso):
+	$ultimo_id=$ingreso->id;
+	$glosa=$ingreso->glosa;
+	$gl=explode(',',$glosa);
+	$det=array();
+	foreach($gl as $id=>$value)
+	{
+		if(!empty($value)){
+		$cl=explode(':',$value);
+		$det[$cl[0]]=$cl[1];
+		}
+	}
+	$color=explode('-',$det['COLOR']);
+	$n++;?>
+ <table class="fichas_plegadores" width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
+ <caption>Ficha de Plegador</caption>
+  <tr>
+    <th width="16%" align="left" valign="top">Nº de Plegador</th>
+    <td width="37%" align="left"><?php echo $ingreso->numero?></td>
+    <th width="11%" align="left" valign="top"><?php if(!empty($ingreso->par)){?>Plegador Par:<?php }?></th>
+    <td width="36%" align="left"><?php if(!empty($ingreso->par))echo $ingreso->par?></td>
+  </tr>
+  <tr>
+    <th align="left" valign="top">Uridido por:</th>
+    <td align="left"><?php echo $ingreso->urdidopor?></td>
+    <th align="left" valign="top">Responsable:</th>
+    <td align="left">________________</td>
+  </tr>
+  <tr>
+    <th align="left" valign="top">Fecha</th>
+    <td align="left"><?php echo $ingreso->fecha?></td>
+    <th align="left" valign="top">Guía</th>
+    <td align="left"><?php echo $ingreso->guia?></td>
+  </tr>
+  <tr>
+    <th align="left" valign="top">Hilo:</th>
+    <td align="left"><?php foreach($color as $c){ echo $det['HILOS'];?><?php echo $c;?> <?php echo "<br />";}?></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <th align="left" valign="top">Cantidad:</th>
+    <td align="left"><?php echo $det['#HILOS']?></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <th align="left" valign="top">Ancho:</th>
+    <td align="left"><?php echo $det['ANCHO']?></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <th align="left" valign="top">Metros:</th>
+    <td align="left"><?php echo $det['METROS']?></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>_____________</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>_____________</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>_____________</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<?php 
+$cl='';
+if($n % 2==0){$cl='saltodepagina';}?>
+<hr class="<?php echo $cl?>" />
+<?php endforeach;
+
+	}else{
+	
+	echo "<h1> No hay Etiquetas Para Imprimir</h1>";
+	}?>
+<script type="text/javascript">
+/*
+$(document).ready(function() {
+	
+	$('.imprimir').live("click",function() {
+		$('div.hoja').printArea();
+		$.ajax({
+					type:"POST",
+					url:"/<?php //echo $module_name?>/plegadores/actualizar_id_guia_ultimo_ingreso_plegador/<?php //echo $ultimo_id;?>",
+					beforeSend:function(){
+					  $("#loading").show();
+					},
+					success:function(response){
+						$("#loading").hide();
+					}
+		 
+					});
+		return false;
+	});
+	$(".botonExcel").click(function(event) {
+		$.ajax({
+					type:"POST",
+					url:"/<?php //echo $module_name?>/plegadores/actualizar_id_guia_ultimo_ingreso_plegador/<?php //echo $ultimo_id;?>",
+					beforeSend:function(){
+					  $("#loading").show();
+					},
+					success:function(response){
+						$("#loading").hide();
+					}
+		 
+					});
+	});
+});*/
+</script>
+<div id="loading" style="display:none;"><img src="/img/spin.gif" /></div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	
+	$(".ver").click(function(){
+	var op=$(this).attr('data-id');
+	document.location = "/<?php echo $module_name?>/<?php echo $controller_name?>/index/"+op;
+	});	
+	$("#anio").change(function(event){
+    	var id = $("#anio").find(':selected').val();
+		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/<?Php echo $action_name?>/'+id;
+     });
+	$(".enviar").click(function()
+	{
+		var fecha = $(this).attr('data-id');
+		var F=fecha.split('-');
+		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/<?Php echo $action_name?>/'+F[0]+'/'+F[1];
+	});
+});
+</script>

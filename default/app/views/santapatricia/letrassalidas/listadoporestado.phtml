@@ -1,0 +1,121 @@
+
+<div class="card">
+    <h1><em>Letras Pendientes de Cobro !<span><?php echo $empresa->razonsocial?></span></em></h1>
+</div>
+<div class="form-actions">
+<?php echo Menu::menuLetras($action_name);?>
+</div>
+<div class="form-actions">
+<?php echo Html::linkAction('letrasporfecha','Volver','class="btn "');?> <?php echo Sp::imprimir('Letras por Cobrar - ','P');?>
+</div>
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="card-body">
+<div id="ver_resultado"></div>
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+  <thead>
+  <caption style="font-size:14px; color:#333; font-weight:bold;">Letras por cobrar segun Fecha de Vencimiento</caption>
+  <tr>
+  	<th width="32" align="left">Nº</th>
+    <th width="58" align="left">Número </th>
+    <th width="53" align="left">F. Ven</th>
+    <th width="89" align="left">F. Em</th>
+    <th width="202" align="left">Proveedor</th>
+    <th width="67" align="right">$/.</th>
+    <th width="57" align="right">S/.</th>
+  </tr>
+  </thead>
+<?php $number=0;
+$semana=0;
+$a=0;
+$T_soles=0;
+$T_dolares=0;
+foreach($letras as $item){ 
+$simbolo="S/. ";
+/*echo "<pre>";
+print_r($item);
+echo "</pre>";*/
+/*campos*/
+$razon_social='';
+$numero='';
+$totalconigv=00;
+$estadoingreso='';
+$fecha_vencimiento='';
+if($item->origen==1){
+$fecha_vencimiento=$item->fvencimiento;
+$fecha_emision=$item->femision;
+$razon_social=$item->razonsocial;
+$numero=$item->getTessalidas()->numero;
+$totalconigv=$item->getTessalidas()->totalconigv;
+$estadoingreso=$item->estadoletras;
+$moneda_id=$item->getTessalidas()->tesmonedas_id;
+}
+if($item->origen==0){
+$item->getTessalidasinternas()->id;
+$fecha_vencimiento=$item->fvencimiento;
+$fecha_emision=$item->femision;
+$razon_social=$item->razonsocial;
+$numero=$item->getTessalidasinternas()->numero;
+$totalconigv=$item->monto;
+$estadoingreso=$item->estadoletras;
+$moneda_id=$item->getTessalidasinternas()->tesmonedas_id;
+}
+//echo $fecha_vencimiento;
+$T_letras=$item->Totalletrasporsemana($item->semana,$fecha_vencimiento);
+
+$number++;?>
+<?php 
+$b=$item->semana;
+if($a!=$b){
+
+//$number=1;
+//$T_soles=0;
+//$T_dolares=0;
+?>
+<?php 
+}
+$a=$item->semana;
+
+switch ($moneda_id)
+{
+	case 1: $simbolo='S/. '; $T_soles=$T_soles+$item->monto; break;
+	case 2: $simbolo='$. '; $T_dolares=$T_dolares+$item->monto;break;
+	case 4: $simbolo='S/. ';$T_soles=$T_soles+$item->monto; break;
+	case 5: $simbolo='$. ';$T_dolares=$T_dolares+$item->monto;break;
+	case 0: $simbolo='S/. ';$T_soles=$T_soles+$item->monto; break;
+}
+/*pintar las fechas*/
+
+?>
+  <tr id="<?php echo $item->id?>" title="<?php echo $item->origen?> (<?Php echo $item->id?>)">
+  	<td height="20"><?php echo $number; if($item->origen==0)echo " X";
+	?></td>
+    <td><?php echo $numero?></td>
+    <td><?php echo Sp::formatFecha('%d/%m/%Y',$fecha_vencimiento)?></td>
+    <td><?php echo Sp::formatFecha('%d/%m/%Y',$fecha_emision)?></td>
+  	<td height="20"><?php echo $razon_social?></td>    
+    <td align="right"><?php if($simbolo=='$. '){if($totalconigv!='NaN.00' && !empty($totalconigv))echo $simbolo.number_format($totalconigv,2,'.','');else echo($simbolo.' 00.00');}?></td>
+    <td align="right"><?php if($simbolo=='S/. '){if($totalconigv!='NaN.00' && !empty($totalconigv))echo $simbolo.number_format($totalconigv,2,'.','');else echo($simbolo.' 00.00');}?></td>
+  </tr>
+<?php 
+	}?>
+    <tr>
+  	<th height="20"></th>
+    <th></th>
+    <th></th>
+    <th></th>
+  	<th height="20">Total</th>    
+    <th align="right"><strong>
+      <?php if($simbolo=='$. '){if($T_dolares!='NaN.00' && !empty($T_dolares))echo $simbolo.number_format($T_dolares,2,'.','');else echo($simbolo.' 00.00');}?>
+    </strong></th>
+    <th align="right"><strong>
+      <?php if($simbolo=='S/. '){if($T_soles!='NaN.00' && !empty($T_soles))echo $simbolo.number_format($T_soles,2,'.','');else echo($simbolo.' 00.00');}?>
+    </strong></th>
+  </tr>
+</table>
+</div>

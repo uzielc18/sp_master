@@ -1,0 +1,94 @@
+<?php 
+$monedas= $salida->tesmonedas_id;
+switch ($monedas)
+{
+	case 1: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES'; break;
+	case 2: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 4: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
+	case 5: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 0: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
+}
+
+?>
+
+<div class="card">
+    <h1><em>Venta<span><?php echo Session::get('DOC_NOMBRE')?></span></em></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+
+<div class="form-actions">
+<?php //echo Html::linkAction("facturas/7", 'Regresar ','class="btn"') ?>
+</div>
+<div class="card-body">
+<?php echo Form::open()?>
+<table width="75%" border="0" align="center" cellpadding="0" cellspacing="1">
+  <tr>
+    <th width="17%" align="left">Cliente:</th>
+    <th width="55%" align="left"><?php echo $salida->getTesdatos()->razonsocial?></th>
+    <th width="18%" align="left">Nº Documento:</th>
+    <th width="10%"><?php echo $salida->serie?>-<?php echo $salida->numero?></th>
+  </tr>
+  <tr>
+    <th align="left">Direccion:</th>
+    <th align="left"><?php echo $salida->getTesdatos()->direccion?></th>
+    <th align="left">F. de Emision:</th>
+    <th><?php echo $salida->femision?></th>
+  </tr>
+  <tr>
+    <th align="left">Referencia:</th>
+    <th colspan="3" align="left"><?php echo $salida->glosa?></th>
+    </tr>
+</table>
+<hr />
+<table width="100%" border="0" cellspacing="1" cellpadding="0">
+  <tr>
+    <th colspan="6" align="left">Concepto</th>
+    <th width="22%" align="left">Importe</th>
+  </tr>
+  <?php 
+  $n=0;
+  $total=0;
+  foreach($detalles as $item){
+	$n++;
+	  ?>
+  <tr id="<?php echo $item->id?>">
+    <td colspan="6" align="left"><?php echo $n.'.'; echo nl2br($item->concepto)?></td>
+    <td><?php echo $simbolo?><?php 
+	$total=$total+$item->importe;
+	echo number_format($item->importe,2,'.','');?></td>
+  </tr>
+  <?php }?>
+  <tr>
+    <td width="9%">&nbsp;</td>
+    <td width="5%">&nbsp;</td>
+    <td width="17%">&nbsp;</td>
+    <td width="6%">&nbsp;</td>
+    <td width="28%">&nbsp;</td>
+    <td width="13%">Sub total</td>
+    <td><?php echo $simbolo?><?php echo number_format($total,2,'.','');?></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>TOTAL</td>
+    <td><?php echo $simbolo?><?php $TOTAL=$total;echo number_format($TOTAL,2,'.','');?></td>
+  </tr>
+</table>
+<?php echo $texto=NumerosLetras::NL($total,$moneda_letras);?>
+<?php echo Form::hidden('salida.id');?>
+<?php echo Form::hidden('salida.tesmonedas_id');?>
+<?php echo Form::hidden('salida.aclusuarios_id');?>
+<?php echo Form::hidden('salida.tesdocumentos_id');?>
+<?php echo Form::hidden('salida.testipocambios_id');?>
+<?php echo Form::hidden('salida.tesdatos_id');?>
+<?php echo Form::hidden('salida.estadosalida','','Pendiente');?>
+<?php echo Form::hidden('salida.total','',$TOTAL);?>
+<?php echo Form::hidden('salida.totalenletras','',$texto);?> - 
+<?php echo Form::submit('Siguente','class="btn btn-primary"')?><?php echo Html::linkAction('crear_nota/'.Session::get('SALIDA_ID'),' Editar','class="btn btn-secondary"')?>
+<?php echo Form::close();?>
+</div>

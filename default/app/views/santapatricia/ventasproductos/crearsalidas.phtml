@@ -1,0 +1,147 @@
+<?php echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<div class="card">
+    <h1>Crear Salida<span><?php echo Session::get('DOC_NOMBRE')?></span></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="card-body">
+<div id="ver_resultado"></div>
+<?php echo Form::open(NULL,'POST','class="form-horizontal"')?>
+<?php echo Form::hidden('salida.id');?>
+<?php if(empty($salida))if(empty($salida->igv)){;echo Form::hidden('salida.igv','',$salida->getTescontratos()->igv);}else{echo Form::hidden('salida.igv');}?>
+<?php echo Form::hidden('salida.totalconigv');?>
+  <div class="control-group">
+    <label class="control-label" for="salida_serie">Serie - Numero</label>
+    <div class="controls">
+      <?php echo Form::text('salida.serie','size="4" class="salida_cambiar"');?>-<?php echo Form::text('salida.numero','size="10"');?>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="salida_serie">Numero de Pedido</label>
+    <div class="controls">
+      <?php echo Form::text('salida.npedido','size="10"');?>
+    </div>
+  </div>
+  
+  <div class="control-group">
+    <label class="control-label" for="salida_serie">Serie y Numero de Factura:</label>
+    <div class="controls">
+      <?php echo Form::text('salida.numerofactura','size="10"');?>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="salida_tesmonedas_id">Moneda:</label>
+    <div class="controls">
+      <?php echo Form::dbSelect('salida.tesmonedas_id','simbolo,nombre',array("tesmonedas",'find','conditions: aclempresas_id='.Session::get('EMPRESAS_ID')));?>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="salida_hilodestino">Condiciones de Pago:</label>
+    <div class="controls">
+      <?php echo Form::dbSelect('salida.tescondicionespagos_id','nombre',array("tescondicionespagos",'find'));?>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="CL">Cliente</label>
+    <div class="controls">
+    	<input id="CL" />
+      <?php echo Form::hidden('salida.tesdatos_id')?>
+    </div>
+  </div>  
+  <div class="control-group">
+  <label class="control-label" for="salida_tesdatosdirecciones_id">Direccion de Fiscal:</label>
+  <div class="controls" id="direccion_fiscal">
+  
+  </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="salida_direccion_entrega">Direccion de Entrega</label>
+    <div class="controls">
+      <?php echo Form::text('salida.direccion_entrega','class="span10"');//finiciotraslado?>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="salida_direccion_entrega">Fecha de Traslado</label>
+    <div class="controls">
+      <?php echo Calendar::selector('salida.finiciotraslado');//finiciotraslado?>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="acuenta">Adelanto o acuenta</label>
+    <div class="controls">
+      <?php echo Form::text('salida.acuenta');//finiciotraslado?>
+    </div>
+  </div>
+  <?php if(Session::get('DOC_ID')==15){?>
+  <div class="control-group">
+    <label class="control-label" for="inputEmail">Transportista: <?php echo Ajax::link($module_name.'/transportistas/crear_externo','Transportista Externo!','otro','ventana')?></label>
+    <div class="controls">
+      <?php echo Form::text('prodetalletransportes.protransportistas_id')?>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="inputEmail">Transporte: <?php echo Ajax::link($module_name.'/transportes/crear_externo','Transporte Externo!','otro','ventana')?></label>
+    <div class="controls">
+      <?php echo Form::text('prodetalletransportes.protransportes_id')?>
+    </div>
+  </div>
+  <?php }?>
+  <div class="control-group">
+    <div class="controls">
+       <button type="submit" class="btn btn-primary">Generar</button> <?php echo Html::linkAction('salidas','Cancelar','class="btn"')?>
+    </div>
+  </div>
+<?php echo Form::close();?>
+</div>
+<script type="text/javascript">
+$(document).ready(function()
+{
+	$("#CL").tokenInput("/<?php echo $module_name?>/salidas/buscarcliente", 
+	{
+		tokenLimit: 1,
+		minChars: 2,
+<?php if(!empty($salida->tesdatos_id)){?>
+		prePopulate: [ 
+		 {id: <?Php echo $salida->tesdatos_id?>, name: "<?php echo $salida->getTesdatos()->razonsocial?>"},
+					 ],
+<?php }?>
+		onAdd: function (item){
+	   $("#salida_tesdatos_id").val(item.id);
+			   $( "#direccion_fiscal" ).load( "/<?php echo $module_name?>/salidas/direcciones_clientes/"+item.id );
+	   //$("#BC").hide();
+	   //GrabarCliente();
+	},
+	onDelete: function (item) {
+	}
+	});
+	
+/*transporte*/
+	$("#prodetalletransportes_protransportes_id").tokenInput("/<?php echo $module_name?>/salidas/transportes", 
+	{
+		tokenLimit: 1,
+		minChars: 2,
+	});
+	
+	/*transportistas*/
+	
+	$("#prodetalletransportes_protransportistas_id").tokenInput("/<?php echo $module_name?>/salidas/transportistas", 
+	{
+		tokenLimit: 1,
+		minChars: 2,
+    });
+	$('.ventana').live("click",function(){
+	$("#myModal").modal("show");});
+});
+</script>
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Nuevo </h3>
+  </div>
+  <div class="modal-body" id="otro">
+  </div>
+  <div class="modal-footer">
+  </div>
+</div>

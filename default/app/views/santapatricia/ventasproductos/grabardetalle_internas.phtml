@@ -1,0 +1,88 @@
+<script type="text/javascript">
+$(document).ready(function()
+{
+	$(".ocultar").live("click",function(){
+		var id=$(this).attr('id');
+		$("#caja-"+id).hide();
+		});
+
+	$("#detalles_tescolores_id").tokenInput("/<?php echo $module_name?>/salidas/colores/", 
+		{
+			tokenLimit: 1,
+			minChars: 1,
+			onAdd: function (item) {
+			},
+			onDelete: function (item) {
+			}
+		});
+	$("#detalles_tesproductos_id").tokenInput("<?php echo "/".$module_name."/produccion/producto/12"?>", 
+		{
+		tokenLimit: 1,
+		minChars: 1,
+		onAdd: function (item) {
+		},
+		onDelete: function (item) {
+		}
+	});
+
+	$("#detalles_tesunidadesmedidas_id").tokenInput("<?php echo "/".$module_name."/ordendecompra/medidas/"?>", 
+		{
+		tokenLimit: 1,
+		minChars: 1,
+		onAdd: function (item) {
+		},
+		onDelete: function (item) {
+		}
+	});
+});
+</script>
+<?php View::content()?>
+<?php echo Ajax::form('guia',NULL,'form-inline','post')?>
+<pre> Ingresar productos para : <?php echo Session::get('DOC_NOMBRE')?></pre>
+  <div class="input-prepend input-append">
+  <span class="add-on">Producto</span>
+  <?php echo Form::text('detalles.tesproductos_id')?>
+  </div>
+  <div class="input-prepend input-append">
+  <span class="add-on">Unidad</span>
+  <?php echo Form::text('detalles.tesunidadesmedidas_id')?>
+  </div>
+  <div class="input-prepend input-append">
+  <span class="add-on">Colores</span>
+  <?php echo Form::text('detalles.tescolores_id')?>
+  </div>
+  <div class="input-prepend input-append">
+  <span class="add-on">Cantida</span>
+  <?php echo Form::text('detalles.cantidad')?>
+  </div>
+  <div class="input-prepend input-append">
+  <span class="add-on">Precio</span>
+  <?php echo Form::text('detalles.preciounitario')?>
+  </div>
+  <button type="submit" class="btn">Enviar</button>
+<?php echo Form::close()?>
+<table width="75%" border="0" align="center" cellpadding="0" cellspacing="1" class="table table-hover">
+<caption> Lista de productos en contrato </caption>
+  <tr>
+    <th width="34%">Producto</th>
+    <th width="9%">Cantidad</th>
+    <th width="20%">Unidad</th>
+    <th width="20%">Costo unitario</th>
+    <th width="9%">Total</th>
+    <th width="8%">Accion</th>
+  </tr>
+  <?php 
+  $n=0;
+  foreach($detalles as $item){
+	  $n++;
+	  ?> 
+  <tr id="<?php echo $item->id?>">
+    <td><?php echo $n?>. <?php if(!empty($item->tesproductos_id)){echo $item->getTesproductos()->detalle?> <?Php echo $item->getTescolores()->nombre;}?></td>
+    <td><?php echo $item->cantidad?></td>
+    <td><?Php echo $item->getTesunidadesmedidas()->simbolo?></td>
+    <td><?php echo $item->preciounitario?></td>
+    <td><?php echo $item->importe?></td>
+    <td><?php echo Html::linkAction('eliminar_internas/'.$item->id,'Elminar',"class='btn'")?></td>
+  </tr>
+  <?php }?>
+</table>

@@ -1,0 +1,178 @@
+<?php
+$simbolo="S/. ";
+
+switch ($inventario->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+View::content();
+/*echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');*/?>
+<style type="text/css">
+/*.container {
+  width: 1124px;
+}*/
+#items,input,tesarea,th,td{
+	font-size:11px !important;
+}
+.item-row td{
+	padding-left:15px !important;
+	}
+#paid
+{
+	width:80% !important;
+}
+.meta td{
+	font-size:14px !important;
+	
+	}
+
+ul.token-input-list{ width:200px !important;}
+</style>
+
+	<div class="card">
+	<h1>Reporte <?Php echo $nombre?></h1>
+    </div>
+    <div class="form-actions" title="Regresar!">
+    <?php echo Menu::menuReportes($action_name);?>
+    <?php echo Html::linkAction("",'Regresar ','class="btn btn"') ?>
+	<?php echo Sp::imprimir('Tintoreria - ','P');?>  
+    </div>
+<div style="clear:both"></div>
+<div id="vista_p"></div>
+    <div class="card-body">
+	<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped" id="exportar_excel">
+    <thead>
+		  <tr> 
+		      <th width="9%" align="left">Codigo</th>
+		      <th width="21%" align="left">Producto</th>
+              <th width="13%" align="left">Color</th>
+              <th width="14%" align="left">Lote</th>
+              <th width="10%" align="right">En Urdido</th>
+		      <th width="10%" align="right">Hilo urdido</th>
+              <th width="14%" align="right">Stock para urdir</th>
+		      <th width="9%" align="right">Medida</th>
+	      </tr>
+	</thead>
+    	  <?php 
+			  $n=0;
+			  $subtotal=0;
+			  $subtotalD=0;
+			  $array_producto='';
+		  	  $id_productoA=0;
+		      $STOCK=0;
+			  //$igv=0;
+			  foreach($detalles as $item){
+				  $i_coma=',';
+				  if($n==0){$i_coma='';}
+				  if($id_productoA!=$item->tesproductos_id)
+				  {
+					  $array_producto.=$i_coma.'{id: '.$item->tesproductos_id.', name: "'.$item->getTesproductos()->detalle.'"}';
+				  }
+				  $id_productoA=$item->tesproductos_id;
+				  $n++;
+				 $stock_salida=$item->getTesproductos()->getTotalsalidas($item->tesproductos_id,$item->tescolores_id,$item->lote);
+				 $STOCK=$item->getUrdido($item->tesproductos_id,$item->tescolores_id,$item->lote);
+		   if(number_format($stock_salida-$STOCK,2,'.','')>0){
+			  ?>
+		  <tr id="<?php echo $n?>">
+           <td><?php echo $item->getTesproductos()->codigo?></td>
+		   <td class="item-name"><?php echo $item->getTesproductos()->nombre?> <?php echo $item->getTesproductos()->nombrecorto?></td>
+           <td align="left"><?php echo $item->getTescolores()->nombre?></td>
+           <td align="left"><?php echo $item->lote?></td>
+           <td align="right"><?php echo $stock_salida?></td>
+		   <td align="right">
+		   <?php echo number_format($STOCK,'2','.',' ');?>
+           </td>
+           <td align="right"> <?php echo number_format($stock_salida-$STOCK,2,'.','')?></td>
+		   <td align="right"><?php echo $item->getTesunidadesmedidas()->nombre?></td>
+	      </tr>
+		  
+		  <?php 
+		      }
+		  }
+		  ?>
+          <?php 
+			  $n=0;
+			  $subtotal=0;
+			  $subtotalD=0;
+			  $array_producto='';
+		  	  $id_productoA=0;
+		      $STOCK=0;
+			  //$igv=0;
+			  foreach($salidas as $item){
+				  $i_coma=',';
+				  if($n==0){$i_coma='';}
+				  if($id_productoA!=$item->tesproductos_id)
+				  {
+					  $array_producto.=$i_coma.'{id: '.$item->tesproductos_id.', name: "'.$item->getTesproductos()->detalle.'"}';
+				  }
+				  $id_productoA=$item->tesproductos_id;
+				  $n++;
+				 $stock_salida=$item->getTesproductos()->getTotalsalidas($item->tesproductos_id,$item->tescolores_id,$item->lote);
+				 $STOCK=$DET->getUrdido($item->tesproductos_id,$item->tescolores_id,$item->lote);
+			 if(number_format($stock_salida-$STOCK,2,'.','')>0){
+			  ?>
+		  <tr id="<?php echo $n?>">
+           <td><?php echo $item->getTesproductos()->codigo?></td>
+		   <td class="item-name"><?php echo $item->getTesproductos()->nombre?> <?php echo $item->getTesproductos()->nombrecorto?></td>
+           <td align="left"><?php echo $item->getTescolores()->nombre?></td>
+           <td align="left"><?php echo $item->lote?></td>
+           <td align="right"><?php echo $stock_salida?></td>
+		   <td align="right">
+		   <?php echo number_format($STOCK,'2','.',' ');?>
+           </td>
+           <td align="right"> <?php echo number_format($stock_salida-$STOCK,2,'.','')?></td>
+		   <td align="right"><?php echo $item->getTesunidadesmedidas()->nombre?></td>
+	      </tr>
+		  
+		  <?php 
+		      }
+		  }
+		  ?>
+          <?php 
+			  $n=0;
+			  $subtotal=0;
+			  $subtotalD=0;
+			  $array_producto='';
+		  	  $id_productoA=0;
+		      $STOCK=0;
+			  //$igv=0;
+			  foreach($internas as $item){
+				  $i_coma=',';
+				  if($n==0){$i_coma='';}
+				  if($id_productoA!=$item->tesproductos_id)
+				  {
+					  $array_producto.=$i_coma.'{id: '.$item->tesproductos_id.', name: "'.$item->getTesproductos()->detalle.'"}';
+				  }
+				  $id_productoA=$item->tesproductos_id;
+				  $n++;
+				 $stock_salida=$item->getTesproductos()->getTotalsalidas($item->tesproductos_id,$item->tescolores_id,$item->lote);
+				 $STOCK=$DET->getUrdido($item->tesproductos_id,$item->tescolores_id,$item->lote);
+			 if(number_format($stock_salida-$STOCK,2,'.','')>0){
+			  ?>
+		  <tr id="<?php echo $n?>">
+           <td><?php echo $item->getTesproductos()->codigo?></td>
+		   <td class="item-name"><?php echo $item->getTesproductos()->nombre?> <?php echo $item->getTesproductos()->nombrecorto?></td>
+           <td align="left"><?php echo $item->getTescolores()->nombre?></td>
+           <td align="left"><?php echo $item->lote?></td>
+           <td align="right"><?php echo $stock_salida?></td>
+		   <td align="right">
+		   <?php echo number_format($STOCK,'2','.',' ');?>
+           </td>
+           <td align="right"> <?php echo number_format($stock_salida-$STOCK,2,'.','')?></td>
+		   <td align="right"><?php echo $item->getTesunidadesmedidas()->nombre?></td>
+	      </tr>
+		  
+		  <?php 
+		      }
+		  }
+		  ?>
+		  </table>
+
+     <div style="clear:both"></div>
+</div>

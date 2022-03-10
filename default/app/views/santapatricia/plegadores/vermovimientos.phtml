@@ -1,0 +1,123 @@
+<div class="card">
+    <h1>Movimientos del Plegador Nº <?php echo $plegador->numero;?>!</h1>
+</div>
+<div id="mensajes_flash" >       
+      <?php View::content() ?>
+</div>
+<div class="form-actions">
+<?php echo Html::linkAction("plegadoresmov", 'Volver ','class="btn"') ?>
+</div>
+<?php echo Sp::imprimir('Abonos Adelanto - ','P');?> 
+<div class="menu">
+<ul>
+<li>
+<a href="javascript:;">Año 
+<select id="anio">
+<?php
+for($i=2011;$i<=2020;$i++)
+{
+	$selec='';
+	if($anio==$i){
+	$selec=' selected="selected"';
+	}
+	echo '<option value="'.$i.'" '.$selec.'>'.$i.'</option>';
+}
+?>
+</select>
+</a>
+</li>
+</ul> 
+</div>
+<div class="card-body" id="exportar_excel" >
+<table width="67%"border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered">
+<caption>Momivientos del plegadores por año</caption>
+<thead>
+  <tr>
+    <th width="39%" align="left">Nombre del Plegador:</th>
+    <td width="22%"><?php echo $plegador->getTesproductos()->nombre;?></td>
+    <th width="29%" align="left">Codigo:</th>
+    <td width="10%"><?php echo $plegador->getTesproductos()->prefijo?><?php echo $plegador->getTesproductos()->codigo;?></td>
+  </tr>
+  <tr>
+    <th width="39%" align="left">Numero:</th>
+    <td width="22%"><?php echo $plegador->numero;?></td>
+    <th width="29%" align="left">Estado Actual:</th>
+    <td width="10%"><?php echo $plegador->getEstadoplegador()->nombre?></td>
+  </tr>
+ </thead>
+</table>
+
+<hr />
+
+<table width="75%" height="79" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+
+<tr align="left">
+  	<th width="17">Nº</th>
+    <th width="42">Fecha</th>
+    <th width="47">Movto</th>
+    <th width="43">Nº de doc</th>
+    <th width="55">Color</th>
+    <th width="33">Hilo</th>
+    <th width="36">Tara </th>
+    <th width="36">Peso Hilo</th>
+    <th width="37">Peso Total</th>
+    <th width="50">Estado</th>
+  </tr>
+<?php $n=0;
+foreach($movimientos as $item){ 
+$n++;
+if($item->tesingresos_id=='0')
+{ 
+	$campo='tessalidas_id';
+	$movimientos_id=$item->tessalidas_id;
+	$movimiento='SALIDA';
+	$glosa=$item->getTessalidas()->glosa;
+	$fecha=$item->getTessalidas()->fregistro;
+	$numerodoc=$item->getTessalidas()->serie.'-'.$item->getTessalidas()->numero;
+}else
+{
+	$campo='tesingresos_id';
+	$movimientos_id=$item->tesingresos_id; 
+	$movimiento='INGRESO'; 
+	$glosa=$item->getTesingresos()->glosa;
+	$fecha=$item->getTesingresos()->fregistro;
+	$numerodoc=$item->getTesingresos()->serie.'-'.$item->getTesingresos()->numero;
+}
+$detalle=$item->getDetalle($item->getProplegadores()->tesproductos_id,$movimientos_id,$campo);
+$hilo=Sp::getArray($glosa);
+?>
+  <tr>
+  	<td><?php echo $n?></td>
+    <td><?php echo Sp::formatFecha('%d de %m del %Y',$fecha)?></td>
+    <td><?php echo $movimiento?></td>
+    <td><?php echo $numerodoc;?></td>
+    <td><?php echo $hilo['COLOR']?></td>
+    <td><?php /*?>
+	<pre><?Php print_r($hilo)?></pre><?php */?>
+	<?php echo $hilo['HILOS']?></td>
+    
+    <td><?php echo $item->getProplegadores()->peso?> kg</td>
+    <td><?php if($movimiento=='INGRESO')echo $detalle->pesoneto;else echo "00.0";?>kg</td>
+    <td><?php if($movimiento=='INGRESO')
+	{
+		echo $detalle->pesoneto+$item->getProplegadores()->peso;
+	}else{
+		echo $detalle->pesoneto;
+	}?>kg</td>
+     <td><?php echo $item->estadomov?></td>
+  </tr>
+<?php }?>
+</table>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	
+	
+	$("#anio").change(function(event){
+    	var id = $("#anio").find(':selected').val();
+		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/<?Php echo $action_name?>/<?php echo $id?>/'+id;
+     });
+	
+});
+</script>

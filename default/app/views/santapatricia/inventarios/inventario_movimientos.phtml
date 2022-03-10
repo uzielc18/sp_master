@@ -1,0 +1,125 @@
+<?php
+$simbolo="S/. ";
+
+switch ($inventario->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+echo Session::get("TIPOPRODUCTO_ID");
+//$inven=$INGR->getInventario(Session::get("TIPOPRODUCTO_ID"));
+
+View::content();
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<style type="text/css">
+/*.container {
+  width: 1124px;
+}*/
+#items,input,tesarea,th,td{
+	font-size:11px !important;
+}
+.item-row td{
+	padding-left:15px !important;
+	}
+#paid
+{
+	width:80% !important;
+}
+.meta td{
+	font-size:14px !important;
+	
+	}
+ul.token-input-list{ width:150px !important;}
+</style>
+	<div class="card">
+	<h1> <em>Movimientos del - <?php echo Session::get('NOMBRE_INVENTARIO')?></em></h1>
+    </div>
+    <div style="clear:both"></div>
+<form id="buscar" class="form-inline">
+<div class="input-prepend input-append">
+  <span class="add-on" title="Buscar Producto!">Buscar Producto:</span>
+  <input type="text" id="local_producto" name="local_producto" class="input-medium search-query" />
+</div>
+<div class="input-prepend input-append">
+  <span class="add-on" title="Ingrese el Color del Producto!">Color:</span>
+  <input type="text" id="local_color" name="local_color" class="input-medium search-query" />
+</div>
+<div class="input-prepend input-append">
+  <span class="add-on" title="Ingrese el Lote del Producto!">Lote</span>:
+  <input type="text" id="local_lote" name="local_lote" class="input-medium search-query" />
+</div>
+<div class="input-prepend input-append">
+  <span class="add-on" title="Ingrese la Fecha de Inicio para reportar los mivimientos del Producto!">Fecha/Inicio</span>:<?php echo Calendar::text('fecha_inicio')?>
+</div>
+<div class="input-prepend input-append">
+  <span class="add-on" title="Ingrese la Fecha Final para reportar los movimientos del Producto!">Fecha/Fin:</span><?php echo Calendar::text('fecha_fin')?>
+</div>
+ 
+     <div class="form-actions" title="Regresar!">
+    <?php echo Html::linkAction("listado/".Session::get('FAMILIA_ID'),'Regresar ','class="btn btn"') ?><button id="enviar" type="button" class="btn" title="Movimientos!">Ver</button>
+	</div>
+  	
+</form>
+<hr />
+    <div class="card-body">
+    <div id="loading" style="display:none;"><img src="/img/spin.gif" /></div>
+    <div id="kardex"></div>
+    <div style="clear:both"></div>
+	</div>
+<script type="text/javascript">
+        $(document).ready(function() {
+			$("#enviar").click(function(){
+				
+				var data=$("#buscar").serialize();
+				alert(data);
+				$.ajax({
+					type:"POST",
+					url:"/<?php echo $module_name?>/inventarios/kardex",
+					data:data,
+					beforeSend:function(){
+					  $("#loading").show();
+					},
+					success:function(response){
+						$("#loading").hide();
+						$("#kardex").prepend(response);
+						//alert(response);
+					}
+		 
+					});
+				
+				});
+			
+			
+			
+            $("#local_producto").tokenInput(
+			[
+                <?php echo (string)$PP?>
+            ],
+			{
+                minChars: 1,
+                tokenLimit: 1
+			});
+			$("#local_color").tokenInput(
+			[
+                <?php echo (string)$CC?>
+            ],
+			{
+                minChars: 1,
+                tokenLimit: 1
+			});
+			$("#local_lote").tokenInput(
+			[
+                <?php echo (string)$LL?>
+            ],
+			{
+                minChars: 1,
+                tokenLimit: 1
+			});
+			
+        });
+        </script>
+        

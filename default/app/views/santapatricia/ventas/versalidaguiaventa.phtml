@@ -1,0 +1,161 @@
+<span class="print btn btn-primary"> Print </span> <?php echo Html::linkAction('guias/'.Session::get('DOC_ID'),'Regresar <i class="icon-hand-left"></i>','class="btn"')?>
+<div class="card-body">
+<br />
+<br />
+<br />
+<br />
+<table width="255" border="0" cellspacing="1">
+  <tr>
+    <td width="169" align="right"><?php echo date('h:i:s');?></td>
+    <td width="79">&nbsp;</td>
+  </tr>
+</table>
+<table width="113%" border="0" cellspacing="1">
+  <tr>
+    <td align="right">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td width="320" rowspan="2">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="141" height="20" align="right"><?php echo Sp::formatFecha('%d / %m / %Y',$salida->femision)?></td>
+    <td width="230" align="right">&nbsp;&nbsp;<?php echo Sp::formatFecha('%d / %m / %Y',$salida->finiciotraslado)?></td>
+  </tr>
+</table>
+<br />
+<br />
+<br />
+
+<table width="113%" border="0" cellspacing="0">
+  <tr>
+    <td width="50" align="right">&nbsp;</td>
+    <td width="328" align="lefth"><?php echo $empresa->direccion?></td>
+    <td width="317" align="lefth">&nbsp;<?php echo $salida->direccion_entrega?></td>
+  </tr>
+</table>
+<br />
+<br />
+<br />
+<table width="113%" border="0" cellspacing="0">
+  <tr valign="top">
+    <td width="43" height="21">&nbsp;</td>
+    <td width="221" valign="bottom"><?php echo $salida->getTesdatos()->razonsocial?></td>
+    <td width="10">&nbsp;</td>
+    <td width="112" valign="bottom"><?php if(!empty($salida->getTesdatos()->codigo_ant)) echo $salida->getTesdatos()->codigo_ant; else echo $salida->getTesdatos()->codigo.'-'.$salida->getTesdatos()->sufijo?></td>
+    <td width="34">&nbsp;</td>
+    <td width="262" valign="bottom"><?php echo $prodetalletransportes->getProtransportes()->marca?></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td><?php echo $salida->getTesdatos()->direccion?></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td><?php echo $salida->getTesdatos()->distrito?></td>
+    <td>&nbsp;</td>
+    <td><?php echo $salida->getTesdatos()->ruc?></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;&nbsp;&nbsp;<?php echo $prodetalletransportes->getProtransportistas()->numerobrevete?></td>
+  </tr>
+</table>
+<br />
+<table width="106%" border="0" cellspacing="1">
+
+  <tr>
+    <td width="214" align="center"><?php echo $salida->getTescondicionespagos()->nombre?></td>
+    <td width="105"><?php echo $salida->npedido;?></td>
+    <td width="51"><?php echo $salida->ordencompra;?></td>
+    <td width="113" align="center"><?php echo $salida->getTesdatos()->getTesvendedores()->codigo?></td>
+    <td width="66" align="lefth"><?php echo $salida->numerofactura;?></td>
+    <td width="89" align="left"><?php echo Sp::formatFecha('%d / %m / %Y',$salida->femision)?></td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="1">
+  <tr>
+    <td width="7%">&nbsp;</td>
+    <td width="5%">&nbsp;</td>
+    <td width="4%">x</td>
+    <td width="7%">&nbsp;</td>
+    <td width="12%">&nbsp;</td>
+    <td width="4%">&nbsp;</td>
+    <td width="11%">&nbsp;</td>
+    <td width="7%">&nbsp;</td>
+    <td width="7%">&nbsp;</td>
+    <td width="7%">&nbsp;</td>
+    <td width="7%">&nbsp;</td>
+    <td width="7%">&nbsp;</td>
+    <td width="7%">&nbsp;</td>
+    <td width="8%">&nbsp;</td>
+  </tr>
+</table>
+<br />
+<br />
+<table width="100%" border="0" cellspacing="1">
+  <?php $n_total_r=14;?>
+  <?php  $n=0;$totalkilos=0;
+  foreach($detalles as $item){
+  		$totalkilos=$totalkilos+$item->cantidad;
+	  $n++;?>
+  <tr>
+    <td width="145" align="center"><?php echo $n?>. <?php if(!empty($item->prorollos_id)){echo $item->getProrollos()->codigo?>-<?Php echo $item->getTescolores()->codigo_ant?>-<?php echo $item->getProrollos()->calidad;?>-0<?php echo $item->getProrollos()->numeroventa;}?></td>
+    <td width="73" align="center"><?php echo number_format($item->cantidad,2,'.','')?></td>
+    
+    <td width="122" align="center"> <?Php echo $item->getTesunidadesmedidas()->simbolo?></td>
+   <td width="553"> <?php echo $item->getTesproductos()->codigo?> <?php echo $item->getTesproductos()->detalle?> <?php echo $item->getTesproductos()->nombre?> <?Php echo $item->getTescolores()->nombre?></td>
+  </tr>
+  <?php }?>
+  
+  <tr>
+    <td width="13%" align="center">TOTAL:</td>
+    <td width="12%" align="center"><?php echo number_format($totalkilos,2,'.','')?></td>
+    <td width="8%" align="center"><?Php echo $item->getTesunidadesmedidas()->simbolo?></td>
+    <td width="67%" align="center" >&nbsp;</td>
+  </tr>
+  <?php for($i=0;$i<=$n_total_r-$n;$i++){?>
+  <tr>
+    <td colspan="3" align="center">&nbsp;</td>
+    </tr>
+    <?php }?>
+</table>
+<table width="113%" border="0" cellspacing="0">
+  <tr>
+    <td width="9%">&nbsp;</td>
+    <td width="89%"></td>
+    <td width="1%">&nbsp;</td>
+    <td width="1%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td><?php echo $prodetalletransportes->getProtransportistas()->nombre?></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td><?php echo $prodetalletransportes->getProtransportistas()->direccion?></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td><?php echo $prodetalletransportes->getProtransportistas()->ruc?></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td><?php echo $prodetalletransportes->getProtransportes()->numeroplaca?></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</div>

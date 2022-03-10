@@ -1,0 +1,16 @@
+<?php foreach($detalles as $detalle){?>
+  <tr id="<?php echo $detalle->id?>">
+    <td><?php if($detalle->tesordendecompras_id!=0){echo $detalle->getTesordendecompras()->codigo;}?></td>
+    <td><?php echo $detalle->getTesproductos()->nombre?></td>
+    <td><?php echo $detalle->getTescolores()->nombre?></td>
+    <td><?php echo $detalle->metroprogramados?></td>
+    <td><ul><?php $tramas=$detalle->getProtrama();
+	$n=0;
+	foreach($tramas as $trama){
+	$n++;	?>
+		<li>S<?php echo $n?>-<?php echo $trama->getTesproductos()->nombre;?> <?php if(!empty($trama->tescolores_id))echo $trama->getTescolores()->nombre;else echo " - -";?></li>
+		<?php	}?></ul></td>
+    <td><?php echo $detalle->observaciones?></td>
+    <td><?php //echo Ajax::linkAction('borrardetalle/'.$detalle->id,Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'detalle_listado');?><?php //echo Ajax::linkAction('editardetalle/'.$detalle->id,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'detalle_listado');?></td>
+  </tr>
+  <?php }?>

@@ -1,0 +1,30 @@
+<?php
+View::content();
+?>
+<div class="card">
+<h1>Detraccion <span>ingresar el codigo y la fecha de deposito de la detraccion</span></h1>
+</div>
+<div class="card-body">
+
+<?php echo Form::open()?>
+<?php echo Form::hidden('detraccion.id')?>
+<?php echo Form::hidden('detraccion.tesingresos_id')?>
+<table width="70%" border="0" align="center" cellpadding="0" cellspacing="1">
+<tr>
+    <th colspan="2"></th>
+    </tr>
+<tr>
+    <th width="25%" align="right">Codigo :</th>
+    <td width="75%" title="Ingrese un Proveedor determinado para Cancelar Letras"><?php echo Form::text('detraccion.codigodedetraccion','')?></td>
+  </tr>
+  <tr>
+    <th align="right">Fecha:</th>
+    <td title="Elegir la moneda, para listar los Documentos pendientes de Pago!"><?php echo Calendar::text('detraccion.fechadeposito')?></td>
+  </tr>
+  <tr>
+    <td colspan="2"><?php echo Form::submit('Continuar','class="btn btn-primary"');?></td>
+  </tr>
+</table>
+
+<?php echo Form::close()?>
+</div>

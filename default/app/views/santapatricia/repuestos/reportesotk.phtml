@@ -1,0 +1,94 @@
+<div class="card">
+    <h1>Stock Repuestos<span> Stock Repuestos <?php echo date('d-m-Y')?> </span></h1>
+</div>
+<div class="form-actions">
+<?php //echo Html::linkAction('salidas/','Entregar repuestos','class="btn btn-primary"');?> 
+<?php echo Html::linkAction('','Volver','class="btn"');?> 
+</div>
+<?php echo Sp::imprimir('Reporte repuestos - ','P',array('W'=>1,'EX'=>1,'P'=>1));?> 
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+<div class="card-body">
+&uarr;
+<?php /*Html::img("figuras/ascendente.gif",'Editar','style="width: 8px;"')   Html::img("figuras/descendente.gif",'Editar','style="width: 8px;"')*/?>
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0"  class="table table-bordered table-striped" id="exportar_excel">
+<caption>REPUESTOS UTILIZADOS <?php echo date('Y')?> - SANTA PATRICIA SA (ORDEN ALFABETICO)</caption>
+  <thead>
+  <tr>
+  	<th width="36" align="left">Ubicacion</th>
+    <th width="148" align="left">Codigo 
+	<?php echo Html::linkAction($action_name.'/codigo/ASC/','&uarr;','');?>
+    <?php echo Html::linkAction($action_name.'/codigo/DESC/','&darr;','');?>    </th>
+    <th width="302" align="left">Descripción 
+	<?php echo Html::linkAction($action_name.'/nombre/ASC/','&uarr;','');?>
+    <?php echo Html::linkAction($action_name.'/nombre/DESC/','&darr;','');?>   </th>
+    <th width="75" align="center">Stock Min	
+	<?php echo Html::linkAction($action_name.'/stokminimo/ASC/','&uarr;','');?>
+	<?php echo Html::linkAction($action_name.'/stokminimo/DESC/','&darr;','');?></th>
+    <th width="99" align="center">Stock Actual
+	<?php echo Html::linkAction($action_name.'/stokactual/ASC/','&uarr;','');?>
+    <?php echo Html::linkAction($action_name.'/stokactual/DESC/','&darr;','');?>   </th>
+    <th width="128" align="center">Pr. s/igv S/.
+    <?php echo Html::linkAction($action_name.'/preciosoles/ASC/','&uarr;','');?>
+    <?php echo Html::linkAction($action_name.'/preciosoles/DESC/','&darr;','');?>   </th>
+    <th width="134" align="center">Pr. s/igv $/.
+	<?php echo Html::linkAction($action_name.'/preciodolares/ASC/','&uarr;','');?>
+    <?php echo Html::linkAction($action_name.'/preciodolares/DESC/','&darr;','');?>   </th>
+  </tr>
+ </thead>
+ <tbody>
+<?php $n=0;
+
+	$total_a=0;
+	$total_ps=0;
+	$total_pd=0;
+	$ps=0;
+	$pd=0;
+foreach($repuestos as $item){ 
+	$n++;
+	$ps=0;
+	$pd=0;
+	if(!empty($item->preciosoles))$ps=$item->preciosoles;
+	if(!empty($item->preciodolares))$pd=$item->preciodolares;
+	$total_a=$total_a+$item->stokactual;
+	$total_ps=$total_ps+$ps;
+	$total_pd=$total_pd+$pd;
+	?>
+  <tr>
+  	<td width="36" align="left"><?Php echo $item->ubicacion?><?php //echo $n?></td>
+    <td width="148" align="left"><?Php echo $item->codigo?> (PL:<?php echo $item->paglibro?>)</td>
+    <td width="302" align="left"><?php echo $item->nombre?> </td>
+    <td width="75" align="right" valign="top"><?php echo $item->stokminimo?></td>
+    <td width="99" align="right" valign="top"><?php echo $item->stokactual?></td>
+    <td width="128" align="right" valign="top"><?php echo number_format($ps,2,'.','')?></td>
+    <td width="134" align="right" valign="top"><?php echo number_format($pd,2,'.','')?></td>
+  </tr>
+<?php }?>
+</tbody>
+<tfoot>
+<tr>
+  	<td colspan="3" align="right">TOTALES:</td>
+    <td width="75" align="right" valign="top"><?php //echo $item->stokminimo?></td>
+    <td width="99" align="right" valign="top"><?php echo $total_a?></td>
+    <td width="128" align="right" valign="top"><?php echo number_format($total_ps,2,'.','')?></td>
+    <td width="134" align="right" valign="top"><?php echo number_format($total_pd,2,'.','')?></td>
+  </tr>
+</tfoot>
+</table>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#txtBuscar').on('search',function(){
+		//le decimos a la funcion que busque en la tabla tblTabla el
+		//valor que contiene el campo actual
+		$.fntBuscarEnTabla($(this).val(),'exportar_excel');
+		
+	});
+});
+</script>

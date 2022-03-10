@@ -1,0 +1,65 @@
+<?php switch ($letras->getTesingresos()->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}?>
+<div class="card">
+    <h1><em>Ingrese Numero Unico y Banco donde se encuentra la Letra !<span><?php echo $empresa->razonsocial?></span></em></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="card-body">
+<?php echo form::open()?>
+<?php echo form::hidden('letras.id');
+echo form::hidden('letras.tesingresos_id');
+echo form::hidden('letras.monto');?>
+<table width="75%" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <th width="11%" align="left">Letra Nº:</th>
+    <th width="16%" align="left"><?php echo $letras->nuemeroletra?></th>
+    <th width="22%" align="left">F. de Vto:</th>
+    <td width="17%"><?php echo $letras->getTesingresos()->fvencimiento?></td>
+    <th width="17%" align="left">Proveedor:</th>
+    <td width="17%"><?php echo $letras->getTesingresos()->getTesdatos()->razonsocial?></td>
+    </tr>
+  <tr>
+    <th align="left">Referencia</th>
+    <td><?php if(empty($letras->numerofactura))echo 'Letra de Adelanto';else echo $letras->numerofactura?></td>
+    <th align="left">Numero Unico:</th>
+    <td><?php echo Form::text('letras.numerounico')?></td>
+    <th align="left">Banco:</th>
+    <?Php 
+	$BAN=array();
+	foreach($bancos as $b):
+	$BAN[$b->abr]=$b->nombre;
+	endforeach;
+	?>
+    <td><?php echo Form::Select('letras.bancos',$BAN,'',$letras->banco)?></td>
+    </tr>
+  <?php if($letras->getTesingresos()->movimiento=='LA'){?>
+  <tr>
+    <th colspan="6" align="center">¿Desea usar esta letra en aplicaciones?<?php echo Form::Select('letras.activo',array(""=>"NO","1"=>"SI"),'')?><br /> Para poder usar la Letra, en pagos de Facturas en S/. debera ingresar el monto en S/..</th>
+    </tr>
+    <tr>
+    
+      <th colspan="3" align="left">Monto $/.<?php echo $letras->getTesingresos()->getTesmonedas()->nombre?><?php echo Form::text('letras.monto')?></th>
+      <th colspan="3" align="left"><?php if($letras->getTesingresos()->getTesmonedas()->nombre=='DOLARES AMERICANOS'){?>Monto S/.<?php echo Form::text('letras.monto_n');}?></th>
+    </tr>
+    <?php }else{?>
+	<tr>
+    
+      <th colspan="6" align="center"><?php echo $letras->getTesingresos()->getTesmonedas()->simbolo?> <?php echo $letras->monto?><?php echo $letras->monto_n?></th>
+    </tr>
+	
+	<?php }?>
+</table>
+<div class="form-actions">
+<?php echo Form::Submit("REGISTRAR",'class="btn btn-primary"') ?> <?php echo Html::linkAction("", 'Volver ','class="btn"') ?>
+</div>
+<?php echo Form::close()?>
+
+</div>

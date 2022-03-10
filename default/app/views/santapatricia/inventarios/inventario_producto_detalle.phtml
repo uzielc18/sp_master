@@ -1,0 +1,189 @@
+<?php
+$simbolo="S/. ";
+
+switch ($inventario->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+echo Session::get("TIPOPRODUCTO_ID");
+$inven=$INGR->getInventario(Session::get("TIPOPRODUCTO_ID"));
+
+View::content();
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<style type="text/css">
+/*.container {
+  width: 1124px;
+}*/
+ul.token-input-list{ width:200px !important;
+}
+</style>
+	<div class="card">
+	<h1>Reporte de <?php echo Session::get('NOMBRE_INVENTARIO')?> Por Lotes</h1>
+    </div>
+    <div class="form-actions" title="Regresar">
+    <?php echo Html::linkAction("listado/".Session::get('FAMILIA_ID'),'Regresar ','class="btn btn"') ?>
+	<?php echo Html::linkAction('inventario_producto_detalle/'.$item->id.'/d.tesproductos_id','por producto','class="btn btn"');?>
+	<?php echo Html::linkAction('inventario_producto_detalle/'.$item->id.'/d.tescolores_id','por color','class="btn btn"');?>
+	<?php echo Html::linkAction('inventario_producto_detalle/'.$item->id.'/d.lote','por lote','class="btn btn"');?>
+	<?php echo Html::linkAction('inventario_producto_detalle/'.$item->id.'/d.tesingresos_id','por ingreso','class="btn btn"');?>
+	<?php echo Html::linkAction('inventario_producto_detalle/'.$item->id.'/d.id','Por registro','class="btn btn"');?>
+    </div>
+    <div style="clear:both"></div>
+    <div class="card-body">
+	<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+    <caption><?Php echo $item->detalle ?></caption>
+    <thead>
+		  <tr align="right">
+              <th width="20%" align="left" valign="top">Inicial</th>
+              <th width="20%" align="left" valign="top">Guias</th>
+              <th width="20%" align="left" valign="top">Facturas</th>
+		      <th width="19%" align="left" valign="top">Notas</th>
+              <th width="21%" align="left" valign="top">CAJAS</th>
+          </tr>
+	</thead>
+		  <tr id="" align="right">
+           <td align="left" valign="top">
+		   <?php $inicial=$INV->inicial($item->id,$gr);
+		   $inv=0;
+		   foreach($inicial as $in):
+		   echo 'L: '.$in->lote.' N: '.$in->numero.' T:'.number_format($in->total,2,'.','');
+		   $inv=$inv+number_format($in->total,2,'.','');
+		   echo "<br />";
+		   endforeach;?></td>
+           <td align="left" valign="top">
+		   <?php $gui=$INV->i_guias($item->id,$gr);
+		   $i_g=0;
+		   foreach($gui as $g):
+		   echo 'L: '.$g->lote.' N: '.$g->numero.' T:'.number_format($g->total,2,'.','');
+		   $i_g=$i_g+number_format($g->total,2,'.','');
+		   echo "<br />";
+		   endforeach;
+		   ?></td>
+           <td align="left" valign="top">
+		   <?php $fac=$INV->i_facturas($item->id,$gr);
+		   $i_f=0;
+		   foreach($fac as $f):
+		   echo 'L: '.$f->lote.'f: '.$f->numero.' T:'.number_format($f->total,2,'.','');
+		   $i_f=$i_f+number_format($f->total,2,'.','');
+		   echo "<br />";
+		   endforeach;
+		   ?></td>
+           <td align="left" valign="top">
+		   <?php $not=$INV->i_notas($item->id,$gr);
+		   $i_n=0;
+		   foreach($not as $n):
+		   echo 'L: '.$n->lote.'N: '.$n->numero.' T:'.number_format($n->total,2,'.','');
+		   echo "<br />";
+		   $i_n=$i_n+number_format($n->total,2,'.','');
+		   endforeach;?></td>
+           <td align="left">
+		   <?php $cajas=$INV->i_cajas($item->id,$gr);
+		   $i_c=0;
+		   foreach($cajas as $c):
+		   echo trim($c->id.'L:'.$c->lote.' T:'.number_format($c->total,2,'.',''));
+		   echo "<br />";
+		   $i_c=$i_c+number_format($c->total,2,'.','');
+		   endforeach;?></td>
+      </tr>
+      <tr>
+      	<td><?Php  echo $inv?></td>
+      	<td><?Php  echo $i_g?></td>
+      	<td><?Php  echo $i_f?></td>
+      	<td><?Php  echo $i_n?></td>
+      	<td></td>
+      </tr>
+	  <tr align="left">
+		    <td align="left" valign="top">Total ingresos</td>
+		    <td colspan="2" align="left" valign="top"><?Php  echo $total_ingreso=$i_g+$i_f+$i_n?></td>
+		    <td align="left" valign="top">&nbsp;</td>
+		    <td align="left" valign="top"><?php echo $i_c?></td>
+      </tr>
+	  </table>
+     <div style="clear:both"></div> 
+     <br />
+     <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+    <thead>
+		  <tr>
+              <th width="7%" height="12" align="left" valign="top">Facturas S</th>
+              <th width="21%" align="left" valign="top">Guias S</th>
+		      <th width="21%" align="left" valign="top">Salidas_internas</th>
+		      <th width="7%" align="left" valign="top">Autosalidas</th>
+              <th width="24%" align="left" valign="top">Notas S</th>
+		      <th width="20%" align="left" valign="top">Cajas T</th>
+	      </tr>
+	</thead>
+		  <tr id="" align="left">
+           <td align="left" valign="top">
+		   <?php $sfact=$INV->s_facturas($item->id,$gr);
+		   $s_f=0;
+		   foreach($sfact as $sf):
+		   echo 'L: '.$sf->lote.'f: '.$sf->numero.' T:'.number_format($sf->total,2,'.','');
+		   $s_f=$s_f+number_format($sf->total,2,'.','');
+		   echo "<br />";
+		   endforeach;?></td>
+		   <td align="left" valign="top">
+		   <?php $sgui=$INV->s_guias($item->id,$gr);
+		   $s_g=0;
+		   foreach($sgui as $sg):
+		   echo 'L: '.$sg->lote.'G: '.$sg->numero.' T:'.number_format($sg->total,2,'.','');
+		   $s_g=$s_g+number_format($sg->total,2,'.','');
+		   echo "<br />";
+		   endforeach;?></td>
+		   <td align="left" valign="top">
+		   <?php $sis= $INV->s_guias_internas($item->id,$gr);
+		   $s_i=0;
+		   foreach($sis as $si):
+		   echo 'L: '.$si->lote.'G: '.$si->numero.' T:'.number_format($si->total,2,'.','');
+		   $s_i=$s_i+number_format($si->total,2,'.','');
+		   echo "<br />";
+		   endforeach;?></td>
+           <td align="left" valign="top">
+		   <?php $auto=$INV->i_autosalidas($item->id,$gr);
+		   $s_a=0;
+		   foreach($auto as $a):
+		   echo 'L: '.$a->lote.'G: '.$a->numero.' T:'.number_format($a->total,2,'.','');
+		   echo "<br />";
+		   $s_a=$s_a+number_format($a->total,2,'.','');
+		   endforeach;?></td>
+		   <td align="left" valign="top">
+		   <?php $nots=$INV->s_notas($item->id,$gr);
+		   $s_n=0;
+		   foreach($nots as $sn):
+		   echo 'L: '.$sn->lote.'n: '.$sn->numero.' T:'.number_format($sn->total,2,'.','');
+		   $s_n=$s_n+number_format($sn->total,2,'.','');
+		   echo "<br />";
+		   endforeach;?></td>
+		   <td width="20%" align="left" valign="top">
+		   <?php $tc=$INV->s_cajas($item->id,$gr);
+		   $s_c=0;
+		   foreach($tc as $t):
+		   echo $t->tescajas_id.'L: '.$t->lote.'L: '.$t->lote.' T:'.number_format($t->total,2,'.','');
+		   $s_c=$s_c+number_format($t->total,2,'.','');
+		   echo "<br />";
+		   endforeach;?></td>
+	      </tr>
+          <tr>
+		    <td align="left" valign="top"><?Php echo $s_f?></td>
+		    <td align="left" valign="top"><?Php echo $s_g?></td>
+		    <td align="left" valign="top"><?Php echo $s_i?></td>
+		    <td align="left" valign="top"><?Php echo $s_a?></td>
+		    <td align="left" valign="top"><?Php echo $s_n?></td>
+		    <td align="left" valign="top"></td>
+          </tr>
+		  <tr align="left">
+		    <td align="left" valign="top">Total salidas</td>
+		    <td colspan="3" align="left" valign="top"><?Php echo $total_salida=$s_n+$s_a+$s_i+$s_g+$s_f?></td>
+		    <td align="left" valign="top">&nbsp;</td>
+		    <td align="left" valign="top"><?php echo $s_c?></td>
+       </tr>
+		  <tr align="left">
+		    <td align="left" valign="top">STOCK</td>
+		    <td colspan="5" align="left" valign="top"><?Php echo $total_ingreso-$total_salida;?></td>
+       </tr>
+	  </table>
+</div>

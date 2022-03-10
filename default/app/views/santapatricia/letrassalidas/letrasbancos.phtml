@@ -1,0 +1,118 @@
+<style type="text/css">
+.span_float
+{
+	float:right !important;
+	margin-left:0px;
+	margin-right:-5px;
+}
+</style>
+<div class="card">
+    <h1><em>Letras Bancos</em><span><?php echo $empresa->razonsocial?></span></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="form-actions">
+<?php echo Menu::menuLetras($action_name);?>
+</div>
+<div class="form-actions">
+<?php echo Sp::imprimir('Letras semanal - ','P',array("W"=>1,"P"=>1,"EX"=>1));?> 
+</div>
+<div id="ver_resultado"></div>
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus="" placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+<div class="card-body">
+<?php echo Form::open($module_name.'/letrassalidas/pagar','POST');?>
+<table id="exportar_excel" width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+<caption>Letras con Numero Unico de Pago</caption>
+  <tr>
+  	<td width="17">Nº</td>
+    <td width="113">Proveedor</td>
+    <td width="60">Número Doc.</td>
+    <td width="60">Número renov.</td>
+    <td width="58">Numero unico</td>
+	<td width="70">F. Emision</td>
+    <td width="54">F. Vto</td>
+    <td width="42">Banco</td>
+    <td width="44">Total</td>
+    <td width="100">Acciones</td>
+  </tr>
+<?php $number=0;
+foreach($letras as $item){ 
+$simbolo="S/. ";
+
+switch ($item->getTessalidas()->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+$dias=Sp::Ndias(date("Y-m-d"),$item->getTessalidas()->fvencimiento);
+$mensaje='';
+if($dias>0)$mensaje=' hace '.$dias.' dia(s)';
+$number++;?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20"><?php echo $number?></td>
+  	<td height="20"><?php echo $item->getTessalidas()->getTesdatos()->razonsocial?></td>
+    <td><?php 
+	$a=$item->numerodeletra;	
+	$b=strlen($a);
+	if($b>=6){$a=substr($a, 0, -2);}
+	echo $a?><?php //echo $item->getTessalidas()->numero?>
+	</td>
+	<td><?Php if(!empty($item->nrenovacion))echo $item->nrenovacion; else echo "00";?></td>
+    <td><?php echo $item->numerounico?></td>
+	<td><?php echo Sp::formatFecha('%d / %m / %Y',$item->getTessalidas()->femision)?><?php //echo $item->getTesingresos()->femision?></td>
+		<?php //echo Sp::formatFecha('%d / %m / %Y',$femision)?>
+    <td><span <?Php if($dias>0)echo 'style="color:#FF0000;"';?>><?php echo Sp::formatFecha('%d / %m / %Y',$item->getTessalidas()->fvencimiento)?> <?php echo $mensaje?></span></td>
+    <td><?php echo $item->banco?></td>
+    <td><?php if($item->getTessalidas()->totalconigv!='NaN.00' && !empty($item->getTessalidas()->totalconigv))echo $simbolo.number_format($item->getTessalidas()->totalconigv,2,'.','');else echo('S/ 00.00')?></td>
+  	
+   <td>
+   <?php echo Html::linkAction('editar/'.$item->id.'/','<i class="icon-pencil"></i>','title="Editar  !"','')?> 
+	<?php echo Html::linkAction('letrara/'.$item->id.'/',Html::img("figuras/ver.png",'VER','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Ver para Imprimir formato Nuevo !"','')?>
+	<?php echo Html::linkAction('ingresarnumero/'.$item->id.'/',Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Editar No. Unico de la Letra !"','')?>	
+	<?php echo Html::linkAction('renovacion/'.$item->id.'/',Html::img("figuras/produccion.png",'Editar','style="width: 30px;margin-left:1px;margin-right:1px;"'),'title="Renovar la letra!"','')?>
+	<?php echo Html::linkAction('pagadobanco/'.$item->id.'/'.$action_name,Html::img("figuras/pagar.png",'Editar','style="width: 30px;margin-left:1px;margin-right:1px;"'),'title="Clic !, si el Cliente Canceló la LETRA !"','')?>
+   
+    <label class="checkbox" style="float: right;">
+          <input type="checkbox" name="itemSelect[]" value="<?php echo $item->id?>" class="sele"><i class="icon-check"></i>
+        </label>
+    </td>
+  </tr>
+<?php }?>
+</table>
+
+
+ <button type="submit" class="btn btn-primary">Pagar varias letras !</button> 
+  </fieldset>
+  <?php echo Form::hidden('facturas.ids');?>
+  <?php echo Form::hidden('facturas.url','',$action_name);?>
+  <?php echo Calendar::text('facturas.fecha_pago','',date('Y-m-d'));?>
+<?Php echo Form::close();?>
+
+
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#txtBuscar').on('search',function(){
+		//le decimos a la funcion que busque en la tabla tblTabla el
+		//valor que contiene el campo actual
+		$.fntBuscarEnTabla($(this).val(),'exportar_excel');
+		
+	});
+	
+	$('.sele').click(function(){
+		var selectedItems = new Array();
+		
+		$("input[@name='itemSelect[]']:checked").each(function(){
+			selectedItems.push($(this).val());
+		});
+		$("#facturas_ids").val(selectedItems);
+	});
+});
+</script>

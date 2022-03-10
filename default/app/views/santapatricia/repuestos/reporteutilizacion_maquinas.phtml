@@ -1,0 +1,170 @@
+<div class="card">
+    <h1>Reporte por Maquinas<span>Utilizacion de Repuestos</span></h1>
+</div>
+<div class="form-actions">
+<?php //echo Html::linkAction('salidas/','Entregar repuestos','class="btn btn-primary"');?> 
+<?php echo Html::linkAction('','Volver','class="btn"');?>   
+<?php echo Html::linkAction('reporteutilizacion/'.$anio.'/0','Por repuesto','class="btn"');?> 
+</div>
+<div class="menu">
+<ul>
+<li>
+<a href="javascript:;">Año 
+<select id="anio">
+<?php
+for($i=2011;$i<=2020;$i++)
+{
+	$selec='';
+	if($anio==$i){
+	$selec=' selected="selected"';
+	}
+	echo '<option value="'.$i.'" '.$selec.'>'.$i.'</option>';
+}
+?>
+</select>
+</a>
+</li>
+</ul> 
+<?php 
+$mes_actual=date('Y-m');
+foreach($meses as $clave => $mes):
+if($anio.'-'.$clave<=$mes_actual){
+$class='';
+if($mes_activo==$clave)$class=' active';
+echo '<ul>';
+echo '<li><a class="enviar'.$class.'" id="mes-'.$mes.'" href="javascript:;" data-id="'.$anio.'-'.$clave.'-01">'.$mes.'</a></li>'; 
+echo '</ul>';
+}
+endforeach;
+echo '<ul>';
+echo '<li><a class="enviar" id="mes-0" href="javascript:;" data-id="'.$anio.'-0-01">Todos</a></li>'; 
+echo '</ul>';
+?>
+</div>
+<div class="clear"></div>
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div style="clear:both">
+</div>
+<?php echo Sp::imprimir('Repuestos utilizacion por maquina - ','P');?> 
+<div class="card-body">
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0"  class="table-bordered" id="tblTabla">
+  <thead>
+  <tr>
+  	<th width="17" align="center">Nº</th>
+    <th width="46" align="center">Codigo</th>
+    <th width="34" align="center">Doc</th>
+    <th width="348" align="center">Descripción</th>
+    <th width="50" align="center">Fecha</th>
+    <th width="53" align="center">Maquina</th>
+    <th width="58" align="center">Ubicacion</th>
+    <th width="56" align="right">Cantidad</th>
+    <th width="68" align="right">Precio Uni</th>
+    <th width="56" align="right">Total</th>
+    <th width="44" align="center">Stock Actual</th>
+  </tr>
+ </thead>
+ <tbody>
+<?php 
+	$nombre=' Sin movimientos';
+	$n=0;
+	$total_c=0;
+	$total_pd=0;
+	$ps=0;
+	$pd=0;
+	$a='';
+	$stokactual=0;
+foreach($repuestos as $item){ 
+	$b=$item->maquina;
+	$n++;
+	$c=0;
+	$pd=0;
+	if(!empty($item->cantidad))$c=$item->cantidad;
+	if(!empty($item->total))$pd=$item->total;
+	
+	?>
+<?php
+if($a!=$b){
+	 $a=$item->maquina;
+	  if($n!=1)
+	  {
+	 ?>
+<tr class="cambio">
+  	<td colspan="6" align="right"><?php echo $nombre?> TOTALES:</td>
+    <td width="58" align="center"><?php //echo $item->stokminimo?></td>
+    <td width="56" align="right"><?php echo number_format($total_c,2,'.','')?></td>
+    <td width="68" align="right"><?php //echo number_format($total_c,2,'.','')?></td>
+    <td width="56" align="right"><?php echo number_format($total_pd,2,'.','')?></td>
+    <td width="44" align="right"><?php echo number_format($stokactual,2,'.','')?></td>
+</tr>
+ <?php 
+ $total_c=0;
+ $total_pd=0;
+ $stokactual=0;
+ 		}
+  	}
+ $total_c=$total_c+$c;
+ $total_pd=$total_pd+$pd;
+ $stokactual=$item->stokactual;
+ ?>
+  <tr>
+  	<td width="17" align="left"><?php echo $n?></td>
+    <td width="46" align="left"><?Php echo $item->condigo_ant?></td>
+    <td width="34" align="left"><?php echo $item->numero?></td>
+    <td width="348" align="left"><?php echo $item->nombre?></td>
+    <td width="50" align="center"><?php echo Sp::formatFecha("%d/%m/%y",$item->fecha)?></td>
+    <td width="53" align="left"><?php echo $item->maquina?></td>
+    <td width="58" align="center"><?php echo $item->ubicacion?></td>
+    <td width="56" align="right"><?php echo $item->cantidad?></td>
+    <td width="68" align="right"><?php if(!empty($item->precio))echo number_format($item->precio,2,'.','')?></td>
+    <td width="56" align="right"><?php echo number_format($pd,2,'.','')?></td>
+    <td width="44" align="right">&nbsp;</td>
+  </tr>
+
+ 
+<?php 
+/*variables para el inicio*/
+$nombre='Maquina Nº '.$item->maquina;
+}?>
+</tbody>
+<tr class="cambio">
+  	<td colspan="6" align="right"><?php echo $nombre?>TOTALES:</td>
+    <td width="58" align="center"><?php //echo $item->stokminimo?></td>
+    <td width="56" align="right"><?php echo number_format($total_c,2,'.','')?></td>
+    <td width="68" align="right"></td>
+    <td width="56" align="right"><?php echo number_format($total_pd,2,'.','')?></td>
+    <td width="44" align="right"><?php echo number_format($stokactual,2,'.','')?></td>  
+</tr>
+</table>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#anio").change(function(event){
+    	var id = $("#anio").find(':selected').val();
+		location.href = '/<?php echo $module_name?>/<?Php echo $controller_name?>/<?php echo $action_name?>/'+id;
+     });
+	$(".enviar").click(function()
+	{
+		var fecha = $(this).attr('data-id');
+		var F=fecha.split('-');
+		location.href = '/<?php echo $module_name?>/<?Php echo $controller_name?>/<?php echo $action_name?>/'+F[0]+'/'+F[1];
+	});
+	$(".botonExcel").click(function(event)
+	{
+		$("#datos_a_enviar").val( $("<div>").append( $("#tblTabla").eq(0).clone()).html());
+		$("#FormularioExportacion").submit();
+	});
+});
+</script>
+<style type="text/css">
+.cambio
+{
+	border-bottom: 1px solid #F00 !important;
+}
+</style>

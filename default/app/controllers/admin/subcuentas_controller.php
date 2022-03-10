@@ -5,7 +5,7 @@ class SubcuentasController extends AdminController
 {
 	 protected function before_filter() {
         if ( Input::isAjax() ){
-			View::response('view');
+			View::template(null);
             //View::select(NULL, NULL);
         }
     }

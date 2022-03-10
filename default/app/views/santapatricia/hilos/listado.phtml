@@ -1,0 +1,47 @@
+<div class="card">
+    <h1>Los ultimos 30 productos creados</h1>
+</div>
+<?php View::content() ?>
+<div class="form-actions">
+<?php echo Html::linkAction("", 'Ver Listado General', 'class="btn btn-primary"') ?>
+-
+<?php echo Html::linkAction("crear", 'Crear Producto', 'class="btn btn-primary"') ?>
+</div>
+<div class="card-body">
+<table class="table zebra-striped table-bordered table-striped">
+  <tr>
+  	<td width="17">Nº</td>
+    <td width="64">Linea de producto</td>
+    <td width="80">Tipo de prodcuto</td>
+    <td width="81">Codigo</td>
+    <td width="129">Nombre</td>
+    <td width="28">Abr.</td>
+    <td width="70">Detalle</td>
+    <td width="51">Estado</td>
+    <td width="76">Acciones</td>
+  </tr>
+<?php $n=0;
+foreach($tesproductos->items as $item){ $n++;?>
+  <tr>
+  	<td><?php echo $n?></td>
+    <td><?php echo $item->getTestipoproductos()->getTeslineaproductos()->nombre?></td>
+    <td><?php echo $item->getTestipoproductos()->nombre?></td>
+    <td><?php echo $item->prefijo?><?php echo $item->codigo?></td>
+    <td><?php //echo $item->nombre?> <?php echo $item->detalle?></td>
+    <td><?php echo $item->abr?></td>
+    <td><?php echo $item->detalle?></td>
+    <td>
+    <?php 
+	 if($item->activo=='0'){
+	 echo Html::linkAction('activar/'.$item->id,Html::img("figuras/circulo_rojo.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'');
+	 }else{
+	 echo Html::linkAction("desactivar/$item->id",Html::img("figuras/circulo_verde.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');}?>
+    </td>
+    <td><?php //echo Html::linkAction('editar/'.$item->id,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'')?>
+    <?php //echo Html::linkAction("borrar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+<?php View::partial('paginators/extended', false, array('page' => $tesproductos ,'url' => Router::get('controller_path').'/listado')); ?>
+</div>

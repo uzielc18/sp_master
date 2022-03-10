@@ -1,0 +1,125 @@
+<?php 
+$n=0;
+$coma=',';
+$tipo_fibra='';
+foreach($detalles as $item)
+{
+	if($n==0){$coma='';}else{$coma=',';}
+	$tipo_fibra.=$coma.$item->getTesproductos()->tipo_fibra;
+	$n++; 
+}$lista_simple=implode(array_unique(explode(",",$tipo_fibra))); 
+  ?>
+<?php
+$n=1;
+  $color='';
+  $rendimiento=0;
+  $a=0;
+  $coma=', ';
+  $ancho=0;
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<div class="card">
+    <h1>Ver Salida<span><?php echo Session::get('DOC_NOMBRE')?></span></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="card-body">
+<div class="span5">
+<?Php echo Form::open();?>
+<?php echo Form::hidden('proprocesos.id')?>
+<fieldset>
+    <legend>Crear Proceso</legend>
+    <label>Tipo de Fibra:</label>
+	<?php echo Form::text('proprocesos.tipo_de_fibra','',$lista_simple);?>
+    <label>Color a teñir:</label>
+	<?php echo Form::text('proprocesos.tescolores_id');?>
+    <label>Ancho Requerido:</label>
+	<?php echo Form::text('proprocesos.ancho_requerido')?>
+    <label>Rendimiento:</label>
+	<?php echo Form::text('proprocesos.rendimiento')?>
+    <label>Observacion:</label>
+	<?php echo Form::textArea('proprocesos.detalle','style="margin: 0px 0px 9px; height: 37px; width: 275px;"')?>
+	<button type="submit" class="btn btn-primary">Elegir Acabados</button>
+  </fieldset>
+<?Php echo Form::close();?>
+</div>
+<div class="span6">
+<?php if($proceso){?>
+<?Php echo Form::open();?>
+
+  <?php echo Form::hidden('prodetalleacabados.proprocesos_id','',$proprocesos->id);?>
+  <fieldset>
+    <legend>Seleccione los acabados a realizar</legend>
+    
+    <?php 
+	$disabled='';
+	if(!empty($ACABADOS)){$disabled='disabled';}
+	$a=100;
+	foreach($acabados as $acabado):
+	 $b=$acabado->tipo_acabado;
+	 $checked='';
+	 $oculto='';
+	 if (in_array($acabado->id, $ACABADOS)){$checked='checked';}
+	 if($acabado->id==3){$checked='checked'; $oculto='style="display:none;"';}
+		?>
+        <?php if($a!=$b){?><legend style=" color:#666666; font-size:10px;"><?Php if($acabado->tipo_acabado==0) echo " Normal";else echo " Especial";?> </legend><?php $a=$acabado->tipo_acabado; }?>
+        <label class="checkbox" style="float:left; width:120px;">
+          <input <?Php echo $oculto ?> type="checkbox" name="itemSelect[]" value="<?php echo $acabado->id?>" class="sele" <?php echo $checked?> <?php echo $disabled?> > <?php echo $acabado->nombre?>
+        </label>
+    <?Php 
+	endforeach;?>
+    <?php //print_r($ACABADOS)?>
+    <button type="submit" class="btn btn-primary">Grabar Acabados</button> <?php echo Html::linkAction('borrar_seleccion/'.$proprocesos->id,'Borrar Seleccionados','class="btn"');?>
+  </fieldset>
+  <?php echo Form::text('prodetalleacabados.ids','readonly="readonly"','3');?>
+<?Php echo Form::close();?>
+
+<?php }?>
+<?php 
+if(!empty($ACABADOS))echo Html::linkAction("versalida/", 'Siguente<i class="icon-hand-right"></i>','class="btn btn-primary"') ?>&nbsp;<?php //echo Html::linkAction("salidas", 'Volver ','class="btn"') ?>
+</div>
+<div class="clear"></div>
+<?php echo Html::linkAction("salidas", 'Volver ','class="btn"') ?>
+<div id="ver_resultado"></div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#proprocesos_tescolores_id").tokenInput("/<?php echo $module_name?>/ingresos/colores/",
+	{
+		//tokenLimit: 1,
+		minChars: 1,
+		<?php if($proceso)
+		{
+			if($proprocesos->tescolores_id!=0){
+				if(!empty($proprocesos->tescolores_id)){?>
+			prePopulate: [ 
+						 {id: <?php echo $proprocesos->tescolores_id?>, name: "<?php echo $proprocesos->getTescolores()->nombre?>"},
+						],
+			<?php }else{?>
+			prePopulate: [ 
+						 <?Php echo $color;?>
+						],
+			<?php 
+			}
+			}
+			}?>
+			onAdd: function (item) {
+			},
+			onDelete: function (item) {
+			}
+		});
+	<?php if(empty($proprocesos->tipo_de_fibra)){?>$("#proprocesos_tipo_de_fibra").val("<?php echo $tipo_fibra; ?>");<?php }?>
+	<?php if(empty($proprocesos->rendimiento)){?>$("#proprocesos_rendimiento").val("<?php echo $rendimiento/$n;?>");<?php }?>
+	<?php if(empty($proprocesos->ancho_requerido)){?>$("#proprocesos_ancho_requerido").val("<?php echo $ancho/$n;?>");<?php }?>	
+		
+	$('.sele').click(function(){
+		var selectedItems = new Array();
+		
+		$("input[@name='itemSelect[]']:checked").each(function(){
+			selectedItems.push($(this).val());
+		});
+		$("#prodetalleacabados_ids").val(selectedItems);
+	});
+});
+</script> 

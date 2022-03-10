@@ -1,0 +1,96 @@
+<?php View::content()?>
+<div class="card"><h1>Ingresar Rollos para Venta!<span>Control de calidad venta</span></h1></div>
+<div class="form-actions">
+<?php echo Menu::menuControl($action_name);?>
+</div>
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus="" placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+<?php echo Sp::imprimir('Salidas Telas - ','P',array('P'=>'1'));?> 
+
+<div id="ver" class="reporte"></div>
+<div class="card-body">
+<table id="exportar_excel" width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+<caption>Cortar rollos para venta</caption>
+<thead>
+  <tr>
+    <th width="70" height="19" align="left">Articulo</th>
+    <th width="118" align="left"># Rollo</th>
+    <th width="81" align="left">Metros</th>
+    <th width="32" align="left">Peso</th>
+    <th width="32" align="left">Ancho</th>
+    <th width="32" align="left">Ancho Util</th>
+    <th width="257" align="left">Accion</th>
+  </tr>
+</thead>
+<tbody>
+  <?php foreach($rollos as $item){?>
+  <tr title="<?php echo $item->estadorollo;?>">
+    <td><?php echo $item->getTesproductos()->codigo_ant?>-<?php echo $item->getTesproductos()->nombre?><?php //echo $item->getTesproductos()->detalle?></td>
+    <td><?php if(empty($item->prorollos_id)){echo $item->numero?>-0<?php echo $item->maquina_numero;}else{echo $item->codigo?>-<?php echo $item->numeroventa;}?></td>
+    <td><?php echo number_format($item->metros,2,'.',' ')?></td>
+    <td><?php echo number_format($item->peso,2,'.',' ')?></td>
+    <td><?php if(!empty($item->ancho))echo number_format($item->ancho,2,'.',' ')?></td>
+    <td><?php if(!empty($item->anchoutil))echo number_format($item->anchoutil,2,'.',' ')?></td>
+    <td>
+    <?php if(empty($item->prorollos_id)){$id_rollo=$item->id;$rollosecundario=0;}else{ $id_rollo=$item->prorollos_id;$rollosecundario=$item->id;}?>        <?php echo Html::linkAction('rollos_listados/'.$item->id,'Ingresar! Si es 1 rollo!','class="btn"')?>/Nro. de Rollos?  <?php echo Form::hidden('rollosecundario-'.$id_rollo,'size="5" placeholder="rollos"',$rollosecundario)?>
+	<?php echo Form::text('numero-'.$id_rollo,'size="5" placeholder="rollos" ')?> <a id="<?php echo $id_rollo?>" class="btn btn-primary enviar"> Generar Rollos!</a></td>
+  </tr>
+  <?php }?>
+</tbody>
+</table>
+</div>
+<script type="text/javascript">
+$(document).ready(function()
+{
+	$('#txtBuscar').on('search',function(){
+		//le decimos a la funcion que busque en la tabla tblTabla el
+		//valor que contiene el campo actual
+		$.fntBuscarEnTabla($(this).val(),'exportar_excel');
+		
+	});
+	$("#ver_fuera").click(function()
+	{
+		$("#cajas_urdido").toggle();
+	});
+
+$(".enviar").live("click",function()
+{
+	var id =$(this).attr('id');
+	var numero = $("#numero-"+id).val();
+	var rollosecundario = $("#rollosecundario-"+id).val();
+	if(confirm("Esta por generar "+numero+" rollos del rollo principal "+" ("+id+") el rollo secundario es "+rollosecundario))
+	{
+		if(numero>1)
+		{
+			$.ajax({
+            type:"POST",
+            url:"/<?php echo $module_name?>/tintoreria/generarollos/"+id+"/"+numero+'/'+rollosecundario,
+            beforeSend:function()
+			{
+				$("#loading").show();
+            },
+            success:function(response)
+			{
+                $("#loading").hide();
+				alert(response);
+				url = "/<?php echo $module_name?>/tintoreria/rollos_listados/"+id;  
+				$(location).attr('href',url);  
+            }
+ 
+          	});
+		
+		}else
+		{
+		alert('Ingreso un numero mayor a 1');
+		}
+	}else
+	{
+		return false;
+	}
+	
+});
+
+});
+</script>

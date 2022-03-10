@@ -1,0 +1,133 @@
+
+<table width="75%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-hover table-bordered">
+  <tr align="left">
+    <th>Codigo</th>
+    <th>Cantidad</th>
+    <th>Unidad</th>
+    <th>Descripcion</th>
+    <th>PU.</th>
+    <th>Descuento</th>
+    <th>Valor de Venta</th>
+  </tr>
+  <?php 
+  $n=0;
+  $total=0;
+  foreach($detalles as $item){
+	$n++;
+	  ?>
+  <tr id="<?php echo $item->id?>">
+    <td><?php echo $n.'.'; if(!empty($item->prorollos->id)){echo $item->getProrollos()->codigo?>-<?php echo $item->getProrollos()->numeroventa; echo ' '.$item->getProrollos()->getNprocesos($item->prorollos_id);}?></td>
+    <td><?php echo number_format($item->cantidad,2,'.','');?></td>
+    <td><?Php echo $item->getTesunidadesmedidas()->simbolo?></td>
+    <td><?php echo $item->getTesproductos()->nombre?> <?php echo $item->getTesproductos()->detalle?> <?Php if(!empty($item->tescolores_id))echo $item->getTescolores()->nombre?></td>
+    <td><?php echo $simbolo?><?php if(!empty($item->preciounitario))echo number_format($item->preciounitario,2,'.','');?></td>
+    <td><?php if(empty($item->descuento))echo "0.00";else echo $item->descuento/100?></td>
+    <td align="right"><?php echo $simbolo?><?php 
+	$total=$total+number_format($item->importe,2,'.','');
+	if(!empty($item->importe))echo number_format($item->importe,2,'.','');?>
+    <?php if(Auth::get('id')==3 || Auth::get('id')==4){?>
+    <?php echo Html::link($module_name.'/'.$controller_name.'/editar_detalle/'.$item->id.'/','[ E ]')?>
+	<?Php }?>
+    </td>
+  </tr>
+  <?php }?>
+  <?php 
+   /*muesra la aplicacion a esta factura */
+  if($aplicaciones){
+  foreach($aplicaciones as $aplicacion){
+  $n++;
+  ?>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td align="right"> Pago adelantado <?php echo $aplicacion->getTesfacturasadelantos()->getTessalidas()->serie.'-'.$aplicacion->getTesfacturasadelantos()->getTessalidas()->numero?> </td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td align="right"><?php echo $simbolo?><?php 
+	$total=number_format($total,2,'.','')-number_format($aplicacion->montototal,2,'.','');
+	echo number_format($aplicacion->montototal,2,'.','')?> <?php 
+	
+	echo Html::link($module_name.'/'.$controller.'/eliminar_app/'.$aplicacion->id,'','class="icon-remove-circle"');?> </td>
+  </tr>
+  <?php }
+   }?>
+  <?php 
+  /*mustra las facturas por adelanto*/
+  if($adelantos){?>
+  <tr>
+  <td colspan="7">
+  <div style="margin:20px;">
+  <blockquote>
+  	<ul>
+	<li> <strong>FACTURAS ADELANTADAS</strong></li>
+	<?php foreach($adelantos as $adelanto)
+  	{
+		?>
+        <li class="well well-small">
+		<?php echo $adelanto->getTessalidas()->serie.'-'.$adelanto->getTessalidas()->numero;?> <?php echo $adelanto->getTessalidas()->glosa?>
+        <span style="float:right;"><label>
+		<?Php echo $adelanto->getTesmonedas()->simbolo?>
+		<?php if($adelanto->getTotal($adelanto->id)==0)
+		{
+			//echo 'es igual a cero';
+			$montototal=$adelanto->montototal;
+		}else{
+			
+			$montototal=$adelanto->getTotal($adelanto->id);
+		}
+		//echo $montototal;
+		echo number_format($montototal,2,'.','');?>
+		<i>Para <?php echo Html::linkAction('limpiar_factura/'.$adelanto->id,'Recalcular el monto')?> del adelanto</i>
+		<?php if($total!=0)echo Ajax::link($module_name.'/cancelacionfacturas/aplicaradelanto/'.$salida->id.'/'.$adelanto->id.'/'.$total,'Aplicar','aplicar','btn', $attrs=NULL);?></label></span></li>        
+<?php }?>
+	
+    </ul>
+    <span>** Si no esta complemante seguro de aplicar comuníquese con sistemas</span>
+    </blockquote>
+  </div>
+
+  </td>
+  </tr> 
+  <?php }?>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <th align="right">Sub total:</th>
+    <td align="right"><?php 
+	echo $simbolo?><?php echo number_format($total,2,'.','');?></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <th align="right">IGV:</th>
+    <td align="right"><?php echo $simbolo?><?php $igv=0; if($total!=0){$igv=$total*(Session::get('IGV'));}echo number_format($igv,2,'.','')?></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <th align="right">TOTAL:</th>
+    <td align="right"><?php echo $simbolo?><?php $TOTAL=$total+$igv;echo number_format($TOTAL,2,'.','');?></td>
+  </tr>
+</table>
+<?php echo $texto=NumerosLetras::NL($total+$igv,$moneda_letras);?>
+<?php echo Form::hidden('salida.id');?>
+<?php echo Form::hidden('salida.tesmonedas_id');?>
+<?php echo Form::hidden('salida.aclusuarios_id');?>
+<?php echo Form::hidden('salida.tesdocumentos_id');?>
+<?php echo Form::hidden('salida.testipocambios_id');?>
+<?php echo Form::hidden('salida.tesdatos_id');?>
+<?php echo Form::hidden('salida.totalconigv','',$TOTAL);?>
+<?php echo Form::hidden('salida.igv','',$igv);?>
+<?php echo Form::hidden('salida.totalenletras','',$texto);?>
+<?php //echo Form::textArea('salida.glosa','style="margin: 0px 0px 15px;height: 15px;width:35%;"');?>
+<?php echo Form::submit('Siguente','class="btn btn-primary"')?>

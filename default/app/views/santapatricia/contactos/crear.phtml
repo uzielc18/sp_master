@@ -1,0 +1,31 @@
+<td colspan="10">
+<h1><?php echo $titulo?></h1>
+<?php View::content() ?>
+<?php echo Ajax::form($id,NULL,'form-horizontal','post') ?>
+            <div class="control-group">                
+             <label><strong>Datos del Contacto</strong></label>
+            </div>
+            <div class="control-group">                
+                <label for="tesdatos.email">Nombres* : </label>
+                <div class="controls">
+                    <?php echo Form::text('tescontactos.nombres','size="60"') ?>
+                </div>
+            </div>
+            <div class="control-group">                
+                <label for="tesdatos.email">Telefono* : </label>
+                <div class="controls">
+                    <?php echo Form::text('tescontactos.telefono','size="40"') ?>Tel. 1- Tel. 2....
+                </div>
+                <div class="control-group">                
+                <label for="tescontactos.fnacimiento">Fecha Nacimiento : </label>
+                <div class="controls">
+                    <?php
+				 echo Calendar::selector('tescontactos.fnacimiento')?>
+                </div>
+            </div>
+            <div class="form-actions">
+                <?php echo Form::submit($boton.' Cambios', 'name="datos_personas" class="btn btn-primary"') ?>
+                <?php echo Ajax::linkAction('listado/'.$id, 'Cancelar',$id,'btn') ?>
+            </div>
+        <?php echo Form::close() ?> 
+</td>

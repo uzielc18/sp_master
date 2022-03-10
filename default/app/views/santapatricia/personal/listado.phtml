@@ -1,0 +1,45 @@
+<div class="card">
+    <h1>Personal de la Empresa Santa Patricia</h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="form-actions" title="Ingresar Personal Nuevo !">
+    <?php echo Html::linkAction("crear", 'Crear Personal','class="btn btn-primary"') ?>
+</div>
+<div class="card-body">
+<table class="table table-bordered table-striped">
+  <tr>
+  	<th width="17">Nº</th>
+    <th width="64">Codigo</th>
+    <th width="124">Nombres y Apellidos</th>
+    <th width="30">DNI</th>
+    <th width="83">Area</th>
+    <th width="55">Cargo</th>
+    <th width="45">Fecha Nac.</th>
+    <th width="46">Estado</th>
+    <th width="52">Es Usuario</th>
+    <th width="60">Acciones</th>
+  </tr>
+<?php $n=0;
+foreach($datos->items as $item){ $n++;?>
+  <tr>
+  	<td><?php echo $n?></td>
+    <td><?php echo $item->id?>-<?php echo $item->dni?></td>
+    <td><?php echo $item->nombre?> <?php echo $item->appaterno?> <?php echo $item->apmaterno?></td>
+    <td><?php echo $item->dni?></td>
+    <td><?php echo $item->getPlareas()->nombre?></td>
+    <td><?php echo $item->getPlacargos()->nombre?></td>
+     <td><?php //echo $item->fnacimiento?><?php echo Sp::formatFecha('%d/%m/%Y',$item->fnacimiento)?></td>
+    <td><?php echo $item->estado ?></td>
+    <td><?php 
+	echo $item->aclusuarios_id;
+	if($item->aclusuarios_id==0) echo "NO"; else echo "SI"; ?></td>
+    <td><?php echo Html::linkAction('editar/'.$item->id,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'')?>
+    <?php echo Html::linkAction("borrar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+<?php View::partial('paginators/extended', false, array('page' => $datos ,'url' => Router::get('controller_path').'/listado')); ?>
+</div>

@@ -1,0 +1,85 @@
+
+<?php if($tipo_id==0){?>
+<div class="card">
+    <h1><?php echo $titulo?> </h1>
+</div>
+<?php }else{
+echo '<script type="text/javascript">
+$(document).ready(function(){
+        $("#listado-'.$tipo_id.'").load("/'.$module_name.'/productos/listadoportipo/'.$tipo_id.'");
+        });
+</script>';
+	echo '&nbsp;'.Ajax::linkAction("none", '[ X ]','producto_nuevo-'.$tipo_id, 'class="btn btn-primary"') ;}?>
+<?php View::content() ?>
+
+<?php if($tipo_id==0){echo Form::open(NULL, 'post', 'class="form-horizontal"');}else{echo Ajax::form('producto_nuevo-'.$tipo_id,NULL, 'form-horizontal');} ?>
+<?php echo $tipo_id?>
+<?php echo Form::hidden('testproductos.id') ?>
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+  <tr>
+    <th width="13%" align="right" valign="top">Codigo:&nbsp;</th>
+    <td width="37%" valign="top">
+	<?php	echo Form::text('testproductos.codigo','size="20"',$codigo)?></td>
+    <th width="13%" align="right" valign="top">Nombre Comercial:&nbsp;</th>
+    <td width="37%" valign="top"><?php echo Form::text('testproductos.nombre','size="40"') ?></td>
+  </tr>
+  <tr>
+    <th align="right" valign="top">Nombre corto:&nbsp;</th>
+    <td valign="top"><?php echo Form::text('testproductos.nombrecorto','size="30"') ?></td>
+    <th align="right" valign="top">Abreviatura:&nbsp;</th>
+    <td valign="top"><?php echo Form::text('testproductos.abr','size="10"') ?></td>
+  </tr>
+  <tr>
+    <th align="right" valign="top">Descripcion:&nbsp;</th>
+    <td valign="top"><?php echo Form::textarea('testproductos.detalle','cols="35" rows="3"') ?></td>
+    <th colspan="2" valign="top" align="left"><?php 
+	echo $tipos; 
+	if($tipos){if($tipos->teslineaproductos_id==1){?>&nbsp;Codigo Anterior: <?php echo Form::text('testproductos.codigo_ant','size="25"')?><br /><br />&nbsp;&nbsp;&nbsp;&nbsp;Tipo de Fibra:&nbsp;&nbsp;<?php echo Form::text('testproductos.tipo_fibra','size="25"')?><?php }}?></th>
+  </tr>
+  <tr>
+    <th align="right" valign="top">Sotk Minimo</th>
+    <td valign="top"><?php echo Form::text('testproductos.stokminimo','size="10"')?></td>
+    <th align="right" valign="top">Sotk Maximo:</th>
+    <td valign="top"><?php echo Form::text('testproductos.stokmaximo','size="10"')?></td>
+  </tr>
+  <tr>
+    <th align="right" valign="top">Precio:&nbsp;</th>
+    <td valign="top"><?php echo Form::text('testproductos.precio') ?></td>
+    <th align="right" valign="top">Linea del Producto:</th>
+    <td valign="top"><?php if($tipo_id==0){echo Ajax::dbSelect('lineaproductos','nombre',array('teslineaproductos','find','conditions: estado =1 and activo =1 and aclempresas_id='.Session::get("EMPRESAS_ID")),'tipoproductos','santapatricia/productos/tipoproductos','seleccione');}else{echo $tipos->getTeslineaproductos()->nombre;}?></td>
+  </tr>
+  <tr>
+    <th align="right" valign="top">Codigo Proveedor:</th>
+    <td valign="top"><?php echo Form::text('testproductos.cod_proveedor','size="30"')?></td>
+    <th align="right" valign="top">Tipo de Producto:</th>
+    <td valign="top" id="tipoproductos"><?php if($tipo_id==0){?><select> <option>Selecciona la linea de productos</option></select><?php }else{/*echo $tipos->nombre;*/echo Form::dbSelect('testproductos.testipoproductos_id','nombre',array('testipoproductos','find','conditions: teslineaproductos_id='.$tipos->teslineaproductos_id.' AND estado =1 and activo =1 and aclempresas_id='.Session::get("EMPRESAS_ID")));}?></td>
+  </tr>
+  </table>
+  <table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+  <caption>UBICACION EN ALMACEN</caption>
+  <tr>
+    <th align="right" valign="top">Piso: </th>
+    <td valign="top"><?php echo Form::text('testproductos.piso_almacen','size="30"')?></td>
+	  <th align="right" valign="top">Fila: </th>
+    <td valign="top"><?php echo Form::text('testproductos.fila_almacen','size="30"')?></td>
+  </tr>
+  <tr>
+    <th align="right" valign="top">Columna: </th>
+    <td valign="top"><?php echo Form::text('testproductos.columna_almacen','size="30"')?></td>
+    <th align="right" valign="top">Ubicación: </th>
+    <td valign="top"><?php echo Form::text('testproductos.ubicacion_almacen','size="30"')?></td>
+  </tr>
+  <tr>
+    <th align="right" valign="top" colspan="2"></th>
+    <th align="right" valign="top">Clientes: </th>
+    <td valign="top"><?php echo Form::dbSelect('testproductos.tesdatos_id',"razonsocial,ruc",
+    array("tesdatos","find","conditions: aclempresas_id=".Session::get('EMPRESAS_ID')." AND testipodatos_id=2 order by razonsocial asc"))?></td>
+  </tr>
+</table>
+<div class="form-actions">
+    <?php echo Form::submit('Guardar Datos', 'class="btn btn-primary"') ?>
+    <?php if($tipo_id==0){echo Html::linkAction('listado', 'Cancelar', 'class="btn"');} ?>
+    </div>
+<?php echo Form::close() ?>
+<?php if($tipo_id==0){?>
+<?php }?>

@@ -1,0 +1,112 @@
+
+<div class="card">
+<h1>Lista de tela Cruda (rollos)<span>Almacen de telas crudas</span></h1>
+</div>
+<div class="form-actions">
+<?php echo Menu::menuProduccion($action_name);?>
+</div>
+<?php echo View::content()?>
+<style type="text/css">
+.link a{
+display:inline-table;
+width:20px;
+padding:2px 2px 7px 2px;
+background-color:#F5F5F5;
+margin:auto;}
+</style>
+<script type="text/jscript">
+function rend(tr_id)
+{
+  var metros=isNaN($('#metros-'+tr_id).val())? 0 : $('#metros-'+tr_id).val();
+  var peso=isNaN($('#peso-'+tr_id).val())? 0 : $('#peso-'+tr_id).val();
+  var rendimiento=(parseInt(metros)/parseInt(peso)); 
+  $("#rendimiento-"+tr_id).val(rendimiento); 
+  grabarDetalle(tr_id);
+  
+}
+function grabarDetalle(tr_id) 
+{
+  var id=tr_id;
+  var ordencompra=$("#ordencompra-"+tr_id).val();
+  var metros=isNaN($('#metros-'+tr_id).val())? 0 : $('#metros-'+tr_id).val();
+  var peso=isNaN($('#peso-'+tr_id).val())? 0 : $('#peso-'+tr_id).val();
+  var rendimiento=$("#rendimiento-"+tr_id).val();
+  /*
+  metros
+	 peso
+	 rendimiento
+	 ancho
+	 estadorollo
+	 ordencompra*/
+
+	  var dataString ='id='+id+'&metros='+ metros+'&peso='+ peso+'&rendimiento='+rendimiento+'&ordencompra='+ordencompra;
+	 //alert(dataString);
+	  $.ajax({
+            type:"POST",
+            url:"/santapatricia/revisiones/grabarrollo/",
+            data:dataString,
+            beforeSend:function(){
+              $("#loading").show();
+            },
+            success:function(response){
+                $("#loading").hide();
+            }
+ 
+         });
+  
+}
+$(document).ready(function()
+{
+	$('.rend').blur(function()
+	{
+		var ID=$(this).attr('id').split('-');
+		rend(ID[1]);
+	})
+	$('.save').blur(function()
+	{
+		var ID=$(this).attr('id').split('-');
+		grabarDetalle(ID[1]);
+	})
+
+});
+</script>
+
+<div class="card-body">
+<table width="100%" border="0" cellspacing="1" cellpadding="0">
+  <tr>
+    <td width="50%"><?php echo Html::img($empresa->logo);?><br /><?php echo $empresa->direccion?> </td>
+    <td width="50%" align="right">Mes : Agosto<br />
+      Año: 2012</td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <th width="4%">Nº </th>
+    <th width="10%">FECHA</th>
+    <th width="11%">METRAJE</th>
+    <th width="8%">PESO</th>
+    <th width="5%" align="center">MAQ.</th>
+    <th width="17%">Nº ARTICULO</th>
+    <th width="7%">GUIA</th>
+    <th width="5%">REND</th>
+    <th width="22%">ARTICULO</th>
+    <th width="4%">O.C.</th>
+    <th width="7%">Acciones</th>
+  </tr>
+  <?php foreach($rollos as $rollo){?>
+  <tr id="<?php echo $rollo->id?>">
+     <td valign="top"><?php echo $rollo->numero?></td>
+    <td align="center" valign="top"><?php echo $rollo->fechacorte?></td>
+    <td align="center" valign="top"><?php echo number_format($rollo->metros,2,'.','')?></td>
+    <td align="center" valign="top"><?php echo number_format($rollo->peso,2,'.','')?></td>
+    <td align="center" valign="top"><?php echo $rollo->getProdetalleproduccion()->getProproduccion()->getPromaquinas()->prefijo.$rollo->getProdetalleproduccion()->getProproduccion()->getPromaquinas()->numero?></td>
+    <td align="center" valign="top"><?php echo $rollo->getProdetalleproduccion()->getTesproductos()->prefijo.$rollo->getProdetalleproduccion()->getTesproductos()->codigo?></td>
+    <td align="center" valign="top"><?php echo $rollo->getProdetalleproduccion()->getProproduccion()->guianumero?></td>
+    <td align="center" valign="top"><?php echo number_format($rollo->rendimiento,2,'.','')?></td>
+    <td valign="top"><?php echo $rollo->getProdetalleproduccion()->getTesproductos()->getTestipoproductos()->nombre.' '.$rollo->getProdetalleproduccion()->getTesproductos()->nombre?></td>
+    <td valign="top"><?php if(!empty($rollo->getProdetalleproduccion()->tesordendecompras_id)){$oc=$rollo->getProdetalleproduccion()->getTesordendecompras()->codigo;}else{$oc=$rollo->ordencompra;}?><?php echo $oc?></td>
+      <td valign="top"><span class="link"><?php echo Html::linkAction('cambiarestado/'.$rollo->id.'/Control de Calidad/telacruda',Html::img("figuras/produccion.png",'Visto Bueno','style="width: 20px;margin-left:1px;margin-right:1px;" title="Regresar a Control de calidad"'));?> <?php echo Html::linkAction('cambiarestado/'.$rollo->id.'/Control de Calidad',Html::img("figuras/procesos.png",'Visto Bueno','style="width: 20px;margin-left:1px;margin-right:1px;"'));?></span></td>
+  </tr>
+  <?php }?>
+</table>
+</div>

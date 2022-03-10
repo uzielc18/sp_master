@@ -1,0 +1,121 @@
+<?php echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<div class="card">
+<h1> Modificar la informacion del rollo </h1>
+</div>
+<div class="alert-info info alert flash" data-alert="alert" data-dismiss="alert">
+<?php View::content();?>La informacion del rollo a modificar <b>!!!</b></div>
+<div class="card-body">
+<div class="span1"><?php echo Html::linkAction('rollos_venta/','Volver','class="btn btn-primary"')?></div>
+<div class="span10">
+<?php echo Form::open()?>
+<div class="well">
+<?php echo Form::hidden('rollo.id');?>
+Ubicacion del rollo <?php 
+if($rollo->enalmacen==1)echo "En Almacen";if($rollo->enalmacen==0)echo "En produccion";if($rollo->enalmacen==2)echo "en Tintoreria"; ?>. Rollos principal :<?php //echo $rollo->prorollos_id;
+if(!empty($rollo->prorollos_id))echo $rollo->getProrollos()->numero;else echo "Es principal";?><br />
+<?php //echo($rollo->rollo_id)?>
+Produccion <?php if(!empty($rollo->prodetalleproduccion_id))echo $rollo->getProdetalleproduccion()->getProproduccion()->titulo.', guia=> '.$rollo->getProdetalleproduccion()->getProproduccion()->guianumero;
+echo ' /estado del rollo=>'.$rollo->estadorollo;;
+?>
+<?php 
+echo Form::hidden('rollo.tescolores_id','');
+echo Form::hidden('rollo.enalmacen','');echo Form::hidden('rollo.prodetalleproduccion_id','');echo Form::hidden('rollo.prorollos_id','');?>
+</div>
+
+<table border="0" align="center" cellpadding="0" cellspacing="0" class="table">
+<thead>
+<tr>
+<th colspan="2"><div class="well">(<?php echo $rollo->codigo?>)Rollo <?php echo $rollo->getTesproductos()->nombre?> </div></th>
+</tr>
+</thead>
+<tbody>
+  <tr>
+    <th width="371" align="left" valign="top">Prodcuto:</th>
+    <td width="459" valign="top"><?php echo Form::dbSelect('rollo.tesproductos_id','nombre,detalle,codigo_ant',array('tesproductos','getTelas','1'));?></td>
+  </tr>
+  <tr>
+    <th width="371" align="left" valign="top">Codigo:</th>
+    <td width="459" valign="top"><?php echo Form::text('rollo.codigo','');?></td>
+  </tr>
+  <?php /*?><tr>
+    <th align="left" valign="top">Estado de Rollo:</th>
+    <td valign="top"><?php echo Form::dbSelect('rollo.estadorollo','estadorollo',array('prorollos','find','conditions: 1=1 group by estadorollo'),'',$rollo->estadorollo);?></td>
+  </tr><?php */?>
+  <tr>
+    <th align="left" valign="top">Numero de produccion:</th>
+    <td valign="top"><?php echo Form::text('rollo.numero');?></td>
+  </tr>
+  <tr>
+    <th align="left" valign="top">Numero Venta:</th>
+    <td><?php echo Form::text('rollo.numeroventa','size="15"');?></td>
+  </tr>
+  <tr>
+    <th align="left" valign="top">Orden de compra</th>
+    <td><?php 	echo Form::dbSelect('rollo.tesordendecompras_id','numero_interno'); if(!empty($rollo->tesordendecompras_id))echo $rollo->getTesordendecompras()->getTesdatos()->razonsocial;?></td>
+  </tr>
+  <tr>
+    <th align="left" valign="top">Metros</th>
+    <td><?php 	echo Form::text('rollo.metros','');?></td>
+  </tr>
+  <tr>
+    <th align="left" valign="top">Peso en kilos:</th>
+    <td valign="top"><?php echo Form::text('rollo.peso','size="5"');?></td>
+  </tr>
+  <tr>
+    <th align="left" valign="top">Ancho:</th>
+    <td valign="top"><?php echo Form::text('rollo.ancho','size="5"');?></td>
+  </tr>
+  <tr>
+    <th align="left" valign="top">Ancho Util:</th>
+    <td valign="top"><?php echo Form::text('rollo.anchoutil','size="5"');?></td>
+  </tr>
+  <tr>
+    <th align="left" valign="top">Color:</th>
+    <td valign="top">
+	<?php echo $rollo->color;?><br />
+	<?php echo Form::text('rollo.color','');?></td>
+  </tr>
+  <tr>
+    <th align="left" valign="top">Calidad:</th>
+    <td valign="top"><?php echo Form::text('rollo.calidad')?></td>
+  </tr>
+  <tr>
+    <th align="left" valign="top">Fecha de corte:</th>
+    <td valign="top"><?php echo Calendar::text('rollo.fechacorte','style="width:90%"');?></td>
+  </tr>
+  <tr>
+    <th align="left" valign="top">Describa el Problema: </th>
+    <td> <?php echo Form::textArea('rollo.observacion_control','');?> </td>
+  </tr>
+  <tr>
+    <td colspan="2"><?php echo Form::submit('Grabar','class="btn btn-primary"')?></td>
+  </tr>
+  </tbody>
+</table>
+<?php echo Form::close()?>
+</div>
+<div style="clear:both;"></div>
+</div>
+<script type="text/javascript">
+$(document).ready(function()
+{
+	$("#rollo_color").tokenInput("/<?php echo $module_name?>/salidas/colores/", 
+		{
+	<?php if(!empty($rollo->tescolores_id)){?>
+		prePopulate: [ 
+	 {id: <?Php echo $rollo->tescolores_id?>, name: "<?php echo $rollo->getTescolores()->nombre?>"},
+					 ],
+	<?php }?>
+		tokenLimit: 1,
+		minChars: 1,
+		onAdd: function (item) {
+			$("#rollo_tescolores_id").val(item.id);
+			$("#rollo_color").val(item.name);
+		},
+		onDelete: function (item) {
+		}
+	});
+
+});
+</script>

@@ -1,0 +1,556 @@
+<?php
+$simbolo="S/. ";
+
+switch ($monedas)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+
+
+View::content();
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<script type="text/javascript">
+// from http://www.mediacollege.com/internet/javascript/number/round.html
+function roundNumber(number,decimals)
+{
+  var newString;// The new rounded number
+  decimals = Number(decimals);
+  if (decimals < 1) {
+    newString = (Math.round(number)).toString();
+  } else {
+    var numString = number.toString();
+    if (numString.lastIndexOf(".") == -1) {// If there is no decimal point
+      numString += ".";// give it one at the end
+    }
+    var cutoff = numString.lastIndexOf(".") + decimals;// The point at which to truncate the number
+    var d1 = Number(numString.substring(cutoff,cutoff+1));// The value of the last decimal place that we'll end up with
+    var d2 = Number(numString.substring(cutoff+1,cutoff+2));// The next decimal, after the last one we want
+    if (d2 >= 5) {// Do we need to round up at all? If not, the string will just be truncated
+      if (d1 == 9 && cutoff > 0) {// If the last digit is 9, find a new cutoff point
+        while (cutoff > 0 && (d1 == 9 || isNaN(d1))) {
+          if (d1 != ".") {
+            cutoff -= 1;
+            d1 = Number(numString.substring(cutoff,cutoff+1));
+          } else {
+            cutoff -= 1;
+          }
+        }
+      }
+      d1 += 1;
+    } 
+    if (d1 == 10) {
+      numString = numString.substring(0, numString.lastIndexOf("."));
+      var roundedNum = Number(numString) + 1;
+      newString = roundedNum.toString() + '.';
+    } else {
+      newString = numString.substring(0,cutoff) + d1.toString();
+    }
+  }
+  if (newString.lastIndexOf(".") == -1) {// Do this again, to the new string
+    newString += ".";
+  }
+  var decs = (newString.substring(newString.lastIndexOf(".")+1)).length;
+  for(var i=0;i<decimals-decs;i++) newString += "0";
+  //var newNumber = Number(newString);// make it a number if you like
+
+  return newString; // Output the result to the form field (change for your purposes)
+}
+/*FIN DE REDONDEO*/
+function addCommas(nStr)
+{
+    nStr += '';
+    x = nStr.split('.');
+    x1 = x[0];
+    x2 = x.length > 1 ? '.' + x[1] : '';
+    var rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return x1 + x2;
+}
+function update_total()
+{
+  var total = 0.00;
+  $('.price').each(function(i)
+  {
+    price = $(this).html();
+    //alert ('precio: '+price+' ->>>>'+i);
+	if (!isNaN(price)) total =parseFloat(total)+parseFloat(price);
+   //alert ('el total es : '+total+' ->>>>');
+   
+   });
+   
+
+	total = roundNumber(total,2);
+	//alert ('el total es : '+total+' ->>>>');
+	var igv= total*0.18;
+	var totalconigv=(parseFloat(total)+parseFloat(igv));
+	//alert('el igv es: '+igv);
+	$("#paid").val(igv);
+	$("#igv").val(igv);
+	$("#totalconigv").val(totalconigv);
+	$('#subtotal').html(total);
+	$('#paid_total').html(total);
+	update_balance();
+}
+
+function update_balance()
+{
+  //alert ($("#paid").val());
+  var due =parseFloat( $("#paid_total").html())+ parseFloat($("#paid").val());
+  due = roundNumber(due,2);
+  //alert ('===: '+due);
+	$('.due').html(due);
+	GRABAR();
+}
+
+function update_price()
+{
+  var ID = $(this).attr('id');
+  var I=ID.split('-');
+  //alert ('id del tr que se manda a grabar->>>'+ID);
+  var row = $(this).parents('.item-row');
+  var price = row.find('.cost').val() * row.find('.qty').val();
+  price = roundNumber(price,2);
+  isNaN(price) ? row.find('.price').html("N/A") : row.find('.price').html(price);
+  update_total();
+  grabarDetalle(I[1]);
+}
+
+/*BUSCAR PRODUCTO*/
+	/*  */		
+function buscarProducto()
+{
+	var row = $(this).parents('.item-row:last');
+	var ID = $('.item-row:last').attr('id');
+	//alert(ID);
+	$("#producto"+ID).tokenInput("<?php echo "/santapatricia/inventarios/producto/"?>", 
+		{
+			
+		tokenLimit: 1,
+		minChars: 1,
+		
+		prePopulate: [ 
+		             {id: $("#productos_id-"+ID).val(), name: ""+$("#producto"+ID).val()+""},
+					 ],
+		onAdd: function (item) {
+		   var VAL=item.id;
+		   var row =$(this).parents('.item-row')
+		   row.find('.productos_id').val(VAL['id']);
+		   row.find('.pro_descripcion').val(VAL['detalle']);
+		   row.find('.cost').val(VAL['precio']);
+		   row.find('.delete').attr("data-id",0);
+		   $('#codigo-'+ID).val(VAL['codigo']);
+		   $('#ver'+ID).hide();
+		   $('#ver-name'+ID).show();
+		   $('#productoname-'+ID).val(VAL['detalle']);
+		},
+		onDelete: function (item) {
+			var row =$(this).parents('.item-row')
+		   row.find('.productos_id').val('');
+		   row.find('.pro_descripcion').val('');
+		   row.find('.cost').val('');
+		   row.find('.qty').val('');
+		   var id=row.find('.delete').attr('data-id');
+		  	EliminarDetalle(id);
+		}
+	});
+}
+/*BUSCAR PRODUCTO*/
+	/*  */		
+function buscarUnidad()
+{
+	var row = $(this).parents('.item-row:last');
+	var ID = $('.item-row:last').attr('id');
+	//alert(ID);
+	$("#tesunidadesmedidas"+ID).tokenInput("<?php echo "/santapatricia/inventarios/medidas/"?>", 
+		{
+			
+		tokenLimit: 1,
+		minChars: 1,
+		
+		prePopulate: [ 
+		             {id: $("#tesunidadesmedidas_id-"+ID).val(), name: ""+$("#tesunidadesmedidas"+ID).val()+""},
+					 ],
+		onAdd: function (item) {
+		   var VAL=item.id;
+		   $("#tesunidadesmedidas_id-"+ID).val(item.id);
+		   $("#tesunidadesmedidas"+ID).val(item.name);
+		   //grabarDetalle(ID);
+		},
+		onDelete: function (item) {
+		  $("#tesunidadesmedidas_id-"+ID).val('');
+		   $("#tesunidadesmedidas"+ID).val('');
+		}
+	});
+}
+
+/*envio dew Formulario PROFORMAS*/
+  function GRABAR(){
+     
+	 
+          $.ajax({
+            type:"POST",
+            url:"/santapatricia/inventarios/grabar/1",
+            data:$("#inventarios").serialize(),
+            beforeSend:function(){
+              $("#loading").show();
+            },
+            success:function(response){
+                $("#loading").hide();
+				$("#id").val(response);
+            }
+ 
+          	});
+ 
+      };
+
+/*GRABAR DETALLE DE PROFORMAS*/
+
+function grabarDetalle(tr_id) {
+
+  //alert(tr_id);
+  var producto_id=$('#productos_id-'+tr_id).val();
+  var pro_descripcion=$('#pro_descripcion-'+tr_id).val();
+  var costo=$('#precio-'+tr_id).val();
+  var cantidad=$('#cantidad-'+tr_id).val();
+  var lote=$('#lote'+tr_id).val();
+  var empaque=$('#empaque'+tr_id).val();
+  var bobinas=$('#bobinas'+tr_id).val();
+  var pesoneto=$('#pesoneto'+tr_id).val();
+  var pesobruto=$('#pesobruto'+tr_id).val();
+  var price = $('#total-'+tr_id).html();
+  var id_detalle=$('#del-'+tr_id).attr("data-id");
+  var unidadmedida_id=$('#tesunidadesmedidas_id-'+tr_id).val();
+  var total=price;
+ //alert('ID del PRODUCTO'+producto_id);
+ //alert('id del detalle es 0 cuando es nuevo--->'+id_detalle);
+ //alert('id del tr que se graba-->'+tr_id);
+  
+  if(producto_id!='' && unidadmedida_id!='')
+  {
+	  var dataString ='id_detalle='+id_detalle+'&tesunidadesmedidas_id='+ unidadmedida_id+'&productos_id='+ producto_id+'&pro_descripcion='+pro_descripcion+'&cantidad='+cantidad+'&precio='+costo+'&total='+total+'&lote='+lote+'&empaque='+empaque+'&bobinas='+bobinas+'&pesoneto='+pesoneto+'&pesobruto='+pesobruto;
+	 // alert(dataString);
+	  $.ajax({
+            type:"POST",
+            url:"/santapatricia/inventarios/grabarDetalle/1",
+            data:dataString,
+            beforeSend:function(){
+              $("#loading").show();
+            },
+            success:function(response){
+                $("#loading").hide();
+				//alert('id del detalle grabado'+response);
+				$('#del-'+tr_id).attr("data-id", response);
+            }
+ 
+         });
+  }
+  
+}
+function EliminarDetalle(id)
+{
+	if(id!=0){
+	$.ajax({
+            type:"POST",
+            url:"/santapatricia/inventarios/eliminarDetalle/"+id,
+            beforeSend:function(){
+              $("#loading").show();
+            },
+            success:function(response){
+				alert('Se elimino de la base de dato');
+            }
+ 
+         });
+	}else
+	{
+		return false;
+	}
+}
+
+function bind() {
+  if ($(".delete").length > 1) $(".delete").show();else $(".delete").hide();
+  $(".cost").blur(update_price);
+  $(".qty").blur(update_price);
+  $(".producto").click(buscarProducto());
+  $(".unidad").click(buscarUnidad());
+}
+
+$(document).ready(function()
+{	  
+	
+  $('input').click(function(){
+    $(this).select();
+  });
+  $("#paid").blur(update_balance);
+   
+  $("#addrow").click(function(){
+	var ID = $('.item-row:last').attr('id');
+	//alert(ID);
+	grabarDetalle(ID);
+	var IDnew=Number(ID)+Number(1);
+    $(".item-row:last").after('<tr id="'+IDnew+'" class="item-row"><td><div class="delete-wpr"><input id="codigo-'+IDnew+'" name="codigo-'+IDnew+'" type="text" readonly="readonly" size="10"><a id="del-'+IDnew+'" class="delete" href="javascript:;" title="Elimar registro" data-id="0" style="">X</a></div></td><td class="item-name"><input id="productos_id-'+IDnew+'" name="productos_id-'+IDnew+'" type="hidden" class="productos_id" readonly="readonly"><span id="ver-name'+IDnew+'" style="display:none;"><input id="productoname-'+IDnew+'" name="productoname-'+IDnew+'" type="text" value="" readonly="readonly"></span><span id="ver'+IDnew+'" class="ver"><input id="producto'+IDnew+'" name="producto'+IDnew+'" type="text" class="producto" placeholder="Producto" size="30" readonly="readonly"></span></td><td><input id="tesunidadesmedidas'+IDnew+'" name="tesunidadesmedidas'+IDnew+'" type="text" value=""><input class="unidad" id="tesunidadesmedidas_id-'+IDnew+'" name="tesunidadesmedidas_id-'+IDnew+'" type="hidden" value=""></td><td> <input id="lote1" name="lote1" type="text" value="" size="10"/></td><td> <input id="empaque1" name="empaque1" type="text" value="" size="10"/></td><td> <input id="bobinas1" name="bobinas1" type="text" value="" size="10"/></td><td> <input id="pesoneto1" name="pesoneto1" type="text" value="" size="10"/></td><td> <input id="pesobruto1" name="pesobruto1" type="text" value="" size="10"/></td><td><span class="simbolo"><?php echo $simbolo;?></span><input id="precio-'+IDnew+'" type="text"  size="10" class="cost"/></td><td><input  size="10" id="cantidad-'+IDnew+'" type="text" class="qty"/></td><td><span class="simbolo"><?php echo $simbolo;?></span><span id="total-'+IDnew+'" class="price">0.00</span></td></tr>');
+    if ($(".delete").length > 1) $(".delete").show();else $(".delete").hide();
+	bind();
+  });
+  
+	  bind();
+  
+	  $(".delete").live('click',function(){
+		  var row =$(this).parents('.item-row')
+		  var id=row.find('.delete').attr('data-id');
+		  EliminarDetalle(id);
+		$(this).parents('.item-row').remove();
+		update_total();
+		if ($(".delete").length < 2) $(".delete").hide();
+	  });
+  
+  	//$("#pre_descripcion").blur(function(){$("#observacion").val($(this).val());GRABAR();});
+	$("#paid").blur(function(){$("#descuento").val($(this).val());GRABAR();})
+	$("#glosa").change(function(){GRABAR();});
+  	$("#femision").change(function(){GRABAR();});
+	$("#monedas").change(function()
+	{
+		GRABAR();
+		var op = $("#monedas option:selected").val();
+		if(op==1)
+		{
+			$(".simbolo").html("S/. ");
+		}
+		if(op==2)
+		{
+			$(".simbolo").html("$. ");
+		}
+	});
+	
+/*Busqueda del Cliente*/
+ $("#CL").tokenInput("<?php echo "/santapatricia/inventarios/buscarcliente"?>", 
+		{
+		//tokenLimit: 1,
+		minChars: 2,
+		onAdd: function (item) {
+		   var VAL=item.id;
+		   $("#cliente_id").val(VAL);
+		   $("#customer-title").val(item.name);
+		   $("#BC").hide();
+		   //GrabarCliente();
+		},
+		onDelete: function (item) {
+		}
+	}); 
+
+	$("#XC").click(function(){
+		$("#BC").show();
+		$("#cliente_id").val('');
+		$("#customer-title").val('');
+		//BorrarCliente()
+		});
+  
+});
+</script>
+<style type="text/css">
+.container {
+  width: 1124px;
+}
+#contenido{
+	width:1100px;
+    min-height: 300px;
+    padding: 5px;
+    padding-top: 60px;
+}
+.simbolo
+{
+	position:absolute;
+	float:left;
+	margin-left:-15px !important;
+}
+.item-row td{
+	padding-left:15px !important;
+	}
+#paid
+{
+	width:80% !important;
+}
+</style>
+
+<div id="page-wrap">
+	<div id="header">INVENTARIO <?php //echo "id--->".Session::get('INVENTARIO_ID')?></div>
+	<div id="identity">
+        <div id="address">
+            <?php echo $empresa->razonsocial?><br />
+            <?php echo $empresa->direccion?>
+        </div>
+        <div id="logo">
+            <img id="image" src="/img/<?php echo $empresa->logo?>" alt="logo" />
+        </div>
+	</div>
+	<div style="clear:both"></div>
+	<div id="customer">
+    <?php echo Form::open('','post','id="inventarios"');?>
+    <?php echo Form::hidden('id')?>
+    <div id="descripcion">
+		  <label>Descripcion: </label>
+		  <?php echo Form::textArea('glosa');?>
+	</div>
+    <?php echo Form::hidden('cliente_id')?>
+    <!--<span id="BC" style="width:100px">
+    <label>Titulo</label>
+    <input id="CL" type="text"></span>
+    <textarea id="customer-title"><?php //echo nl2br($cliente)?></textarea><span id="XC">×</span>-->
+	 <table width="904">
+                <tr>
+                    <th width="117" class="meta-head">Moneda</th>
+                    <th width="64"><?php echo Form::dbSelect('monedas','nombre',array('tesmonedas','find','aclempresas_id='.Session::get("EMPRESAS_ID")))?></th>
+                    <th width="84" class="meta-head">Número #</th>
+                    <th width="49"><?php echo Form::text('numero',' readonly="readonly"',$numero)?></th>
+                </tr>
+                <tr>
+					<th>Fecha de Emision</th>
+                    <th><?php echo Calendar::selector('femision');?></th>
+                    <th class="meta-head">Monto Total</th>
+                    <th><span class="simbolo"><?php echo $simbolo?></span></span><span class="due"><?php echo number_format($totalconigv+$igv,2,'.','')?></span></th>
+       </tr>
+
+            </table>
+	 <?php echo Form::hidden('totalconigv');?>
+            <?php echo Form::hidden('igv');?>
+        <?php echo Form::close();?>
+	</div>
+	<table width="100%" id="items">
+		  <tr>
+		      <th>Codigo</th>
+		      <th>Producto</th>
+		      <th>Medida</th>
+              <th>Lote</th>
+		      <th>Empaque</th>
+		      <th>Bobinas</th>
+              <th>P/N</th>
+		      <th>P/B</th>
+		      <th>Costo Unit</th>
+		      <th>Cantidad</th>
+		      <th>Precio</th>
+		  </tr>
+		  <?php 
+		  if($DETALLE){
+			  $n=0;
+			  $subtotal=0;
+			  foreach($detalles as $item){
+				  $n++;
+				  $subtotal=$subtotal+$item->importe;
+			  ?>
+		  <tr id="<?php echo $n?>" class="item-row">
+           <td>
+                  <div class="delete-wpr">
+                  <?php echo Form::text('codigo-'.$n,'size="10" readonly="readonly"',$item->getTesproductos()->codigo)?>
+                  <a id="del-<?php echo $n?>" class="delete" href="javascript:;" title="Elimar registro" data-id="<?php echo $item->id?>">X</a>
+                  </div>
+              </td>
+		      <td class="item-name">
+                  <?php echo Form::hidden('productos_id-'.$n,'class="productos_id" readonly="readonly"',$item->tesproductos_id)?>
+                  <span id="ver-name<?php echo $n?>" style="display:none;"><?php echo Form::text('productoname-'.$n,'readonly="readonly"')?></span>
+                  <span id="ver<?php echo $n;?>" class="ver"><?php echo Form::text('producto'.$n,'class="producto" placeholder="Producto" size="30" readonly="readonly"',$item->getTesproductos()->nombre)?></span>
+              </td>
+		      <td><?php echo Form::hidden('tesunidadesmedidas_id-'.$n,'readonly="readonly"',$item->tesunidadesmedidas_id)?> <?php echo Form::text('tesunidadesmedidas'.$n,'class="unidad" size="10"',$item->getTesunidadesmedidas()->nombre)?></td>
+		      <td> <?php echo Form::text('lote'.$n,'size="10"',$item->lote)?></td>
+              <td> <?php echo Form::text('empaque'.$n,'size="10"',$item->empaque)?></td>
+              <td> <?php echo Form::text('bobinas'.$n,'size="10"',$item->bobinas)?></td>
+              <td> <?php echo Form::text('pesoneto'.$n,'size="10"',$item->pesoneto)?></td>
+              <td> <?php echo Form::text('pesobruto'.$n,'size="10"',$item->pesobruto)?></td>
+              <td><span class="simbolo"><?php echo $simbolo?></span><?php echo Form::text('precio-'.$n,'size="10" class="cost" placeholder="0.0"',number_format($item->preciounitario,2,'.',''))?></td>
+		      <td><?php echo Form::text('cantidad-'.$n,' class="qty" size="10" placeholder="0.0"',$item->cantidad);?></td>
+		      <td><span class="simbolo"><?php echo $simbolo?></span><span id='total-<?php echo $n?>' class="price"><?php echo number_format($item->importe,2,'.','')?></span></td>
+		  </tr>
+		  
+		  <?php
+			  }/*FIN FOREACH*/
+			if($n==0)
+		  		{  $n=1; ?>
+                  <tr id="1" class="item-row">
+                     <td class="item-name">
+                          <div class="delete-wpr">
+                          <?php echo Form::text('codigo-1','class="productos_id" readonly="readonly"')?>
+                          <a id="del-1" class="delete" href="javascript:;" title="Elimar registro" data-id="0">X</a>
+                          </div>
+                      </td>
+                      <td class="item-name">
+                         <?php echo Form::hidden('productos_id-1','class="productos_id" readonly="readonly"')?>
+                          <span id="ver-name1" style="display:none;"><?php echo Form::text('productoname-1','readonly="readonly"')?></span>
+                          <span id="ver1" class="ver"><?php echo Form::text('producto1','class="producto" placeholder="Producto" size="30"')?></span>
+                      </td>
+                      <td><?php echo Form::hidden('tesunidadesmedidas_id-1')?> <?php echo Form::text('tesunidadesmedidas1','class="unidad"')?></td>
+		      <td> <?php echo Form::text('lote'.$n,'size="10"')?></td>
+              <td> <?php echo Form::text('empaque'.$n,'size="10"')?></td>
+              <td> <?php echo Form::text('bobinas'.$n,'size="10"')?></td>
+              <td> <?php echo Form::text('pesoneto'.$n,'size="10"')?></td>
+              <td> <?php echo Form::text('pesobruto'.$n,'size="10"')?></td>
+                      <td><span class="simbolo"><?php echo $simbolo?></span><?php echo Form::text('precio-1','class="cost" placeholder="0.0"')?></td>
+                      <td><?php echo Form::text('cantidad-1',' class="qty" placeholder="0.0"');?></td>
+                      <td><span class="simbolo"><?php echo $simbolo?></span><span id='total-1' class="price">0.00</span></td>
+                  </tr>
+		  <?php
+		  		}?>
+          <?php 
+		  }else{
+			 $n=1; ?>
+		  <tr id="1" class="item-row">
+             <td class="item-name">
+                  <div class="delete-wpr">
+                  <?php echo Form::text('codigo-1','class="productos_id" readonly="readonly"')?>
+                  <a id="del-1" class="delete" href="javascript:;" title="Elimar registro" data-id="0">X</a>
+                  </div>
+              </td>
+		      <td class="item-name">
+                 <?php echo Form::hidden('productos_id-1','class="productos_id" readonly="readonly"')?>
+                  <span id="ver-name1" style="display:none;"><?php echo Form::text('productoname-1','readonly="readonly"')?></span>
+                  <span id="ver1" class="ver"><?php echo Form::text('producto1','class="producto" placeholder="Producto" size="30"')?></span>
+              </td>
+		      <td><?php echo Form::hidden('tesunidadesmedidas_id-1')?> <?php echo Form::text('tesunidadesmedidas1','class="unidad"')?></td>
+		      <td> <?php echo Form::text('lote'.$n,'size="10"')?></td>
+              <td> <?php echo Form::text('empaque'.$n,'size="10"')?></td>
+              <td> <?php echo Form::text('bobinas'.$n,'size="10"')?></td>
+              <td> <?php echo Form::text('pesoneto'.$n,'size="10"')?></td>
+              <td> <?php echo Form::text('pesobruto'.$n,'size="10"')?></td>
+		      <td><span class="simbolo"><?php echo $simbolo?></span><?php echo Form::text('precio-1','class="cost" placeholder="0.0"')?></td>
+		      <td><?php echo Form::text('cantidad-1',' class="qty" placeholder="0.0"');?></td>
+		      <td><span class="simbolo"><?php echo $simbolo?></span><span id='total-1' class="price">0.00</span></td>
+		  </tr>
+		  <?php }?>
+		  <tr id="hiderow">
+		    <td colspan="12"><a id="addrow" href="javascript:;" title="Agregar mas registros">Agragar Mas</a></td>
+		  </tr>
+          </table>
+          <table class="meta" width="60%">
+		  <tr>
+		      <td colspan="2" class="blank"> </td>
+		      <td colspan="2" class="total-line"><strong>Subtotal : </strong></td>
+		      <td width="24%" class="total-value"><span class="simbolo"><?php echo $simbolo?></span><span id="subtotal"><?php echo number_format($subtotal,2,'.','')?></span></td>
+		  </tr>
+		  <tr>
+
+		      <td colspan="2" class="blank"> </td>
+		      <td colspan="2" class="total-line"><strong>Total : </strong></td>
+		      <td class="total-value"><span class="simbolo"><?php echo $simbolo?></span><span id="paid_total"><?php echo number_format($subtotal,2,'.','')?></span></td>
+		  </tr>
+		  <tr>
+		      <td colspan="2" class="blank"> </td>
+		      <td colspan="2" class="total-line"><strong>IGV : </strong></td>
+
+		      <td class="total-value"><span class="simbolo"><?php echo $simbolo?></span><?php echo Form::text('paid','placeholder="0.00" readonly="readonly"')?></td>
+		  </tr>
+		  <tr>
+		      <td colspan="2" class="blank"> </td>
+		      <td colspan="2" class="total-line balance"><strong>Total a Pagar : </strong> </td>
+		      <td class="total-value balance"><span class="simbolo"><?php echo $simbolo?></span><span class="due"><?php echo number_format($subtotal+$igv,2,'.','')?></span></td>
+		  </tr>
+		</table>
+        <div id="loading" style="display:none;"><img src="/img/spin.gif" /></div>
+     <div style="clear:both"></div>
+	<div id="terms">
+	  <h5>Terminos del Inventario</h5><?php echo Form::textArea('pre_descripcion');?>
+		</div>
+</div>

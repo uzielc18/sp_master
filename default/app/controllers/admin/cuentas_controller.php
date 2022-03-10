@@ -4,7 +4,7 @@ View::template('backend/backend');
 class CuentasController extends AdminController {
 	 protected function before_filter() {
         if ( Input::isAjax() ){
-			View::response('view');
+			View::template(null);
             //View::select(NULL, NULL);
         }
     }

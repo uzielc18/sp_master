@@ -1,0 +1,88 @@
+<?php $simbolo="S/. "?>
+<div class="card">
+    <h1>Repuestos!</h1>
+</div>
+<div class="form-actions">
+<?php echo Html::linkAction('crearsalidas/','Crear Guia!','class="btn btn-primary"');?> 
+<?php echo Html::linkAction('','Volver','class="btn"');?> 
+</div>
+<?php echo Sp::imprimir('salidas de respuestos','P');?> 
+<div class="menu">
+<ul><li><a>Año 
+<select id="anio">
+<?php
+for($i=2011;$i<=2020;$i++)
+{
+	$selec='';
+	if($anio==$i){
+	$selec=' selected="selected"';
+	}
+	echo '<option value="'.$i.'" '.$selec.'>'.$i.'</option>';
+}
+?>
+</select></a></li></ul>
+<?php 
+$mes_actual=date('Y-m');
+foreach($meses as $clave => $mes):
+if($anio.'-'.$clave<=$mes_actual){
+$class='';
+if($mes_activo==$clave)$class=' active';
+echo '<ul>';
+echo '<li><a class="enviar'.$class.'" id="mes-'.$mes.'" href="javascript:;" data-id="'.$anio.'-'.$clave.'-01">'.$mes.'</a></li>'; 
+echo '</ul>';
+}
+endforeach;?>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="card-body">
+<table align="center" class="table table-bordered table-striped">
+  <thead>
+  <tr>
+  	<th width="17" align="left">Nº</th>
+    <th width="122" align="left">Creado por:</th>
+    <th width="40" align="left">Fecha</th>
+    <th width="134" align="left">Descripción</th>
+    <th width="61" align="center">Total Unidades</th>
+    <th width="78" align="center">Acciones</th>
+  </tr>
+ </thead>
+<?php $n=0;
+foreach($notas as $item){ 
+	$or='';
+	$n++;
+	?>
+  <tr id="<?php echo $item->id?>">
+  	<td><?php echo $item->codigo?></td>
+   <td>
+    <?php 
+	echo $item->getAclusuarios()->getAcldatos()->nombre.' '.$item->getAclusuarios()->getAcldatos()->appaterno.' '.$item->getAclusuarios()->getAcldatos()->apmaterno;?>
+    </td>
+    <td><?php echo Sp::formatFecha('%d/%m/%Y',$item->fecha_at)?></td>
+    <td><?php if(!empty($item->plareas_id))echo 'Area: '.$item->getPlareas()->nombre.'<br />'; echo $item->descripcion?></td>
+    <td align="center"><?php echo $item->total?></td>
+    <td align="center">
+    <?php if($item->total==0)echo Html::linkAction("eliminar_nota_salida/$item->id/",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:1px;margin-right:1px;"'));?>
+	<?php /*if($item->estadonota=='Editable' || Auth::get('id')==3)*/echo Html::linkAction('cargarnota/'.$item->id.'/agregardetalles_salida/',Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Editar"')?>
+  <?php echo Html::linkAction("cargarnota/$item->id/versalida/",Html::img("figuras/ver.png",'Ver detalle!','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Ver Doc."');?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+	
+	$("#anio").change(function(event){
+    	var id = $("#anio").find(':selected').val();
+		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/<?Php echo $action_name?>/'+id;
+     });
+	$(".enviar").click(function()
+	{
+		var fecha = $(this).attr('data-id');
+		var F=fecha.split('-');
+		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/<?Php echo $action_name?>/'+F[0]+'/'+F[1];
+	});
+});
+</script>

@@ -1,0 +1,108 @@
+<br />
+<?php
+$simbolo="S/. ";
+if(empty($igv))$igv=0;
+switch ($monedas)
+{
+	case 1: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES'; break;
+	case 2: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 4: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
+	case 5: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 0: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
+}
+View::content();
+?>
+<div class="card">
+<h1>Salida de Plegadorers <span>Guia!</span></h1>
+</div>
+
+<div class="card-body">
+<?php if($estadosalida=='ANULADO'){?><div class="texto"> ANULADO </div><?php }?>
+<br />
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+     <tr>
+       	<td width="30%" align="left" valign="top"><h4>Proveedor:</h4></td>
+        <td width="70%" align="left" valign="top"> <?php echo $nombre?>
+    </td>
+    </tr>
+     <tr>        
+        <td align="left"><h4><span class="meta-head">Serie-Numero:</span></h4></td>
+        <td align="left"><?php echo $serie?>-<?php echo $numero?></tr>
+      <tr>
+     <tr>
+        <td align="left" valign="top"><h4>Fecha de Emicion:</h4></td>
+        <td align="left" valign="top"><?php echo Sp::formatFecha('%d / %m / %Y',$femision)?><?php //echo $femision;?></td>
+    </tr>
+
+  </table>
+<br />  
+<table width="90%" border="00" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+<tr>
+ 	 <th width="72" height="21" align="center">No. Plegador</th>
+     <th width="49" align="center">Peso Neto</th>
+     <th width="59" align="center">Medida</th>
+     <th width="378" align="left">Producto</th>
+ </tr>
+<?php
+if($DETALLE)
+{
+  $n=0;
+  $subtotal=0;
+  foreach($detalles as $item){
+			$n++;?>
+ <tr id="<?php echo $n?>" class="item-row">
+ 	 <td width="72" height="21" align="center"><?php echo $item->getTesproductos()->getProplegadores()->numero?></td>
+     <td width="49" align="center"><?php echo $item->pesoneto?></td>
+     <td width="59" align="center"><?php echo $item->getTesunidadesmedidas()->simbolo?></td>
+     <td width="378"><?php echo $item->getTesproductos()->nombrecorto?>-<?php echo $item->getTesproductos()->getProplegadores()->numero?></td>
+ </tr>
+<?php
+	}/*FIN FOREACH*/
+}  
+?>
+  <tr>
+    <td width="72" align="center"></td>
+    <td width="49" align="center"></td>
+    
+    <td width="59" align="center"></td>
+    <td width="378">
+    <p>----------------------------
+    </p>
+    <p>Titulo: <?Php echo $titulo_hilo?><br />
+    	Color: <?Php echo $color?><br />
+    	Ancho: <?php echo $ancho?><br />
+    	Num.de Hilos: <?php echo $nhilos?><br />
+    	Metros: <?Php echo $metros?>
+    	</p></td>
+  </tr>
+</table>
+   <?php echo Html::linkAction("salidas/",'Regresar!','class="btn btn-secondary"') ?>   
+<button onclick="myFunction()" class="btn btn-info"> IMPRIMIR </button>
+
+<script>
+function myFunction() {
+    window.open("http://"+document.domain+"/imprimir/guias", "_blank", "toolbar=NO, scrollbars=yes, resizable=yes, top=100, left=250, width=600, height=400");
+}
+</script>
+<hr />
+</div>
+<style type="text/css">
+.page {
+position: relative;
+z-index: 2;
+}
+
+.texto {
+color:#F00;
+position:absolute;
+margin-top:15%;
+padding-top:20%;
+text-align:center;
+z-index:1;
+top:0;
+left:0;
+right:0;
+bottom:0;
+font-size:36px !important;
+}
+</style>

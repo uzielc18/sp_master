@@ -1,0 +1,28 @@
+<?Php View::content()?>
+<div id="form_ingreso"></div>
+<table width="75%" border="0" align="center" cellpadding="0" cellspacing="1" class="table table-hover">
+<caption>
+ Lista de Telas en Guia de Ingreso
+</caption>
+  <tr>
+    <th width="9%">Codigo</th>
+    <th width="17%">Cantidad</th>
+    <th width="11%">Unidad</th>
+    <th width="53%">Descripcion</th>
+    <th width="10%">Accion</th>
+  </tr>
+  <?php 
+  $n=0;
+  foreach($detalles as $item){
+	  $n++;
+	  ?> 
+  <tr id="<?php echo $item->id?>">
+    <td><?php echo $n?>. <?php echo $item->getProrollos()->numero?>-<?php echo $item->getProrollos()->maquina_numero?></td>
+    <td><?php echo $item->pesoneto?></td>
+    <td><?Php echo $item->getTesunidadesmedidas()->simbolo?></td>
+    <td><?php echo $item->getTesproductos()->detalle?> <?Php echo $item->getTescolores()->nombre?></td>
+    <td><?php echo Html::link($module_name.'/rollos/borraringresorollos/'.$item->id.'/'.$item->prorollos_id.'/','Elminar','id="'.$item->prorollos_id.'"')?>
+    <?php echo Ajax::link($module_name.'/rollos/grabaringresotelas/'.$item->id.'/'.$item->prorollos_id.'/','Editar','form_ingreso','')?></td>
+  </tr>
+  <?php }?>
+</table>

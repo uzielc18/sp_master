@@ -1,0 +1,239 @@
+<?Php echo Tag::js('jquery/graficos/js/highcharts');?>
+<?Php echo Tag::js('jquery/graficos/js/modules/exporting');?>
+<?php View::content();?>
+<div class="card">
+	<h1>Impuestos del mes <span>Reportes para exportal a excel</span></h1>
+    </div>
+<div class="form-actions" title="Regresar!">
+    <?php echo Menu::menuReportes($action_name);?>
+	<?php echo Sp::imprimir('Impuesto mes - ','P');?>  
+</div>
+
+<div class="menu">
+<ul><li><a>
+ Año 
+<select id="anio">
+<?php
+for($i=2011;$i<=2020;$i++)
+{
+	$selec='';
+	if($anio==$i){
+	$selec=' selected="selected"';
+	}
+	echo '<option value="'.$i.'" '.$selec.'>'.$i.'</option>';
+}
+?>
+</select> 
+</a></li></ul>
+<?php 
+$mes_actual=date('Y-m');
+foreach($meses as $clave => $mes):
+if($anio.'-'.$clave<=$mes_actual){
+$class='';
+if($mes_activo==$clave)$class=' active';
+echo '<ul>';
+echo '<li><a class="enviar'.$class.'" id="mes-'.$mes.'" href="javascript:;" data-id="'.$anio.'-'.$clave.'-01">'.$mes.'</a></li>'; 
+echo '</ul>';
+}
+endforeach;?>
+</div>
+<div class="card-body"  id="exportar_excel">
+<b><?php echo $empresa->razonsocial?> IMPUESTOS</b>
+
+
+<?php 
+$mes_actual=date('Y-m');$igv_mes_ant=0;$igv_pagar=0;
+$n=0;
+$IGVPAGAR=array();
+foreach($meses as $clave => $mes):
+$n++;
+if($anio.'-'.$clave<=$mes_actual){
+	$fechames=$anio.'-'.$clave;
+	$nuevafecha = strtotime ( '-1 month' , strtotime ( $fechames ) ) ;
+	$mes_anterior = date ( 'Y-m' , $nuevafecha );
+	$val=$R->getIgvpotmes($fechames);
+	if($clave==01)$igv_mes_a=$R->getIgvpotmes($mes_anterior,1);else{$igv_mes_a=$igv_pagar;}
+	if($igv_mes_a<0)$igv_mes_ant=$igv_mes_a; else{$igv_mes_ant=0;}
+?>
+<table width="95%" border="0" cellpadding="0" cellspacing="0" class="table-bordered">
+	<thead>
+	<tr>
+		<td width="34">&nbsp;</td>
+		<td colspan="4" align="left"><strong><?php echo ucfirst(Sp::formatFecha('%m',$fechames)); ?>-<?php echo Sp::formatFecha('%Y',$fechames); ?></strong></td>
+	</tr>
+	<tr>
+		<th>&nbsp;</th>
+		<th width="335">&nbsp;</th>
+		<th width="193" align="right">SUBTOTAL</th>
+		<th width="174" align="right">IGV</th>
+		<th width="140" align="right">TOTAL  SOLES</th>
+	</tr>
+    </thead>
+    <tbody>
+	<tr>
+		<td>&nbsp;</td>
+		<td align="left">VENTAS</td>
+		<td align="right"><?Php echo number_format($val['ST']-$val['SI'],2,'.','')?></td>
+		<td align="right"><?Php echo number_format($val['SI'],2,'.','')?></td>
+		<td align="right"><?Php echo number_format($val['ST'],2,'.','')?></td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td align="left">COMPRAS</td>
+		<td align="right"><?Php echo number_format($val['IT']-$val['II'],2,'.','')?></td>
+		<td align="right"><?Php echo number_format($val['II'],2,'.','')?></td>
+		<td align="right"><?Php echo number_format($val['IT'],2,'.','')?></td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td colspan="2" align="left">(-)CREDITO MES ANTERIOR</td>
+		<td align="right"><?php echo number_format($igv_mes_ant,2,'.','')?></td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td colspan="2" align="left">(-)RETENCIONES DEL PERIODO</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+    </tbody>
+    <tfoot>
+	<tr>
+		<td>&nbsp;</td>
+		<th colspan="2">Igv a Pagar</th>
+		<td align="right" style="border-top:1px solid #333 !important;"><?php $IGVPAGAR[$n]=$igv_pagar_mes=($val['SI']-$val['II']+($igv_mes_ant)); echo number_format($igv_pagar_mes,2,'.','')?></td>
+		<td>&nbsp;</td>
+	</tr>
+    </tfoot>
+</table>
+
+<?php
+if($igv_pagar_mes<0)$igv_pagar=$igv_pagar_mes;
+}
+endforeach;?>
+<div class="clear"></div>
+</div>
+
+<div id="reporte"></div>
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#anio").change(function(event){
+    	var id = $("#anio").find(':selected').val();
+		location.href = '/<?php echo $module_name?>/reportes/impuestosmes/'+id;
+     });
+	 $(".enviar").click(function()
+	{
+		var fecha = $(this).attr('data-id');
+		var F=fecha.split('-');
+		location.href = '/<?php echo $module_name?>/reportes/impuestosmes_resumen/'+F[0]+'/'+F[1];
+	});
+	 
+});
+</script>
+<script type="text/javascript">
+$(document).ready(function() {
+ $(function () {
+        $('#reporte').highcharts({
+            chart: {
+                
+            },
+            title: {
+                text: 'VENTAS Y COMPRAS'
+            },
+            subtitle: {
+                text: 'IGV para el pago de impuesto'
+            },
+            xAxis: {
+                categories: [<?php 
+			$n=0;
+			$categories=array();
+			foreach($ingresos as $mes):
+			$categories[$mes->fecha]="'".$mes->fecha."'";
+			?>
+            <?php
+			 if($n!=0) echo ","; 
+			 echo "'".$mes->fecha."'";
+			$n++;
+			?>
+            <?Php endforeach;?>
+                ]
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Soles (S/. )'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>S/. {point.y:.1f}</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series:[{
+				type: 'column',
+                name: 'IGV VENTA',
+                data: [<?php 
+			$n=0;
+			foreach($salidas as $venta):?>
+            <?php
+			 if($n!=0) echo ","; 
+			 /*valida si existe registro para la categoria*/
+			 if(array_key_exists($venta->fecha,$categories)){$valor=$venta->igv;}else{$valor=00;}
+			 echo number_format($valor,2,'.','');
+			$n++;
+			?>
+            <?Php endforeach;?>]
+    
+            }, {
+				type: 'column',
+                name: 'IGV COMPRAS',
+                data: [<?php 
+			$n=0;
+			foreach($ingresos as $venta):?>
+            <?php
+			 if($n!=0) echo ","; 
+			 if(array_key_exists($venta->fecha,$categories)){$valor=$venta->igv;}else{$valor=00;}
+			 echo number_format($valor,2,'.','');
+			$n++;
+			?>
+            <?Php endforeach;?>]
+    
+            }, {
+                type: 'spline',
+				name: 'IMPUESTO A PAGAR',
+                data: [<?php 
+			$n=0;
+			foreach($IGVPAGAR as $key=>$value)
+			{
+			if($n!=0) echo ","; 
+			echo number_format($value,2,'.','');
+			$n++;	
+			}
+			?>]
+    
+            }/*, {
+                name: 'Berlin',
+                data: [42.4, 33.2, 34.5, 39.7, 52.6, 75.5, 57.4, 60.4, 47.6, 39.1, 46.8, 51.1]
+    
+            }*/]
+        });
+    });
+       
+});
+</script>

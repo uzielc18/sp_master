@@ -1,0 +1,76 @@
+<style type="text/css">
+.span_float
+{
+	float:right !important;
+	margin-left:0px;
+	margin-right:-5px;
+}
+</style>
+<div class="card">
+    <h1>Guias Internas!<span><?php echo $titulo?> <?php echo Session::get('DOC_NOMBRE')?></span></h1>
+</div>
+<div id="mensajes_flash" >        
+<?php View::content() ?>
+</div>
+<div class="form-actions">
+<?php echo Html::linkAction($url."/", 'Crear Venta','class="btn btn-primary"') ?> <?php echo Html::linkAction("crearsalidas_muestra/", 'Crear Muestra','class="btn btn-primary"') ?> <?php echo Html::linkAction("", 'Regresar ','class="btn"') ?>
+</div>
+<div class="card-body">
+<div id="ver_resultado"></div>
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+  <thead>
+  <tr>
+  	<th width="27">Nº</th>
+    <th width="175">Cliente</th>
+    <th width="87">Número Doc.</th>
+    <th width="358">Productos </th>
+    <th width="82" align="right" valign="top">Total</th>
+    <th width="101" align="center">Acciones </th>
+  </tr>
+  </thead>
+  <tbody>
+<?php $number=0;
+foreach($salidas as $item){ 
+$simbolo="S/. ";
+switch ($item->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+$number++;?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20"><?php echo $number?></td>
+  	<td height="20"><?php echo $item->getTesdatos()->razonsocial?></td>
+    <td><?php echo $item->serie?>-<?php echo $item->numero?></td>
+    <td>
+      <small style="color:#666; font-size:10px !important; font-style:italic; ">
+        <?php
+	$n=0;$m=0;
+	foreach($item->getTesdetallesalidasinternas() as $det)
+	{
+		if($det->tesproductos_id!=0)
+		{
+			$n++;
+			echo $det->getTesproductos()->nombre;if(count($item->getTesdetallesalidasinternas())>$n){echo ", ";}
+		}else
+		{
+			echo $det->concepto;
+		}
+	}
+	?>
+        </small>
+    </td>
+    <td align="right" valign="top"><?php if($item->total!='NaN.00' && !empty($item->total))echo $simbolo.number_format($item->total,2,'.','');else echo('S/ 00.00')?></td>
+   <td align="center">
+   <?php if($item->estadosalida=="Editable")echo Html::linkAction('cargarsalida_internas/'.$item->id.'/',Html::img("figuras/editar.png",'EDITAR','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Editar Guia - 002 - Hilos"')?>
+	<?php echo Html::linkAction('cargarsalida_internas/'.$item->id.'/versalida_internas',Html::img("figuras/ver.png",'Ver','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Ver e Imprimir Guia - 002 - Hilos"')?>
+   <?php //echo Html::linkAction("borrar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:1px;margin-right:1px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+    </td>
+  </tr>
+<?php }?>
+</tbody>
+</table>
+</div>

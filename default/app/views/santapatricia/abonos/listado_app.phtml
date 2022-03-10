@@ -1,0 +1,78 @@
+<div class="card">
+<h1>Abonos</h1></div>
+<div class="form-actions">
+<?php echo Html::linkAction("", 'Regresar a listado de abonos','class="btn btn-primary"','title="Regrersar"','') ?>
+</div>
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus="" placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+<?php echo Sp::imprimir('Abonos Adelanto - ','P');?>
+<div class="card-body">
+<table id="exportar_excel" width="86%" align="center" class="table table-bordered table-striped">
+<caption>
+Abonos generados en el Mes Actual
+</caption>
+  <tr>
+  	<th width="21" align="left">Nº.</th>
+	<th width="54" align="left">Numero</th> 
+	<th width="72" align="left">Forma de Pago</th> 
+	<th width="39" align="left">Ref. Doc</th> 
+    <th width="84" align="left">Cliente</th> 
+    <th width="45" align="left">Fecha</th> 
+    <th width="56" align="left">Moneda</th>
+    <th width="58" align="right">Importe</th>
+    <th width="64" align="left">Acciones</th>
+  </tr>
+<?php $n=0;
+foreach($abonos_adelanto as $item){ 
+$n++;
+$importe=0;
+switch ($item->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+
+if(!empty($item->total))$importe=$item->total;
+?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20"><?php echo $n?></td>
+    <td><?php echo $item->numero?> <?php if($item->estadov=="ANULADO") echo "Anulado";?></td>
+    <td><?php echo $item->getTesformadepagosabonos(('DOC_ID')==10)->nombre?></td>
+	<td><?php echo $item->getTesformadepagosabonos()->numero?></td>
+    <td><?php $i=0;foreach($item->getClientes() as $det)
+	{
+		if(!empty($det->tesdatos_id)){
+			$i++;
+			if($i==1)echo $det->getTesdatos()->razonsocial;else echo ", ".$det->getTesdatos()->razonsocial;
+			}
+	}
+	if($i==0)echo $item->getTesdatos()->razonsocial?></td>
+    <td><?php echo Sp::formatFecha('%d/%m/%Y',$item->fecha)?></td>
+    <td><?php echo $item->getTesmonedas()->nombre;?></td>
+    
+    <td align="right"><?php echo $simbolo;?> <?php echo number_format($importe,2,'.',' ');?></td>
+   <td>
+   <?php 
+   echo Html::linkAction('cargar/'.$item->id.'/creardetalle_app',Html::img("figuras/procesos.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Agregar detalles o el documento para le abono"');
+    echo Html::linkAction('cargar/'.$item->id.'/finalizar',Html::img("figuras/ver.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Visualizar Abono"','')?> 
+    <?php echo Html::linkAction('no_mostrar_adelanto_app/'.$item->id,'Terminar','class="btn btn-danger"');?> 
+    </td>
+  </tr>
+<?php }?>
+</table>
+	</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#txtBuscar').on('search',function(){
+		//le decimos a la funcion que busque en la tabla tblTabla el
+		//valor que contiene el campo actual
+		$.fntBuscarEnTabla($(this).val(),'exportar_excel');
+		
+	});	
+});
+</script>

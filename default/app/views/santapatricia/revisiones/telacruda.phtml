@@ -1,0 +1,167 @@
+<div class="card">
+<h1>Rollos de tela cruda<span>Tela cruda sin nigun proceso</span></h1>
+</div>
+<div class="form-actions">
+<?php echo Menu::menuProduccion($action_name);?>
+</div>
+<?php echo View::content()?>
+<style type="text/css">
+.link a{
+display:inline-table;
+width:20px;
+padding:2px 2px 7px 2px;
+background-color:#F5F5F5;
+margin:auto;}
+</style>
+<script type="text/jscript">
+function rend(tr_id)
+{
+  var metros=isNaN($('#metros-'+tr_id).val())? 0 : $('#metros-'+tr_id).val();
+  var peso=isNaN($('#peso-'+tr_id).val())? 0 : $('#peso-'+tr_id).val();
+  var rendimiento=(parseInt(metros)/parseInt(peso)); 
+  $("#rendimiento-"+tr_id).val(rendimiento); 
+  grabarDetalle(tr_id);
+  
+}
+function grabarDetalle(tr_id) 
+{
+  var id=tr_id;
+  var ordencompra=$("#ordencompra-"+tr_id).val();
+  var metros=isNaN($('#metros-'+tr_id).val())? 0 : $('#metros-'+tr_id).val();
+  var peso=isNaN($('#peso-'+tr_id).val())? 0 : $('#peso-'+tr_id).val();
+  var rendimiento=$("#rendimiento-"+tr_id).val();
+  /*
+  metros
+	 peso
+	 rendimiento
+	 ancho
+	 estadorollo
+	 ordencompra*/
+
+	  var dataString ='id='+id+'&metros='+ metros+'&peso='+ peso+'&rendimiento='+rendimiento+'&ordencompra='+ordencompra;
+	 //alert(dataString);
+	  $.ajax({
+            type:"POST",
+            url:"/santapatricia/revisiones/grabarrollo/",
+            data:dataString,
+            beforeSend:function(){
+              $("#loading").show();
+            },
+            success:function(response){
+                $("#loading").hide();
+            }
+ 
+         });
+  
+}
+$(document).ready(function()
+{
+	$('.rend').blur(function()
+	{
+		var ID=$(this).attr('id').split('-');
+		rend(ID[1]);
+	})
+	$('.save').blur(function()
+	{
+		var ID=$(this).attr('id').split('-');
+		grabarDetalle(ID[1]);
+	})
+
+});
+</script>
+
+	<div class="menu">
+<ul><li><a>Año
+	<select id="anio">
+		<?php
+for($i=2011;$i<=2020;$i++)
+{
+	$selec='';
+	if($anio==$i){
+	$selec=' selected="selected"';
+	}
+	echo '<option value="'.$i.'" '.$selec.'>'.$i.'</option>';
+}
+?>
+		</select>
+</a></li></ul>
+<?php 
+$mes_actual=date('Y-m');
+foreach($meses as $clave => $mes):
+if($anio.'-'.$clave<=$mes_actual){
+$class='';
+echo '<ul>';
+echo '<li><a class="enviar" id="mes-'.$mes.'" href="javascript:;" data-id="'.$anio.'-'.$clave.'">'.$mes.'</a></li>'; 
+echo '</ul>';
+}
+endforeach;
+echo '<ul>';
+echo '<li>'.Html::linkAction("telacruda_listado",'Listado general').'</li>'; 
+echo '</ul>';
+?>
+</div>
+<div id="loading" style="display:none;"><img src="/img/spin.gif" /></div>
+<div class="card-body" id="reporte">
+<table width="100%" class="table table-bordered table-striped" id="rollos">
+    <caption>
+      Listado de Rollos Producidos
+    </caption>
+  <thead>
+  <tr>
+    <th width="10%" align="left">Fecha</th>
+    <th width="11%" align="left">Nº Rollo</th>
+    <th width="9%" align="left">Maq.</th>
+    <th width="27%" align="left">Descripcion</th>
+    <th width="12%" align="left">Metraje</th>
+    <th width="7%" align="left">Peso</th>
+    <th width="9%" align="left">Rend.</th>
+    <th width="8%" align="left">O.C.</th>
+    <th width="7%" align="center">Acc.</th>
+  </tr>
+  </thead>
+  <tbody>
+  <?php foreach($rollos as $rollo){?>
+  <tr id="tr-<?php echo $rollo->id?>">
+     <td align="left" valign="top"><?php echo Sp::formatFecha('%d / %m / %Y',$rollo->fechacorte)?></td>
+	 <td align="left" valign="top"><?php echo $rollo->numero?>-
+	<?php if($rollo->prodetalleproduccion_id!=0)echo $rollo->getProdetalleproduccion()->getProproduccion()->getPromaquinas()->prefijo.$rollo->getProdetalleproduccion()->getProproduccion()->getPromaquinas()->numero?></td>
+    <td align="left" valign="top"><?php if($rollo->prodetalleproduccion_id!=0)echo $rollo->getProdetalleproduccion()->getProproduccion()->getPromaquinas()->prefijo.$rollo->getProdetalleproduccion()->getProproduccion()->getPromaquinas()->numero?></td>
+    
+    <td align="left" valign="top"><?php echo $rollo->getTesproductos()->getTestipoproductos()->nombre.' - '.$rollo->getTesproductos()->nombre?></td>
+    <td align="left" valign="top"><?php echo number_format($rollo->metros,2,'.','')?></td>
+    <td align="left" valign="top"><?php echo number_format($rollo->peso,2,'.','')?></td>
+    <td valign="top" align="left"><?php echo number_format($rollo->rendimiento,2,'.','')?></td>
+    <td valign="top"><?php if(!empty($rollo->getProdetalleproduccion()->tesordendecompras_id)){$oc=$rollo->getProdetalleproduccion()->getTesordendecompras()->codigo." (".$rollo->getProdetalleproduccion()->getTesordendecompras()->numero_interno.")";}else{$oc=$rollo->ordencompra;}?><?php echo $oc?></td>
+      <td valign="top" align="center"><span class="link"><?php echo Ajax::linkAction('cambiarestado/'.$rollo->id.'/Control de Calidad/telacruda',Html::img("figuras/produccion.png",'Visto Bueno','style="width: 20px;margin-left:1px;margin-right:1px;" title="Regresar a Control de calidad"'),'tr-'.$rollo->id);?></span></td>
+  </tr>
+  <?php }?>
+  </tbody>
+</table>
+</div>
+<script type="text/javascript">
+        $(document).ready(function() {
+			$("#anio").change(function(event){
+            var id = $("#anio").find(':selected').val();
+			location.href = '/<?php echo $module_name?>/revisiones/telacruda/'+id;
+        	});
+			$(".enviar").click(function(){
+				
+				var fecha = $(this).attr('data-id');
+				$.ajax({
+					type:"POST",
+					url:"/<?php echo $module_name?>/revisiones/telacruda_mes/",
+					data:'fecha='+fecha,
+					beforeSend:function(){
+					  $("#loading").show();
+					},
+					success:function(response){
+						$("#loading").hide();
+						$("#reporte").html(response);
+						//alert(response);
+					}
+		 
+					});
+				
+				});
+        });
+        </script>

@@ -1,0 +1,142 @@
+
+<br />
+<style type="text/css">
+.span_float
+{
+	float:right !important;
+	margin-left:0px;
+	margin-right:-5px;
+}
+</style>
+<div class="card">
+    <h1>Salida de Rollos<span><?php echo $titulo?> <?php echo Session::get('DOC_NOMBRE')?></span></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+
+<div class="form-actions" id="active">
+<?php echo Html::linkAction($url."/", 'Nueva','class="btn btn-primary"') ?><?php echo Menu::menuControl();?>
+</div>
+<div class="menu">
+<ul>
+<li>
+<a href="javascript:;">Año 
+<select id="anio">
+<?php
+for($i=2011;$i<=2020;$i++)
+{
+	$selec='';
+	if($anio==$i){
+	$selec=' selected="selected"';
+	}
+	echo '<option value="'.$i.'" '.$selec.'>'.$i.'</option>';
+}
+?>
+</select>
+</a>
+</li>
+</ul> 
+<?php 
+$mes_actual=date('Y-m');
+foreach($meses as $clave => $mes):
+if($anio.'-'.$clave<=$mes_actual){
+$class='';
+if($mes_activo==$clave)$class=' active';
+echo '<ul>';
+echo '<li><a class="enviar'.$class.'" id="mes-'.$mes.'" href="javascript:;" data-id="'.$anio.'-'.$clave.'-01">'.$mes.'</a></li>'; 
+echo '</ul>';
+}
+endforeach;?>
+
+</div>
+<div class="clear"></div>
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus="" placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+<?php echo Sp::imprimir('Salidas a Confecciones - ','P');?> 
+<div class="card-body">
+<table id="exportar_excel" width="98%" border="0" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+<caption>Guias de salida (Telas)</caption>
+  <tr>
+  	<th width="17">Nº</th>
+    <th width="108">Cliente</th>
+    <th width="54">Número Doc.</th>
+    <th width="200">Productos</th>
+    <th width="77">Sub-total</th>
+    <th width="60">Igv</th>
+    <th width="72">Total</th>
+    <th width="60">Acciones</th>
+  </tr>
+<?php $number=0;
+foreach($salidas as $item){ 
+$simbolo="S/. ";
+
+switch ($item->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+
+$number++;?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20"><?php echo $number?></td>
+  	<td height="20"><?php echo $item->getTesdatos()->razonsocial?></td>
+    <td><?php echo $item->serie?>-<?php echo $item->numero?></td>
+    <td>
+    <small style="color:#666; font-size:10px !important; font-style:italic; ">
+	<?php
+    
+	$n=0;$m=0;
+	foreach($item->getTesdetallesalidas() as $det)
+	{
+		if($det->tesproductos_id!=0){$n++;
+		echo $det->getTesproductos()->nombre;if(count($item->getTesdetallesalidas())>$n){echo ", ";}
+		}else{
+			echo $det->concepto;
+			}
+	}
+	?>
+    </small>
+    </td>
+    <td><?php if($item->totalconigv!='NaN.00' && !empty($item->totalconigv))echo $simbolo.number_format($item->totalconigv-$item->igv,2,'.','');else echo('S/ 00.00');?></td>
+    <td><?php if($item->totalconigv!='NaN.00' && !empty($item->totalconigv))echo $simbolo.number_format($item->igv,2,'.','');else echo('S/ 00.00')?></td>
+    <td><?php if($item->totalconigv!='NaN.00' && !empty($item->totalconigv))echo $simbolo.number_format($item->totalconigv,2,'.','');else echo('S/ 00.00')?></td>
+   <td>
+   <?php if($item->estadosalida=="Editable")echo Html::linkAction('cargarsalida/'.$item->id.'/',Html::img("figuras/editar.png",'EDITAR','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Editar Guia - 002 - Hilos"')?>
+	<?php echo Html::linkAction('cargarsalida/'.$item->id.'/versalida',Html::img("figuras/ver.png",'Ver','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Ver e Imprimir Guia - 002 - Hilos"')?>
+    <?php //echo Html::linkAction("borrar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:1px;margin-right:1px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+    <?php //echo Html::linkAction("ver/$item->id/$page",Html::img("figuras/ver.png",'Eliminar','style="width: 20px;margin-left:1px;margin-right:1px;"'));?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#txtBuscar').on('search',function(){
+		//le decimos a la funcion que busque en la tabla tblTabla el
+		//valor que contiene el campo actual
+		$.fntBuscarEnTabla($(this).val(),'exportar_excel');
+		
+	});
+	$(".ver").click(function(){
+	var op=$(this).attr('data-id');
+	document.location = "/<?php echo $module_name?>/<?php echo $controller_name?>/index/"+op;
+	});	
+	$("#anio").change(function(event){
+    	var id = $("#anio").find(':selected').val();
+		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/<?Php echo $action_name?>/'+id;
+     });
+	$(".enviar").click(function()
+	{
+		var fecha = $(this).attr('data-id');
+		var F=fecha.split('-');
+		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/<?Php echo $action_name?>/'+F[0]+'/'+F[1];
+	});
+});
+</script>

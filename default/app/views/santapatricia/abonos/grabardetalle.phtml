@@ -1,0 +1,138 @@
+<?php 
+//echo $salida_id;
+switch ($ab->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+
+Tag::css('token-input');
+?>
+<div class="card">
+<h1>Generacion de Abonos!</h1>
+</div>
+
+<div class="card-body">
+  <table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+  <caption>Aun, no ha grabado este Abono!</caption>
+  <tr valign="top">
+    <td colspan="12" align="center"><?php echo $empresa->razonsocial?></td>
+
+  </tr>
+  <thead>
+  <tr>
+    <th align="left" valign="top">Fecha:</th>
+    <th align="left" valign="top">Nº Documento</th>
+    <th align="left" valign="top">F. Vto.</th>
+    <th align="left" valign="top">Cod Auxiliar</th>
+    <th colspan="4" align="left" valign="top">Descripcion</th>
+    <th align="left" valign="top">Cargos</th>
+    <th align="left" valign="top">Abonos</th>
+    <th width="5%" valign="top" align="left">Acc</th>
+    <td width="0%"></td>
+  </tr>
+  </thead>
+  <?Php 
+  $ids='';
+  $doc='';
+  $i=0;
+  $l=0;
+  $li=0;
+  $id_factura='';
+  foreach($detalles as $item):
+  $i++;
+  $monto_A=0;
+	$cuenta=$item->plancontable;
+	$fechavcto=NULL;
+	$descripcion=$ab->getTesformadepagosabonos()->nombre;
+	$num_doc=$item->correlativo;
+	$codauxiliar='';
+  if($item->tesingresos_id!=0)
+  {
+	  //echo "ingreso";
+	  $cuenta=$item->getTesingresos()->cuentaporpagar;
+	  $num_doc=$item->getTesingresos()->serie.'-'.$item->getTesingresos()->numero;
+	  $fechavcto=$item->getTesingresos()->fvencimiento;
+	  $codauxiliar=$item->getTesingresos()->getTesdatos()->ruc;
+	  $descripcion=$item->getTesingresos()->getTesdatos()->razonsocial;
+  }
+  if($item->tessalidas_id!=0)
+  {
+	  //echo ' SAlida';
+	 $id_factura=$item->tessalidas_id;
+	 $l++;
+	 $cuenta=$item->getTessalidas()->cuentaporpagar;
+	 $num_doc=$item->getTessalidas()->serie.'-'.$item->getTessalidas()->numero;
+	 $fechavcto=$item->getTessalidas()->fvencimiento;
+	 $codauxiliar=$item->getTessalidas()->getTesdatos()->ruc;
+	 $descripcion=$item->getTessalidas()->getTesdatos()->razonsocial;
+	 
+  }
+  if($item->tessalidasinternas_id!=0)
+  {
+	  //echo " S_interna";
+	 $id_factura=$item->tessalidasinternas_id;
+	 $li++;
+	 $cuenta=$item->getTessalidasinternas()->cuentaporpagar;
+	 $num_doc=$item->getTessalidasinternas()->serie.'-'.$item->getTessalidasinternas()->numero;
+	 $fechavcto=$item->getTessalidasinternas()->fvencimiento;
+	 $codauxiliar=$item->getTessalidasinternas()->getTesdatos()->ruc;
+	 $descripcion=$item->getTessalidasinternas()->getTesdatos()->razonsocial;
+  }
+ 
+  ?>
+  <tr valign="top">
+    <td><?php echo date('Y-m-d');?></td>
+    <td><?php echo $num_doc?><?php //echo '/*--*/'.$id_factura;?></td>
+    <td><?php if(!empty($fechavcto))echo $fechavcto;else echo '-';?></td>
+    <td><?php echo $codauxiliar?></td>
+    <td colspan="4"><?php echo $descripcion?></td>
+    <td><?php if($item->cargos==1)echo number_format($item->monto-$monto_A,2,'.',''); else echo '';?></td>
+    <td><?php if($item->abono==1)echo number_format($item->monto-$monto_A,2,'.',''); else echo '';?></td>
+    <td title="Eliminar si se equivoco de Documento !, Regresar a elegir otro !"><?php echo Html::linkAction('eliminardetalle/'.$item->id,Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'onclick="return confirm(\'¿Está seguro?\')"');?></td>
+  </tr>
+  <?php 
+  if($i==1)$ids.=$id_factura;else $ids.=','.$id_factura;
+  if($i==1)$doc.=$num_doc;else $doc.=','.$num_doc;
+  endforeach;?>
+  </table>
+ <?php 
+ 
+ switch ($ab->tesformadepagosabonos_id)
+{
+	case 1: $url='efectivo/1'; break;
+	case 2: $url='cheques/2/'.$salida_id; break;
+	case 3: $url='efectivo/3'; break;
+	case 4: $url=''; break;
+	case 5: $url='bancos/6'; break;
+	case 6: $url='bancos/5'; break;
+	case 7: $url=''; break;
+	case 8: $url='bancos/8'; break;
+	case 9: $url=''; break;
+	case 11: $url='aplicacion/11/0'; break;
+	case 12: $url='cuotas/12/0'; break;
+	case 13: $url='cheques/2/'.$salida_id; break;
+	case 15: $url='efectivo/15/'; break;
+	case 16: $url='efectivo/16/'; break;
+	case 17: $url='efectivo/17/'; break;
+}
+//echo $doc;?>
+<script type="text/javascript">
+$(document).ready(function()
+{
+$("#pago").load('/<?php echo $module_name?>/abonos/<?php echo $url?>');
+
+});
+</script>
+<hr />
+y
+<div id="pago"><div id="loading"><img src="/img/spin.gif" /></div></div>
+<div class="form-actions">
+    <?php echo Html::linkAction("creardetalle/", 'Agregar detalles','class="btn btn-secondary"') ?>
+    <?php //echo Html::linkAction("terminer/100", 'Terminar','class="btn btn-primary"') ?>
+</div>
+<?php echo Form::close()?>
+</div>

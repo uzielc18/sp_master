@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,124 +10,98 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
-  
+
   <link rel="stylesheet" href="/plugins/select2/css/select2.min.css">
   <link rel="stylesheet" href="/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="/dist/css/adminlte.min.css">
+  <link rel="stylesheet" href="/css/token-input.css">
 </head>
+
 <body class="hold-transition sidebar-mini sidebar-collapse">
-  
-<script src="/plugins/jquery/jquery.min.js"></script>
-<!-- Site wrapper -->
-<div class="wrapper">
-  <?php View::partial('head_admin') ?>
 
-  <!-- Main Sidebar Container -->
-  <aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <!-- Brand Logo -->
-    <a href="/" class="brand-link">
-      <img src="/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-      <span class="brand-text font-weight-light">AdminLTE 3</span>
-    </a>
+  <script src="/plugins/jquery/jquery.min.js"></script>
+  <!-- Site wrapper -->
+  <div class="wrapper">
+    <?php View::partial('head_admin') ?>
+    <?php View::partial('menu_lateral') ?>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <section class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
 
-    <!-- Sidebar -->
-    <div class="sidebar">
-      <!-- Sidebar user (optional) -->
-      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image">
-          <img src="/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
-        </div>
-        <div class="info">
-          <a href="#" class="d-block">Alexander Pierce</a>
-        </div>
-      </div>
-      <!-- Sidebar Menu -->
-      <nav class="mt-2">
-        <?php View::renderMenu(Menu::BACKEND,3,'class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false"') ?>
-        
-      </nav>
-      <!-- /.sidebar-menu -->
-    </div>
-    <!-- /.sidebar -->
-  </aside>
-
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-           
+            </div>
+            <div class="col-sm-6">
+              <div class="float-sm-right">
+                <?php echo Sp::cambio() ?>
+              </div>
+            </div>
           </div>
-          <div class="col-sm-6">
-            <div class="float-sm-right">
-              <?php echo Sp::cambio()?>
+        </div><!-- /.container-fluid -->
+
+      </section>
+
+      <!-- Main content -->
+      <section class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <!-- Default box -->
+              <?php View::content() ?>
+              <!-- /.card -->
             </div>
           </div>
         </div>
-      </div><!-- /.container-fluid -->
-    
-    </section>
-
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-12">
-            <!-- Default box -->
-            <?php View::content() ?>
-            <!-- /.card -->
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- /.content -->
-  </div>
-  <!-- /.content-wrapper -->
-
-  <footer class="main-footer">
-    <div class="float-right d-none d-sm-block">
-      <b>Version</b> 3.2.0
+      </section>
+      <!-- /.content -->
     </div>
-    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
-  </footer>
+    <!-- /.content-wrapper -->
 
-  <!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-  </aside>
-  <!-- /.control-sidebar -->
-</div>
-<!-- ./wrapper -->
+    <footer class="main-footer">
+      <div class="float-right d-none d-sm-block">
+        <b>Version</b> 3.2.0
+      </div>
+      <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+    </footer>
 
-<!-- jQuery -->
-<?php
-       
-        echo Tag::js('jquery/jquery.kumbiaphp.min');
-        echo Tag::js('jquery/jquery+kumbiaphp.min');
-        echo Tag::js('jquery/pickadate');
-        ?>
-<!-- Bootstrap 4 -->
-<script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- Select2 -->
-<script src="/plugins/select2/js/select2.full.min.js"></script>
-<!-- AdminLTE App -->
-<script src="/dist/js/adminlte.min.js"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="/dist/js/demo.js"></script>
-<script src="https://use.fontawesome.com/39d7c8f08f.js"></script>
-<script>
-  $(function () {
-    //Initialize Select2 Elements
-    $('.select2').select2()
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+      <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+  </div>
+  <!-- ./wrapper -->
 
-    //Initialize Select2 Elements
-    $('.select2bs4').select2({
-      theme: 'bootstrap4'
-    })
-  });
-</script>
+  <!-- jQuery -->
+  <?php
+  echo Tag::js('jquery/jquery+kumbiaphp.min');
+  echo Tag::js('jquery/jquery.kumbiaphp');
+  echo Tag::js('jquery/pickadate');
+  echo Tag::js('jquery/jquery.tokeninput');
+  ?>
+  <!-- Bootstrap 4 -->
+  <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- Select2 -->
+  <script src="/plugins/select2/js/select2.full.min.js"></script>
+  <!-- AdminLTE App -->
+  <script src="/dist/js/adminlte.min.js"></script>
+  <!-- AdminLTE for demo purposes -->
+  <script src="/dist/js/demo.js"></script>
+  <script src="https://use.fontawesome.com/39d7c8f08f.js"></script>
+  <script>
+    $(function() {
+      //Initialize Select2 Elements
+      $('.select2').select2()
+
+      //Initialize Select2 Elements
+      $('.select2bs4').select2({
+        theme: 'bootstrap4'
+      })
+    });
+  </script>
 </body>
+
 </html>

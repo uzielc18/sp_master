@@ -1,0 +1,62 @@
+<div class="card">
+    <h1>Plegadores<span> Reporte con el ultimo movimiento del plegador</span></h1>
+</div>
+<div class="form-actions">
+<?php echo Html::linkAction("plegadoresmov/",'Volver','class="btn btn-info"') ?>
+</div>
+<?php echo Sp::imprimir('Abonos Adelanto - ','P');?> 
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="card-body">
+
+<table width="90%" border="0" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+<caption>Reporte con el ultimo movimiento del plegador</caption>
+ <thead> 
+  <tr>
+  	<th width="72" valign="top"><?php echo date("d/m/y")?></th>
+    <?Php foreach($maquinas as $maq){?>
+	<th width="386" valign="top"><?php echo $maq->prefijo.'-'.$maq->numero?></th>
+	<?php }?>
+    <th width="48" valign="top"> EN PISO</th>
+    <th width="39" valign="top"> VACIO </th>
+    <th width="42" valign="top"> URIDO </th>
+  </tr>
+ </thead>
+  <tbody>
+<?php $n=0;
+foreach($plegadores as $item){ $n++;
+
+$val=explode(",",$item->glosa);
+
+
+?>
+  <tr>
+  	<td valign="top" style="font-size:9px !important; border-right:#000 inset 1px;"><?php echo $item->protipoplegadores()->abr?> - <?php echo $item->numero?> <?php //echo $item->estadoplegador_id?></td>
+     <?Php foreach($maquinas as $maq){?>
+	<td align="center" valign="top"><?php if($maq->id==$item->maquina_id){
+	$det=explode("-",$item->detalle);
+		echo $det[1]."<br />";
+	    echo "Total: ".$det[2]."<br />";
+		echo "Falta:";
+		echo $det[2]-$item->total;
+		echo "<br />";
+		echo '<a href="/santapatricia/produccion/cargarhoja/'.$det[0].'/verhoja" title="Ver hoja de ruta"><img src="/img/figuras/ver.png" alt="Ver" style="width: 20px;margin-left:1px;margin-right:1px;"></a>';
+	}?></td>
+	<?php }?>
+    <td valign="top" style="font-size:9px !important; border-left:#000 inset 1px;">  
+	<?php 
+	if($item->estadoplegador_id==5 or (empty($item->maquina_id) && $item->estadoplegador_id==2)){
+		echo $val[0]."<br />";
+	    echo $val[4]."";
+	}?></td>
+    <td valign="top" style="font-size:9px !important; border-left:#000 inset 1px;"> 
+    <?php if($item->estadoplegador_id==1){echo "X";}?></td>
+    <td valign="top" style="font-size:9px !important; border-left:#000 inset 1px;"> 
+	<?php if($item->estadoplegador_id==4){echo "X";}?></td>
+  </tr>
+<?php }?>
+</tbody>
+</table>
+<div class="cl"></div>
+</div>

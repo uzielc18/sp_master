@@ -1,0 +1,196 @@
+<style type="text/css">
+.page {
+position: relative;
+z-index: 2;
+}
+
+.texto {
+color:#F00;
+position:absolute;
+padding-top:10%;
+text-align:center ;
+z-index:1;
+top:0;
+left:0;
+right:0;
+bottom:0;
+font-size:36px !important;;
+}
+</style>
+<?php 
+switch ($ab->tesmonedas_id)
+{
+	case 1: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES'; break;
+	case 2: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 4: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
+	case 5: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 0: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
+}
+?>
+<div class="card">
+<h1>Abonos !<span> Abono de los clientes  </span></h1>    
+</div>
+<div class="form-actions">
+<?php echo Html::linkAction("", 'Volver','class="btn btn-primary"') ?><?php if($ab->estadov=='Pendiente'){?>
+<?php echo Html::linkAction("grabardetalle/", 'Editar','class="btn btn-secondary"') ?>
+<?php echo Html::linkAction("finalizar/1", 'Terminar','class="btn btn-primary"') ?>
+<?php }?> 
+</div>
+<?php echo Sp::imprimir('Abono'.$numero,'P',array("W"=>"W","EX"=>"EX","P"=>"P"));?>
+<div class="card-body" id="exportar_excel">
+<?php if($ab->estadov=='ANULADO'){?><div class="texto"> ANULADO </div><?php }?>
+<table width="750" border="0" align="center" cellpadding="0" cellspacing="0">
+  <?php if($ab->estadov=='Pendiente'){?><caption>
+  <strong>Abono, aun no grabado!</strong></caption><?php }?>
+  <thead>
+  <tr>
+    <td colspan="2" valign="top"><?php echo $empresa->razonsocial?></td>
+    <td colspan="2" align="left" valign="top"><strong>Abono: #</strong><?php echo $numero?></td>
+    <td width="15%" align="right" valign="top"><strong>Operacion:</strong></td>
+    <td width="9%" align="left" valign="top"><?php echo $ab->getTesformadepagosabonos()->operacion?></td>
+    <td width="7%" valign="top" align="right"><strong>Asiento:</strong></td>
+    <td width="8%" valign="top" align="left"><?Php echo $asiento?></td>
+    <td width="5%" valign="top"a align="left"><strong>Mes:</strong></td>
+    <td width="3%" valign="top" align="left"><?php echo date('m');?></td>
+  </tr>
+  <tr>
+    <td width="7%" valign="top"><strong>Fecha:</strong></td>
+    <td width="20%" valign="top"><?php echo Sp::formatFecha('%d/%m/%Y',$ab->fecha)?><?php //echo date('Y-m-d');?></td>
+    <td width="8%" align="left" valign="top"><strong>Importe:</strong></td>
+    <td colspan="2" valign="top"><?php echo $simbolo?> <?php if(!empty($ab->total))echo number_format($ab->total,2,'.','')?> <?php echo $moneda_letras?></td>
+    <td colspan="2" align="right"valign="top"><strong>T/C: </strong></td>
+    <td valign="top"><?php echo $ab->getTestipocambios()->compra;?></td>
+    <td valign="top">&nbsp;</td>
+    <td valign="top">&nbsp;</td>
+  </tr>
+  </thead>
+</table>
+<hr />
+<table width="750" border="0" align="center" cellpadding="0" cellspacing="0" background="">
+ <tr>
+	<th width="59" valign="left">Cta.</th>
+    <th width="84" valign="left">Nº Doc.</th>
+    <th width="91" valign="left">F. Vto.</th>
+    <th width="97" valign="left">Cod Auxiliar</th>
+    <th colspan="4" valign="left">Descripcion</th>
+    <th width="79" valign="left">Cargos</th>
+    <th width="98" valign="left">Abonos</th>
+  </tr>
+  <?php if($ab->voucherformadepagos_id==11){
+	$letra=$LI->getLetraAdelanto($ab->id);
+	$saldo_ant=$LI->getAplicacionesAnteriores($ab->id,$letra->id);	  
+  ?>
+  <tr>
+    <td width="59" valign="left"><em><?php echo $letra->getTesingresos()->cuentaporpagar?></em></td>
+    <td width="84" valign="left"><em><?php echo $letra->getTesingresos()->numero?></em></td>
+    <td width="91" valign="left"><em><?php //echo Sp::formatFecha('%d/%m/%Y',$letra->getTesingresos()->fvencimiento)?><?php echo Sp::formatFecha('%d/%m/%Y',$letra->getTesingresos()->fvencimiento)?></em></td>
+    <td width="97" valign="left"><em><?php echo $letra->getTesingresos()->getTesdatos()->ruc?></em></td>
+    <td colspan="4" valign="left"><em>Saldo de aplicación anterior L/A [<?php echo $letra->gettesingresos()->getTesdatos()->razonsocial?>]</em></td>
+    <td width="79" valign="left"></td>
+    <td width="98" valign="left"><em><?php echo $simbolo?>
+	  <?php if(empty($letra->monto_n))echo number_format($letra->monto-$saldo_ant,2,'.',' '); else echo number_format($letra->monto_n-$saldo_ant,2,'.',' ');?>
+    </em></td>
+  </tr>
+  <?php }?>
+  <?Php 
+  foreach($detalles as $item):
+	$cuenta=$item->plancontable;
+	$fechaabto=NULL;
+	$descripcion=$ab->getTesformadepagosabonos()->nombre.' ('.$ab->getTesdatos()->razonsocial.')';
+	if(!empty($item->correlativo))$num_doc=$item->correlativo;else $num_doc=$item->noperacion;
+	$codauxiliar='-';
+  if($item->tesingresos_id!=0)
+  {
+	 $serie='';
+	 $cuenta=$item->getTesingresos()->cuentaporpagar;
+	  if(!empty($item->getTesingresos()->serie))$serie=$item->getTesingresos()->serie.'-';
+	  $num_doc=$serie.$item->getTesingresos()->numero;
+	  $fechaabto=$item->getTesingresos()->fvencimiento;
+	  $codauxiliar=$item->getTesingresos()->getTesdatos()->ruc;
+	  $descripcion=$item->getTesingresos()->getTesdatos()->razonsocial;
+	   if($ab->tesformadepagosabonos_id==2)$descripcion=$item->getTesingresos()->getTeschequesingresos()->getTesbancos()->nombre.' '.$item->getTesingresos()->getTesdatos()->razonsocial;
+  }
+  if($item->tessalidas_id!=0)
+  {
+	 $serie='';
+	 if(!empty($item->getTessalidas()->cuentaporpagar))$cuenta=$item->getTessalidas()->cuentaporpagar;
+	 if(!empty($item->getTessalidas()->serie))$serie=$item->getTessalidas()->serie.'-';
+	 $num_doc=$serie.$item->getTessalidas()->numero;
+	 $fechaabto=$item->getTessalidas()->fvencimiento;
+	 $codauxiliar=$item->getTessalidas()->getTesdatos()->ruc;
+	 $descripcion=$item->getTessalidas()->getTesdatos()->razonsocial;
+	 /*if($ab->tesformadepagosabonos_id==2)$descripcion=$item->getTessalidas()->getTescuentascorrientes()->getTesbancos()->nombre.' '.$item->getTessalidas()->getTescuentascorrientes()->detalle;*/
+	 if($ab->tesformadepagosabonos_id==13)$descripcion=$item->getTescuentascorrientes()->getTesbancos()->nombre.' '.$item->getTescuentascorrientes()->detalle;
+  }
+  if($item->tessalidasinternas_id!=0)
+  {
+	 $cuenta=$item->getTessalidasinternas()->cuentaporpagar;
+	 $num_doc=$item->getTessalidasinternas()->serie.'-'.$item->getTessalidasinternas()->numero;
+	 $fechavcto=$item->getTessalidasinternas()->fvencimiento;
+	 $codauxiliar=$item->getTessalidasinternas()->getTesdatos()->ruc;
+	 $descripcion=$item->getTessalidasinternas()->getTesdatos()->razonsocial;
+  }
+  ?>
+  <tr>
+    <td valign="top"><?php echo $cuenta?></td>
+    <td valign="top"><?php echo $num_doc?></td>
+    <td valign="top"><?php if(!empty($fechaabto))echo $fechaabto;else echo '-';?></td>
+    <td valign="top"><?php echo $codauxiliar?></td>
+    <td colspan="4" valign="top"><?php echo $descripcion?></td>
+    <td align="right" valign="top">
+      <?php if($item->cargos==1)echo $simbolo.' '.number_format($item->monto,2,'.',' '); else echo '';?>
+    </td>
+    <td align="right" valign="top">
+      <?php if($item->abono==1)echo $simbolo.' '.number_format($item->monto,2,'.',' '); else echo '';?>
+    </td>
+  </tr>
+  <?php endforeach;?>
+  
+  <?php if($ab->voucherformadepagos_id==11){ 
+  ?>
+  <tr>
+    <td width="59" valign="left"><em><?php echo $letra->getTesingresos()->cuentaporpagar?></em></td>
+    <td width="84" valign="left"><em><?php echo $letra->getTesingresos()->numero?></em></td>
+    <td width="91" valign="left"><em><?php echo $letra->getTesingresos()->fvencimiento?></em></td>
+    <td width="97" valign="left"><em><?php echo $letra->getTesingresos()->getTesdatos()->ruc?></em></td>
+    <td colspan="4" valign="left"><em>Saldo [ <?php echo $letra->gettesingresos()->getTesdatos()->razonsocial?>]</em></td>
+    <td width="79" valign="left"></td>
+    <td width="98" valign="left"><em><?php echo $simbolo?>
+      <?php if(empty($letra->monto_n))echo number_format($letra->monto-$saldo_ant-$ab->importe,2,'.',' ') ; else echo number_format($letra->monto_n-$saldo_ant-$ab->importe,2,'.',' ');?>
+    </em></td>
+  </tr>
+  <?php }?>
+  <tr>
+    <td colspan="3">&nbsp;</td>
+    <td colspan="3">&nbsp;</td>
+    <td colspan="3">&nbsp;</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td colspan="3">&nbsp;</td>
+    <td colspan="3">&nbsp;</td>
+    <td colspan="3">&nbsp;</td>
+    <td></td>
+  </tr>  
+  <tr>
+    <td colspan="3">&nbsp;</td>
+    <td colspan="3">&nbsp;</td>
+    <td colspan="3">&nbsp;</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td colspan="3">&nbsp;</td>
+    <td colspan="3">&nbsp;</td>
+    <td colspan="3">&nbsp;</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td colspan="3" align="center"><em>Aprobador por:</em></td>
+    <td colspan="3" align="center"><em>Contador :  </em></td>
+    <td colspan="3" align="center"><em>Recibido por:</em></td>
+    <td>&nbsp;</td>
+  </tr>
+  </table>
+
+<?php echo Form::close()?>
+</div>

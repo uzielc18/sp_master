@@ -1,0 +1,2 @@
+Ubicacion:<br />
+<?php echo Form::dbSelect('prorepuestosuso.proubicacionmaquina_id','nombre',array('proubicacionmaquina',"find",'conditions: promaquinas_id='.$id.' ORDER BY nombre ASC'),'Seleccione una Parte');?>

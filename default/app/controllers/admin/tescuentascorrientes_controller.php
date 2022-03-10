@@ -73,7 +73,7 @@ class TescuentascorrientesController extends AdminController {
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::toAction('');
+        return Redirect::toAction('');
     }
 	public function desactivar($id) {
         try {
@@ -90,7 +90,7 @@ class TescuentascorrientesController extends AdminController {
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::toAction('');
+        return Redirect::toAction('');
     }
 	public function eliminar($id) {
         try {
@@ -113,7 +113,7 @@ class TescuentascorrientesController extends AdminController {
     }
 	public function bancos($id)
 	{
-		View::response('view');
+		View::template(null);
 		$this->id=$id;
 	}
 }

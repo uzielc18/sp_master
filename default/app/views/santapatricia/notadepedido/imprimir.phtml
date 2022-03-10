@@ -1,0 +1,91 @@
+<?php
+$simbolo="S/. ";
+View::content();
+?>
+<div class="card">
+<h1>Vista para imprimir</h1>
+</div>
+<div class="form-actions">
+<?php echo Html::linkAction("listado/Produccion", 'Listado de Pedidos','class="btn btn-secondary"');?> 
+</div>
+<?php echo Sp::imprimir('Pedidos pendientes - ','P');?> 
+<div class="card-body" id="exportar_excel">
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered">
+   <thead>
+    <tr>
+    	<th colspan="4" align="left" valign="top"><?php echo $empresa->razonsocial?></th>
+    	<th width="8%" align="left" valign="top">&nbsp;</th>
+    	<th width="13%" align="left" valign="top">Area:</th>
+    	<th width="24%" colspan="2" align="left" valign="top">Diseño</th>
+    </tr>
+    <tr>
+      <th width="14%" align="left" valign="top"><?php echo date("d/m/Y");?> <?php echo date("H:i:s");?></th>
+      <th colspan="4" align="left" valign="top">&nbsp;</th>
+      <th align="left" valign="top">Pedido:</th>
+      <th colspan="2" align="left" valign="top">Trama</th>
+    </tr>
+    <tr>
+      <th align="left" valign="top">Estado: </th>
+      <th width="27%" align="left" valign="top">Pendiente</th>
+      <th width="4%" align="left" valign="top">&nbsp;</th>
+      <th width="10%" align="left" valign="top">&nbsp;</th>
+      <th align="left" valign="top">&nbsp;</th>
+      <th align="left" valign="top">&nbsp;</th>
+      <th colspan="2" align="left" valign="top">&nbsp;</th>
+    </tr>
+  </thead>
+</table>
+
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0"  class="table table-bordered">
+     <tbody> 
+		  <?php 
+		  		
+			  $codigo_a='NN0000';	
+			  $n=0;
+			  $totalP=0;
+			  $totalC=0;
+			  foreach($detalles as $item){
+				  $n++;
+				$codigo_b=$item->codigo;
+				if($codigo_a!=$codigo_b){
+					?>
+        <thead>
+        <tr>
+	 	  <th colspan="2" align="left" valign="top">Nº. Pedido: <?php echo $item->codigo?></th>
+	 	  <th colspan="3" align="left" valign="top"><span class="description">Articulo: <?php echo $item->tela?></span></th>
+	 	  <th colspan="2" valign="top" align="left">Maquina: M-<?php echo $item->numero?></th>
+	 	</tr> 
+        <tr>
+        <th width="24%" align="left">Material</th>
+        <th width="14%" align="left">Color</th>
+        <th width="9%" align="left">Cantidad ref.</th>
+        <th width="23%" align="right">Nº Bolsa/Caja</th>
+        <th width="7%" align="right">Conos</th>
+        <th width="11%" align="right">Peso</th>
+        <th width="12%" align="center">Lote</th>
+        </tr>
+        </thead>  
+                    
+          <?php	}  ?> 
+		 <tr id="<?php echo $n?>" class="item-row">
+             <td align="left" valign="top" style="border-bottom:#dddddd 1px solid;"><?php echo $item->getTesproductos()->detalle?></td>
+		     <td align="left" valign="top" class="description" style="border-left:#dddddd 1px solid; border-bottom:#dddddd 1px solid;"><?php echo $item->getTescolores()->nombre?></td>
+		 	 <td style="border-left:#dddddd 1px solid; border-bottom:#dddddd 1px solid;" align="left">
+			 <?php if(is_numeric($item->cantidad))echo number_format($item->cantidad,2,'.','');?>
+	 	     <?php $totalC=$totalC+$item->cantidad;?>
+	 	     <?php echo $item->getTesunidadesmedidas()->simbolo?></td>
+        	<td align="right" style="border-left:#dddddd 1px solid; border-bottom:#dddddd 1px solid;"><?php echo $item->getTescajas()->numerodecaja ?></td>
+        	<td align="right" style="border-left:#dddddd 1px solid; border-bottom:#dddddd 1px solid;"><?php echo $item->getTescajas()->conos ?> </td>
+        	<td align="right" style="border-left:#dddddd 1px solid; border-bottom:#dddddd 1px solid;">
+			<?php echo number_format($item->getTescajas()->pesoneto,2,'.','') ?> </td>
+        	<td align="center" style="border-left:#dddddd 1px solid; border-bottom:#dddddd 1px solid;"> <?php echo $item->getTescajas()->lote ?></td>
+	     </tr>
+		  
+		  <?php
+			 $codigo_a=$item->codigo; }/*FIN FOREACH*/?>
+              </tbody>
+	  </table>
+  
+
+  </div>
+</div>

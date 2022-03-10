@@ -1,0 +1,38 @@
+<div class="card">
+    <h1>Proveedores de la Empresa <span><?Php echo Session::get('EMPRESAS_NOMBRE')?></span></h1>
+</div>
+<div class="form-actions">
+    
+    <?php echo Html::linkAction('listado', 'Listado de Clientes','class="btn btn-info"') ?>
+    </div>
+    
+<div class="card-body">
+<div id="ver_resultado"></div>
+<table width="99%" border="0" cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="exportar_excel">
+  <tr>
+  	<th width="17">Nº</th>
+    <th width="109">Cod</th>
+    <th width="226">Razon Social</th>
+    <th width="78">Ruc</th>
+    <th width="251">Direccion</th>
+    <th width="31">Pais</th>
+    <th width="64">Accion</th>
+  </tr>
+<?php $n=0;
+foreach($direcciones as $item){ $n++;?>
+  <tr id="<?php echo $item->id?>">
+  	<td><?php echo $n?></td>
+    <td><?php echo $item->getTesdatos()->codigo?>-<?php echo $item->getTesdatos()->sufijo?></td>
+    <td><?php echo $item->razonsocial?></td>
+    <td><?php echo $item->getTesdatos()->ruc?></td>
+    <td><?php echo $item->direccion?></td>
+    <td><?php echo $item->getTesdatos()->pais?></td>
+    <td><?php echo Html::linkAction("direccionfiscal/$item->id_direccion/$item->id",'Modificar direccion');?></td>
+  </tr>
+<?php }?>
+</table>
+<?php //View::partial('paginators/classic', false, array('page' => $datos ,'url' => Router::get('controller_path').'/listado/'.$campo.'/'.$direccion.'')); ?>
+<div class="form-actions">
+    <?php //echo Html::linkAction('crear/'.$campo.'/'.$direccion.'/'.$page, 'Crear Clientes','class="btn btn-primary"') ?>
+</div>
+</div>

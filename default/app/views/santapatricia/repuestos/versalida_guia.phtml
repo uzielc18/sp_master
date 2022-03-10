@@ -1,0 +1,149 @@
+<div class="card">
+    <h1><em>Ver Salida<span><?php echo Session::get('DOC_NOMBRE')?></span></em></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="card-body">
+<div id="ver_resultado"></div>
+<table width="50%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered">
+  <tr>
+    <th width="27%" align="right">Pedido:</th>
+    <td width="29%"><?php echo $salida->npedido;?></td>
+    <th width="30%" align="right">Serie-Numero:</th>
+    <td width="14%"><?php echo $salida->serie;?>-<?php echo $salida->numero;?></td>
+  </tr>
+  <tr>
+    <th align="right">Moneda:</th>
+    <td><?php echo $salida->getTesmonedas()->nombre;?></td>
+    <th align="right">Fecha de Traslado:</th>
+    <td><?php echo $salida->finiciotraslado;//finiciotraslado?></td>
+  </tr>
+  <tr>
+    <th align="right">Proveedor:</th>
+    <td colspan="3"><?php echo $salida->getTesdatos()->razonsocial?></td>
+  </tr>
+  <tr>
+    <th align="right">Direccion de Entrega:</th>
+    <td colspan="3"><?php echo $salida->direccion_entrega;//finiciotraslado?></td>
+  </tr><?php if(Session::get('DOC_ID')==15){?>
+  <tr>
+    <th align="right">Conductor:</th>
+    <td>
+      <?php echo $prodetalletransportes->getProtransportistas()->nombre;?>
+   </td>
+   <th align="right">Transporte:</th>
+    <td><?php echo $prodetalletransportes->getProtransportes()->modelo;?></td>
+  </tr><?php }?>
+</table>
+<div id="guia">
+<table width="75%" border="0" align="center" cellpadding="0" cellspacing="1" class="table-hover table-bordered">
+  <tr>
+    <th width="46%">Producto</th>
+    <th width="13%">Cantidad</th>
+    <th width="7%">Unidad</th>
+    <th width="23%">P/unitario</th>
+    <th width="11%">Total</th>
+  </tr>
+ <?php 
+  $n=0;
+  $subtotal=0;
+  foreach($detalles as $item){
+	  $n++;
+	  $subtotal=$subtotal+$item->importe;
+	  ?> 
+  <tr id="<?php echo $item->id?>">
+    <td><?php echo $n?>. <?php echo $item->getTesproductos()->detalle?> <?Php echo $item->getTescolores()->nombre?></td>
+    <td align="right"><?php echo $item->cantidad?></td>
+    <td align="center"><?Php echo $item->getTesunidadesmedidas()->simbolo?></td>
+    <td align="right"><?php echo $item->preciounitario?></td>
+    <td align="right"><?php echo $item->importe?></td>
+  </tr>
+  <?php }?>
+  <tr>
+  <th colspan="5">&nbsp;</th>
+    </tr>
+  <?php if(Session::get('DOC_ID')==9){
+  $igv=0;
+  ?>
+  <tr>
+  <th width="46%">&nbsp;</th>
+    <th width="13%">&nbsp;</th>
+    <th width="7%">&nbsp;</th>
+    <th width="23%">Sub-Total</th>
+    <th width="11%" align="right"><?php if(!empty($salida->tescontratos_id))$subtotal=$subtotal*$salida->getTescontratos()->duracion; else $subtotal?><?php echo number_format($subtotal,2,'.','')?></th>
+    </tr>
+    <tr>
+  <th width="46%">&nbsp;</th>
+    <th width="13%">&nbsp;</th>
+    <th width="7%">&nbsp;</th>
+    <th width="23%">A cuenta</th>
+    <th width="11%" align="right"><?php  echo number_format($salida->acuenta,2,'.','')?></th>
+    </tr>
+    <tr>
+  <th width="46%">&nbsp;</th>
+    <th width="13%">&nbsp;</th>
+    <th width="7%">&nbsp;</th>
+    <th width="23%">Total</th>
+    <th width="11%" align="right"><?php if(!empty($salida->totalconigv))$total=$salida->totalconigv; else $total=$subtotal-$salida->acuenta?><?php echo number_format($total,2,'.','')?></th>
+    </tr>
+  <?php 
+  }else{?>
+  <tr>
+  <th width="46%">&nbsp;</th>
+    <th width="13%">&nbsp;</th>
+    <th width="7%">&nbsp;</th>
+    <th width="23%">Total</th>
+    <th width="11%" align="right"><?php if(!empty($salida->tescontratos_id))$subtotal=$subtotal*$salida->getTescontratos()->duracion; else $subtotal?><?php echo number_format($subtotal,2,'.','')?></th>
+    </tr>
+    <tr>
+  <th width="46%">&nbsp;</th>
+    <th width="13%">&nbsp;</th>
+    <th width="7%">&nbsp;</th>
+    <th width="23%"></th>
+    <th width="11%" align="right"><?php if(!empty($salida->igv))$igv=$salida->igv; else $igv=$subtotal*Session::get('IGV')?><?php //echo number_format($igv,2,'.','')
+	$igv=0;?></th>
+    </tr>
+    <tr>
+  <th width="46%">&nbsp;</th>
+    <th width="13%">&nbsp;</th>
+    <th width="7%">&nbsp;</th>
+    <th width="23%"></th>
+    <th width="11%" align="right"><?php if(!empty($salida->totalconigv))$total=$salida->totalconigv; else $total=$subtotal+$igv?><?php //echo number_format($total,2,'.','')
+	?></th>
+    </tr>
+    <?php }?>
+</table>
+</div> 
+<?php	
+echo $totalenletras=strtoupper(NumerosLetras::NL($total,$salida->getTesmonedas()->nombre));
+?>
+<?php //echo nl::numerosALetras(3.141516)?>
+<?php echo Form::open(NULL,'POST','class="form-inline"')?>
+<?php echo Form::hidden('salida.id')?>
+<?php echo Form::hidden('salida.aclusuarios_id')?>
+<?php echo Form::hidden('salida.tesmonedas_id')?>
+<?php echo Form::hidden('salida.tesdatos_id')?>
+<?php echo Form::hidden('salida.tesdocumentos_id')?>
+<?php echo Form::hidden('salida.testipocambios_id')?>
+<?php echo Form::hidden('salida.acuenta')?>
+<?php echo Form::hidden('salida.igv','',$igv)?>
+<?php echo Form::hidden('salida.totalconigv','',$total)?>
+<?php echo Form::hidden('salida.totalenletras','',$totalenletras)?>
+<?php echo Form::hidden('salida.estadosalida','','Pendiente')?>
+<?php if($salida->estadosalida=='Editable'){?><button type="submit" class="btn btn-primary">Finalizar</button> <?php echo Html::linkAction('agregardetalles_guia','Editar','class="btn"')?><?Php }else
+{?>
+<?php echo Html::linkAction('listado_guias','Listado','class="btn"')?> <?php //echo Html::linkAction('versalida_i','Imprimir','class="btn"')?>
+<?php }?>
+<?php echo Form::close();?>
+<button onclick="myFunction()" class="btn btn-info"> IMPRIMIR </button> 
+<?php 
+$hrf='facturas';
+if(Session::get('DOC_ID')==15)$hrf='guias';
+?>
+<script>
+function myFunction() {
+    window.open("http://"+document.domain+"/imprimir/<?php echo $hrf?>", "_blank", "toolbar=NO, scrollbars=yes, resizable=yes, top=100, left=250, width=600, height=400");
+}
+</script>
+</div>

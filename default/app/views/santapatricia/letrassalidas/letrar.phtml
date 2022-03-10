@@ -1,0 +1,64 @@
+<?php switch ($letra->getTessalidas()->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+
+View::content();?>
+<button onclick="myFunction_l()" class="btn btn-info"> IMPRIMIR </button> <?php echo Html::linkAction('','Regresar <i class="icon-hand-left"></i>','class="btn"')?>
+
+<div class="card-body">
+<table width="93%" border="0" cellspacing="0" align="left">
+  <tr>
+   
+    <td width="123" height="41" align="center">&nbsp;</td>
+    <td width="68" align="lefth"><?php echo $letra->numerodeletra?><?Php if(!empty($letra->nrenovacion))echo $letra->nrenovacion; else echo "00";?></td>
+    <td width="82" align="lefth"><?php echo $letra->getFacturas($letra->factura_id)?></td>
+	<td width="100" align="lefth"><?php //echo $letra->getTessalidas()->getTesdatos()->distrito_ant?>LIMA</td>
+	<td width="20" align="lefth" valign="bottom"><?php $FE=explode('-',$letra->getTessalidas()->femision); echo $FE[0]?></td>
+	<td width="20" align="lefth" valign="bottom"><?php echo $FE[1]?></td>
+	<td width="23" align="lefth" valign="bottom"><?php echo $FE[2]?></td>
+	<td width="20" align="lefth" valign="bottom"><?php $FV=explode('-',$letra->getTessalidas()->fvencimiento); echo $FV[0]?></td>
+	<td width="18" align="lefth" valign="bottom"><?php echo $FV[1]?></td>
+	<td width="17" align="lefth" valign="bottom"><?php echo $FV[2]?></td>
+    <td width="64" align="lefth" valign="bottom"><?php echo $simbolo?>* <?php echo number_format($letra->getTessalidas()->totalconigv,2,'.',',')?></td>
+  </tr>
+</table>
+<br />
+<table width="95%" border="0" cellspacing="1">
+  <tr>
+    <td width="19%" align="center"><p>&nbsp;</p></td>
+    <td width="81%" align="left" valign="bottom"><?php echo $texto=NumerosLetras::NL($letra->getTessalidas()->totalconigv,$letra->getTessalidas()->getTesmonedas()->nombre);?> -----</td>
+    </tr>
+</table>
+<br />
+<table width="705" border="0" cellspacing="1">
+	<tr>
+		<td width="202">&nbsp;</td>
+		<td colspan="2"><?php echo $letra->getTessalidas()->getTesdatos()->razonsocial?></td>
+		<td width="262">&nbsp;</td>
+	</tr>
+		<tr>
+		<td width="202" height="26">&nbsp;</td>
+		<td width="168"><?php echo $letra->getTessalidas()->getTesdatos()->ruc?></td>
+		<td width="60"><?php  echo $letra->getTessalidas()->getTesdatos()->telefono;?></td>
+		<td width="262">&nbsp;</td>
+	</tr>
+		<tr>
+		<td width="202">&nbsp;</td>
+		<td colspan="3"><?php  echo $letra->getTessalidas()->getTesdatos()->direccion;?> <?php //if(empty($letra->getTessalidas()->getTesdatos()->distrito))echo $letra->getTessalidas()->getTesdatos()->distrito_ant ;else $letra->getTessalidas()->getTesdatos()->distrito ?></td>
+	</tr>
+</table>
+</div>
+<?php 
+echo $factura_id=$letra->factura_id;
+$hrf_l='letras';?>
+<script>
+function myFunction_l() {
+    window.open("http://"+document.domain+"/imprimir/<?php echo $hrf_l?>/<?php echo $factura_id?>/<?php echo $letra->$letra->getTessalidas()->tesdatos_id?>", "_blank", "toolbar=NO, scrollbars=yes, resizable=yes, top=100, left=250, width=600, height=400");
+}
+</script>
+

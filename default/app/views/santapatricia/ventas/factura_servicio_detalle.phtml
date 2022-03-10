@@ -1,0 +1,151 @@
+<?php 
+$monedas= $salida->tesmonedas_id;
+switch ($monedas)
+{
+	case 1: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES'; break;
+	case 2: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 4: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
+	case 5: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 0: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
+}
+
+?>
+
+<div class="card">
+    <h1><em><?php $titulos='Factura por Servicios !';if(Session::get('DOC_ID')==15)$titulos='Guia por Servicios !';echo $titulos?><span><?php echo Session::get('DOC_NOMBRE')?></span></em></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+
+<div class="form-actions">
+<?php //echo Html::linkAction("facturas/7", 'Regresar ','class="btn"') ?>
+</div>
+<div class="card-body">
+<table width="75%" border="0" align="center" cellpadding="0" cellspacing="1">
+  <tr>
+    <th width="17%" align="left">Cliente:</th>
+    <th width="52%" align="left"><?php echo $salida->getTesdatos()->razonsocial?></th>
+    <th width="18%" align="left">Nº Documento:</th>
+    <th width="13%"><?php echo $salida->serie?>-<?php echo $salida->numero?></th>
+  </tr>
+  <tr>
+    <th align="left">Direccion:</th>
+    <th align="left"><?php echo $salida->getTesdatos()->direccion?></th>
+    <th align="left">F. de Emision:</th>
+    <th><?php echo $salida->femision?></th>
+  </tr>
+  <tr>
+    <th align="left">Referencia:</th>
+    <th colspan="3" align="left"><?php echo $salida->glosa?></th>
+    </tr>
+</table>
+<hr />
+<?php 
+if(Session::get('DOC_ID')==15){
+
+echo Form::open();
+?>
+
+<table width="75%" border="0" align="center" cellpadding="0" cellspacing="1">
+  <tr>
+    <th colspan="6" align="left">Confeccion de:<?php echo Form::text('detalle.tesproductos_id')?></th>
+    <th width="15%" align="left">Cantidad:<br /><?php echo Form::text('cantidad','class="qty" size="6"')?></th>
+    <th width="20%" align="left">Precio:<br /><?php echo Form::text('preciounitario','class="qty" size="6"')?></th>
+    <th width="13%" align="left"><?php echo Form::submit('Ingresar','class="btn btn-primary"')?></th>
+  </tr>
+</table>
+<?php echo Form::close();
+}?>
+<hr />
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="1">
+  <tr>
+    <th colspan="6" align="left">Concepto</th>
+    <?php if(Session::get('DOC_ID')==15)echo '<th width="22%" align="left">Cantidad</th>';?>
+    <th width="34%" align="left">Importe</th>
+  </tr>
+  <?php 
+  $n=0;
+  $total=0;
+  foreach($detalles as $item){
+	$n++;
+	  ?>
+  <tr id="<?php echo $item->id?>">
+    <td colspan="6" align="left"><?php if(Session::get('DOC_ID')!=15)echo $n.'. '.nl2br($item->concepto);else echo $n.'. '.$item->getTesproductos()->detalle.' '.$item->getTesproductos()->nombre;?></td>
+    <?php if(Session::get('DOC_ID')==15)echo '<td width="22%" align="left">'.$item->cantidad.'</td>';?>
+    <td>
+	
+	<?php echo $simbolo?><?php 
+	$total=$total+$item->importe;
+	echo number_format($item->importe,2,'.','');?></td>
+  </tr>
+  <?php }?>
+  <tr>
+    <td width="4%">&nbsp;</td>
+    <td width="14%">&nbsp;</td>
+    <td width="5%">&nbsp;</td>
+    <td width="13%">&nbsp;</td>
+    <td width="19%">&nbsp;</td>
+    <td width="11%">Sub total</td>
+    <td><?php echo $simbolo?><?php echo number_format($total,2,'.','');?></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>IGV(% <?php echo Session::get('IGV')*100?>.00)</td>
+    <td><?php echo $simbolo?><?php $igv=$total*(Session::get('IGV'));echo number_format($igv,2,'.','')?></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>TOTAL</td>
+    <td><?php echo $simbolo?><?php $TOTAL=$total+$igv;echo number_format($TOTAL,2,'.','');?></td>
+  </tr>
+</table>
+
+<?php echo Form::open()?>
+<?php echo $texto=NumerosLetras::NL($total+$igv,$moneda_letras);?>
+<?php echo Form::hidden('salida.id');?>
+<?php echo Form::hidden('salida.tesmonedas_id');?>
+<?php echo Form::hidden('salida.aclusuarios_id');?>
+<?php echo Form::hidden('salida.tesdocumentos_id');?>
+<?php echo Form::hidden('salida.testipocambios_id');?>
+<?php echo Form::hidden('salida.tesdatos_id');?>
+<?php echo Form::hidden('salida.estadosalida','','Editable');?>
+<?php echo Form::hidden('salida.totalconigv','',$TOTAL);?>
+<?php echo Form::hidden('salida.igv','',$igv);?>
+<?php echo Form::hidden('salida.totalenletras','',$texto);?> - 
+<?php echo Form::submit('Siguente','class="btn btn-primary"')?><?php echo Html::linkAction('listado_servicio/',' Volver','class="btn btn-secondary"')?><?php echo Html::linkAction('factura_servicio/'.Session::get('SALIDA_ID'),' Editar esta factura','class="btn btn-primary"')?>
+<?php echo Form::close();?>
+</div>
+<?php
+//echo Session::get('mostrar');
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<script type="text/javascript">
+
+$(document).ready(function()
+{
+	
+	
+	$("#detalle_tesproductos_id").tokenInput("<?php echo "/santapatricia/produccion/producto/7"?>", 
+		{
+			
+		tokenLimit: 1,
+		minChars: 1,preventDuplicates: true,
+		onAdd: function (item) {
+			//alert(item.id);
+			$("#detalle_tesproductos_id").val(item.id);
+		  },
+		onDelete: function (item) {
+		}
+	});
+  
+});
+</script>

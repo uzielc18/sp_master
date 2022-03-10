@@ -1,0 +1,17 @@
+<?php
+if (!isset($f) || empty($f)) {
+ exit();
+}
+$root = $ruta;
+$file = basename($f);
+$path =$root.'/'.$file."";
+$type = '';
+ 
+ header("Content-disposition: attachment; filename=\"$file\"");
+ header("Content-Transfer-Encoding: binary");
+ header("Content-Length: ");
+ // Descargar archivo
+ readfile($path);
+
+ 
+?>

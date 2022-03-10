@@ -1,0 +1,94 @@
+
+<div class="card">
+    <h1>Estadisticas de ventas</h1>
+</div>
+<div class="form-actions">
+<?php echo Menu::menuReportes($action_name);?>
+</div>
+<div class="menu">
+<ul><li><a>
+ Año 
+<select id="anio">
+<?php
+for($i=2011;$i<=2030;$i++)
+{
+	$selec='';
+	if($anio==$i){
+	$selec=' selected="selected"';
+	}
+	echo '<option value="'.$i.'" '.$selec.'>'.$i.'</option>';
+}
+?>
+</select> 
+</a></li></ul>
+
+<ul>
+<li><?php echo Html::linkAction('ventasmes',"Volver a ventas",'')?></li>
+</ul>
+
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div style="clear:both"></div>
+<?php echo Sp::imprimir('Ventas anual - ','P');?>
+
+<div class="card-body">
+<table id="exportar_excel" width="100%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+  <caption>ESTADICTICAS DE VENTAS <?pHP echo $anio?></caption>
+  <tr>
+    <th width="3%" align="left">ITEM</th>
+    <th width="14%" align="left">RUC<span class="span_float no_imprimir"><?php echo Html::linkAction('ventas_anual/'.$anio.'/ruc/ASC/','<i class="icon-arrow-up"></i>','');?>
+    	<?php echo Html::linkAction('ventas_anual/'.$anio.'/ruc/DESC/','<i class="icon-arrow-down"></i>','');?></span></th>
+    <th width="42%" align="left">RAZON SOCIAL<span class="span_float no_imprimir"><?php echo Html::linkAction('ventas_anual/'.$anio.'/razonsocial/ASC/','<i class="icon-arrow-up"></i>','');?>
+    	<?php echo Html::linkAction('ventas_anual/'.$anio.'/razonsocial/DESC/','<i class="icon-arrow-down"></i>','');?></span></th>
+    <?Php 
+	if(Auth::get("id")==3){
+	?>    
+    <th>Guias</th>
+    <th>RUC</th>
+    <?php 
+	}
+	?>
+    <th width="15%" align="right">IMPORTE EN SOLES <span class="span_float no_imprimir"><?php echo Html::linkAction('ventas_anual/'.$anio.'/total/ASC/','<i class="icon-arrow-up"></i>','');?>
+    	<?php echo Html::linkAction('ventas_anual/'.$anio.'/total/DESC/','<i class="icon-arrow-down"></i>','');?></span></th>
+  </tr>
+  <?php 
+  $n=0;
+  foreach($ventas as $venta):
+  $n++;
+  ?>
+  <tr title="id <?php echo $venta->id ?>">
+    <td style=" border-bottom:1px solid #999;" align="left"><?php echo $n?></td>
+    <td style=" border-bottom:1px solid #999;" align="left"><?php echo $venta->ruc?></td>
+    <td style=" border-bottom:1px solid #999;" ><?php echo $venta->razonsocial?> <span class="no_imprimir"><?Php if(Auth::get("id")==3){echo Html::linkAction("ventas_anual_detalle/$anio/$venta->id",'VER');}?></span></td>
+    <?Php 
+	if(Auth::get("id")==3){
+	?>
+    <td style=" border-bottom:1px solid #999;" align="right"><?php echo number_format($venta->venta_interna,2,'.',',');
+	//echo $venta->total?></td>
+    <td style=" border-bottom:1px solid #999;" align="right"><?php echo number_format($venta->venta_ruc,2,'.',',');
+	//echo $venta->total?></td>
+    <?php 
+	}
+	?>
+    <td style=" border-bottom:1px solid #999;" align="right"><?php echo number_format($venta->total,2,'.',',');
+	//echo $venta->total?></td>
+  </tr>
+  <?php endforeach;?>
+</table>
+
+
+<div id="reporte">
+
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#anio").change(function(event){
+    	var id = $("#anio").find(':selected').val();
+		location.href = '/<?php echo $module_name?>/reportes/ventas_anual/'+id;
+     });
+	
+});
+</script>
+</div>

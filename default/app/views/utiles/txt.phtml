@@ -1,0 +1,69 @@
+
+<?php
+$showdate=true;
+$showpage=true;
+$txtheader='Santa patricia';
+$txtfoot='admin/santapatricia';
+$align=NULL;
+$filename=$nombre;
+$font =			'Times New Roman'; //font name
+$fontsize =			'9.0pt'; //font size
+$fontstyle =		'normal'; //italic, obliquie or normal
+$fontweight =		'normal'; //bold or normal
+?><html>
+<head>
+<?php 
+header("Content-type: application/vnd.ms-word");
+header("Content-Disposition: attachment;Filename={$filename}.doc");
+?>
+<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+<style>
+body
+{
+	padding:0px !important;
+	border:0px !important;
+}
+div.page
+{
+	padding-top:0in;
+	mso-style-unhide:no;
+	mso-style-qformat:yes;
+	mso-style-parent:'';
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:<?Php echo $fontsize?>;
+	font-family:<?php echo $font?>,'serif';
+	mso-fareast-font-family:<?php echo $font?>;
+}
+table
+{
+	padding-top:0in;
+	mso-style-unhide:no;
+	mso-style-qformat:yes;
+	mso-style-parent:'';
+	margin:0in;
+	font-size:<?Php echo $fontsize?> !important ;
+	font-family:<?php echo $font?>,'serif' !important ;
+	mso-fareast-font-family:<?php echo $font?> !important ;	
+}
+table tr td
+{
+	/*border-left:#333 solid 1px !important;*/
+	padding:1px !important;
+}
+.header
+{
+	color:#666666f !important;font:9px !important;
+}
+</style>
+</head>
+<body style="padding:0px; border:0px;">
+<div class="header">Textil Santa Patricia S. A. <?php echo date('H:i:s');?></div> 
+<?php 		
+echo $p;
+?>    
+</body>
+</html>
+
+

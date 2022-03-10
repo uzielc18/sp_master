@@ -1,0 +1,23 @@
+<?php View::content()?>
+<?php echo $vale?>
+<table width="100%" border="0" cellspacing="1" cellpadding="0">
+  <tr>
+    <th width="19%">Cuenta General</th>
+    <th width="10%">Nº Docuemnto</th>
+    <th width="14%">Fecha Vcto</th>
+    <th width="14%">Codigo Auxiliar</th>
+    <th width="14%">Descripcion</th>
+    <th width="14%">Cargo</th>
+    <th width="15%">Abono</th>
+  </tr>
+  <tr>
+    <td width="19%"><?php echo $tesdetalles->plancontable;
+	 echo Form::hidden('tesdetalles.plancontable'); ?></td>
+    <td width="10%"><?php echo $salida->numero?></td>
+    <td width="14%"><?php echo $salida->fvencimiento?></td>
+    <td width="14%">-</td>
+    <td width="14%"><?php echo $salida->getTesdatos()->razonsocial;?></td>
+    <td width="14%">-</td>
+    <td width="15%"><?php echo number_format($tesdetalles->monto,2,'.',' '); ?></td>
+  </tr>
+</table>

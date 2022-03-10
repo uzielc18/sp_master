@@ -1,0 +1,213 @@
+<?php
+View::content();
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<div class="card">
+<h1>LISTADO DE ROLLOS</h1>
+</div>
+<div class="form-actions" title="Regresar!">
+<?php echo Menu::menuReportes($action_name);?>
+</div>
+<?php echo Sp::imprimir('Rollos '.$e.' - ','P');?>
+<div class="span12">
+<div class="span6">
+	<div class="input-prepend input-append">
+	  <span class="add-on">Stock por estado de </span>
+	<?php echo Form::dbSelect('estado','estadorollo',array('prorollos','getEstados'),'Seleccione el estado del rollo','',$e)?>
+
+	<a href="javascript:;" id="ver" class="btn">Ver</a>
+	</div>
+	<?php if($e=='VENTA' || $e=='Sin procesos'){?>
+		<div class="input-prepend input-append">
+		  <div class="span3">Buscar un producto:</div>
+		  	<div class="span7">
+		 	<?php echo Form::text('producto','class="span7"');?>
+			</div>
+		</div>
+		<?php }?>
+</div>
+<div class="span6">
+	<?php if($e=='Sin procesos' || $e=='TERMINADO' || $e=='TR'){}else{
+		echo '<div class="input-prepend input-append">
+	  <span class="add-on">Ancho </span>';
+		echo Form::dbSelect('anchos','ancho',array('prorollos','getMetros',$e),'Seleccione el ancho','',$ancho);
+		?>
+
+	<a href="javascript:;" id="ver-anchos" class="btn">Filtrar</a>
+	</div>
+	<?php }?>
+	<br>
+	<a href="javascript:;" id="ver-ocultar" class="btn">Mostrar/Ocultar Totales</a>
+</div>
+</div>
+
+
+
+
+
+
+<div class="span12">
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar en la tabla :</span>
+ <input type="search" id="txtBuscar" autofocus="" placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+</div>
+<br />
+<div class="card-body"  id="exportar_excel">
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered">
+	<tr>
+      <th align="center">Orden</th>
+      <th align="center">Nº</th>
+      <th align="center">Articulo</th>
+      <th align="left">Descripcion</th>
+      <th align="left">Piezza</th>
+      <th align="left">Fecha</th>
+      <th align="center">Metros</th>
+      <th align="center">Kilos</th>
+      <th align="center">Ancho</th>
+      <th align="center">Ancho Util</th>
+      <th align="center">Ubi.</th>
+    </tr>
+    <?php 
+	$contador=0;
+	$a=0;
+	/*contador para la suma */
+	$n=0;
+	$m=1;
+	/*suma de totales*/
+	$total_kilos=0;
+	$total_metros=0;
+	$final='Total';
+	foreach($rollos as $rollo){
+		$contador++;
+		$maximo=count($rollos);
+		$b=$rollo->id;
+		$articulo=$rollo->codigo_ant;
+		if(empty($rollo->codigo_ant))$articulo=$rollo->codigo;
+		if($a!=$b){$n++;$m=1;}else{$m++;}
+	//PARA MOSTRAR EL TOTAL ANTERIOR
+if($a!=$b)
+{
+		if($a!=0)
+		{?>
+	<tr class="total">
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <th><?php echo $final;?></th>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td style="border-top:#333 1px solid;" align="right"><?php echo number_format($total_metros,2,'.','')?></td>
+      <td style="border-top:#333 1px solid;" align="right"><?php echo number_format($total_kilos,2,'.','')?></td>
+      <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+    </tr>
+    <tr class="total">
+      <td colspan="11">&nbsp;</td>
+    </tr>
+	
+<?php $total_metros=0;$total_kilos=0;
+	}
+}	
+		?>
+    <tr>
+      <td><?php echo $contador?></td>
+      <td><?php echo $n?>.<?Php echo $m;?></td>
+      <td><?Php //echo $a.'=='; echo $b.'/**/'?><?php if($b)echo $articulo?></td>
+      <td><?php if($b)echo $rollo->descripcion;echo ' Color (';if(!empty($rollo->color_venta)){echo $rollo->color_venta;}else{echo $rollo->estadorollo;}echo ')';?><?Php //echo $rollo->estadorollo;?></td>
+      <td><?php echo $rollo->piezza?>-<?php echo empty($rollo->tescolores_id) ? '': $rollo->getTescolores()->codigo;?>-<?php echo $rollo->calidad?>-<?php echo $rollo->nventa?></td>
+      <td><?php echo Sp::formatFecha('%d/%m/%y',$rollo->fecha)?></td>
+      <td align="right"><?php if(!empty($rollo->metros))echo number_format($rollo->metros,2,'.','')?></td>
+      <td align="right"><?php if(!empty($rollo->kilos))echo number_format($rollo->kilos,2,'.','')?></td>
+      <td align="right"><?php if(!empty($rollo->ancho))echo number_format($rollo->ancho,2,'.','')?></td>
+      <td align="right"><?php if(!empty($rollo->anchoutil))echo number_format($rollo->anchoutil,2,'.','')?></td>
+      <td align="left" valign="top"><?php echo $rollo->ubicacion?></td>
+    
+
+    </tr>
+    <?Php 
+	$total_kilos=$total_kilos+$rollo->kilos;
+	$total_metros=$total_metros+$rollo->metros;
+	?>
+    <?Php if($contador==$maximo){?>
+    <tr>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td><h5><?php echo $final;?></h5></td>
+      <td>&nbsp;</td>
+	  <td>&nbsp;</td>
+      <td style="border-top:#333 1px solid;" align="right"><?php echo number_format($total_metros,2,'.','')?></td>
+      <td style="border-top:#333 1px solid;" align="right"><?php echo number_format($total_kilos,2,'.','')?></td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <?php }?>
+    <?Php if($a!=$b)
+	{
+	$a=$rollo->id;
+	$final='TOTAL '.$rollo->descripcion;
+	?>
+	<?php 
+	}
+	
+	//$m++;
+	
+	}?>
+    
+  </table>
+</div>
+
+<script type="text/JavaScript">
+$(window).load(function(){
+  // acá pones el código para ocultar el div de carga
+});
+$(document).ready(function(){
+        $("#ver").click(function(event){
+            var estado = $("#estado").find(':selected').val();
+			location.href = '/<?php echo $module_name?>/reportes/listado_rollos/'+estado;
+        });
+        $("#ver-anchos").click(function(event){
+            var estado = $("#estado").find(':selected').val();
+            var anchos = $("#anchos").find(':selected').val();
+			location.href = '/<?php echo $module_name?>/reportes/listado_rollos/'+estado+'/'+anchos;
+        });
+    	$('#txtBuscar').on('search',function(){
+		//le decimos a la funcion que busque en la tabla tblTabla el
+		//valor que contiene el campo actual
+		$.fntBuscarEnTabla($(this).val(),'exportar_excel');
+		
+	});
+	$("#ver-ocultar").click(function(event)
+	{
+		$(".total").toggle();
+	})
+	
+});
+</script>
+<?php if($e=='VENTA' || $e=='Sin procesos'){?>
+<script type="text/JavaScript">
+$(document).ready(function(){
+	var data_ant;
+   $("#producto").tokenInput("<?php echo "/santapatricia/produccion/producto/1"?>", 
+		{
+			
+		tokenLimit: 1,
+		minChars: 1,preventDuplicates: true,
+		onAdd: function (item) {
+			data_ant=$("#exportar_excel").html();
+			//alert(item.id);
+			$.get( "/<?Php echo $module_name?>/<?Php echo $controller_name?>/listado_rollos_venta/"+item.id,function(data)
+			{
+				//alert(data);
+				$("#exportar_excel").html(data);
+			});
+			
+		  },
+		onDelete: function (item) {
+			$("#exportar_excel").html(data_ant);
+		}
+	});
+});
+</script>
+<?php }?>

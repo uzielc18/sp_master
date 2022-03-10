@@ -1,0 +1,148 @@
+<?php
+View::content();
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<script type="text/javascript">
+        $(document).ready(function() {
+            $("#prod").tokenInput("<?php echo "/".$module_name."/transportistas/resultados"?>",
+			{ 
+				tokenLimit: 1,minChars: 1,
+                onAdd: function (item) {
+                   var VAL=item.id;
+				   $("#datos_id").val(VAL['id']);
+				   $("#datos_plareas_id").val(VAL['plareas_id']);//datos_plcargos_id
+				   $("#datos_placargos_id").val(VAL['placargos_id'])
+				   $("#datos_nombre").val(VAL['nombre']);
+				   $("#datos_appaterno").val(VAL['appaterno']);
+				   $("#datos_apmaterno").val(VAL['apmaterno']);
+				   $("#datos_dni").val(VAL['dni']);
+				   $("#datos_correo").val(VAL['correo']);
+				   $("#datos_telefono").val(VAL['telefono']);
+				   $("#datos_celular").val(VAL['celular']);
+				   $("#datos_direccion").val(VAL['direccion']);
+				   $("#datos_fnacimiento").val(VAL['fnacimiento']);
+                },
+                onDelete: function (item) {
+				   $("#datos_id").val('');
+				   $("#datos_plareas_id").val('');
+				   $("#datos_placargos_id").val('')
+				   $("#datos_nombre").val('');
+				   $("#datos_appaterno").val('');
+				   $("#datos_apmaterno").val('');
+				   $("#datos_dni").val('');
+				   $("#datos_correo").val('');
+				   $("#datos_telefono").val('');
+				   $("#datos_celular").val('');
+				   $("#datos_direccion").val('');
+				   $("#datos_fnacimiento").val('');
+                }
+            });
+		});
+        </script>
+<div class="card">
+    <h1><?php echo $titulo?></h1>
+</div>
+<div class="card-body">
+<strong>Si ya creó el Personal puede buscarlo aqui</strong>
+<br /><input name="prod" id="prod" type="text">
+<hr />
+<?php echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
+<?php 
+echo Form::hidden('datos.id');
+echo Form::hidden('transportistas.acldatos_id');
+echo Form::hidden('transportistas.id');
+?>
+        <div class="control-group">
+            <label for="datos_aclempresas_id">Empresa* : </label>
+            <div class="controls">
+                <?php echo Form::text('EMP','size="40" readonly="readonly"',$empresas->nombre) ?>
+            </div>
+        </div>
+        <div class="control-group" id="areas">
+        <label for="datos_plareas_id">Areas* : </label>
+<?php echo Form::dbSelect('datos.plareas_id', 'nombre',array('plareas','find','conditions: activo=1 and aclempresas_id='.$empresa)) ?>
+        </div>
+        <div class="control-group">
+        <label for="datos_placargos_id">Cargos* : </label>
+        <?php echo Form::dbSelect('datos.placargos_id', 'nombre',array('placargos','find','conditions: activo=1 and aclempresas_id='.$empresa),'Seleccione Gargo','',17) ?>
+        </div>
+            <div class="control-group">                
+                <label for="datos_nombres">Nombre Completo* : </label>
+                <div class="controls">
+                    <?php echo Form::text('datos.nombre','size="40"') ?>
+                </div>
+            </div>
+            <div class="control-group">                
+                <label for="datos_appaterno">Apellido Paterno* : </label>
+                <div class="controls">
+                    <?php echo Form::text('datos.appaterno','size="40"') ?>
+                </div>
+            </div>
+            <div class="control-group">                
+                <label for="datos.apmaterno">Apellido materno* : </label>
+                <div class="controls">
+                    <?php echo Form::text('datos.apmaterno','size="40"') ?>
+                </div>
+            </div>
+            <div class="control-group">                
+                <label for="transportistas.ruc">Ruc:
+                <div class="controls">
+				<?php echo Form::text('transportistas.ruc','size="30"') ?><?php //echo Form::text('datos.direccion','size="60"') ?>
+                </div>
+            </div>
+            <div class="control-group">                
+                <label for="datos_correo">Correo Electronico* : </label>
+                <div class="controls">
+                    <?php echo Form::text('datos.correo','size="40"') ?>
+                </div>
+            </div>
+            <div class="control-group">                
+                <label for="datos.telefono">Telefonos : </label>
+                <div class="controls">
+                    <?php echo Form::text('datos.telefono','size="40"') ?>
+                </div>
+            </div>
+            <div class="control-group">                
+                <label for="datos.celular">Celulares : </label>
+                <div class="controls">
+                    <?php echo Form::text('datos.celular','size="40"') ?>
+                </div>
+            </div>
+            <div class="control-group">                
+                <label for="datos.fnacimiento">Fecha Nacimiento : </label>
+                <div class="controls">
+                <?php
+				 echo Calendar::selector('datos.fnacimiento','')?>
+                
+                </div>
+            </div>
+            <div class="control-group">                
+                <label for="transportistas.numerobrevete">Direccion:
+                <div class="controls">
+				<?php echo Form::text('transportistas.direccion','size="30"') ?><?php //echo Form::text('datos.direccion','size="60"') ?>
+                </div>
+            </div>
+            <div class="control-group">                
+                <label for="transportistas.numerobrevete">Numero de Brevete : </label>
+                <div class="controls">
+				<?php echo Form::text('transportistas.numerobrevete','size="30"') ?>
+                </div>
+            </div>
+            <div class="control-group">                
+                <label for="transportistas.categoria">Categoria : </label>
+                <div class="controls">
+				<?php echo Form::text('transportistas.categoria','size="30"') ?>
+                </div>
+            </div>
+            <div class="control-group">                
+                <label for="transportistas.categoria">Fecha de Caducidad : </label>
+                <div class="controls">
+				<?php echo Calendar::text('transportistas.fechacadiucidad') ?>
+                </div>
+            </div>
+            <div class="form-actions">
+                <?php echo Form::submit($boton.' Cambios', 'name="datos_personas" class="btn btn-primary"') ?>
+                <?php echo Html::linkAction('listado', 'Cancelar', 'class="btn"') ?>
+            </div>
+        <?php echo Form::close() ?>
+</div>

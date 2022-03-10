@@ -1,0 +1,110 @@
+<?php 
+echo $vc->voucherformadepagos_id;
+switch ($vc->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+switch ($vc->voucherformadepagos_id)
+{
+	case 1: $url='efectivo/1'; break;
+	case 2: $url='cheques/2/'.$salida_id; break;
+	case 3: $url='letras/3/0'; break;
+	case 4: $url=''; break;
+	case 5: $url='bancos/6'; break;
+	case 6: $url='bancos/5'; break;
+	case 7: $url=''; break;
+	case 8: $url='bancos/8'; break;
+	case 9: $url=''; break;
+	case 11: $url='aplicacion/11/0'; break;
+	case 12: $url='cuotas/12/0'; break;
+	case 13: $url='cheques/2/'.$salida_id; break;
+  case 14: $url='efectivo/14'; break;
+}
+?>
+<div class="card">
+<h1>Ingresar detalles del Vaucher</h1>
+</div>
+<?php View::content();?> 
+<div class="card-body">
+  <table id="vauchers" width="86%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped"> 
+  <caption>Aun, no ha grabado este Baucher!</caption>
+  <tr>
+    <td colspan="12" align="center"><?php echo $empresa->razonsocial?></td>
+    
+  </tr>
+
+  <tr class="card">
+    <th align="left">Fecha:</th>
+    <th align="left">Nº Documento</th>
+    <th align="left">F. Vto.</th>
+    <th align="left">Cod Auxiliar</th>
+    <th colspan="4" align="left">Descripcion</th>
+    <th align="left">Cargos</th>
+    <th align="left">Abonos</th>
+    <th width="5%">Acc</th>
+    <td width="0%"></td>
+  </tr>
+  <?Php 
+  $t_abono=0;
+  $t_cargo=0;
+  $doc='';
+  $i=0;
+  foreach($detalles as $item):
+  $i++;
+	$cuenta=$item->plancontable;
+	$fechavcto=NULL;
+	$descripcion=$vc->getVoucherformadepagos()->nombre;
+	$num_doc=$item->correlativo;
+	$codauxiliar='';
+  if($item->tesingresos_id!=0)
+  {
+	  $cuenta=$item->getTesingresos()->cuentaporpagar;
+	  $num_doc=$item->getTesingresos()->serie.'-'.$item->getTesingresos()->numero;
+	  $fechavcto=$item->getTesingresos()->fvencimiento;
+	  $codauxiliar=$item->getTesingresos()->getTesdatos()->ruc;
+	  $descripcion=$item->getTesingresos()->getTesdatos()->razonsocial;
+  }
+  if($item->tessalidas_id!=0)
+  {
+	 $cuenta=$item->getTessalidas()->cuentaporpagar;
+	 $num_doc=$item->getTessalidas()->serie.'-'.$item->getTessalidas()->numero;
+	 $fechavcto=$item->getTessalidas()->fvencimiento;
+	 $codauxiliar=$item->getTessalidas()->getTesdatos()->ruc;
+	 $descripcion=$item->getTessalidas()->getTesdatos()->razonsocial;
+  }
+  ?>
+  <tr>
+    <td><?php echo date('Y-m-d');?></td>
+    <td><?php echo $num_doc?></td>
+    <td><?php if(!empty($fechavcto))echo $fechavcto;else echo '-';?></td>
+    <td><?php echo $codauxiliar?></td>
+    <td colspan="4"><?php echo $descripcion?></td>
+    <td align="left"><?php if($item->cargos==1){$t_cargo=$t_cargo+$item->monto; echo $item->monto; }else{ echo '';}?></td>
+    <td align="right"><?php if($item->abono==1){$t_abono=$t_abono+$item->monto; echo $item->monto; }else{ echo '';}?></td>
+    <td title="Eliminar si se equivoco de Documento !, Regresar a elegir otro !"><?php echo Html::linkAction('eliminardetalle/'.$item->id,Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'onclick="return confirm(\'¿Está seguro?\')"');?></td>
+  </tr>
+  <?php 
+  if($i==1)$doc.=$num_doc;else $doc.='-'.$num_doc;
+  endforeach;?>
+ 
+  </table>
+  
+<script type="text/javascript">
+$(document).ready(function()
+{
+$("#pago").load('/<?php echo $module_name?>/vouchers/<?php echo $url?><?php if($vc->voucherformadepagos_id==3)echo '/'.$doc?>');
+});
+</script>
+<div id="pago" align="center">
+  <img src="/img/spin.gif" />
+</div>
+<div class="form-actions">
+    <?php echo Html::linkAction("creardetalle/", 'Agregar detalles','class="btn btn-secondary"') ?>
+    <?php //echo Html::linkAction("terminer/100", 'Terminar','class="btn btn-primary"') ?>
+</div>
+<?php echo Form::close()?>
+</div>

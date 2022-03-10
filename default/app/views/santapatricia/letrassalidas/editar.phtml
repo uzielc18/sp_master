@@ -1,0 +1,120 @@
+<?php
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<style type="text/css">
+.span_float
+{
+	float:right !important;
+	margin-left:0px;
+	margin-right:-5px;
+}
+</style>
+<div class="card">
+    <h1><em>Editar Letra</em><span><?php echo $empresa->razonsocial?></span></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="card-body">
+<div id="ver_resultado"></div>
+<div class="form-actions">
+<?php echo Menu::menuLetras($action_name);?>
+</div>
+<?php echo Form::open(NULL,'POST','class="form-horizontal"')?>
+<?php 
+echo Form::hidden('salidas.id');
+echo Form::hidden('salidas.tesdocumentos_id');
+echo Form::hidden('salidas.tesdatos_id');
+echo Form::hidden('salidas.tesmonedas_id');
+echo Form::hidden('salidas.aclusuarios_id');
+echo Form::hidden('salidas.userid','',Auth::get('id'));
+echo Form::hidden('letras.id');
+echo Form::hidden('letras.tessalidas_id');
+?>
+  <div class="control-group">
+    <label class="control-label" for="salida_serie">Numero de Letra:</label>
+    <div class="controls">
+      <?php echo Form::text('letras.numerodeletra');//finiciotraslado?>
+    </div>
+  </div>
+<div class="control-group">
+    <label class="control-label" for="salida_serie">Fecha de vencimiento:</label>
+    <div class="controls">
+      <?php echo Calendar::selector('salidas.fvencimiento');//finiciotraslado?>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="salida_serie">Monto:</label>
+    <div class="controls">
+      <?php echo Form::text('letras.monto','size="10" class="qty"');?>
+    </div>
+  </div>
+   
+  <div class="control-group">
+    <label class="control-label" for="salida_tesmonedas_id">Moneda:</label>
+    <div class="controls">
+      <?php echo Form::dbSelect('salidas.tesmonedas_id','simbolo,nombre',array("tesmonedas",'find','conditions: aclempresas_id='.Session::get('EMPRESAS_ID')));?>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="CL">Cliente</label>
+    <div class="controls">
+      <?php echo $salidas->getTesdatos()->razonsocial;?>
+    </div>
+  </div>  
+  <div class="control-group">
+    <label class="control-label" for="CL">Aval</label>
+    <div class="controls">
+	<div class="distrito"><?php echo Form::text('letras.tesdatos_id');?></div>
+    <?php echo Form::hidden('letras.aval');?>
+    </div>
+  </div>  
+  <div class="control-group">
+    <label class="control-label" for="CL">Ruc</label>
+    <div class="controls">
+	<?php echo Form::text('letras.avalruc');?>
+    </div>
+  </div>   
+  <div class="control-group">
+    <label class="control-label" for="CL">Telefono</label>
+    <div class="controls">
+	<?php echo Form::text('letras.avaltelefono');?>
+    </div>
+  </div>   
+  <div class="control-group">
+    <label class="control-label" for="CL">Direccion</label>
+    <div class="controls">
+	<?php echo Form::text('letras.avaldireccion','class="span7"');?>
+    </div>
+  </div>  
+  <div class="control-group">
+    <div class="controls">
+       <button type="submit" class="btn btn-primary">Modificar</button> <?php echo Html::linkAction('','Cancelar','class="btn" title="Editar  !"','')?>
+    </div>
+  </div>
+<?php echo Form::close();?>
+</div>
+<script type="text/javascript">
+        $(document).ready(function() {
+            $("#letras_tesdatos_id").tokenInput("/<?php echo $module_name."/clientes/resultados"?>", 
+			{
+				tokenLimit: 1,minChars: 3,
+				<?php if(!empty($letras->tesdatos_id)){?>prePopulate: [ 
+		             {id: '<?php echo $letras->tesdatos_id?>', name: "<?php echo $letras->aval?>"},
+					 ],
+					 <?php }?>
+                onAdd: function (item) {
+                   $("#letras_aval").val(item.razonsocial);
+				   $("#letras_avalruc").val(item.ruc);
+				   $("#letras_avaltelefono").val(item.telefono);
+				   $("#letras_avaldireccion").val(item.direccion);
+                },
+                onDelete: function (item) {
+				   $("#letras_aval").val('');
+				   $("#letras_avalruc").val('');
+				   $("#letras_avaltelefono").val('');
+				   $("#letras_avaldireccion").val('');
+                }
+            });
+		});
+        </script>

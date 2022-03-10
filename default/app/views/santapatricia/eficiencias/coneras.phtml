@@ -1,0 +1,91 @@
+<div class="card">
+    <h1>Ver Coneras</h1>
+</div>
+ <div class="form-actions">
+ <?Php echo Html::linkAction('grabar_coneras','CREAR PRODUCCION','class="btn btn-primary"')?>
+<?php /*?><a href="/<?Php echo $module_name;?>/<?Php echo $controller_name;?>/" class="btn btn-primary">Tejeduria</a>
+<a href="/<?Php echo $module_name;?>/<?Php echo $controller_name;?>/index/140" class="btn btn-primary">Hilatura-Chenillera</a>
+<a href="/<?Php echo $module_name;?>/<?Php echo $controller_name;?>/index/141" class="btn btn-primary">Urdido</a>
+<a href="/<?Php echo $module_name;?>/<?Php echo $controller_name;?>/index/142" class="btn btn-primary">Control de Calidad</a>
+<a href="/<?Php echo $module_name;?>/<?Php echo $controller_name;?>/index/143" class="btn btn-primary">Estampado</a>
+<a href="/<?Php echo $module_name;?>/<?Php echo $controller_name;?>/index/144" class="btn btn-primary">Soporte</a>
+<a href="/<?Php echo $module_name;?>/<?Php echo $controller_name;?>/index/163" class="btn btn-primary">Enconado</a><?php */?>
+</div>
+<div class="card-body">
+<h3>Ver los resultados de las coneras</h3>
+<?Php 
+$fecha_a=0;
+foreach($eficiencias_fechas as $item){
+
+	?>
+<?php /*LOS VALORES DE LA TABLA */
+$COLORES_1='';
+$COLORES_2='';
+$VALORES_1='';
+$VALORES_2='';
+$NUMEROS_1='';
+$NUMEROS_2='';
+$m=0;
+foreach($eficiencias as $valor)
+{
+	$m++;
+	if($m<=20)
+	{
+		$COLORES_1.='<td width="5%" align="center">'.$valor->color.'</td>';
+		$VALORES_1.='<td width="5%" align="center">'.Html::linkAction('coneras_edit/'.$valor->id,$valor->valor_c).'</td>';
+		$NUMEROS_1.='<th width="5%" align="center">'.$m.'</th>';
+	}else
+	{
+		$COLORES_2.='<td width="5%" align="center">'.$valor->color.'</td>';
+		$VALORES_2.='<td width="5%" align="center">'.Html::linkAction('coneras_edit/'.$valor->id,$valor->valor_c).'</td>';
+		$NUMEROS_2.='<th width="5%" align="center">'.$m.'</th>';
+	}
+	
+	
+}
+?>
+<?php 
+/*echo $COLORES_1;
+echo $COLORES_2;
+echo $VALORES_1;
+echo $VALORES_2;
+echo $NUMEROS_1;
+echo $NUMEROS_2;*/ ?>
+<table width="90%" border="0" cellspacing="0" cellpadding="0" class="table table-bordered">
+  
+  <tr>
+    <th width="10%" align="center">Incio</th>
+    <th width="10%">&nbsp;</th>
+    <?php echo $NUMEROS_1?>
+  </tr>
+  <tr>
+    <th align="left">Fecha:<br />
+    <?Php echo $item->fecha_inicio?></th>
+    <th>CL</th>
+	<?php echo $COLORES_1?>
+  </tr>
+  <tr>
+    <th align="left">Hora:<br /><?Php echo $item->hora_inicio?></th>
+    <th>KG</th>
+    <?php echo $VALORES_1?>
+  </tr>
+  <tr>
+    <th align="center">Fin</th>
+    <th>&nbsp;</th>
+    <?php echo $NUMEROS_2?>
+  </tr>
+  <tr>
+    <th align="left">Fecha:<br /><?php echo $item->fecha?></th>
+    <th>CL</th>
+    <?php echo $COLORES_2?>
+  </tr>
+  <tr>
+    <th align="left">Hora: <br /><?Php echo $item->hora_fin?></th>
+    <th>KG</th>
+    <?php echo $VALORES_2?>
+  </tr>
+</table>
+<?php 
+
+}?>
+</div>

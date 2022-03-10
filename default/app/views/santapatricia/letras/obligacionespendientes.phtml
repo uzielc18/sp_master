@@ -1,0 +1,85 @@
+<style type="text/css">
+.span_float
+{
+	float:right !important;
+	margin-left:0px;
+	margin-right:-5px;
+}.rojo{
+	color:#FF0000;}
+	.verde{
+	color:#090;}
+</style>
+<div class="card">
+    <h1>Obligaciones por Pagar<span><?php echo $empresa->razonsocial?></span></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+
+<div class="form-actions"><?Php echo Html::linkAction('obligacionesporfecha','Volver','class="btn btn-info"');?></div>
+<?php echo Sp::imprimir('Letras Pendientes - ','P');?>
+<div class="card-body">
+<div id="ver_resultado"></div>
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+<caption> <?php echo Session::get('EMPRESAS_NOMBRE')?> <?php echo date("d-m-Y")?></caption>
+  <thead>
+  <tr>
+  	<th width="31">Nº</th>
+    <th width="307">Proveedor</th>
+    <th width="110">Nro Doc.</th>
+    <th width="139">Nro unico</th>
+    <th width="131">F.de Vto</th>
+    <th width="112">Total</th>
+  </tr>
+  </thead>
+<?php $number=0;
+$semana=0;
+$a=0;
+$T_soles=0;
+$T_dolares=0;
+foreach($obligaciones as $item){ 
+$class='';
+if($item->fvencimiento<date("Y-m-d"))$class=' class="rojo" ';
+if($item->fvencimiento==date("Y-m-d"))$class=' class="verde" ';
+$simbolo="S/. ";
+$T_letras=$item->Totalporsemana($item->semana,$item->fvencimiento);
+$number++;?>
+<?php 
+$b=$item->semana;
+if($a!=$b){
+ 
+}
+$a=$item->semana;
+switch ($item->tesmonedas_id)
+{
+	case 1: $simbolo='S/. ';$T_soles=$T_soles+$item->totalconigv; break;
+	case 2: $simbolo='$. ';$T_dolares=$T_dolares+$item->totalconigv;break;
+	case 4: $simbolo='S/. ';$T_soles=$T_soles+$item->totalconigv; break;
+	case 5: $simbolo='$. ';$T_dolares=$T_dolares+$item->totalconigv;break;
+	case 0: $simbolo='S/. ';$T_soles=$T_soles+$item->totalconigv; break;
+}
+?>
+<tbody>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20"><?php echo $number?></td>
+  	<td height="20"><?php echo $item->getTesdatos()->razonsocial?></td>
+    <td><?php echo $item->getTesdocumentos()->abr;?> <?php if(!empty($item->serie))echo $item->serie.'-';?><?php echo $item->numero?></td>
+    <td><?php echo $item->numerounico?></td>
+    <td<?php echo $class?>><?php echo Sp::formatFecha('%d/%m/%Y',$item->fvencimiento)?></td>
+    
+    <td><?php if($item->totalconigv!='NaN.00' && !empty($item->totalconigv))echo $simbolo.number_format($item->totalconigv,2,'.','');else echo('S/ 00.00')?><br /><?php //echo $number."==".$T_letras ?></td>
+  </tr>
+  </tbody>
+
+<?php 
+	}?>
+  <tr>
+  <td colspan="2">Total</td>
+  <td colspan="2">Total en S/.<?php echo number_format($T_soles,2,'.',' ')?></td>
+  <td colspan="3">Total en $/.<?php echo number_format($T_dolares,2,'.',' ')?></td>
+  </tr>
+  <tr>
+  <td colspan="7">&nbsp;</td>
+  </tr>
+</table>
+</div>

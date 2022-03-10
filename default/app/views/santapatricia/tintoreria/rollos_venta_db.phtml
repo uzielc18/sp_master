@@ -1,0 +1,84 @@
+
+<div class="card">
+<h1>Rollos para Venta <span>Listado de rollos en almacen de ventas</span></h1>
+</div>
+
+<?php View::content()?>
+<div class="form-actions">
+<?php echo Menu::menuControl($action_name);?>
+</div>
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+<?php echo Sp::imprimir('Rollos en Venta - ','P',array('P'=>'1','EX'=>1));?> 
+<div class="card-body">
+<div id="exportar_excel">
+
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped" id="rollos">
+<thead>
+  <tr>
+
+    <th width="90" align="left">Nro Rollo.</th>
+    <th width="65" align="left">Numero</th>
+    <th width="136" align="left">Articulo</th>
+    <th width="72" align="left">Color</th>
+    <th width="77" align="left">MTS</th>
+    <th width="59" align="left">Peso</th>
+    <th width="89" align="left">producto_id</th>
+    <th width="51" align="left">rollo_id</th>
+    <th width="63" align="left">color_id</th>
+    <th width="220" align="left">codigo</th>
+  </tr>
+</thead>
+<tbody>
+  <?php $n=0;foreach($rollos as $item){$n++;
+?>
+  <tr title="<?php //echo $item->getTesdetalleingresos()->getTesingresos()->getTesdatos()->razonsocial?>">
+    <td><?php if(empty($item->codigo)){
+	if(empty($item->getTesproductos()->codigo_ant))$COD=$item->getTesproductos()->codigo; else $COD=$item->getTesproductos()->codigo_ant;
+	}else
+	{
+		$COD=$item->codigo;
+	}
+	echo $COD?>-<?php if(!empty($item->tescolores_id))echo $item->getTescolores()->codigo?>-<?php echo $item->calidad?>-<?php echo $item->numeroventa;?></td>
+    <td><?php echo $item->numeroventa;?></td>
+    <td><?php echo $item->getTesproductos()->nombre?><?php //echo $item->getTesproductos()->detalle?></td>
+    <td width="72"><?php echo $item->color;?></td>
+    <td><?php if(!empty($item->metros))echo number_format($item->metros,2,'.',' ');?></td>
+    <td><?php if(!empty($item->peso))echo number_format($item->peso,2,'.',' ')?></td>
+    <td><?php echo $item->tesproductos_id?></td>
+    <td><?php echo $item->id?></td>
+    <td><?php echo $item->tescolores_id?></td>
+    <td><?php echo $item->tesproductos_id?>-<?php echo $item->id?>-<?php echo $item->tescolores_id?>-<?php if(!empty($item->metros))echo number_format($item->metros,2,'.',' ');?>-<?php if(!empty($item->peso))echo number_format($item->peso,2,'.',' ')?></td>
+     </tr>
+  <?php }?>
+</tbody>
+</table>
+</div>
+<script type="text/javascript">
+$(document).ready(function()
+{
+		
+//hacemos la busqueda en el evento search del control de busqueda
+	$('#txtBuscar').on('search',function(){
+		//le decimos a la funcion que busque en la tabla tblTabla el
+		//valor que contiene el campo actual
+		$.fntBuscarEnTabla($(this).val(),'rollos');
+		
+	});
+	
+	
+});
+</script>
+<script type="text/javascript">
+$(document).ready(function()
+{
+$(".botonExcel").click(function(event)
+	{
+		$("#datos_a_enviar").val( $("<div>").append( $("#exportar_excel").eq(0).clone()).html());
+		$("#FormularioExportacion").submit();
+	});
+});
+</script>
+</div>

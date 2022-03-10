@@ -1,0 +1,93 @@
+<?php
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<script type="text/javascript">
+        $(document).ready(function() {
+            $("#distrito").tokenInput("<?php echo "/utiles/resultados"?>", 
+			{
+				tokenLimit: 1,minChars: 3,
+				<?php if(!empty($direccion->distrito)){?>prePopulate: [ 
+		             {id: '<?php echo $direccion->distrito?>', name: "<?php echo $direccion->distrito?>"},
+					 ],
+					 <?php }?>
+                onAdd: function (item) {
+                   var VAL=item.id.split('-');
+				   $("#direccion_departamento").val(VAL[0]);
+				   $("#direccion_provincia").val(VAL[1]);
+				   $("#direccion_distrito").val(VAL[2]);
+                },
+                onDelete: function (item) {
+				   $("#direccion_departamento").val('');
+				   $("#direccion_provincia").val('');
+				   $("#direccion_distrito").val('');
+                }
+            });
+			
+		
+        });
+        </script>
+<div class="card">
+    <h1><?php echo $titulo?></h1>
+</div>
+<div class="form-actions"><?Php echo Html::linkAction("listar_direcciones",'Volver al listado de direcciones','class="btn btn-info"')?> <?Php echo Html::linkAction("listado",'Volver al listado de Clientes','class="btn btn-info"')?>
+
+</div>
+<div class="card-body">      
+<div class="span12">
+<div class="span4"> 
+<?php View::content() ?>
+
+        <?php echo Form::open(NULL, 'post', '') ?>
+        <legend>Modifcar la direccion</legend>
+        <?php echo Form::hidden('direccion.id')?>
+        <?php echo Form::hidden('direccion.tesdatos_id','',$dato_id)?>
+        <!-- INICIO DE NACIONAL-->
+        <label for="datos_ruc"><b>Distrito* : </b></label>
+		<?php echo Form::text('distrito','class="textocorto"') ?>        
+		<?php echo Form::hidden('direccion.distrito','class="textocorto"') ?>
+        <label for="datos_ruc"><b>Provincia(*) :</b> </label>
+        <?php echo Form::text('direccion.provincia','class="textocorto" readonly="readonly"') ?>
+        
+        <label for="datos_ruc"><b>Departamento(*) :</b> </label>
+        <?php echo Form::text('direccion.departamento','class="textocorto" readonly="readonly"') ?>
+                     
+                <label for="datos_direccion"><b>Direccion* : </b></label>
+                
+                    <?php echo Form::text('direccion.direccion','class="textolargo"') ?>
+                    
+        <!-- FIN DE NACIONAL-->
+        
+           <?php echo Form::submit($boton.' Cambios', 'name="datos_personas" class="btn btn-primary"') ?>
+           
+ <?php echo Form::close() ?>
+</div>
+<div class="span8">
+<a class="btn btn-info" href="http://www.sunat.gob.pe/cl-ti-itmrconsruc/jcrS00Alias" target="hola">Ver direcccion de la sunat</a><?Php echo Html::linkAction("siguente/".$clave+1,'Siguente Dato','class="btn btn-danger"')?>
+<?Php echo Html::linkAction("siguente/".$clave-1,'Dato anterior','class="btn btn-danger"')?>
+<?Php echo Html::linkAction("siguente/0",'Primer dato','class="btn btn-info"')?><br />
+  <iframe name="hola" style="width:100%;height:400px;" scrolling="yes"></iframe>
+</div>
+</div>
+ <table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered">
+ <caption><?Php echo "Ruc: ".$tesdatos->ruc?></caption>
+ <thead>
+  <tr>
+    <th scope="col">Direccion</th>
+    <th scope="col">Distrito</th>
+    <th scope="col">Provincia</th>
+    <th scope="col">Departamento</th>
+    <th scope="col">ACC</th>
+  </tr>
+  </thead>
+  <?php foreach($direcciones as $item):?>
+  <tr>
+    <td><?Php echo $item->direccion?></td>
+    <td><?Php echo $item->distrito?></td>
+    <td><?Php echo $item->provincia?></td>
+    <td><?Php echo $item->departamento?></td>
+    <td><?php echo Html::linkAction('direccionfiscal/'.$item->id.'/'.$dato_id,'<i class="icon-pencil"></i>');?><?php echo Html::linkAction('eliminar_direccion/'.$item->id.'/'.$dato_id,'<i class="icon-remove-sign"></i>');?></td>
+  </tr>
+  <?php endforeach;?>
+</table>
+ 
+</div>

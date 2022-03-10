@@ -1,0 +1,447 @@
+<?php
+View::content();
+//echo Session::get('mostrar');
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+
+<div class="card">
+<h1>Hoja de Ruta !<span>Programacion</span></h1>
+</div><span style="float:right; font-size:22px; margin-top:-25px;"><?php echo Session::get('MAQUINA_PREFIJO')?><?php echo Session::get('MAQUINA_NUMERO')?></span>
+<div id="HD" class="card-body">  
+<div id="loading" style="display:none;"><img src="/img/spin.gif" /></div>
+<form id="hojaderuta">
+<?php echo Form::hidden('id')?>
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+  <thead>
+  <tr>
+    <th colspan="10" align="center" valign="middle">HOJA DE RUTA DEL PLEGADOR</th>
+  </tr>
+  </thead>
+  <tbody class="listado">
+  <tr>
+    <th width="8%" align="left">Nº Guia :</th>
+    <td width="6%">
+	<?php if(Session::get('MAQUINA_NUMERO')==10)
+	{
+		echo $guianumero;
+		echo ' '.$pro->guianumero_m;
+		echo Form::hidden('guianumero','class="grabar_form"');
+	}else
+	{
+		echo Form::text('guianumero_mostrar','class="grabar_form" placeholder="Numero de guia" size="6"');
+		echo Form::hidden('guianumero','class="grabar_form"');
+	}?>
+    </td>
+    <th width="9%" align="left">Titulo de Urdido:</th>
+    <td width="12%"><?php echo Form::text('titulo','class="grabar_form" placeholder="Titlo de la Hoja de ruta" size="25"')?></td>
+    <th width="14%" align="left">Servicio de: </th>
+    <td width="17%"><?php echo Form::text('serviciode','class="grabar_form" placeholder="Nombre de la empresa que hace el urdido" size="25"')?></td>
+    <th width="10%" align="left">Peso N:</th>
+    <td width="14%"><?php 
+	if(Session::get('MAQUINA_NUMERO')==10)
+	{
+		echo $peso;
+		echo '<br />'.$pro->peso_m;
+		echo Form::hidden('peso','class="grabar_form" placeholder="Peso neto del hilo" size="6"');
+	}else{
+	echo Form::text('peso','class="grabar_form" placeholder="Peso neto del hilo" size="6"');
+	}?></td>
+    <th width="7%" align="left">Fecha:</th>
+    <td width="3%"><?php echo Calendar::text('fecha');?></td>
+  </tr>
+  <tr>
+    <th align="left">Nº de Hilos:</th>
+    <td><?php 
+	if(Session::get('MAQUINA_NUMERO')==10){
+		echo $numerohilos;
+		echo '<br />'.$pro->numerohilos_m;
+	echo Form::hidden('numerohilos','class="grabar_form" placeholder="Total de hilos" size="6"');
+	}else{
+	echo Form::text('numerohilos','class="grabar_form" placeholder="Total de hilos" size="6"');
+	}?></td>
+    <th align="left">Metros Uridos:</th>
+    <td><?php 
+	if(Session::get('MAQUINA_NUMERO')==10)
+	{
+		echo $metros;
+		echo '<br />'.$pro->metros_m;
+		echo Form::hidden('metros','class="grabar_form" placeholder="metros del hilo" size="6"');
+	}else{
+	echo Form::text('metros','class="grabar_form" placeholder="metros del hilo" size="6"');
+	}?></td>
+    <th align="left">Colores (plegador):</th>
+    <td><?php echo Form::text('colores','class="grabar_form" placeholder="colores del urdido" size="25"')?></td>
+    <th align="left">Plegador:</th>
+    <td colspan="3"><?php echo Form::text('plegadores','class="grabar_form" size="6"')?></td>
+  </tr>
+  </tbody>
+</table>
+</form>
+<?php 
+if(Session::get('PRODUCCION_ID')!=0 && $estado!=0){?>
+<form id="prodetalleproduccion">
+<table width="75%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+<caption>Programar</caption>
+<tr>
+	<td width="12%">Muestra:<?php echo Form::check('muestra','1')?></td>
+    <td width="12%">Ref O.C.:<?php echo Form::text('tesordendecompras_id','placeholder="Orden de compra" value="0"')?></td>
+	<td width="17%">Artículo:<?php echo Form::text('tesproductos_id','placeholder="Articulo"')?></td>
+    <td width="18%">Color:<?php echo Form::text('tescolores_id','placeholder="Color del Artículo"')?></td>
+    <td width="9%"><div class="alert-error" style="display:none;"></div>Metros:<br /><?php echo Form::text('metroprogramados','placeholder="Metros programados" size="10"')?></td>
+    <td width="21%">Trama:<?php echo Form::text('trama','placeholder="Trama"')?></td>
+    <td width="18%">Corte:<?php echo Form::select('corte',array("Sin corte"=>"Sin corte","Corte central"=>"Corte central","Otros"=>"Otros"),'',"Sin corte")?></td>
+    <td width="18%">Observaciones:<?php echo Form::textArea('observaciones','placeholder="Observaciones"')?></td>
+    <td width="5%"><a href="javascript:;" class="btn btn-primary grabardetalle">AGREGAR</a></td>
+</tr>
+</table>
+</form>
+
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+<thead>
+  <tr>
+    <th width="6%">Ref O.C</th>
+    <th width="13%">Artículo</th>
+    <th width="12%">Color </th>
+    <th width="10%">Metros Programados</th>
+    <th width="25%">Trama</th>
+    <th width="27%">Observaciones</th>
+    <th width="7%">Acciones</th>
+  </tr>
+</thead>
+<tbody id="detalle_listado" class="listado">
+<?php 
+$total=$metros;
+$n=0;
+foreach($detalles as $detalle){
+	$n++;
+	$total=$total-$detalle->metrosrevisados;
+	?>
+  <tr id="<?php echo $detalle->id?>">
+    <td><?php if($detalle->tesordendecompras_id!=0){echo $detalle->getTesordendecompras()->codigo;}?></td>
+    <td><?php echo $detalle->getTesproductos()->nombre?></td>
+    <td><?php echo $detalle->getTescolores()->nombre?></td>
+    <td><?php echo $detalle->metroprogramados?></td>
+    <td><ul><?php $tramas=$detalle->getProtrama();
+	$n=0;
+	foreach($tramas as $trama){
+	$n++;	?>
+		<li>S<?php echo $n?>-<?php echo $trama->getTesproductos()->nombre;?><?php if(!empty($trama->tescolores_id))echo $trama->getTescolores()->nombre;else echo " - -";?></li>
+		<?php	}?></ul></td>
+    <td><?php echo $detalle->observaciones?> <?php echo $detalle->corte?></td>
+    <td><?php if(empty($detalle->fechadecorte))echo Ajax::linkAction('borrardetalle/'.$detalle->id,Html::img("figuras/eliminar.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'detalle_listado');?><?php //echo Ajax::linkAction('editardetalle/'.$detalle->id,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'detalle_listado');?></td>
+  </tr>
+  <?php }?>
+  <tfoot>
+  <tr>
+    <th width="6%"></th>
+    <th width="13%"></th>
+    <th width="12%">Total:</th>
+    <th id="metros_total" width="10%" align="left"><?php echo $total?></th>
+    <th width="25%"></th>
+    <th width="27%"></th>
+    <th width="7%"></th>
+  </tr>
+  </tfoot>
+</tbody>
+</table>
+
+<div class="form-actions">
+<?php 
+echo Html::linkAction("finalizar/".Session::get("PRODUCCION_ID").'/PRODUCCION',"Enviar a Producción",'class="btn btn-primary"').'&nbsp;';
+echo Html::linkAction("listado/","Ir a Listado de Hojas",'class="btn btn-secondary"');
+/*validar si hay detalle de programacion*/
+if(!empty($pro->guia_id) && $n==0)
+{
+	echo Html::linkAction("eliminar/".$pro->guia_id,"Eliminar hoja de ruta",'class="btn btn-warning"');
+}?>
+</div>
+<?php 
+}else
+{?>
+<div class="form-actions">
+<?Php if(!empty($pro->guia_id))
+{?>
+	<a href="javascript:;" id="hoja" class="btn btn-primary">GRABAR</a><?php echo Html::linkAction("eliminar/".$pro->guia_id,"Eliminar hoja de ruta",'class="btn btn-secondary"');?>
+<?php }else{?><a href="javascript:;" id="hoja" class="btn btn-primary">GRABAR</a><?php echo Html::linkAction("eliminar/0"
+,"Eliminar hoja de ruta",'class="btn btn-secondary"');?><?php }echo Html::linkAction("listado/","Ir a Listado de Hojas",'class="btn btn-secondary"');?>
+</div>
+<?php }
+?>
+</div>
+<script type="text/javascript">
+/*envio dew Formulario PROFORMAS*/
+function GRABAR(){
+     var dataString=$("#hojaderuta").serialize();
+	 //alert(dataString);
+          $.ajax({
+            type:"POST",
+            url:"/santapatricia/produccion/grabar/1",
+            data:$("#hojaderuta").serialize(),
+            beforeSend:function(){
+              $("#loading").show();
+            },
+            success:function(response){
+                $("#loading").hide();
+				$("#id").val(response);
+            }
+ 
+          	});
+ 
+      };
+function borrarplegador(id)
+{
+	//alert('id del plegador'+id);
+	var id_produccion=$('#id').val();
+	$.ajax({
+            type:"POST",
+            url:"/santapatricia/produccion/borrarplegadoruso/"+id+'/'+id_produccion,
+            beforeSend:function(){
+              $("#loading").show();
+            },
+            success:function(response){
+                $("#loading").hide();
+				//alert(response);
+				//$("#id").val(response);
+				GRABAR();
+            }
+       });
+}
+function grabarplegador(id)
+{
+	if(id!=0)
+	{
+		//alert('antes de grabar'+id);
+		var id_produccion=$('#id').val();
+ 		$.ajax({
+            type:"POST",
+            url:"/santapatricia/produccion/plegadoruso/"+id+'/'+id_produccion,
+            beforeSend:function(){
+              $("#loading").show();
+            },
+            success:function(response){
+                $("#loading").hide();
+				//alert(response);
+				//$("#id").val(response);
+				GRABAR();
+            }
+       });
+	}
+}
+$(document).ready(function()
+{
+	
+	//alert($("#tesordendecompras_id").val());
+	$("#metroprogramados").blur(function()
+	{
+		var n_m=parseInt($(this).val());
+		var N_MT=parseInt($("#metros_total").html());
+		if(n_m>N_MT)
+		{
+			$('.alert-error').show();
+			$('#finalizar').show();
+		}else{
+			$('.alert-error').hide();
+			$('#finalizar').hide();
+			}
+		
+	});
+	$(".grabardetalle").click(function()
+	{
+	 var n_m=$('#metroprogramados').val();
+	 var N_MT=$("#metros_total").html();
+	 
+	 var dataString=$("#prodetalleproduccion").serialize();
+	
+	 if($("#tesproductos_id").val() && $("#tesordendecompras_id").val())
+	 {
+		if(n_m!='')
+		{
+			if(parseInt(n_m)>parseInt(N_MT))
+			{
+				$('.alert-error').html('No hay suficiente hilo en el plegador');
+				$('.alert-error').show();
+					
+			}else
+			{
+			 $.ajax({
+				type:"POST",
+				url:"/santapatricia/produccion/grabardetalle/1",
+				data:$("#prodetalleproduccion").serialize(),
+				beforeSend:function()
+				{
+				  $("#loading").show();
+				},
+				success:function(response)
+				{
+					//alert(response);
+					$("#loading").hide();
+					$("#detalle_listado").html(response);
+					$("#metroprogramados").val('');
+					$("#observaciones").val('');
+					var total=parseInt($("#metros_total").html())-parseInt(n_m);
+					 //alert(N_MT);
+					// alert(total);
+					$("#metros_total").html(total);
+					$("#trama").tokenInput("clear");
+					$("#tesproductos_id").tokenInput("clear");
+					$("#tescolores_id").tokenInput("clear");
+					
+				} 
+			});
+		$('.alert-error').hide();
+		}
+	   }else
+	   {
+		   $('.alert-error').html('Orden de compra y productos no pueden estar vacio');
+		   $('.alert-error').show();
+	   }
+	 }
+	 return false;
+	});
+	$("#limipar").click(function(){
+		
+		//$("#trama").tokenInput("clear");
+		//$("#tesproductos_id").tokenInput("clear");
+		//$("#tescolores_id").tokenInput("clear");
+		//$("#metroprogramados").val('');
+		$("#observaciones").val('');
+		
+		});
+	$(".grabar_form").blur(function(){
+		GRABAR();
+		});	  
+/*
+Buscar Artículo
+*/
+	$("#trama").tokenInput("<?php echo "/santapatricia/produccion/producto/3"?>", 
+		{
+		minChars: 1,preventDuplicates: true,
+		onAdd: function (item) {
+		  },
+		onDelete: function (item) {
+		}
+	});
+	$("#tesproductos_id").tokenInput("<?php echo "/santapatricia/produccion/producto/1"?>", 
+		{
+			
+		tokenLimit: 1,
+		minChars: 1,
+		/*preventDuplicates: true,*/
+		onAdd: function (item) {
+			//alert(item.id);
+			$("#tesproductos_id").val(item.id);
+		  },
+		onDelete: function (item) {
+		}
+	});
+	$("#tescolores_id").tokenInput("<?php echo "/santapatricia/ingresos/colores"?>", 
+		{
+			
+		tokenLimit: 1,
+		minChars: 1,
+		preventDuplicates: true,
+		onAdd: function (item) {
+		  },
+		onDelete: function (item) {
+		}
+	});
+		$("#tesordendecompras_id").tokenInput("<?php echo "/santapatricia/produccion/ordenescompra"?>", 
+		{
+			
+		tokenLimit: 1,
+		minChars: 1,
+		preventDuplicates: true,
+		onAdd: function (item) {
+		  },
+		onDelete: function (item) {
+		}
+	});
+
+/*Busqueda del Cliente*/
+ $("#plegadores").tokenInput("<?php echo "/santapatricia/produccion/plegadores"?>", 
+		{
+		tokenLimit: 2,
+		minChars: 2,
+		<?php if($plegadoresuso){?>
+		prePopulate: [ 
+		             <?php foreach($plegadoresuso as $puso):?>
+					 {id: '<?php echo $puso->getProplegadores()->id.'-0'?>', name: "<?php echo $puso->getProplegadores()->tipoplegador.' - '.$puso->getProplegadores()->numero?>"},
+					 <?php endforeach;?>
+					 ],
+		<?php }?>
+		preventDuplicates: true,
+		onAdd: function (item) {
+		   VAL=item.id;
+		   var id_n=VAL.split('-');
+		   var color=$("#colores").val();
+		   var color_n=color+', '+id_n[1];
+		   $("#colores").val(color_n);
+		   //$("#customer-title").val(item.name);
+		   //$("#BC").hide();
+		   grabarplegador(id_n[0]);
+		   GRABAR();
+		},
+		onDelete: function (item) {
+		 // alert(VAL=item.id);
+		   var id_n=VAL.split('-');
+		   borrarplegador(id_n[0]);
+			//$("#plegadores").tokenInput("clear");
+			$("#colores").val('');
+			
+		}
+	});
+$("#guianumero_mostrar").tokenInput("<?php echo "/santapatricia/produccion/buscarguia"?>", 
+		{
+		tokenLimit: 1,
+		minChars: 2,
+		<?php if(!empty($guianumero)){?>
+		prePopulate: [ 
+		             {id: <?php echo $guianumero?>, name: "<?php echo $guianumero?>"},
+					 ],
+		<?php }?>
+		preventDuplicates: true,
+		onAdd: function (item) {
+		   var VAL=item.id;
+		  // alert(VAL);
+		   var id_n=VAL.split('-');
+		   $("#guianumero").val(id_n[0]+'-'+id_n[1])
+		   $('#titulo').val(id_n[2]);
+		   $('#serviciode').val(id_n[3]);
+		   $('#numerohilos').val(id_n[4]);
+		   $('#metros').val(id_n[5]);
+		   $('#peso').val(id_n[6]);
+		   GRABAR();
+		   //$("#BC").hide();
+		},
+		onDelete: function (item) {
+		   $("#guianumero").val('');
+		   $('#titulo').val('');
+		   $('#serviciode').val('');
+		   $('#numerohilos').val('');
+		   $('#metros').val('');
+		   $('#peso').val(id_n[6]);
+		   GRABAR();
+		}
+	});	
+	/*
+	Vidacion antes de grabar el form principal
+	*/
+	$("#hoja").click(function()
+	{
+		var v=0;
+		if($('#peso').val()){var v=v+1;}else{v=0;}
+		if($('#metros').val()){var v=v+1;}else{v=0;}
+		if($('#numerohilos').val()){var v=v+1;}else{v=0;}
+		
+		if(v==3)
+		{
+			var id=$('#id').val();
+			location.href = '/santapatricia/produccion/terminar/'+id+'/1'
+		}else
+		{
+			alert('los campos #Peso, #Metros, $Numero de hilos. No pueden estar vacios');
+		}
+	});
+  
+});
+</script>

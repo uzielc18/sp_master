@@ -69,7 +69,7 @@ class TesmonedasController extends AdminController {
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::toAction('');
+        return Redirect::toAction('');
     }
      public function desactivar($id) {
         try {
@@ -86,7 +86,7 @@ class TesmonedasController extends AdminController {
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::toAction('');
+        return Redirect::toAction('');
     }
 	public function eliminar($id) {
         try {

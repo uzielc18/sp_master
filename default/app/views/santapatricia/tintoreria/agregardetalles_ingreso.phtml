@@ -1,0 +1,160 @@
+<?php echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?><div class="card">
+    <h1><em>Ingreso de Telas! <span><?php echo Session::get('DOC_NOMBRE')?></span></em></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="card-body">
+<div id="ver_resultado"></div>
+<?php echo Form::open(NULL,'POST','class="form-inline" name="guia"')?>
+<?php echo Form::hidden('ingreso.id')?>
+<?php echo Form::hidden('ingreso.tesdocumentos_id')?>
+    
+    <div class="input-prepend">
+    	<p><span class="add-on">Destino:</span>
+    		<select name="select">
+    			<option>TINTORERIA-TI</option>
+   			</select>
+    	</p>
+    	<p>
+    		<input id="CL" />
+   		</p>
+    	<p><span class="add-on">Moneda</span> <?php echo Form::dbSelect('ingreso.tesmonedas_id','simbolo,nombre',array("tesmonedas",'find','conditions: aclempresas_id='.Session::get('EMPRESAS_ID')));?>&nbsp;
+			<?php if($ingreso->movimiento=="INTE"){?>
+			<span class="add-on">Total</span> <?php echo Form::text('ingreso.totalconigv','class="qty" size="10" required="required"');?>&nbsp;
+			<?php }?>
+    		
+   		</p>
+    	<p><?php echo Form::hidden('ingreso.tesdatos_id')?>
+    		<?php echo Form::hidden('ingreso.npedido','size="8" readonly="readonly"');?>
+    		<span class="add-on">Serie</span>
+    		<?php echo Form::text('ingreso.serie','size="4"');?>&nbsp;
+    		<span class="add-on">Numero</span>
+    		<?php echo Form::text('ingreso.numero','size="10" required="required"');?>&nbsp;<br />
+    		<?php //echo Form::dbSelect('salida.hilodestino_id','nombre,abr',array("hilodestino",'find'));?>
+    		<br />
+    		<span class="add-on">Fecha de Llegada</span>
+    		<?php echo Calendar::selector('ingreso.finiciotraslado');//finiciotraslado?><br />
+   		</p>
+	</div>
+	      
+  <div class="control-group">
+    <div>
+       <button type="submit" class="btn btn-primary">Grabar</button> <?php echo Html::linkAction('ingresos','Cancelar','class="btn"')?>
+    </div>
+  </div>
+<?php echo Form::close();?>
+<div id="guia">
+<div id="form_ingreso"></div>
+<table width="85%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+<caption>
+ <strong>Rollos Ingresados</strong>
+</caption>
+  <tr>
+    <th width="9%" align="left">Codigo</th>
+    <th width="17%" align="left">Cantidad</th>
+    <th width="11%" align="left">Unidad</th>
+    <th width="53%" align="left">Descripcion</th>
+    <th width="10%" align="left">Accion</th>
+  </tr>
+
+  <?php 
+  $n=0;
+  foreach($detalles as $item){
+	  $n++;
+	  ?> 
+  <tr id="<?php echo $item->id?>">
+    <td><?php echo $n?>. <?php echo $item->getProrollos()->numero?>-<?php echo $item->getProrollos()->maquina_numero?></td>
+    <td><?php echo $item->pesoneto?></td>
+    <td><?Php echo $item->getTesunidadesmedidas()->simbolo?></td>
+    <td><?php echo $item->getTesproductos()->detalle?> <?php echo $item->getTesproductos()->nombre?> <?Php echo $item->getTescolores()->nombre?></td>
+    <td><?php echo Html::link($module_name.'/rollos/borraringresorollos/'.$item->id.'/'.$item->prorollos_id.'/','Elminar','id="'.$item->prorollos_id.'"')?>
+    --<?php echo Ajax::link($module_name.'/rollos/grabaringresotelas/'.$item->id.'/'.$item->prorollos_id.'/','Editar','form_ingreso','')?></td>
+  </tr>
+  <?php }?>
+</table>
+</div>
+<div class="form-actions"><a onclick="return validar()"></a>
+<?php 
+echo Html::linkAction("veringreso/", 'Siguente<i class="icon-hand-right"></i>','class="btn btn-primary" onclick="return validar()"') ?>&nbsp;<?php //echo Html::linkAction("salidas", 'Volver ','class="btn"') ?>
+</div>
+<hr />
+<table width="85%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+<caption> 
+<strong>Lista de Telas en tintoreria (<?php echo $ingreso->numeroguia ?>)</strong>
+</caption>
+  <tr>
+    <th width="34%" align="left">Producto</th>
+    <th width="12%" align="left">Color</th>
+    <th width="17%" align="left"># Rollo</th>
+    <th width="8%" align="left">Pesov</th>
+    <th width="12%" align="left">Metros</th>
+    <th width="7%" align="left">O. C.</th>
+    <th width="10%" align="left">Accion</th>
+  </tr>
+ <?Php foreach($rollos as $rollo){
+	 ?> 
+  <tr id="caja-<?php echo $rollo->id?>">
+    <td><?php echo $rollo->getTesproductos()->detalle?> <?php echo $rollo->getTesproductos()->nombre?></td>
+    <td><?php echo $rollo->getTescolores()->nombre?></td>
+    <td><?php if(empty($rollo->prorollos_id)){echo $rollo->numero?>-M<?php echo $rollo->maquina_numero;}else{echo $rollo->codigo?>-<?php echo $rollo->numeroventa;  }?></td>
+    <td><?php echo number_format($rollo->peso,2,'.',' ')?> K</td>
+    <td><?php echo number_format($rollo->metros,2,'.',' ')?> m</td>
+    <td></td>
+    <td width="10%" title="Ingresar Rollo!">
+	
+    <?php echo Ajax::link($module_name.'/rollos/grabaringresotelas/'.$rollo->detallessalidas_id,'Ingresar!','guia','ocultar','id="'.$rollo->id.'"')?>
+	<?php //echo Ajax::link($module_name.'/rollos/grabaringresotelas/'.$rollo->detallessalidas_id,'Ingresar!','form_ingreso','ocultar','id="'.$rollo->id.'"')?></td>
+  </tr>
+ <?php }?>
+</table>
+</div>
+<script type="text/javascript">
+ <?php if($ingreso->movimiento=="INTE"){?>
+ function validar() {
+        //obteniendo el valor que se puso en campo text del formulario
+        miCampoTexto = document.getElementById("ingreso_totalconigv").value;
+		//la condición
+        if (miCampoTexto.length == 0) {
+			alert("Ingresar el total de la guia interna y Modificar");
+            return false;
+			
+        }
+		document.guia.submit();
+        return true;
+    }
+<?php }?>
+$(document).ready(function()
+{
+
+	
+	$(".ocultar").live("click",function(){
+		var id=$(this).attr('id');
+		$("#caja-"+id).hide();
+		
+		});
+	
+	$("#CL").tokenInput("/<?php echo $module_name?>/salidas/buscarproveedor", 
+		{
+			tokenLimit: 1,
+			minChars: 2,
+			<?php if(!empty($ingreso->tesdatos_id)){?>
+			prePopulate: [ 
+						 {id: <?Php echo $ingreso->tesdatos_id?>, name: "<?php echo $ingreso->getTesdatos()->razonsocial?>"},
+						 ],
+			<?php }?>
+			onAdd: function (item){
+			   var VAL=item.id;
+			   $("#salida_tesdatos_id").val(VAL);
+			   var DIR=item.name.split('(');
+			   $("#salida_direccion_entrega").val(DIR[1]);
+			   //$("#BC").hide();
+			   //GrabarCliente();
+			},
+			onDelete: function (item) {
+			}
+		});
+		
+});
+</script>

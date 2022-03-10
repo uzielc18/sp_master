@@ -1,0 +1,87 @@
+<div id="mensajes_flash">
+	<?php View::content() ?>
+</div>
+<div class="card">
+	<div class="card-header">
+
+		<h3 class="card-title">Guias para Facturar!<span><?php echo $titulo ?> <?php echo Session::get('DOC_NOMBRE') ?></span></h3>
+		<div class="card-tools">
+			<?php echo Menu::menuVentas($action_name); ?>
+		</div>
+
+	</div>
+
+	<div class="form-actions">
+		<?php echo Html::linkAction($url . "/", 'Nueva ' . Session::get('DOC_NOMBRE'), 'class="btn btn-primary"') ?> <?php echo Html::linkAction("guias_mes", 'Guias por mes ', 'class="btn btn-info"') ?>
+	</div>
+	<div class="card-body">
+		<div id="ver_resultado"></div>
+		<table id="exportar_excel" width="99%" class="table-bordered table-striped">
+			<caption>Guias Generadas para Facturar! (Telas)</caption>
+			<thead>
+				<tr>
+					<th width="17">Nº</th>
+					<th width="154">Cliente</th>
+					<th width="52">Nro Doc.</th>
+					<th width="239">Productos </th>
+					<th width="64">Acciones </th>
+				</tr>
+			</thead>
+			<?php $number = 0;
+			foreach ($salidas as $item) {
+				$simbolo = "S/. ";
+
+				switch ($item->tesmonedas_id) {
+					case 1:
+						$simbolo = 'S/. ';
+						break;
+					case 2:
+						$simbolo = '$. ';
+						break;
+					case 4:
+						$simbolo = 'S/. ';
+						break;
+					case 5:
+						$simbolo = '$. ';
+						break;
+					case 0:
+						$simbolo = 'S/. ';
+						break;
+				}
+
+				$number++; ?>
+				<tr id="<?php echo $item->id ?>">
+					<td height="20"><?php echo $number ?></td>
+					<td height="20"><?php echo $item->getTesdatos()->razonsocial ?></td>
+					<td><?php echo $item->serie ?>-<?php echo $item->numero ?></td>
+					<td>
+						<small style="color:#666; font-size:10px !important; font-style:italic; ">
+							<?php
+							$n = 0;
+							$m = 0;
+							foreach ($item->getTesdetallesalidas() as $det) {
+								if ($det->tesproductos_id != 0) {
+									$n++;
+									echo $det->getTesproductos()->nombre;
+									if (count($item->getTesdetallesalidas()) > $n) {
+										echo ", ";
+									}
+								} else {
+									echo $det->concepto;
+								}
+							}
+							?>
+						</small>
+					</td>
+					<td align="center">
+						<?php if ($item->estadosalida == "Editable" or Auth::get('aclroles_id') == 4 or Auth::get('aclroles_id') == 2) echo Html::linkAction('cargarsalida/' . $item->id . '/', Html::img("figuras/editar.png", 'EDITAR', 'style="width: 20px;margin-left:1px;margin-right:1px;"'), 'title="Editar Guia - 002 - Hilos"') ?>
+						<?php echo Html::linkAction('cargarsalida/' . $item->id . '/versalida', Html::img("figuras/ver.png", 'Ver', 'style="width: 20px;margin-left:1px;margin-right:1px;"'), 'title="Ver e Imprimir Guia - 002 - Hilos"') ?>
+						<?php //echo Html::linkAction("borrar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:1px;margin-right:1px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');
+						?>
+					</td>
+				</tr>
+			<?php } ?>
+		</table>
+	</div>
+
+</div>

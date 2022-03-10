@@ -1,0 +1,131 @@
+<?php
+$simbolo="S/. ";
+
+switch ($inventario->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+
+$inven=$INGR->getInventario(Session::get("TIPOPRODUCTO_ID"));
+
+View::content();
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<style type="text/css">
+ul.token-input-list{ width:200px !important;}
+</style>
+<div class="card">
+	<h1><?php echo Session::get('NOMBRE_INVENTARIO')?> x Colores </h1>
+</div>
+<div class="form-actions" title="Regresar!">
+    <?php echo Html::linkAction("listado/".Session::get('FAMILIA_ID'),'Regresar ','class="btn btn"') ?>
+</div>
+<?php echo Sp::imprimir('INVENTARIO - ','P',array('P'=>"P"));?> 
+<div style="clear:both"></div>
+<form class="form-inline">
+<div class="input-prepend input-append">
+  <span class="add-on" title="Buscar Producto!"><em><strong>Buscar Producto</strong></em></span>
+  <input type="text" id="demo-input-local_producto" name="blah" class="input-medium search-query" />
+</div>
+</form>
+<div id="vista_p"></div>
+    <div class="card-body">
+	 <table width="47%" border="0" align="center" class="table-bordered table-striped">
+     <caption><?php echo Session::get('NOMBRE_INVENTARIO')?> x Colores</caption>
+                <tr>
+                    <th width="63" class="meta-head" align="left">Moneda</th>
+                    <td width="72">SOLES</td>
+                    <th width="58" class="meta-head" align="left">Número #</th>
+                    <td width="68"><?php echo $inventario->numero?></td>
+                </tr>
+                <tr>
+					<th align="left">F. Inventario</th>
+                    <td><?php echo date('d/m/Y');?></td>
+                    <th class="meta-head" align="left">Monto Total</th>
+                    <td><span class="simbolo"><?php echo $simbolo?></span></span><span class="due">
+					<?php echo number_format((float)$inven->totalconigv-(float)$inven->igv,2,'.','')?></span></td>
+       </tr>
+        </table>
+			<hr />
+	<table width="100%" class="table table-bordered table-striped">
+    <thead>
+		  <tr align="left">
+		      <th width="7%">Codigo</th>
+		      <th width="31%">Producto</th>
+              <th width="15%">Color</th>
+		      <th width="12%">Inicial</th>
+		      <th width="10%">Ingresos</th>
+              <th width="9%">Salidas</th>
+		      <th width="8%">Stock</th>
+		      <th width="8%">Medida</th>
+	      </tr>
+	</thead>
+    	 
+    	  <?php 
+			  $n=0;
+			  $subtotal=0;
+			  $subtotalD=0;
+			  $array_producto='';
+		  	  $id_productoA=0;
+			  foreach($detalles as $item)
+			  {
+				  $i_coma=',';
+				  if($n==0){$i_coma='';}
+				  if($id_productoA!=$item->tesproductos_id)$array_producto.=$i_coma.'{id: '.$item->tesproductos_id.', name: "'.$item->getTesproductos()->nombre.' '.$item->getTesproductos()->detalle.'"}';
+				  
+				  $n++;
+				  $STOCK=(float)$item->getTesproductos()->getStockColor($item->tesproductos_id,$item->tescolores_id);
+				  $inicial=$item->getTesproductos()->getStockInicialColor($item->tesproductos_id,Session::get("INVENTARIO_ID"),$item->tescolores_id);
+				  $stock_ingreso=$item->getTesproductos()->getTotalingresos($item->tesproductos_id,$item->tescolores_id)-number_format($inicial,2,'.','');
+				  $stock_salida=$item->getTesproductos()->getTotalsalidas($item->tesproductos_id,$item->tescolores_id);
+			  ?>
+		  <tr id="<?php echo $n?>">
+           <td align="left" <?php if(Auth::get('id')==3){?>title="<?php echo $item->getTesingresos()->id.'-'?><?php echo $item->getTesingresos()->getTesdocumentos()->nombre?> <?php echo $item->id?> <?php echo $item->o?>"<?php }?>>
+		   <?php if($id_productoA!=$item->tesproductos_id)echo $item->getTesproductos()->codigo?> <?php //echo '--->'.$item->id?></td>
+		   <td class="item-name">
+                  <?php if($id_productoA!=$item->tesproductos_id){/*echo $item->getTesproductos()->nombre; */echo $item->getTesproductos()->detalle;}?>
+           </td>
+           <td><?php if(Auth::get('id')==3){echo $item->tesproductos_id.'/**/'.$item->tescolores_id;}
+		   if(!empty($item->tescolores_id))echo $item->getTescolores()->nombre?></td>
+           <td><?php echo number_format($inicial,2,'.','')?></td>
+           <td><?php echo $stock_ingreso?></td>
+           <td><?php echo $stock_salida?></td>
+		   <td>
+		   <?php 
+		   echo number_format($STOCK,'2','.','');?>
+           </td>
+		   <td><?php echo $item->getTesunidadesmedidas()->nombre?></td>
+	      </tr>
+		  <?php 
+		  $id_productoA=$item->tesproductos_id;
+		  }
+		  ?>
+		  </table>
+          <div style="clear:both"></div>
+          
+</div>
+
+<script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-local_producto").tokenInput(
+			[
+                <?php echo $array_producto?>
+            ],
+			{
+                minChars: 1,
+                tokenLimit: 1,
+				onAdd: function (item) {
+					$("#vista_p").load("/<?php echo $module_name?>/<?php echo $controller_name?>/<?php echo $action_name?>_uno/" + item.id);
+                },
+                onDelete: function (item) {
+                    $("#vista_p").html('');
+                }
+			});
+			
+        });
+        </script>
+        

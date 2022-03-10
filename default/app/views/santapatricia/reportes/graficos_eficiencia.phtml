@@ -1,0 +1,358 @@
+<?php View::content()?>
+<div class="card">
+<h1>Produccion Diaria<span>Ingreso de las producciones por turnos</span></h1>
+</div>
+
+<div class="form-actions">
+<?php echo Menu::menuReportes($action_name);?>
+</div>
+
+   Cambie de Año 
+<select id="anio">
+<?php
+for($i=2011;$i<=2020;$i++)
+{
+	$selec='';
+	if($anio==$i){
+	$selec=' selected="selected"';
+	}
+	echo '<option value="'.$i.'" '.$selec.'>'.$i.'</option>';
+}
+?>
+</select> 
+<div class="menu">
+<?php 
+$mes_actual=date('Y-m');
+foreach($meses as $clave => $mes):
+if($anio.'-'.$clave<=$mes_actual){
+$class='';
+if($mes_activo==$clave){$class=' active';$nombre_mes=$mes;}
+echo '<ul>';
+echo '<li><a class="enviar'.$class.'" id="mes-'.$mes.'" href="javascript:;" data-id="'.$anio.'-'.$clave.'-01">'.$mes.'</a></li>'; 
+echo '</ul>';
+}
+endforeach;?>
+<div class="clear"></div>
+
+<?php echo Sp::imprimir('Graficos Efeciencia','P');?>
+
+</div>
+<div class="card-body">
+	<div class="tabbable">
+ <!-- Only required for left/right tabs -->
+	<ul class="nav nav-tabs">
+	  <?php 
+	  $tejedores=array();
+	  for($i=1;$i<=$vals;$i++)
+    {
+        $val_id='';
+		$val_n='';
+        $val_m='';
+        $val_f='';
+		$val_id='id'.$i;
+        $val_n='nombre'.$i;
+        $val_m='maquinas'.$i;
+        $val_f='fechas'.$i;
+    ?>
+        <li <?php if($i==1){?>class="active"<?php }?>><a href="#tab<?Php echo $i?>" data-toggle="tab"><?php $tejedores[${$val_id}]=${$val_n};echo ${$val_n}?></a></li>
+    <?php }
+	$i=$i+1;?>
+    <li><a href="#tab<?Php echo $i?>" data-toggle="tab"><?php echo "TOTALES"?></a></li>
+      </ul>
+	<div class="tab-content">
+<?php for($i=1;$i<=$vals;$i++)
+{
+	
+	$z=0;
+	$val_n='';
+	$val_m='';
+	$val_f='';
+	$val_id='';
+	$val_id='id'.$i;
+	$val_n='nombre'.$i;
+	$val_m='maquinas'.$i;
+	$val_f='fechas'.$i;
+?>
+<?php //echo $maquinas1;print_r($maquinas1)?>
+<div class="tab-pane <?php if($i==1){echo "active"; }?>" id="tab<?Php echo $i?>">
+<h3><?php echo ${$val_n}?><?php //echo ${$val_id}?></h3>
+<script type="text/javascript">
+
+$(document).ready(function() {
+$(function () {
+        $('#reporte<?Php echo $i?>').highcharts({
+            title: {
+                text: 'Eficiencias por mes (<?php echo $nombre_mes?>)',
+                x: -20 //center
+            },
+            subtitle: {
+                text: '',
+                x: -20
+            },
+            xAxis: {
+                categories: [<?php 
+		$f_1=0;
+		$con=0;
+		foreach(${$val_f} as $fecha)
+		{
+			$f_2=$fecha->fecha;
+			if($f_1!=$f_2)
+			{$f_1=$fecha->fecha;
+				if($con!=0){echo ",";}
+				echo "'".Sp::formatFecha('%d',$fecha->fecha)."'";
+				$con++;
+			}
+		}?>]
+            },
+            yAxis: {
+                title: {
+                    text: 'Eficiencia en Porcentajes %'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+            tooltip: {
+                valueSuffix: '%'
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle',
+                borderWidth: 0
+            },
+            series: [
+
+<?Php 
+$total_m=0;
+$suma_max=0;
+$con=0;
+foreach(${$val_m} as $maquina)
+{
+	$divisor=number_format($maquina->getPromaquinas()->maxproduccion*((60*8)/1000),0,'.','');
+	$total_m++;
+	$maxproduccion=number_format($maquina->getPromaquinas()->maxproduccion*((60*8)/1000),0,'.','');
+	$suma_max=$suma_max+$maxproduccion;
+	if($con!=0){echo ",";}
+	echo "{";
+	echo "name: '".$maquina->getPromaquinas()->nombre."',data: [";
+	$sub_con=0;
+	foreach(${$val_f} as $valor)
+				{
+					
+					if($valor->promaquinas_id==$maquina->promaquinas_id)
+					{
+						if($sub_con!=0){echo ",";}
+						$t=number_format(($valor->resta*100)/$divisor,1,'.','');
+						echo $t;
+						$sub_con++;
+					}
+					$z=0;
+				}
+	echo "]}";
+	$con++;
+}
+?>]
+        });
+    });
+});
+</script>
+<div id="reporte<?Php echo $i?>" style="min-width: 500px; width:100% !important; height:auto; margin: 0 auto"></div>
+<?php 
+/*
+SUMA LOS TOTALES NO borrar /* 
+*/
+$f_1=0;
+foreach(${$val_f} as $fecha)
+{
+	
+	$f_2=$fecha->fecha;
+	if($f_1!=$f_2)
+	{
+		$f_1=$fecha->fecha;
+		Sp::formatFecha('%d/%m/%Y',$fecha->fecha); 
+		   $total_suma=0;
+			foreach(${$val_m} as $maquina)
+			{
+				$i_m=0;
+				$sumas_t='+';
+				$divisor=number_format($maquina->getPromaquinas()->maxproduccion*((60*8)/1000),0,'.','');
+				$td=0;
+				$resta1=0;
+				foreach(${$val_f} as $valor)
+				{
+					$i_m++;
+					$totales='fecha-'.$i_m.$valor->promaquinas_id;
+					if($fecha->fecha==$valor->fecha && $valor->promaquinas_id==$maquina->promaquinas_id)
+					{
+						$total_suma=$total_suma+$valor->resta;
+						$td++;
+						$t=number_format(($valor->resta*100)/$divisor,1,'.','');
+						$t;
+					}
+					if($f_2==$valor->fecha && $valor->promaquinas_id==$maquina->promaquinas_id && $valor->acldatos_id==${$val_id})
+					{
+						
+						$item=$z.$maquina->promaquinas_id.$valor->acldatos_id;
+						${$totales}[$item]=$sumas_t=$sumas_t+$t;
+					}
+					$z=0;
+				}
+				if($td==0){
+						//echo "<td align='right' title='Aun no hay valores'>00</td>";
+						//if($f_2==$valor->fecha)${$totales}[$f_2]=$sumas_t=$sumas_t+0;
+					}
+			}
+		number_format(($total_suma/$suma_max)*100,1,',','');
+	}
+	
+	
+}
+/*FIN DE SUMA LOS TOTALES*/
+?>
+</div>
+<?php 
+
+}
+
+
+$i=$i+1;
+?>
+<div class="tab-pane <?php if($i==1){echo "active"; }?>" id="tab<?Php echo $i?>">
+<h1>Totales</h1>
+<script type="text/javascript">
+
+$(document).ready(function() {
+$(function () {
+        $('#reporte<?Php echo $i?>').highcharts({
+            title: {
+                text: 'Eficiencias por mes (<?php echo $nombre_mes?>)',
+                x: -20 //center
+            },
+            subtitle: {
+                text: '',
+                x: -20
+            },
+            xAxis: {
+                categories: [<?php 
+		$f_1=0;
+		$con=0;
+		foreach(${$val_f} as $fecha)
+		{
+			$f_2=$fecha->fecha;
+			if($f_1!=$f_2)
+			{$f_1=$fecha->fecha;
+				if($con!=0){echo ",";}
+				echo "'".Sp::formatFecha('%d',$fecha->fecha)."'";
+				$con++;
+			}
+		}?>]
+            },
+            yAxis: {
+                title: {
+                    text: 'Eficiencia en Porcentajes %'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+            tooltip: {
+                valueSuffix: '%'
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle',
+                borderWidth: 0
+            },
+            series: [<?php 
+//"<br />".($maquina->getPromaquinas()->maxproduccion)
+$total_m=0;
+foreach(${$val_m} as $maquina)
+{
+	if($total_m!=0)echo ",";
+	$total_m++;
+	echo "{name :'";
+	echo $maquina->getPromaquinas()->nombre."', data: [";
+	$f_1=0;
+	$con=0;
+	foreach(${$val_f} as $fecha)
+	{
+		$f_2=$fecha->fecha;
+		if($f_1!=$f_2)
+		{
+			$f_1=$fecha->fecha;
+			$total_suma=0;
+			$i_m=0;
+			$sumas_t='+';
+			$divisor=number_format($maquina->getPromaquinas()->maxproduccion*((60*8)/1000),0,'.','');
+			$td=0;
+			$resta1=0;
+			foreach($fechas1 as $valor)
+			{
+				$i_m++;
+				
+				
+				if($fecha->fecha==$valor->fecha && $valor->promaquinas_id==$maquina->promaquinas_id)
+				{
+					
+					$td++;
+					foreach($maquinas1 as $maq)
+					{
+						if(isset(${'fecha-'.$i_m.$maq->promaquinas_id}))
+						{
+							if($maq->promaquinas_id==$maquina->promaquinas_id)
+							{
+								
+								if($con!=0){echo ",";}
+								//echo 'CONTADOR=>'.$con;
+								$prom_suma=number_format(array_sum(${'fecha-'.$i_m.$maquina->promaquinas_id})/3,1,'.','');
+								echo $prom_suma;
+								$con++;
+							}
+						}
+					}
+					//echo "%";
+				}
+			}
+		
+		}
+	}
+	echo "]}";
+}?>]
+        });
+    });
+});
+</script>
+<div id="reporte<?Php echo $i?>" style="min-width: 500px; width:100% !important; height:auto; margin: 0 auto"></div>
+
+
+
+        </div>
+<?php //print_r(${$totales});
+$i=$i+1;
+?>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#anio").change(function(event){
+    	var id = $("#anio").find(':selected').val();
+		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/<?php echo $action_name?>/'+id;
+     });
+	$(".enviar").click(function()
+	{
+		var fecha = $(this).attr('data-id');
+		var F=fecha.split('-');
+		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/<?php echo $action_name?>/'+F[0]+'/'+F[1];
+	});
+});
+</script>
+
+<?Php echo Tag::js('jquery/graficos/js/highcharts');?>
+<?Php echo Tag::js('jquery/graficos/js/modules/exporting');?>

@@ -1,0 +1,103 @@
+<script>
+$(document).ready(function()
+{
+	$(".save_caja").blur(function(e)
+	{
+		var id=$(this).attr('id');
+		//alert(id)
+		var ID=id.split('-');
+		grabarCaja(ID[1]);
+	});
+	$('.agregaruno').click(function()
+	{
+		event.preventDefault();
+		var id_detalle=$(this).attr('id');
+		var dataString ='id_detalle='+id_detalle;
+		//alert(id_detalle);
+		$.ajax({
+            type:"POST",
+            url:"/santapatricia/cajas/crearuno/",
+            data:dataString,
+            beforeSend:function(){
+              $("#loading").show();
+            },
+            success:function(response){
+                $("#loading").hide();
+				$("#cajas_crear").append(response);//alert(response);//$("#"+iddiv).html(response);
+			}
+ 
+         });
+	});
+	$(".borrar").click(function(){
+		var id=$(this).attr('id');
+		$.ajax({
+            type:"POST",
+            url:"/santapatricia/cajas/borrar/"+id,
+            beforeSend:function(){
+              $("#loading").show();
+            },
+            success:function(response){
+                $("#loading").hide();
+				$("div #c-"+id).remove();
+			}
+ 
+         });
+		});
+	/*grabar detalle de las cajas */
+	/*
+	$("#empresa").find(':selected').val();
+	*/
+	/*
+	## id del div
+	*/
+	function grabarCaja(iddiv)
+	{
+		//alert(iddiv);
+		var id_detalle=$("#detalle_id-"+iddiv).val();
+		//alert(id_detalle);
+		var tipodecaja=$("#tipodecaja-"+iddiv).find(':selected').val();
+		var pesoneto=$("#cpesoneto-"+iddiv).val();
+		//alert(pesoneto);
+		var conos =$("#conos-"+iddiv).val();
+		var numeroant=$("#numeroant-"+iddiv).val();
+		var dataString ='id_detalle='+id_detalle+'&numeroant='+numeroant+'&tipodecaja='+tipodecaja+'&pesoneto='+pesoneto+'&conos='+conos+'&id='+iddiv;
+		//alert(id_detalle+' **** '+dataString+' ** '+iddiv);
+		
+	  $.ajax({
+            type:"POST",
+            url:"/santapatricia/cajas/grabar/",
+            data:dataString,
+            beforeSend:function(){
+              $("#loading_c").show();
+            },
+            success:function(response){
+                $("#loading_c").hide();
+				var VAL=response.split("-");//$("#"+iddiv).html(response);
+				$("#empaque<?php echo($numerodetr);?>").val(VAL[0]);
+				$("#bobinas<?php echo($numerodetr);?>").val(VAL[1]);
+				$("#pesoneto<?php echo($numerodetr);?>").val(VAL[2]);
+				$("#empaque-<?php echo($numerodetr);?>").val(VAL[0]);
+				$("#bobinas-<?php echo($numerodetr);?>").val(VAL[1]);
+				$("#pesoneto-<?php echo($numerodetr);?>").val(VAL[2]);
+				
+			}
+ 
+         });
+	}
+});
+</script>
+<?Php View::content();?>
+<div id="cajas_crear">
+<div><a href="javascript:;" id="<?php echo $id_detalle?>" class="agregaruno">Agregar</a></div>
+<?php $n=0; foreach($cajas as $cj){$n++;?>
+<div id="c-<?php echo $cj->id?>"><?php echo $n?>->
+<a id="<?php echo $cj->id?>" class="borrar" href="javascript:;">[X]</a>
+<?php echo Form::hidden('detalle_id-'.$cj->id,'',$cj->tesdetalleingresos_id)?>
+<?php echo Form::text('numerodecaja-'.$cj->id,'class="save_caja" placeholder="numero" size="10" ',$cj->numerodecaja)?> <?php //echo Form::text('numeroant-'.$cj->id,'class="save_caja" placeholder="numero antiguos" size="10"',$cj->numeroant)?><?php echo Form::dbSelect('tipodecaja-'.$cj->id,'nombre',array('tesproductos','find','conditions: testipoproductos_id=3'),'Seleccione...','',$cj->tipodecaja)?>
+<?php echo Form::text('cpesoneto-'.$cj->id,'class="save_caja" placeholder="Peso neto" size="10"',$cj->pesoneto)?>
+<?php echo Form::text('conos-'.$cj->id,'class="save_caja" placeholder="# de conos" size="10"',$cj->conos)?>
+</div>
+<?Php }?>
+</div>
+<div id="loading_c" style="display:none;"><img src="/img/spin.gif" /></div>
+<div class="">Enviar cajas al al almacen</div>

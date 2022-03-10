@@ -1,0 +1,42 @@
+<?php
+View::content();
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<div class="card">
+	<h1>INVENTARIOS <span>Modificar el invantario incial por producto y detalle de el inventario </span></h1>
+    </div>
+    <div style="clear:both"></div>
+<form class="form-inline">
+<div class="input-prepend input-append">
+  <span class="add-on" title="Buscar Producto!"><em><strong>Buscar Producto</strong></em></span>
+  <input type="text" id="demo-input-local_producto" name="blah" class="input-medium search-query" />
+</div>
+</form>
+<div id="vista_p"></div>
+<div class="card-body">
+<div id="ver">
+</div>
+</div>
+<script>
+
+$(document).ready(function()
+{
+	$("#demo-input-local_producto").tokenInput("<?php echo "/".$module_name."/inventarios/producto_modificar/"?>", 
+		{
+			
+		tokenLimit: 1,
+		minChars: 1,
+		onAdd: function (item) {
+		   $("#ver").load("/<?php echo $module_name?>/<?php echo $controller_name?>/modificar_grabar/"+item.id);
+		  // bind();
+		},
+		onDelete: function (item) {
+			$("#ver").html('Busque el producto');
+		}
+	
+	});
+	
+
+});
+
+</script>

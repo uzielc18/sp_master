@@ -1,0 +1,89 @@
+<?php
+View::content();
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<style type="text/css">
+/*.container {
+  width: 1124px;
+}*/
+#items,input,tesarea,th,td{
+	font-size:11px !important;
+}
+.item-row td{
+	padding-left:15px !important;
+	}
+#paid
+{
+	width:80% !important;
+}
+.meta td{
+	font-size:14px !important;
+	
+	}
+ul.token-input-list{ width:100% !important;}
+</style>
+<div class="card">
+	<h1>Reporte de Hilos<span>Reporte de utilizacion de hilo por producto</span></h1>
+</div>
+    <div style="clear:both">
+ </div>
+<form id="buscar" class="form-inline">
+<?php echo Form::hidden('lote');?>
+
+<?php echo Form::hidden('producto_id');?>
+<div class="input-prepend input-append">
+  <span class="add-on" title="Buscar Producto!">Buscar Lote o producto o fecha:</span>
+  <input type="text" id="local_lote" name="local_lote" class="input-large search-query" />
+</div>
+<div class="form-actions" title="Regresar!">
+    <?php echo Html::linkAction("",'Regresar ','class="btn btn"') ?><button id="enviar" type="button" class="btn" title="Movimientos!">Ver</button>
+</div>
+  	
+</form>
+<hr />
+    <div class="card-body">
+    <div id="loading" style="display:none;"><img src="/img/spin.gif" /></div>
+    <div id="kardex"></div>
+    <div style="clear:both"></div>
+	</div>
+ 
+<script type="text/javascript">
+$(document).ready(function()
+{
+	$("#enviar").click(function()
+	{
+		var data=$("#buscar").serialize();
+		var id=$("#producto_id").val();
+		$.ajax({
+			type:"POST",
+			url:"/<?php echo $module_name?>/<?php echo $controller_name?>/ver_hiloutilizado/"+id,
+			data:data,
+			beforeSend:function(){
+				$("#loading").show();
+				},
+			success:function(response){
+				$("#loading").hide();
+				$("#kardex").html(response);
+				//alert(response);
+			}
+		});
+				
+	});
+	$("#local_lote").tokenInput(
+	[<?php echo (string)$LL?>],
+	{
+		minChars: 1,
+		tokenLimit: 1,
+		onAdd: function (item){
+			   var VAL=item.id.split('-');
+			   alert(VAL);
+			   $("#lote").val(VAL[0]);
+			   $("#producto_id").val(VAL[1]);
+			},
+			onDelete: function (item) {
+			}
+	});
+			
+});
+</script>
+        

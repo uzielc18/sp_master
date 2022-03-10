@@ -1,0 +1,111 @@
+<span class="print btn btn-primary"> Print </span> <?php echo Html::linkAction('versalida','Regresar <i class="icon-hand-left"></i>','class="btn"')?>
+<div class="card-body">
+<br />
+<br />
+<br />
+<br />
+<table width="550" border="0" cellspacing="1">
+  <tr>
+    <td width="373" align="right"><?php echo date("H:i:s")?></td>
+    <td width="170">&nbsp;</td>
+  </tr>
+</table>
+<br />
+<br />
+<table width="100%" border="0" cellspacing="1" cellpadding="0">
+  <tr>
+    <td width="50%">&nbsp;</td>
+    <td width="24%">&nbsp;</td>
+    <td width="26%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td>
+    <br />
+    <br />
+    &nbsp;
+    </td>
+    <td><?php echo Sp::formatFecha('%d / %m / %Y',$salida->femision)?></td>
+    <td><?php echo $salida->serie?>-<?php echo $salida->numero?></td>
+  </tr>
+  </table>
+  <br />
+  <table width="100%" border="0" cellspacing="1" cellpadding="0">
+  <tr>
+    <td width="15%">&nbsp;</td>
+    <td width="53%"><?php echo $salida->getTesdatos()->razonsocial?></td>
+    <td width="18%">&nbsp;</td>
+    <td width="14%"><?php echo $salida->getTesdatos()->codigo?></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td><?php echo $salida->direccion_entrega?></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  </table>
+<br />
+<br />
+<table width="100%" border="0" cellspacing="1" cellpadding="0">
+  <tr>
+    <td width="83%">
+    <table width="100%" border="0" cellspacing="1">
+
+  <?php $n=0;$totalkilos=0;$totalmetros=0;
+  foreach($detalles as $item){
+	  $totalkilos=$totalkilos+$item->pesoneto;
+	  $n++;?>
+  <tr>
+    <td width="94" align="center"><?php echo $n?>. <?php if(empty($item->getProrollos()->prorollos_id)){echo $item->getProrollos()->numero?>-M<?php echo $item->getProrollos()->maquina_numero;}else{echo $item->getProrollos()->codigo?>-<?php echo $item->getProrollos()->numeroventa; echo ' '.$item->getProrollos()->getNprocesos($item->prorollos_id);}?></td>
+    <td width="59" align="center"><?php echo $item->pesoneto?></td>
+    <td width="53" align="center">KLS</td>
+    <td width="401"><?php echo $item->cantidad?> <?Php echo $item->getTesunidadesmedidas()->simbolo?>/ <?php echo $item->getTesproductos()->codigo?> TELA PARA <?php echo strtoupper($item->getTesproductos()->getTestipoproductos()->nombre)?> <?php echo $item->getTesproductos()->detalle?> <?Php echo $item->getTescolores()->nombre?></td>
+  </tr>
+  <?php }?>
+</table>
+</td>
+    <td width="17%"><table width="100%" border="0" cellspacing="1" cellpadding="0">
+      <tr>
+        <td><?php echo $totalkilos?></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>total metros</td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+<br />
+<table width="100%" border="0" cellspacing="1" cellpadding="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td><?php echo $proceso->tipo_de_fibra;?><br />
+    <?PHP if(!empty($proceso->tescolores_id)){?>COLOR: <?php echo $proceso->getTescolores()->nombre;}?></td>
+    <td>&nbsp;</td>
+    <td><?php echo $proceso->ancho_requerido;?></td>
+    <td>&nbsp;</td>
+    <td>rendimiento</td>
+  </tr>
+  <tr>
+    <td colspan="6">
+	<?php echo $proceso->detalle;?><br />
+	<?php foreach($detalle_A as $det){?>
+    <?php echo $det->getProacabados()->nombre;?>&nbsp;&nbsp;<i class="icon-ok"></i><br />
+    <?php }?></td>
+    </tr>
+</table>
+<br />
+<br />
+
+<br />
+ 
+ 
+<div style="clear:both;"></div>
+<br />
+<br />
+<br />
+<br />
+<br />
+
+</div>

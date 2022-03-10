@@ -1,0 +1,71 @@
+<div class="card">
+    <h1>Plegadores !</h1>
+</div>
+<div class="form-actions">
+    <?php echo Html::linkAction("crear/$page", 'Crear Plegadores','class="btn btn-primary"') ?> <?php //echo Html::linkAction("plegadoresmov/", 'Ver Movimientos','class="btn btn-primary"','') ?>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus="" placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+<div id="ver_resultado"></div>
+<div class="card-body">
+<div id="ver_resultado"></div>
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped" id="exportar_excel">
+  <tr>
+  	<th width="17">Nº</th>
+    <th width="57">Numero</th>
+    <th width="59">Numero Par</th>
+    <th width="97">Nombre</th>
+    <th width="103">Tipo</th>
+    <th width="70">Origen</th>
+    <th width="47">Marca</th>
+    <th width="69">Ubicacion </th>
+    <th width="50">Estado</th>
+    <th width="71">Acciones</th>
+  </tr>
+<?php $n=0;
+foreach($plegadores->items as $item){ $n++;?>
+  <tr id="<?php echo $item->id?>">
+  	<td><?php echo $n?></td>
+    <td><?php echo $item->numero?></td>
+    <td><?php echo $item->pares?></td>
+    <td><?php echo $item->getTesproductos()->nombre;?></td>
+    <td>
+    <?php echo $item->getProtipoplegadores()->nombre;?></td>
+    <td><?php if($item->nacional=='1')echo "NACIONAL";else echo "IMPORTADO";?></td>
+    <td><?php echo $item->marca?></td>
+	<td>
+	<?php echo $item->getEstadoplegador()->nombre?></td>
+   <td>
+    <?php 
+	 if($item->activo=='0'){
+	 echo Html::linkAction('activar/'.$item->id,Html::img("figuras/circulo_rojo.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'');
+	 }else{
+	 echo Html::linkAction("desactivar/$item->id",Html::img("figuras/circulo_verde.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');}?>
+    </td>
+    <td>
+	<?php echo Html::linkAction('editar/'.$item->id.'/'.$page,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Editar Datos del Plegador!"','')?>
+    <?php echo Html::linkAction("borrar/$item->id/$page",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:1px;margin-right:1px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+    <?php //echo Html::linkAction("ver/$item->id/$page",Html::img("figuras/ver.png",'Eliminar','style="width: 20px;margin-left:1px;margin-right:1px;"'));?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+<?php View::partial('paginators/classic', false, array('page' => $plegadores ,'url' => Router::get('controller_path').'/listado')); ?>
+
+<div class="cl"></div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#txtBuscar').on('search',function(){
+		//le decimos a la funcion que busque en la tabla tblTabla el
+		//valor que contiene el campo actual
+		$.fntBuscarEnTabla($(this).val(),'exportar_excel');
+		
+	});
+});
+</script>

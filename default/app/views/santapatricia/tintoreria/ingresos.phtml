@@ -1,0 +1,348 @@
+<div class="card">
+    <h1>Ingreso de Telas de Transformaciones<span><?php echo Session::get('DOC_NOMBRE')?></span></h1>
+</div>
+<div class="menu">
+  <ul><li><a>Año 
+<select id="anio">
+<?php
+for($i=2011;$i<=2020;$i++)
+{
+	$selec='';
+	if($anio==$i){
+	$selec=' selected="selected"';
+	}
+	echo '<option value="'.$i.'" '.$selec.'>'.$i.'</option>';
+}
+?>
+</select> 
+</a></li></ul>
+<?php 
+$mes_actual=date('Y-m');
+foreach($meses as $clave => $mes):
+if($anio.'-'.$clave<=$mes_actual){
+$class='';
+if($mes_activo==$clave)$class=' active';
+echo '<ul>';
+echo '<li><a class="enviar'.$class.'" id="mes-'.$mes.'" href="javascript:;" data-id="'.$anio.'-'.$clave.'-01">'.$mes.'</a></li>'; 
+echo '</ul>';
+}
+endforeach;?>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="card-body">
+<div id="ver_resultado"></div>
+<table width="90%" border="00" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+<caption>Rollos Ingresados (Telas)</caption>
+  <tr>
+  	<td width="30">Nº</td>
+	<td width="99">Fecha</td>
+    <td width="315">Cliente</td>
+    <td width="157"> Doc. Ingreso</td>
+    <td width="119">Doc. Texsapa</td>
+
+    <td width="95">Acciones</td>
+  </tr>
+<?php $number=0;
+foreach($ingresos as $item){ 
+$simbolo="S/. ";
+
+switch ($item->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+
+$number++;?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20"><?php echo $number?></td>
+	<td><?php echo Sp::formatFecha('%d / %m / %Y',$item->fregistro)?></td>
+  	<td height="20"><?php echo $item->getTesdatos()->razonsocial?></td>
+    <td><?php echo $item->serie?>-<?php echo $item->numero?></td>
+    <td>
+    <?Php echo $item->numeroguia?>
+    </td>
+   <td>
+   <?php if($item->estadoingreso=="Editable"){echo Html::linkAction('cargaringreso/'.$item->id.'/agregardetalles_ingreso',Html::img("figuras/editar.png",'EDITAR','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Editar Guia - 002 - Hilos"')?>
+   <?php echo Html::linkAction("borraringreso/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:1px;margin-right:1px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');}//echo $item->estadoingreso?>
+	<?php echo Html::linkAction('cargaringreso/'.$item->id.'/veringreso',Html::img("figuras/ver.png",'Ver','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Ver e Imprimir Guia - 002 - Hilos"')?>
+    
+    <?php //echo Html::linkAction("ver/$item->id/$page",Html::img("figuras/ver.png",'Eliminar','style="width: 20px;margin-left:1px;margin-right:1px;"'));?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+<hr />
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+<?php 
+$total_metro=0.00;
+$total_kilo=0.00;
+$number=0;
+$a=0;
+$array_datos='';
+foreach($rollos_tintoreria as $item){ 
+
+$simbolo="S/. ";
+$number++;
+switch ($item->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+$b=$item->datos_id;
+if($b!=$a)
+{
+$a=$item->datos_id;
+$i_coma=',';
+if($number==1){$i_coma='';}
+$array_datos.=$i_coma.'{id: '.$item->datos_id.', name: "'.$item->razonsocial.'"}';
+if($number!=1){
+?>
+<tr>
+<th colspan="9">&nbsp;</th>
+</tr>
+<?php }?>
+<tr>
+<th colspan="9" style="color:#000; font-size:12px; border-bottom:#666 inset 2px;">Guias de Tintoreria, para INGRESAR( <?php echo $item->razonsocial?>)</th>
+</tr>
+<tr>
+  	<th width="18" align="left">Nº</th>
+	<th width="58" align="left">Guia.</th>
+	<th width="54" align="left">Fecha.</th>
+    <th width="50" align="left">Metros</th>
+    <th width="50" align="left">Kilos</th>
+   <!-- <th width="44" align="left">Color</th>-->
+    <th width="28" align="left">Art.</th>
+    <th width="101" align="left">Descricion</th>
+    <th width="53" align="left">Accion</th>
+  </tr>
+<?php 
+}
+
+?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20"><?php echo $number?></td>
+  	<td height="20"><?php if(!empty($item->serie))echo $item->serie.'-'?><?php echo $item->numero?></td>
+	<td height="20"><?php echo Sp::formatFecha('%d / %m / %Y',$item->femision)?><?php //echo $item->femision?></td>
+    <td align="left"><?php $total_metro=$total_metro+$item->metros; echo number_format($item->metros,2,'.','')?></td>
+    <td align="left"><?php $total_kilo=$total_kilo+$item->pesoneto; echo number_format($item->pesoneto,2,'.','')?></td>
+   <?php /*?> <td align="left"><?php $co=$COLOR->find_first((int)$item->color); echo $co->nombre; ?></td><?php */?>
+    <td align="left"><?php echo $item->art?></td>
+    <td align="left"><?php echo $item->descripcion?></td>
+    <td>
+      <label class="checkbox" style="float:left;">
+          <input type="checkbox" name="itemSelect[]" value="<?php echo $item->id?>" class="sele" title="Check, para INGRESAR GUIA"><?php if($item->estadosalida=='Proceso') echo " EN PROCESO";?>
+        </label>
+    </td>
+  </tr>
+<?php }?>
+<tr>
+<th colspan="9">&nbsp;</th>
+</tr>
+  <th colspan="3" align="center">TOTAL</th>
+	<th width="50" align="left"><?php echo number_format($total_metro,2,'.','');?>MTS</th>
+    <th width="50" align="left"><?php echo number_format($total_kilo,2,'.','');?>KG</th>
+    <th width="44" align="left"></th>
+    <th width="53" align="left"></th>
+</tr>
+</table> 
+<hr />
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+<?php 
+$total_metro=0.00;
+$total_kilo=0.00;
+$number=0;
+$a=0;
+$array_datos='';
+foreach($rollos_reprocesos as $item){ 
+
+$simbolo="S/. ";
+$number++;
+switch ($item->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+$b=$item->datos_id;
+if($b!=$a)
+{
+$a=$item->datos_id;
+$i_coma=',';
+if($number==1){$i_coma='';}
+$array_datos.=$i_coma.'{id: '.$item->datos_id.', name: "'.$item->razonsocial.'"}';
+if($number!=1){
+?>
+<tr>
+<th colspan="10">&nbsp;</th>
+</tr>
+<?php }?>
+<tr>
+<th colspan="10" style="color:#000; font-size:12px; border-bottom:#666 inset 2px;">Guias de Re-proceso, para INGRESAR(<?php echo $item->razonsocial?>)</th>
+</tr>
+<tr>
+  	<th width="19" height="23" align="left">Nº</th>
+	<th width="91" align="left">Guia.</th>
+	<th width="88" align="left">Fecha.</th>
+    <th width="49" align="left">Metros</th>
+    <th width="34" align="left">Kilos</th>
+    <th width="36" align="left">Color</th>
+    <th width="27" align="left">Art.</th>
+    <th width="90" align="left">Descripcion</th>
+    <th width="364" align="left">Observacion</th>
+    <th width="64" align="left">Accion</th>
+  </tr>
+<?php 
+}
+
+?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20"><?php echo $number?></td>
+  	<td height="20"><?php if(!empty($item->serie))echo $item->serie.'-'?><?php echo $item->numero?></td>
+	<td height="20"><?php echo Sp::formatFecha('%d / %m / %Y',$item->femision)?><?php //echo $item->femision?></td>
+    <td align="left"><?php $total_metro=$total_metro+$item->metros; echo number_format($item->metros,2,'.','')?></td>
+
+    <td align="left"><?php $total_kilo=$total_kilo+$item->pesoneto; echo number_format($item->pesoneto,2,'.','')?></td>
+    <td align="left"><?php //$co=$COLOR->find_first((int)$item->color); echo $co->nombre;?></td>
+    <td align="left"><?php echo $item->art?></td>
+    <td align="left"><?php echo $item->descripcion?></td>
+    <td align="left"><?php echo $item->observacion?></td>
+    <td>
+      <label class="checkbox" style="float:left;">
+          <input type="checkbox" name="itemSelect[]" value="<?php echo $item->id?>" class="sele" title="Check para INGRESAR GUIA"><?php if($item->estadosalida=='Proceso') echo " EN PROCESO";?>
+        </label>
+    </td>
+  </tr>
+<?php }?>
+<tr>
+<th colspan="10">&nbsp;</th>
+</tr>
+  <th colspan="3" align="center">TOTAL</th>
+	<th width="49" align="left"><?php echo number_format($total_metro,2,'.','');?>MTS</th>
+    <th width="34" align="left"><?php echo number_format($total_kilo,2,'.','');?>KG</th>
+    <th width="36" align="left"></th>
+    <th width="27" align="left"></th>
+    <th width="90" align="left"></th>
+    <th width="364" align="left"></th>
+    <th width="64" align="left"></th>
+</tr>
+</table>
+<?php /*?>
+<table width="100%" border="0" align="center" class="table table-bordered table-striped">
+<caption style="font-size:14px; color:#333; font-weight:bold;"><pre>Guias Pendiente de Ingreso(Telas)</pre></caption>
+  <tr>
+  	<td width="17"><h4>Nº</h4></td>
+    <td width="180"><h4>Proveedor</h4></td>
+    <td width="80"><h4>Número Doc.</h4></td>
+    <td width="443"><h4>Productos </h4></td>
+    <td width="164"><h4>Acciones </h4></td>
+  </tr>
+<?php $number=0;
+foreach($salidas as $item){ 
+$simbolo="S/. ";
+
+switch ($item->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+
+$number++;?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20"><?php echo $number?></td>
+  	<td height="20"><?php echo $item->getTesdatos()->razonsocial?></td>
+    <td><?php echo $item->serie?>-<?php echo $item->numero?></td>
+    <td>
+      <small style="color:#666; font-size:10px !important; font-style:italic; ">
+        <?php
+    
+	$n=0;$m=0;
+	foreach($item->getTesdetallesalidas() as $det)
+	{
+		if($det->tesproductos_id!=0){$n++;
+		echo $det->getTesproductos()->nombre;if(count($item->getTesdetallesalidas())>$n){echo ", ";}
+		}else{
+			echo $det->concepto;
+			}
+	}
+	?>
+        </small>
+    </td>
+    <td>
+      <label class="checkbox" style="float:left;">
+          <input type="checkbox" name="itemSelect[]" value="<?php echo $item->id?>" class="sele"> Seleccionar<?php if($item->estadosalida=='Proceso') echo " EN PROCESO";?>
+        </label>
+	  <?php //echo Html::linkAction('generaringreso_tintoreria/'.$item->id.'/',Html::img("figuras/facturar.png",'VER','style="width: 20px;margin-left:1px;margin-right:1px;"'),'onlick="return(\'¿Esta seguro de INgresar esta Guia?\')"')?> 
+    </td>
+  </tr>
+<?php }?>
+  <tr>
+  	<td width="17"></td>
+    <td width="180"></td>
+    <td width="80"></td>
+    <td width="443"></td>
+    <td width="164" align="right"></td>
+  </tr>
+</table>
+<?php */?>
+<div style="float:right">
+<?php echo Form::open($module_name.'/tintoreria/generaringreso_tintoreria_mas','POST')?>
+ <button type="submit" class="btn btn-primary">Registrar Ingreso!</button> 
+  </fieldset>
+  <?php echo Form::hidden('guias.ids');?>
+<?Php echo Form::close();?>
+</div>
+</div>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+	
+	$('.sele').click(function(){
+		var selectedItems = new Array();
+		
+		$("input[@name='itemSelect[]']:checked").each(function(){
+			selectedItems.push($(this).val());
+		});
+		$("#guias_ids").val(selectedItems);
+	});
+});
+</script> 
+<div class="form-actions">
+<?php
+if($action_name=='ingresos_i'){
+echo Html::linkAction('ingresos/','ingresar Guias','class="btn btn-info"');
+}else{
+echo Html::linkAction('ingresos_i/','Ingresar Guia internas','class="btn btn-info"');
+}?> 
+</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+
+	
+	$("#anio").change(function(event){
+    	var id = $("#anio").find(':selected').val();
+		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/<?Php echo $action_name?>/'+id;
+     });
+	$(".enviar").click(function()
+	{
+		var fecha = $(this).attr('data-id');
+		var F=fecha.split('-');
+		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/<?Php echo $action_name?>/'+F[0]+'/'+F[1];
+	});
+	
+});
+</script>

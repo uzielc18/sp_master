@@ -1,0 +1,107 @@
+<?php
+$simbolo="S/. ";
+
+switch ($inven->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+
+View::content();
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<div class="card"><h1>INVENTARIO INICAL</h1></div>
+<div class="form-actions">
+<?Php echo Html::linkAction('listado','Volver','class="btn btn-info"');?>
+</div>
+
+<?php echo Sp::imprimir('INVENTARIO - ','P',array('P'=>"P"));?> 
+<div class="card-body">
+<span style="float:right;"><img id="image" src="/img/<?php echo $empresa->logo?>" alt="logo" /></span>
+  <table width="75%" border="00" align="center" cellpadding="00" cellspacing="0">
+    <caption><?php echo $empresa->razonsocial?><br />
+            <?php echo $empresa->direccion?></caption>
+                <tr>
+                    <th width="83" align="left">Moneda:</th>
+                    <td width="55"><?php echo $inven->getTesmonedas()->nombre?></td>
+                    <th width="71" align="left">Número #:</th>
+                    <td width="81"><?php echo $inven->numero?></td>
+                </tr>
+                <tr>
+					<th align="left">F. Emision:</th>
+                    <td><?php echo Sp::formatFecha('%d / %m / %Y',$inven->femision)?><?php //echo $inven->femision?></td>
+                    <th align="left">Monto Total:</th>
+                    <td><span class="simbolo"><?php echo $simbolo?></span>
+				  <?php echo number_format((float)$inven->totalconigv-(float)$inven->igv,2,'.','')?></span></td>
+       </tr>
+    </table>
+    <br />
+	<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" id="items">
+    <thead>
+		  <tr>
+		      <th width="6%" title="Codigo del Producto!" align="left">Codigo</th>
+		      <th width="17%" title="Descripcion del Producto!" align="left">Producto</th>
+		      <th width="14%" title="Color del Producto!" align="left">Color</th>
+              <th width="7%" title="Lote del Producto!" align="left">Lote</th>
+		      <th width="9%" title="Precio en S/.!" align="left">Stock</th>
+              <th width="9%" title="Precio en D/.!" align="left">Medida</th>
+		      <th width="11%" title="Stock Total!" align="left">P. Unt S/.</th>
+		      <th width="10%" title="Medida!" align="left">P. Unt $/.</th>
+		      <th width="8%" title="Total en S/.!" align="left">Total S/.</th>
+              <th width="9%" title="Total en $/.!" align="left">Total $/.</th>
+		  </tr>
+	</thead>
+    	  <?php 
+			  $n=0;
+			  $subtotal=0;
+			  $subtotalD=0;
+			  //$igv=0;
+			  foreach($detalles as $item){
+				  $n++;
+				  $STOCK=(float)$item->cantidad;
+				  $precios=$item->preciounitario;
+				  $preciod=$item->preciounitario/Session::get('CAMBIO_MONTO');
+				  $subtotal=$subtotal+($STOCK*$item->preciounitario);
+				  $subtotalD=$subtotalD+($STOCK*($item->preciounitario/Session::get('CAMBIO_MONTO')));
+			  ?>
+		  <tr id="<?php echo $n?>" class="item-row" title="<?Php echo $item->id;?>">
+           <td><?php //if(Auth::get('id')==3)echo $item->id.'/**/';?> <?php if(!empty($item->tesproductos_id)){echo $item->getTesproductos()->codigo;}?></td>
+		   <td class="item-name">
+                   <?php 
+				   if(!empty($item->tesproductos_id)){echo $item->getTesproductos()->nombre.' '.$item->getTesproductos()->detalle;
+				   }?>
+              </td>
+            <td>
+                   <?php if(!empty($item->tescolores_id)){echo $item->getTescolores()->nombre;}?>
+              </td> 
+		   <td> <?php echo $item->lote?></td>
+           <td><?php 
+		   echo number_format($STOCK,2,'.','');?></td><td><?php echo $item->getTesunidadesmedidas()->nombre?></td>
+		   <td><span class="simbolo"><?php echo $simbolo?></span>
+			<?php if(empty($item->preciounitario))echo "0.00";else echo number_format($precios,2,'.','')?></td>
+		   <td><span class="simbolo"><?php echo "$. "?></span>
+			<?php if(empty($item->preciounitario))echo "0.00";else echo number_format($preciod,2,'.','')?></td>
+		   <td><span class="simbolo"><?php echo $simbolo?></span><span id='total-<?php echo $n?>' class="price"><?php echo number_format($STOCK*$precios,2,'.','')?></span></td>
+           <td><span class="simbolo"><?php echo "$. "?></span><span id='total-<?php echo $n?>' class="price"><?php echo number_format($STOCK*$preciod,2,'.','')?></span></td>
+		  </tr>
+		  <?php }
+		  /*calcular el igv en dolares*/
+		  $igvD=$subtotalD*Session::get('IGV');
+		  /*calcular el igv en Soles*/
+		  $igvs=$subtotal*Session::get('IGV')
+		  ?>
+		  </table>
+          <table class="meta" width="100%">
+		  <tr>
+		      <td class="blank"> </td>
+		      <td width="30%" class="total-line"><strong>Subtotal : </strong></td>
+		      <td width="11%" class="total-line"><span class="total-value"><span class="simbolo"><?php echo $simbolo?></span><span id="subtotal"><?php echo number_format($subtotal,2,'.','')?></span></span></td>
+		      <td width="11%" class="total-value"><span class="simbolo"><?php echo "$. "?></span><span id="subtotal2"><?php echo number_format($subtotalD,2,'.','')?></span></td>
+		  </tr>
+		</table>
+
+      
+</div>

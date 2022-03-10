@@ -1,0 +1,539 @@
+<?php View::content();?>
+
+<div class="card">
+	<h1>Impuestos del mes <span>Reportes para exportal a excel</span></h1>
+    </div>
+<div class="form-actions" title="Regresar!">
+    <?php echo Menu::menuReportes($action_name);?>
+	<?php echo Sp::imprimir('Impuesto mes - ','P');?>  
+</div>
+
+<div class="menu">
+<ul><li><a>
+ Año 
+<select id="anio">
+<?php
+for($i=2011;$i<=2020;$i++)
+{
+	$selec='';
+	if($anio==$i){
+	$selec=' selected="selected"';
+	}
+	echo '<option value="'.$i.'" '.$selec.'>'.$i.'</option>';
+}
+?>
+</select> 
+</a></li></ul>
+<?php 
+$mes_actual=date('Y-m');
+foreach($meses as $clave => $mes):
+if($anio.'-'.$clave<=$mes_actual){
+$class='';
+if($mes_activo==$clave)$class=' active';
+echo '<ul>';
+echo '<li><a class="enviar'.$class.'" id="mes-'.$mes.'" href="javascript:;" data-id="'.$anio.'-'.$clave.'-01">'.$mes.'</a></li>'; 
+echo '</ul>';
+}
+endforeach;?>
+</div>
+<div class="span6">
+<table width="95%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped"><caption><strong>Textil Santa Patricia SA</strong><br /><strong>Compras mes anterior <?php echo $fecha_a?></strong></caption>	
+<?php 
+	$DOLARES_C_a=array("total"=>0);
+	$SOLES_C_a=array("total"=>0,"igv"=>0,"sub"=>0);
+	$NOTACREDITO_C_a=array("total"=>0,"igv"=>0,"sub"=>0);
+	$NOTADEBITO_C_a=array("total"=>0,"igv"=>0,"sub"=>0);
+	$FACTURA_C_a=array("total"=>0,"igv"=>0,"sub"=>0);
+foreach($ingresos_anteriores as $item){
+	//echo $item->id;
+	//echo "<br />";
+	$monto_soles_c_a=0;
+	$monto_dolares_c_a=0;
+	$monto_igv_c_a=0;
+	$monedas_c= $item->tesmonedas_id;
+switch ($item->tesmonedas_id)
+{
+	case 1: $simbolo_c_a='S/. ';
+	$monto_soles_c_a=$item->totalconigv;
+	$monto_dolares_c_a=($item->totalconigv-$item->igv)/$item->getTestipocambios()->compra;
+	$monto_igv_c_a=$item->igv;
+	; break;
+	case 2: $simbolo_c_a='$. ';
+	$monto_soles_c_a=($item->totalconigv-$item->igv)*$item->getTestipocambios()->compra;
+	$monto_dolares_c_a=$item->totalconigv;
+	$monto_igv_c_a=$item->igv*$item->getTestipocambios()->compra;
+	  break;
+	case 4: $simbolo_c_a='S/. ';
+	$monto_soles_c_a=$item->totalconigv;
+	$monto_dolares_c_a=($item->totalconigv-$item->igv)/$item->getTestipocambios()->compra;
+	$monto_igv_c_a=$item->igv;
+	; break;
+	case 5: $simbolo_c_a='$. ';
+	$monto_soles_c_a=($item->totalconigv-$item->igv)*$item->getTestipocambios()->compra;
+	$monto_dolares_c_a=$item->totalconigv;
+	$monto_igv_c_a=$item->igv*$item->getTestipocambios()->compra;
+	  break;
+	case 0: $simbolo_c_a='S/. ';
+	$monto_soles_c_a=$item->totalconigv;
+	$monto_dolares_c_a=($item->totalconigv-$item->igv)/$item->getTestipocambios()->compra;
+	$monto_igv_c_a=$item->igv;
+	; break;
+}	
+		if($item->tesdocumentos_id==7){
+		
+		$DOLARES_C_a["total"]=$DOLARES_C_a["total"]+$monto_dolares_c_a;
+		$SOLES_C_a["sub"]=$SOLES_C_a["sub"]+($monto_soles_c_a-$monto_igv_c_a);
+		$SOLES_C_a["igv"]=$SOLES_C_a["igv"]+$monto_igv_c_a;
+		$SOLES_C_a["total"]=$SOLES_C_a["total"]+$monto_soles_c_a;
+		$FACTURA_C_a["total"]=$FACTURA_C_a["total"]+$monto_soles_c_a;
+		$FACTURA_C_a["igv"]=$FACTURA_C_a["igv"]+$monto_igv_c_a;
+		$FACTURA_C_a["sub"]=$FACTURA_C_a["sub"]+($monto_soles_c_a-$monto_igv_c_a);
+		}
+		if($item->tesdocumentos_id==13)
+		{
+		/*Nota de credito*/
+		$DOLARES_C_a["total"]=$DOLARES_C_a["total"]+$monto_dolares_c_a;
+		$SOLES_C_a["sub"]=$SOLES_C_a["sub"]+($monto_soles_c_a-$monto_igv_c_a);
+		$SOLES_C_a["igv"]=$SOLES_C_a["igv"]+$monto_igv_c_a;
+		$SOLES_C_a["total"]=$SOLES_C_a["total"]+$monto_soles_c_a;
+		$NOTACREDITO_C_a["total"]=$NOTACREDITO_C_a["total"]+$monto_soles_c_a;
+		$NOTACREDITO_C_a["igv"]=$NOTACREDITO_C_a["igv"]+$monto_igv_c_a;
+		$NOTACREDITO_C_a["sub"]=$NOTACREDITO_C_a["sub"]+($monto_soles_c_a-$monto_igv_c_a);
+		}
+		if($item->tesdocumentos_id==14)
+		{
+		/*nota de debito*/
+		$DOLARES_C_a["total"]=$DOLARES_C_a["total"]+$monto_dolares_c_a;
+		$SOLES_C_a["sub"]=$SOLES_C_a["sub"]-($monto_soles_c_a-$monto_igv_c_a);
+		$SOLES_C_a["igv"]=$SOLES_C_a["igv"]-$monto_igv_c_a;
+		$SOLES_C_a["total"]=$SOLES_C_a["total"]-$monto_soles_c_a;
+		$NOTADEBITO_C_a["total"]=$NOTADEBITO_C_a["total"]-$monto_soles_c_a;
+		$NOTADEBITO_C_a["igv"]=$NOTADEBITO_C_a["igv"]-$monto_igv_c_a;
+		$NOTADEBITO_C_a["sub"]=$NOTADEBITO_C_a["sub"]-($monto_soles_c_a-$monto_igv_c_a);
+		}
+		
+		?>
+    <?php }?>
+	<tr>
+		<td>Sub Total:<?php echo number_format($SOLES_C_a["sub"],2,'.','')?></td>
+		<td>Igv: <?php echo number_format($SOLES_C_a["igv"],2,'.','')?></td>
+		<td>Total: <?php echo number_format($SOLES_C_a["total"],2,'.','')?></td>
+	</tr>
+</table>
+</div>
+<div class="span5">
+
+<table width="95%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+<caption><strong>Textil Santa Patricia SA</strong><br /><strong>Ventas  mes anterios <?php echo $fecha_a?></strong></caption>
+	
+    <tbody>
+    <?php 
+	
+	$DOLARES_V_a=array("total"=>0);
+	$SOLES_V_a=array("total"=>0,"igv"=>0,"sub"=>0);
+	$NOTACREDITO_V_a=array("total"=>0,"igv"=>0,"sub"=>0);
+	$NOTADEBITO_V_a=array("total"=>0,"igv"=>0,"sub"=>0);
+	$FACTURA_V_a=array("total"=>0,"igv"=>0,"sub"=>0);	
+	foreach($salidas_anteriores as $item){
+		$monto_soles_a=0;
+	$monto_dolares_a=0;
+	$monto_igv_a=0;
+			$monedas_a= $item->tesmonedas_id;
+switch ($monedas_a)
+{
+	case 1: $simbolo_a='S/. ';
+	$monto_soles_a=$item->totalconigv;
+	$monto_dolares_a=($item->totalconigv-$item->igv)/$item->getTestipocambios()->compra;
+	$monto_igv_a=$item->igv;
+	; break;
+	case 2: $simbolo_a='$. ';
+	$monto_soles_a=($item->totalconigv-$item->igv)*$item->getTestipocambios()->compra+$item->igv*$item->getTestipocambios()->compra;
+	$monto_dolares_a=$item->totalconigv;
+	$monto_igv_a=$item->igv*$item->getTestipocambios()->compra;
+	  break;
+	case 4: $simbolo_a='S/. ';
+	$monto_soles_a=$item->totalconigv;
+	$monto_dolares_a=($item->totalconigv-$item->igv)/$item->getTestipocambios()->compra;
+	$monto_igv_a=$item->igv;
+	; break;
+	case 5: $simbolo_a='$. ';
+	$monto_soles_a=($item->totalconigv-$item->igv)*$item->getTestipocambios()->compra+$item->igv*$item->getTestipocambios()->compra;
+	$monto_dolares_a=$item->totalconigv;
+	$monto_igv_a=$item->igv*$item->getTestipocambios()->compra;
+	  break;
+	case 0: $simbolo_a='S/. ';
+	$monto_soles_a=$item->totalconigv;
+	$monto_dolares_a=($item->totalconigv-$item->igv)/$item->getTestipocambios()->compra;
+	$monto_igv_a=$item->igv;
+	; break;
+}	
+		if($item->tesdocumentos_id==7){
+		
+		$DOLARES_V_a["total"]=$DOLARES_V_a["total"]+$monto_dolares_a;
+		$SOLES_V_a["sub"]=$SOLES_V_a["sub"]+($monto_soles_a-$monto_igv_a);
+		$SOLES_V_a["igv"]=$SOLES_V_a["igv"]+$monto_igv_a;
+		$SOLES_V_a["total"]=$SOLES_V_a["total"]+$monto_soles_a;
+		$FACTURA_V_a["total"]=$FACTURA_V_a["total"]+$monto_soles_a;
+		$FACTURA_V_a["igv"]=$FACTURA_V_a["igv"]+$monto_igv_a;
+		$FACTURA_V_a["sub"]=$FACTURA_V_a["sub"]+($monto_soles_a-$monto_igv_a);
+		}
+		if($item->tesdocumentos_id==13)
+		{
+		/*Nota de credito*/
+		$DOLARES_V_a["total"]=$DOLARES_V_a["total"]+$monto_dolares_a;
+		$SOLES_V_a["sub"]=$SOLES_V_a["sub"]+($monto_soles_a-$monto_igv_a);
+		$SOLES_V_a["igv"]=$SOLES_V_a["igv"]+$monto_igv_a;
+		$SOLES_V_a["total"]=$SOLES_V_a["total"]+$monto_soles_a;
+		$NOTACREDITO_V_a["total"]=$NOTACREDITO_V_a["total"]+$monto_soles_a;
+		$NOTACREDITO_V_a["igv"]=$NOTACREDITO_V_a["igv"]+$monto_igv_a;
+		$NOTACREDITO_V_a["sub"]=$NOTACREDITO_V_a["sub"]+($monto_soles_a-$monto_igv_a);
+		}
+		if($item->tesdocumentos_id==14)
+		{
+		/*nota de debito*/
+		$DOLARES_V_a["total"]=$DOLARES_V_a["total"]+$monto_dolares_a;
+		$SOLES_V_a["sub"]=$SOLES_V_a["sub"]-($monto_soles_a-$monto_igv_a);
+		$SOLES_V_a["igv"]=$SOLES_V_a["igv"]-$monto_igv_a;
+		$SOLES_V_a["total"]=$SOLES_V_a["total"]-$monto_soles_a;
+		$NOTADEBITO_V_a["total"]=$NOTADEBITO_V_a["total"]-$monto_soles_a;
+		$NOTADEBITO_V_a["igv"]=$NOTADEBITO_V_a["igv"]-$monto_igv_a;
+		$NOTADEBITO_V_a["sub"]=$NOTADEBITO_V_a["sub"]-($monto_soles_a-$monto_igv_a);
+		}
+		
+		?>
+    <?php }?>
+	<tr>
+		<td>Sub Total:<?php echo number_format($SOLES_V_a["sub"],2,'.','')?></td>
+		<td>Igv: <?php echo number_format($SOLES_V_a["igv"],2,'.','')?></td>
+		<td>Total: <?php echo number_format($SOLES_V_a["total"],2,'.','')?></td>
+	</tr>
+    </tbody>
+</table>
+</div>
+<br />
+<div class="span6">
+<table width="95%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped"><caption><strong>Textil Santa Patricia SA</strong><br /><strong>COMPRAS <?php echo ucfirst(Sp::formatFecha('%m',$mes_actual)); ?>-<?php echo Sp::formatFecha('%Y',$mes_actual); ?></strong></caption>
+	
+    <?php 
+	$DOLARES_C=array("total"=>0);
+	$SOLES_C=array("total"=>0,"igv"=>0,"sub"=>0);
+	$NOTACREDITO_C=array("total"=>0,"igv"=>0,"sub"=>0);
+	$NOTADEBITO_C=array("total"=>0,"igv"=>0,"sub"=>0);
+	$FACTURA_C=array("total"=>0,"igv"=>0,"sub"=>0);
+foreach($ingresos as $item){
+	$monto_soles_c=0;
+	$monto_dolares_c=0;
+	$monto_igv_c=0;
+			$monedas_c= $item->tesmonedas_id;
+switch ($monedas_c)
+{
+	case 1: $simbolo_c='S/. ';
+	$monto_soles_c=$item->totalconigv;
+	$monto_dolares_c=($item->totalconigv-$item->igv)/$item->getTestipocambios()->compra;
+	$monto_igv_c=$item->igv;
+	; break;
+	case 2: $simbolo_c='$. ';
+	$monto_soles_c=($item->totalconigv-$item->igv)*$item->getTestipocambios()->compra;
+	$monto_dolares_c=$item->totalconigv;
+	$monto_igv_c=$item->igv*$item->getTestipocambios()->compra;
+	  break;
+	case 4: $simbolo_c='S/. ';
+	$monto_soles_c=$item->totalconigv;
+	$monto_dolares_c=($item->totalconigv-$item->igv)/$item->getTestipocambios()->compra;
+	$monto_igv_c=$item->igv;
+	; break;
+	case 5: $simbolo_c='$. ';
+	$monto_soles_c=($item->totalconigv-$item->igv)*$item->getTestipocambios()->compra;
+	$monto_dolares_c=$item->totalconigv;
+	$monto_igv_c=$item->igv*$item->getTestipocambios()->compra;
+	  break;
+	case 0: $simbolo_c='S/. ';
+	$monto_soles_c=$item->totalconigv;
+	$monto_dolares_c=($item->totalconigv-$item->igv)/$item->getTestipocambios()->compra;
+	$monto_igv_c=$item->igv;
+	; break;
+}	
+		if($item->tesdocumentos_id==7){
+		
+		$DOLARES_C["total"]=$DOLARES_C["total"]+$monto_dolares_c;
+		$SOLES_C["sub"]=$SOLES_C["sub"]+($monto_soles_c-$monto_igv_c);
+		$SOLES_C["igv"]=$SOLES_C["igv"]+$monto_igv_c;
+		$SOLES_C["total"]=$SOLES_C["total"]+$monto_soles_c;
+		$FACTURA_C["total"]=$FACTURA_C["total"]+$monto_soles_c;
+		$FACTURA_C["igv"]=$FACTURA_C["igv"]+$monto_igv_c;
+		$FACTURA_C["sub"]=$FACTURA_C["sub"]+($monto_soles_c-$monto_igv_c);
+		}
+		if($item->tesdocumentos_id==13)
+		{
+		/*Nota de credito*/
+		$DOLARES_C["total"]=$DOLARES_C["total"]+$monto_dolares_c;
+		$SOLES_C["sub"]=$SOLES_C["sub"]+($monto_soles_c-$monto_igv_c);
+		$SOLES_C["igv"]=$SOLES_C["igv"]+$monto_igv_c;
+		$SOLES_C["total"]=$SOLES_C["total"]+$monto_soles_c;
+		$NOTACREDITO_C["total"]=$NOTACREDITO_C["total"]+$monto_soles_c;
+		$NOTACREDITO_C["igv"]=$NOTACREDITO_C["igv"]+$monto_igv_c;
+		$NOTACREDITO_C["sub"]=$NOTACREDITO_C["sub"]+($monto_soles_c-$monto_igv_c);
+		}
+		if($item->tesdocumentos_id==14)
+		{
+		/*nota de debito*/
+		$DOLARES_C["total"]=$DOLARES_C["total"]+$monto_dolares_c;
+		$SOLES_C["sub"]=$SOLES_C["sub"]-($monto_soles_c-$monto_igv_c);
+		$SOLES_C["igv"]=$SOLES_C["igv"]-$monto_igv_c;
+		$SOLES_C["total"]=$SOLES_C["total"]-$monto_soles_c;
+		$NOTADEBITO_C["total"]=$NOTADEBITO_C["total"]-$monto_soles_c;
+		$NOTADEBITO_C["igv"]=$NOTADEBITO_C["igv"]-$monto_igv_c;
+		$NOTADEBITO_C["sub"]=$NOTADEBITO_C["sub"]-($monto_soles_c-$monto_igv_c);
+		}
+		
+		?>
+    <?php }?>
+	<tr>
+		<td>Sub Total:<?php echo number_format($SOLES_C["sub"],2,'.','')?></td>
+		<td>Igv: <?php echo number_format($SOLES_C["igv"],2,'.','')?></td>
+		<td>Total: <?php echo number_format($SOLES_C["total"],2,'.','')?></td>
+	</tr>
+</table>
+</div>
+<div class="span5">
+
+<table width="95%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+<caption><strong>Textil Santa Patricia SA</strong><br /><strong>VENTAS  <?php echo ucfirst(Sp::formatFecha('%m',$mes_actual)); ?>-<?php echo Sp::formatFecha('%Y',$mes_actual); ?></strong></caption>
+	
+    <tbody>
+    <?php 
+	
+	$DOLARES_V=array("total"=>0);
+	$SOLES_V=array("total"=>0,"igv"=>0,"sub"=>0);
+	$NOTACREDITO_V=array("total"=>0,"igv"=>0,"sub"=>0);
+	$NOTADEBITO_V=array("total"=>0,"igv"=>0,"sub"=>0);
+	$FACTURA_V=array("total"=>0,"igv"=>0,"sub"=>0);	
+	foreach($salidas as $item){
+		$monto_soles=0;
+	$monto_dolares=0;
+	$monto_igv=0;
+			$monedas= $item->tesmonedas_id;
+switch ($monedas)
+{
+	case 1: $simbolo='S/. ';
+	$monto_soles=$item->totalconigv;
+	$monto_dolares=($item->totalconigv-$item->igv)/$item->getTestipocambios()->compra;
+	$monto_igv=$item->igv;
+	; break;
+	case 2: $simbolo='$. ';
+	$monto_soles=($item->totalconigv-$item->igv)*$item->getTestipocambios()->compra+$item->igv*$item->getTestipocambios()->compra;
+	$monto_dolares=$item->totalconigv;
+	$monto_igv=$item->igv*$item->getTestipocambios()->compra;
+	  break;
+	case 4: $simbolo='S/. ';
+	$monto_soles=$item->totalconigv;
+	$monto_dolares=($item->totalconigv-$item->igv)/$item->getTestipocambios()->compra;
+	$monto_igv=$item->igv;
+	; break;
+	case 5: $simbolo='$. ';
+	$monto_soles=($item->totalconigv-$item->igv)*$item->getTestipocambios()->compra+$item->igv*$item->getTestipocambios()->compra;
+	$monto_dolares=$item->totalconigv;
+	$monto_igv=$item->igv*$item->getTestipocambios()->compra;
+	  break;
+	case 0: $simbolo='S/. ';
+	$monto_soles=$item->totalconigv;
+	$monto_dolares=($item->totalconigv-$item->igv)/$item->getTestipocambios()->compra;
+	$monto_igv=$item->igv;
+	; break;
+}	
+		if($item->tesdocumentos_id==7){
+		
+		$DOLARES_V["total"]=$DOLARES_V["total"]+$monto_dolares;
+		$SOLES_V["sub"]=$SOLES_V["sub"]+($monto_soles-$monto_igv);
+		$SOLES_V["igv"]=$SOLES_V["igv"]+$monto_igv;
+		$SOLES_V["total"]=$SOLES_V["total"]+$monto_soles;
+		$FACTURA_V["total"]=$FACTURA_V["total"]+$monto_soles;
+		$FACTURA_V["igv"]=$FACTURA_V["igv"]+$monto_igv;
+		$FACTURA_V["sub"]=$FACTURA_V["sub"]+($monto_soles-$monto_igv);
+		}
+		if($item->tesdocumentos_id==13)
+		{
+		/*Nota de credito*/
+		$DOLARES_V["total"]=$DOLARES_V["total"]+$monto_dolares;
+		$SOLES_V["sub"]=$SOLES_V["sub"]+($monto_soles-$monto_igv);
+		$SOLES_V["igv"]=$SOLES_V["igv"]+$monto_igv;
+		$SOLES_V["total"]=$SOLES_V["total"]+$monto_soles;
+		$NOTACREDITO_V["total"]=$NOTACREDITO_V["total"]+$monto_soles;
+		$NOTACREDITO_V["igv"]=$NOTACREDITO_V["igv"]+$monto_igv;
+		$NOTACREDITO_V["sub"]=$NOTACREDITO_V["sub"]+($monto_soles-$monto_igv);
+		}
+		if($item->tesdocumentos_id==14)
+		{
+		/*nota de debito*/
+		$DOLARES_V["total"]=$DOLARES_V["total"]+$monto_dolares;
+		$SOLES_V["sub"]=$SOLES_V["sub"]-($monto_soles-$monto_igv);
+		$SOLES_V["igv"]=$SOLES_V["igv"]-$monto_igv;
+		$SOLES_V["total"]=$SOLES_V["total"]-$monto_soles;
+		$NOTADEBITO_V["total"]=$NOTADEBITO_V["total"]-$monto_soles;
+		$NOTADEBITO_V["igv"]=$NOTADEBITO_V["igv"]-$monto_igv;
+		$NOTADEBITO_V["sub"]=$NOTADEBITO_V["sub"]-($monto_soles-$monto_igv);
+		}
+		
+		?>
+    <?php }?>
+	<tr>
+		<td>Sub Total:<?php echo number_format($SOLES_V["sub"],2,'.','')?></td>
+		<td>Igv: <?php echo number_format($SOLES_V["igv"],2,'.','')?></td>
+		<td>Total: <?php echo number_format($SOLES_V["total"],2,'.','')?></td>
+	</tr>
+</table>
+</div>
+<div class="card-body">
+<table id="exportar_excel" width="90%" border="000" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-estriped" style="font-size:14px !important;">
+	<thead>
+	<tr>
+		<th colspan="5" align="center">IMPUESTOS <?php echo Session::get('EMPRESAS_NOMBRE')?></th>
+	</tr>
+	<tr>
+		<td colspan="5" align="center"><strong>(<?Php echo Sp::getMes($fecha)?>)-<?php echo Sp::formatFecha('%Y',$anio.'-'.$mes_activo); ?></strong></td>
+	  </tr>
+	<tr>
+    	<th width="16"></th>
+    	<th align="left"></th>
+    	<th align="right">Base imponible</th>
+    	<th align="right">Igv</th>
+    	<th align="right">TOTAL</th>		
+	</tr>
+    </thead>
+	<tr>
+    	<th></th>
+    	<th align="left">Ventas</th>
+    	<td align="right"><?php echo number_format($FACTURA_V["sub"],2,'.','')?></td>
+    	<td align="right"><?php echo number_format($FACTURA_V["igv"],2,'.','')?></td>
+    	<td align="right"><?php echo number_format($FACTURA_V["total"],2,'.','')?></td>		
+	</tr>
+	<tr>
+    	<td></td>
+   	  <td>Nota Debitos</td>
+    	<td align="right"><?php echo number_format($NOTADEBITO_V["sub"],2,'.','')?></td>
+    	<td align="right"><?php echo number_format($NOTADEBITO_V["igv"],2,'.','')?></td>
+    	<td align="right"><?php echo number_format($NOTADEBITO_V["total"],2,'.','')?></td>	
+	</tr>
+	<tr>
+    	<td></td>
+   	  <td>Nota Creditos</td>
+    	<td align="right"><?php echo number_format($NOTACREDITO_V["sub"],2,'.','')?></td>
+    	<td align="right"><?php echo number_format($NOTACREDITO_V["igv"],2,'.','')?></td>
+    	<td align="right"><?php echo number_format($NOTACREDITO_V["total"],2,'.','')?></td>	
+	</tr>
+    
+	<tr>
+    	<td></td>
+    	<td><b>Total Ventas</b></td>
+    	<td align="right"><?php echo number_format($SOLES_V["sub"],2,'.','')?></td>
+    	<td align="right"><?php echo number_format($SOLES_V["igv"],2,'.','')?></td>
+    	<td align="right"><?php echo number_format($SOLES_V["total"],2,'.','')?></td>		
+	</tr>
+    <tr>
+    	<th colspan="5">&nbsp;</th>
+    </tr>
+	<tr>
+    	<th></th>
+    	<th align="left">Compras</th>
+    	<td align="right"><?php echo number_format($FACTURA_C["sub"],2,'.','')?></td>
+    	<td align="right"><?php echo number_format($FACTURA_C["igv"],2,'.','')?></td>
+    	<td align="right"><?php echo number_format($FACTURA_C["total"],2,'.','')?></td>	
+	</tr>
+    <tr>
+    	<td></td>
+    	<td>Notas Debitos</td>
+    	<td align="right"><?php echo number_format($NOTADEBITO_C["sub"],2,'.','')?></td>
+    	<td align="right"><?php echo number_format($NOTADEBITO_C["igv"],2,'.','')?></td>
+    	<td align="right"><?php echo number_format($NOTADEBITO_C["total"],2,'.','')?></td>	
+	</tr>
+    <tr>
+    	<td></td>
+    	<td>Notas Creditos</td>
+    	<td align="right"><?php echo number_format($NOTACREDITO_C["sub"],2,'.','')?></td>
+    	<td align="right"><?php echo number_format($NOTACREDITO_C["igv"],2,'.','')?></td>
+    	<td align="right"><?php echo number_format($NOTACREDITO_C["total"],2,'.','')?></td>	
+	</tr>
+	<tr>
+    	<td></td>
+   	  <td><b>Total Compras</b></td>
+    	<td align="right"><?php echo number_format($SOLES_C["sub"],2,'.','')?></td>
+    	<td align="right"><?php echo number_format($SOLES_C["igv"],2,'.','')?></td>
+    	<td align="right"><?php echo number_format($SOLES_C["total"],2,'.','')?></td>		
+	</tr>
+    
+	<tr>
+		<th colspan="5">Resumen</th>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<th width="305">&nbsp;</th>
+		<th width="148" align="right">SUBTOTAL</th>
+		<th width="99" align="right">IGV</th>
+		<th width="112" align="right">TOTAL  SOLES</th>
+	</tr>
+    <tbody>
+	<tr>
+		<td>&nbsp;</td>
+		<td align="left">VENTAS</td>
+		<td align="right"><?php echo number_format($SOLES_V["sub"],2,'.','')?></td>
+    	<td align="right"><?php echo number_format($SOLES_V["igv"],2,'.','')?></td>
+    	<td align="right"><?php echo number_format($SOLES_V["total"],2,'.','')?></td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td align="left">COMPRAS</td>
+		<td align="right"><?php echo number_format($SOLES_C["sub"],2,'.','')?></td>
+    	<td align="right"><?php echo number_format($SOLES_C["igv"],2,'.','')?></td>
+    	<td align="right"><?php echo number_format($SOLES_C["total"],2,'.','')?></td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td colspan="2" align="left">(-)CREDITO MES ANTERIOR</td>
+		<td align="right"><?Php $RET_a=number_format($retencion_a,2,'.','')?><?php  $IGV_ANT=(number_format($SOLES_V_a["igv"],2,'.','')-number_format($SOLES_C_a["igv"],2,'.','')-$RET_a);?>
+        <?php if($IGV_ANT<0)echo $IGV_ANT;else echo "0.00";?>
+        </td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td colspan="2" align="left">(-)RETENCIONES DEL PERIODO</td>
+		<td align="right"><?Php echo $RET=number_format($retencion,2,'.','')?></td>
+		<td>&nbsp;</td>
+	</tr>
+    </tbody>
+    <tfoot>
+	<tr>
+		<th>&nbsp;</th>
+		<th colspan="2">Igv a Pagar</th>
+		<td align="right" style="border-top:1px solid #333 !important;"><?php echo number_format($SOLES_V["igv"],2,'.','')-number_format($SOLES_C["igv"],2,'.','')-$RET;?></th>
+		<th>&nbsp;</th>
+	</tr>
+    </tfoot>
+</table>
+
+</div>
+
+<div id="reporte"></div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#anio").change(function(event){
+    	var id = $("#anio").find(':selected').val();
+		location.href = '/<?php echo $module_name?>/reportes/<?php echo $action_name?>/'+id;
+     });
+	 $(".enviar").click(function()
+	{
+		var fecha = $(this).attr('data-id');
+		var F=fecha.split('-');
+		location.href = '/<?php echo $module_name?>/reportes/<?php echo $action_name?>/'+F[0]+'/'+F[1];
+	});
+	 
+});
+</script>

@@ -1,0 +1,111 @@
+<?php View::content();?><script type="text/javascript">
+$(document).ready(function(){
+    $('.selec').click(function()
+        {
+		var totalconigv=0;
+        var selectedItems = new Array();
+        $("input[@name='SALIDA[]']:checked").each(function(){
+            selectedItems.push($(this).val());
+			var id=$(this).val();
+			var total=$("#total-"+id).val();
+			totalconigv=parseFloat(totalconigv)+parseFloat(total);
+        });
+        $("#totalconigv").val(totalconigv);
+        $("#s").val(selectedItems);
+    });
+});
+</script>
+<div class="card">
+<h1>Documentos a Cancelar!</h1>
+</div>
+<div class="card-body">
+<strong> Cliente :- </strong><?Php if(Session::get('tesdatos_id')!=0)echo $tesdatos->razonsocial;else echo "Todos";?>
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+<caption>
+Seleccionar Documentos Pendientes de Cancelacion (Check)
+</caption>
+  <tr>
+  	<td width="17">Nº</td>
+	<td width="57">F. Emision Doc.</td>
+    <td width="78">Numero</td>
+    <td width="69">Proveedor</td>
+    <td width="56">Moneda</td>
+    <td width="36">Total</td>
+      </tr>
+<?php $n=0;
+foreach($salidas as $item){ 
+$n++;
+$monto_A=0;
+switch ($item->tesmonedas_id)
+{
+	case 1: $simbolo='S/. ';
+	 break;
+	case 2: $simbolo='$. ';
+	 break;
+	case 4: $simbolo='S/. '; 
+	break;
+	case 5: $simbolo='$. '; 
+	break;
+	case 0: $simbolo='S/. '; 
+	break;
+}
+//$monto_A=$item->getAdelantos($item->id);
+?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20"><?php echo $n?></td>
+	<td><?php echo $item->femision?>
+    <td><?php echo $item->getTesdocumentos()->abr?>/ <?php echo $item->serie.'-'.$item->numero?></td>
+    <td><?php echo $item->getTesdatos()->razonsocial?>
+	<?php 
+	//echo $item->estadosalida;
+	if($monto_A!=0)echo " ( pago adelantado ".$simbolo.number_format($monto_A,2,'.','')." )";
+	?></td>
+    <td><?php echo $item->getTesmonedas()->nombre?></td>
+    <td><?php echo $simbolo; echo number_format($total=$item->totalconigv-$monto_A,2,'.','');echo Form::text('total-'.$item->id,'',$total);?></td>
+  </tr>
+<?php }?>
+</table>
+<?php
+foreach($letras as $letra){
+$q=$letra->id;
+$letra->getTessalidas()->getTesdatos()->diascredito;
+	?>
+<div id="letras-<?php echo $letra->id?>">
+<?php echo Ajax::form('letras-'.$letra->id,$module_name.'/cancelacionfacturas/grabarletra/'.$letra->id.'/Editar')?>
+	 <?php echo Form::hidden('salida-'.$q.'.id','',$letra->getTessalidas()->id)?>
+     <?php echo Form::hidden('salida-'.$q.'.aclusuarios_id','',Auth::get('id'))?>
+     <?php echo Form::hidden('salida-'.$q.'.tesmonedas_id','',$letra->getTessalidas()->tesmonedas_id)?>
+     <?php echo Form::hidden('salida-'.$q.'.tesdocumentos_id','','34')?>
+     <?php echo Form::hidden('salida-'.$q.'.codigo','',time())?>
+     <?php echo Form::hidden('salida-'.$q.'.movimiento','','SALIDA')?>
+     <?php echo Form::hidden('salida-'.$q.'.estado','',1)?>
+     <?php echo Form::hidden('salida-'.$q.'.userid','',Auth::get('id'))?>
+     <?php echo Form::hidden('salida-'.$q.'.aclempresas_id','',Session::get('EMPRESAS_ID'))?>
+     <?php echo Form::hidden('salida-'.$q.'.tesdatos_id','',$letra->getTessalidas()->tesdatos_id)?>
+      <?php echo Form::hidden('salida-'.$q.'.estadoingreso','','Pendiente')?>
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+  <tr>
+    <th width="13%" align="left">Nro. Letra</th>
+    <th width="16%" align="left">Cliente</th>
+    <th width="29%" align="left">F. Emision</th>
+    <th width="35%" align="left">F. Vencimiento</th>
+    <th width="7%" align="left">Monto</th>
+    </tr>
+  <tr>
+    <td>
+      <?php echo Form::text('salida-'.$q.'.numero','size="10" placeholder="numero" required',$letra->getTessalidas()->numero)?> </td>
+    <td>
+     <?php echo $letra->getTessalidas()->getTesdatos()->razonsocial?> </td>
+    <td><?php echo Calendar::selector('salida-'.$q.'.femision','',$letra->getTessalidas()->femision);?></td>
+    <td><?php echo Calendar::selector('salida-'.$q.'.fvencimiento','',$letra->getTessalidas()->fvencimiento);?></td>
+    <td> 
+     <?php echo Form::text('salida-'.$q.'.totalconigv','',$letra->getTessalidas()->totalconigv)?>
+<?php echo Form::submit('GRABAR','class="btn btn-primary"');?>
+     </td>
+    </tr>
+</table>
+<?php echo Form::close()?>
+</div>
+<?php }?>
+<?php echo Html::link($module_name.'/letrassalidas/','TERMINAR','class="btn btn-info"');?>
+</div>

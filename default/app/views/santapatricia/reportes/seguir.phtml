@@ -1,0 +1,197 @@
+<?php echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<div class="card">
+    <h1>Seguimiento de un documento<span>todos los moviminetos que tiene un documento de las tablas de Ingresos y Salidas</span></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="span12">
+  <div style="margin:5px;float:left; width:40%; display:inline-block;"> 
+   <label>INGRESOS</label>
+    <input id="ingreso" />
+    <a href="javascript:;" id="ver_i" class="btn"> Ver >></a>
+  </div>
+    <div style="margin:5px; width:40%; display:inline-block;">
+    <label>SALIDAS</label>
+   <input id="salida" />
+      <a href="javascript:;" id="ver_s" class="btn"> Ver >></a>
+	</div>
+</div>
+<div class="clear"></div>
+<hr />
+<div class="card-body">
+<div class="span12">
+  <div class="span6">
+  <table width="90%" border="0" cellspacing="0" cellpadding="0">
+  <caption>Movimientos Ingresos</caption>
+    <tr>
+      <td width="80">Documento</td>
+      <td width="80">Factura</td>
+    </tr>
+    <tr>
+      <td>Numero</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Datos</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Igv</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Total</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Estado</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Letra estado</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Banco</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>fecha pago</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Numero unico</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Cheque    Estado</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Banco</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Numero</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>fecha pago</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Retencion</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Vauchers</td>
+      <td></td>
+    </tr>
+  </table>
+<div class="clear"></div>
+  </div>
+  <div class="span6">
+  <table width="90%" border="0" cellspacing="0" cellpadding="0">
+  
+  <caption>Movimientos Salidas</caption>
+   <tr>
+      <td width="80">Documento</td>
+      <td width="80">Factura</td>
+    </tr>
+    <tr>
+      <td>Numero</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Datos</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Igv</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Total</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Estado</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Letra estado</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Banco</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>fecha pago</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Numero unico</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Cheque    Estado</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Banco</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Numero</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>fecha pago</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Es factura    adelanto</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Abono</td>
+      <td></td>
+    </tr>
+  </table>
+  <div class="clear"></div>
+  </div>
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function()
+{
+	$("#ingreso").tokenInput("/<?php echo $module_name?>/ingresos/buscardoc", 
+		{
+			tokenLimit: 1,
+			minChars: 2,
+	
+			onAdd: function (item){
+			   alert(item.id);
+			},
+			onDelete: function (item) {
+				$("#ver").html('');
+			}
+		});
+	$("#salida").tokenInput("/<?php echo $module_name?>/salidas/buscardoc/", 
+		{
+			tokenLimit: 1,
+			minChars: 2,
+	
+			onAdd: function (item){
+			   alert(item.id);
+			},
+			onDelete: function (item) {
+				$("#ver").html('');
+			}
+		});
+
+});
+</script>

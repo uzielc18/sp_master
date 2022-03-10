@@ -1,0 +1,53 @@
+<?Php View::content();
+if($n!=0){
+?>
+<?php echo Ajax::form('rollo'.$n,'santapatricia/produccion/grabarrollo/'.$id)?>
+<?php echo Form::hidden('a'.$n,'',$n)?>
+<?php echo Form::hidden('prorollos'.$n.'.id','',$rollo->id);?>
+<?php echo Form::hidden('prorollos'.$n.'.prodetalleproduccion_id','',$rollo->prodetalleproduccion_id);?>
+<table width="261" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <td width="172">Codigo</td>
+    <td width="73"><?php echo Form::text('prorollos'.$n.'.codigo','readonly="readonly"',$rollo->codigo);?></td>
+  </tr>
+  <tr>
+    <td>Numero</td>
+    <td><?php echo Form::text('prorollos'.$n.'.numero','',$rollo->numero);?></td>
+  </tr>
+  <tr>
+    <td>Metros</td>
+    <td><?php echo Form::text('prorollos'.$n.'.metros','',$rollo->metros);?></td>
+  </tr>
+  <tr>
+    <td>Peso</td>
+    <td><?php echo Form::text('prorollos'.$n.'.peso','',$rollo->peso);?></td>
+  </tr>
+  <tr>
+    <td>Ancho</td>
+    <td><?php echo Form::text('prorollos'.$n.'.ancho','',$rollo->ancho);?></td>
+  </tr>
+  <tr>
+    <td>Color</td>
+    <td><?php echo Form::text('prorollos'.$n.'.color','',$rollo->color);?></td>
+  </tr>
+  <tr>
+    <td>Fecha de corte</td>
+    <td><?php echo Calendar::text('prorollos'.$n.'.fechacorte','',$rollo->fechacorte);?></td>
+  </tr>
+  <tr>
+    <td>Estado del rollo</td>
+    <td><?php echo Form::text('prorollos'.$n.'.estadorollo','',$rollo->estadorollo);?></td>
+  </tr>
+  <tr>
+    <td colspan="2"><?php echo Form::submit('Grabar','id="'.$n.'" class="btn btn-primary"')?></td>
+  </tr>
+</table>
+<?php echo Form::close();
+}else{
+echo $ok;?>
+<div class="form-actions">
+<?php
+echo Html::linkAction('rollos/'.$id,'Si','class="btn"');
+?>
+</div>
+<?php }?>

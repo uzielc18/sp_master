@@ -1,0 +1,63 @@
+<?php
+$orden;
+View::content();
+if($e=='Grabar'){
+$q=$letra->id;
+ echo Ajax::form('letras-'.$letra->id,$module_name.'/cancelacionfacturas/grabarletra/'.$letra->id.'/Editar')?>
+	 <?php echo Form::hidden('salida-'.$q.'.id','',$letra->getTessalidasinternas()->id)?>
+     <?php echo Form::hidden('salida-'.$q.'.aclusuarios_id','',Auth::get('id'))?>
+     <?php echo Form::hidden('salida-'.$q.'.tesmonedas_id','',$letra->getTessalidasinternas()->tesmonedas_id)?>
+     <?php echo Form::hidden('salida-'.$q.'.tesdocumentos_id','','34')?>
+     <?php echo Form::hidden('salida-'.$q.'.codigo','',time())?>
+     <?php echo Form::hidden('salida-'.$q.'.movimiento','','SALIDA')?>
+     <?php echo Form::hidden('salida-'.$q.'.estado','',1)?>
+     <?php echo Form::hidden('salida-'.$q.'.userid','',Auth::get('id'))?>
+     <?php echo Form::hidden('salida-'.$q.'.aclempresas_id','',Session::get('EMPRESAS_ID'))?>
+     <?php echo Form::hidden('salida-'.$q.'.tesdatos_id','',$letra->getTessalidasinternas()->tesdatos_id)?>
+      <?php echo Form::hidden('salida-'.$q.'.estadoingreso','','Pendiente')?>
+<table width="100%" border="0" cellspacing="1" cellpadding="0">
+  <tr>
+    <th width="13%" align="left">Nro. Letra</th>
+    <th width="16%" align="left">Cliente</th>
+    <th width="29%" align="left">F. Emision</th>
+    <th width="35%" align="left">F. Vencimiento</th>
+    <th width="7%" align="left">Monto</th>
+    </tr>
+  <tr>
+    <td>
+      <?php echo Form::text('salida-'.$q.'.numero','size="10" placeholder="numero" required',$letra->getTessalidasinternas()->numero)?> </td>
+    <td>
+     <?php echo $letra->getTessalidasinternas()->getTesdatos()->razonsocial?> </td>
+    <td><?php echo Calendar::selector('salida-'.$q.'.femision','',$letra->getTessalidasinternas()->femision);?></td>
+    <td><?php echo Calendar::selector('salida-'.$q.'.fvencimiento','',$letra->getTessalidasinternas()->fvencimiento);?></td>
+    <td> 
+     <?php echo Form::text('salida-'.$q.'.total','',$letra->getTessalidasinternas()->total)?>
+<?php echo Form::submit('GRABAR','class="btn btn-primary"');?>
+     </td>
+    </tr>
+</table>
+<?php echo Form::close();
+}else{
+	?>
+<table width="100%" border="0" cellspacing="1" cellpadding="0">
+  <tr>
+    <th width="13%" align="left">Nro. Letra</th>
+    <th width="16%" align="left">Cliente</th>
+    <th width="29%" align="left">F. Emision</th>
+    <th width="35%" align="left">F. Vencimiento</th>
+    <th width="7%" align="left">Monto</th>
+    </tr>
+  <tr>
+    <td>
+      <?php echo $letra->getTessalidasinternas()->numero?> </td>
+    <td>
+     <?php echo $letra->getTessalidasinternas()->getTesdatos()->razonsocial?> </td>
+    <td><?php echo Sp::formatFecha('%d/%m/%Y',$letra->getTessalidasinternas()->femision);?></td>
+    <td><?php echo Sp::formatFecha('%d/%m/%Y',$letra->getTessalidasinternas()->fvencimiento);?></td>
+    <td> 
+     <?php echo $letra->getTessalidasinternas()->total?>
+<?php echo Ajax::LinkAction('grabarletra_i/'.$letra->id.'/Grabar','Editar','letras-'.$letra->id,'btn btn-primary');?>
+     </td>
+    </tr>
+</table>
+<?php }?>

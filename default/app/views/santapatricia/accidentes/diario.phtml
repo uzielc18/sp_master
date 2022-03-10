@@ -1,0 +1,49 @@
+<div class="card">
+    <h1>Libro de Accidentes !</h1>
+</div>
+<script type="text/JavaScript">
+    $(document).ready(function(){
+        $("#anio").change(function(event){
+            var id = $("#anio").find(':selected').val();
+			location.href = '/<?php echo $module_name?>/accidentes/reportes/'+id+'/<?php echo date('m')?>';
+        });
+    });
+</script>
+<div class="form-actions">
+<?php echo Html::linkAction("", 'Registrar Accidentes', 'class="btn btn-primary"') ?>
+</div>
+<?php echo Sp::imprimir('Abonos Adelanto - ','P');?> 
+
+<div class="menu">
+<ul>
+<li>
+<a href="javascript:;">Año 
+<select id="anio">
+<?php
+for($i=2011;$i<=2020;$i++)
+{
+	$selec='';
+	if($anio==$i){
+	$selec=' selected="selected"';
+	}
+	echo '<option value="'.$i.'" '.$selec.'>'.$i.'</option>';
+}
+?>
+</select>
+</a>
+</li>
+</ul> 
+<?php 
+foreach($meses as $clave => $mes):
+$class='';
+if($clave==$mes_activo){$class=' class="active"';}
+echo '<ul>';
+echo '<li>'.Html::linkAction("reportes/$anio/$clave",$mes,$class).'</li>'; 
+echo '</ul>';
+endforeach;?>
+</div>
+
+<div class="page reporte">
+
+
+</div>

@@ -1,0 +1,33 @@
+<?php echo Form::open()?>
+<?php echo Form::hidden('tesdetallevauchers.id');?>
+<?php echo Form::hidden('tesdetallevauchers.tesvauchers_id','',Session::get('V_ID_O'));?>
+<?php echo Form::hidden('tesdetallevauchers.tesingresos_id','',0);?>
+<?php echo Form::hidden('tesdetallevauchers.tessalidas_id','',0);?>
+<?php echo Form::hidden('tesdetallevauchers.abono','',1);?>
+<?php echo Form::hidden('tesdetallevauchers.cargos','',0);?>
+<?php echo Form::hidden('tesdetallevauchers.tesdatos_id','',0);?>
+<?php echo Form::hidden('tesdetallevauchers.tescuentascorrientes_id','',0);?>
+<?php echo Form::hidden('tesdetallevauchers.estado','',1);?>
+<?php echo Form::hidden('tesdetallevauchers.cargos','',0);?>
+<table width="68%" border="0" cellspacing="1" cellpadding="0">
+  <tr>
+    <th width="16%" align="left">Cuenta General</th>
+    <th width="8%" align="left">Nº Doc.</th>
+    <th width="9%" align="left">F. Vcto</th>
+    <th width="17%" align="left">Cod. Auxiliar</th>
+    <th width="20%" align="left">Descripcion</th>
+    <th width="12%" align="left">Cargo</th>
+    <th width="18%" align="left">Abono</th>
+  </tr>
+  <tr>
+    <td width="16%"><?php echo $pago->ncuenta; echo Form::hidden('tesdetallevauchers.plancontable','',$pago->ncuenta); ?></td>
+    <td width="8%"><?php echo $numero; echo Form::hidden('tesdetallevauchers.correlativo','',$numero); ?></td>
+    <td width="9%">-</td>
+    <td width="17%">-</td>
+    <td width="20%"><?php echo $pago->nombre;?></td>
+    <td width="12%">-</td>
+    <td width="18%"><?php echo Form::text('tesdetallevauchers.monto','',number_format($total,2,'.','')); ?></td>
+  </tr>
+</table>
+<?php echo Form::submit('GRABAR','class="btn btn-primary"');?>
+<?php echo Form::close()?>

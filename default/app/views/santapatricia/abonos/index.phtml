@@ -1,0 +1,143 @@
+<div class="card">
+<h1>Abonos Santa Patricia</h1>
+</div>
+<div class="form-actions"><?php echo Html::linkAction("crear/", 'Ingresar Abono','class="btn btn-primary"','title="Crear Abono"','') ?> <?php echo Html::linkAction("listado_app/", 'Abonos Adelanto','class="btn btn-primary"','title="Abonos que estan si documento"','') ?>
+</div>
+
+<?php View::content()?>
+<div class="tabbable"> <!-- Only required for left/right tabs -->
+  <ul class="nav nav-tabs">
+    <?php foreach($pagos as $p){?>
+    <li <?php if($p->id==$id){echo "class='active'";}?>><a class="ver" data-id="<?Php echo $p->id?>" href="#tab<?php echo $p->id?>" data-toggle="tab"><?Php echo $p->nombre?></a></li>
+    <?Php }?>
+    <li <?php if(0==$id){echo "class='active'";}?>><a class="ver" data-id="0" href="#tab0" data-toggle="tab"><?Php echo "TODOS"?></a></li>
+  </ul>
+	<div class="tab-content">
+    <div class="tab-pane active" id="tab<?php echo $id?>">
+
+<div class="menu">
+<ul>
+<li>
+<a href="javascript:;">Año 
+<select id="anio">
+<?php
+for($i=2011;$i<=2020;$i++)
+{
+	$selec='';
+	if($anio==$i){
+	$selec=' selected="selected"';
+	}
+	echo '<option value="'.$i.'" '.$selec.'>'.$i.'</option>';
+}
+?>
+</select>
+</a>
+</li>
+</ul> 
+<?php 
+$mes_actual=date('Y-m');
+foreach($meses as $clave => $mes):
+if($anio.'-'.$clave<=$mes_actual){
+$class='';
+if($mes_activo==$clave)$class=' active';
+echo '<ul>';
+echo '<li><a class="enviar'.$class.'" id="mes-'.$mes.'" href="javascript:;" data-id="'.$anio.'-'.$clave.'-01">'.$mes.'</a></li>'; 
+echo '</ul>';
+}
+endforeach;?>
+
+</div>
+<div class="clear"></div>
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus="" placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+<?php echo Sp::imprimir('Abonos Adelanto - ','P');?> 
+<div class="card-body">
+<table id="exportar_excel" width="86%" align="center" class="table table-bordered table-striped">
+<caption>
+ Abonos generados en el Mes Actual
+</caption>
+  <tr>
+  	<th width="21" align="left">Nº.</th>
+	<th width="54" align="left">Numero</th> 
+	<th width="72" align="left">Forma de Pago</th> 
+	<th width="39" align="left">Ref. Doc</th> 
+    <th width="84" align="left">Cliente</th> 
+    <th width="45" align="left">Fecha</th> 
+    <th width="56" align="left">Moneda</th>
+    <th width="58" align="right">Importe</th>
+    <th width="64" align="left">Acciones</th>
+  </tr>
+<?php $n=0;
+foreach($vouchers as $item){ 
+$n++;
+$importe=0;
+switch ($item->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+
+if(!empty($item->total))$importe=$item->total;
+?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20"><?php echo $n?></td>
+    <td><?php echo $item->numero?> <?php if($item->estadov=="ANULADO") echo "Anulado";?></td>
+    <td><?php echo $item->getTesformadepagosabonos(('DOC_ID')==10)->nombre?></td>
+	<td><?php echo $item->getTesformadepagosabonos()->numero?></td>
+    <td><?php $i=0;foreach($item->getClientes() as $det)
+	{
+		if(!empty($det->tesdatos_id)){
+			$i++;
+			if($i==1)echo $det->getTesdatos()->razonsocial;else echo ", ".$det->getTesdatos()->razonsocial;
+			}
+	}
+	if($i==0)echo $item->getTesdatos()->razonsocial?></td>
+    <td><?php echo Sp::formatFecha('%d/%m/%Y',$item->fecha)?></td>
+    <td><?php echo $item->getTesmonedas()->nombre;?></td>
+    
+    <td align="right"><?php echo $simbolo;?> <?php echo number_format($importe,2,'.',' ');?></td>
+   <td>
+   <?php 
+   
+   
+   if($item->estadov!="Terminado" && $item->estadov!="ANULADO")echo Html::linkAction('cargar/'.$item->id.'/grabardetalle',Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'')?>
+   <?php echo Html::linkAction('cargar/'.$item->id.'/finalizar',Html::img("figuras/ver.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Visualizar Abono"','')?>
+   <?php if($item->activo==0)echo Html::linkAction("eliminar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');
+   echo Html::linkAction('cargar/'.$item->id.'/creardetalle_app',Html::img("figuras/procesos.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Agregar detalles o el documento para le abono"');?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+	</div>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#txtBuscar').on('search',function(){
+		//le decimos a la funcion que busque en la tabla tblTabla el
+		//valor que contiene el campo actual
+		$.fntBuscarEnTabla($(this).val(),'exportar_excel');
+		
+	});
+	$(".ver").click(function(){
+	var op=$(this).attr('data-id');
+	document.location = "/<?php echo $module_name?>/<?php echo $controller_name?>/index/"+op;
+	});	
+	$("#anio").change(function(event){
+    	var id = $("#anio").find(':selected').val();
+		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/<?Php echo $action_name?>/<?php echo $id?>/'+id;
+     });
+	$(".enviar").click(function()
+	{
+		var fecha = $(this).attr('data-id');
+		var F=fecha.split('-');
+		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/<?Php echo $action_name?>/<?php echo $id?>/'+F[0]+'/'+F[1];
+	});
+});
+</script>

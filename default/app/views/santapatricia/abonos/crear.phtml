@@ -1,0 +1,68 @@
+<?php
+View::content();
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<script type="text/javascript">
+
+$(document).ready(function()
+{	  
+	
+  
+/*Busqueda del Proveedores*/
+ $("#abonos_tesdatos_id").tokenInput("<?php echo "/".$module_name."/clientes/resultados"?>", 
+		{
+		tokenLimit: 1,
+		minChars: 2,
+		onAdd: function (item) {
+		},
+		onDelete: function (item) {
+		}
+	}); 
+	$("#abonos_tesformadepagosabonos_id").change(function(){
+                var op = $("#abonos_tesformadepagosabonos_id option:selected").val();
+                if(op==14){
+				var campo='<td><h5>Serie-Numero</h5></td><td><input id="abonos_serie_numero" name="abonos[serie_numero]" type="text" value=""><input id="abonos_tipodeabono" name="abonos[tipodeabono]" type="hidden" value="RETENCION"></td>';
+				$("#retenciones").html(campo);
+				}
+				if(op==10){
+				var campo='<td><h5>Serie-Numero</h5></td><td><input id="abonos_serie_numero" name="abonos[serie_numero]" type="text" value=""><input id="abonos_tipodeabono" name="abonos[tipodeabono]" type="hidden" value="RETENCION"></td>';
+				$("#retenciones").html(campo);
+				}
+        });
+
+  
+});
+</script>
+<div class="card">
+<h1><?php echo $titulo?></h1>
+</div>
+<div class="card-body">
+
+<?php echo Form::open()?>
+<?php echo Form::hidden('abonos.id')?>
+<table width="70%" border="0" align="center" cellpadding="0" cellspacing="0">
+<caption>Ingresar Datos para generar un Abono</caption>
+    <td width="20%"><h5>Cliente:</h5></td>
+    <td width="80%" title="Elegir Documentos de un determinado Proveedor"><?php echo Form::text('abonos.tesdatos_id','')?></td>
+  </tr>
+  <tr>
+    <td><h5>Fecha del Abono:</h5></td>
+    <td title="Elegir: Efectivo, Cheques, TLC, etc"><?php echo Calendar::text('abonos.fecha','requerid');?></td>
+  </tr>
+  <tr>
+    <td><h5>Moneda:</h5></td>
+    <td title="Seleccionar Moneda S/. O $/."><?php echo Form::dbSelect('abonos.tesmonedas_id','nombre',array('tesmonedas','find','conditions: aclempresas_id='.Session::get('EMPRESAS_ID')));?></td>
+  </tr>
+  <tr>
+    <td><h5>Forma de Pago:</h5></td>
+    <td title="Elegir: Efectivo, Cheques, TLC, etc"><?php echo Form::dbSelect('abonos.tesformadepagosabonos_id','nombre',array('tesformadepagosabonos','find','conditions: estado=1 AND activo=1'));?></td>
+  </tr>
+  <tr id="retenciones">
+  </tr>
+  <tr>
+    <td colspan="2"><?php echo Form::submit('Continuar','class="btn btn-primary"');?> <?php echo Html::linkAction('','Cancelar','class="btn btn-info"');?></td>
+    </tr>
+</table>
+
+<?php echo Form::close()?>
+</div>

@@ -1,0 +1,79 @@
+<div class="card">
+    <h1><em>Ver Salida<span><?php echo Session::get('DOC_NOMBRE')?></span></em></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="card-body">
+<div id="ver_resultado"></div>
+
+    <form class="form-inline">
+    <div class="input-prepend">
+    <span class="add-on">Pedido</span>
+    <?php echo $salida->npedido;?>
+    <span class="add-on">Serie</span>
+    <?php echo $salida->serie;?>&nbsp;
+    <span class="add-on">Numero</span>
+    <?php echo $salida->numero;?>&nbsp;
+    <span class="add-on">Moneda</span>
+    <?php echo $salida->tesmonedas_id;?>&nbsp;
+    <span class="add-on">Destino:</span>
+    <?php echo $salida->hilodestino_id;?><br />
+    <span class="add-on">Proveedor</span>
+      <?php echo $salida->tesdatos_id?><br />
+    <span class="add-on">Direccion de Entrega</span>
+      <?php echo $salida->direccion_entrega;//finiciotraslado?><br />
+    <span class="add-on">Fecha de Traslado</span>
+      <?php echo $salida->finiciotraslado;//finiciotraslado?><br />
+    <span class="add-on">Conductor</span>
+      <?php echo $prodetalletransportes->protransportistas_id;?>
+    <span class="add-on">Transporte</span>
+      <?php echo $prodetalletransportes->protransportes_id;?>
+	</div>      
+  <div class="control-group">
+    <div class="controls">
+       
+    </div>
+  </div>
+  </form>
+
+<div id="guia">
+<table width="75%" border="0" align="center" cellpadding="0" cellspacing="1" class="table table-hover">
+<caption> Lista de Cajas en Guia </caption>
+  <tr>
+    <th width="9%">Codigo</th>
+    <th width="17%">Cantidad</th>
+    <th width="11%">Unidad</th>
+    <th width="53%">Descripcion</th>
+  </tr>
+  <?php 
+  $n=0;
+  foreach($detalles as $item){
+	  $n++;
+	  ?> 
+  <tr id="<?php echo $item->id?>">
+    <td><?php echo $n?>. <?php echo $item->getTescajas()->numerodecaja?></td>
+    <td><?php echo $item->pesoneto?></td>
+    <td><?Php echo $item->getTesunidadesmedidas()->simbolo?></td>
+    <td><?php echo $item->getTesproductos()->detalle?> <?Php echo $item->getTescolores()->nombre?></td>
+  </tr>
+  <?php }?>
+</table>
+</div> 
+<?php echo Form::open(NULL,'POST','class="form-inline"')?>
+<?php echo Form::hidden('salida.id')?>
+<?php echo Form::hidden('salida.aclusuarios_id')?>
+<?php echo Form::hidden('salida.tesmonedas_id')?>
+<?php echo Form::hidden('salida.tesdatos_id')?>
+<?php echo Form::hidden('salida.tesdocumentos_id')?>
+<?php echo Form::hidden('salida.testipocambios_id')?>
+<?php echo Form::hidden('salida.estadosalida','','TERMINADO')?>
+<?php if($salida->estadosalida=='Editable'){?><button type="submit" class="btn btn-primary">Finalizar</button> <?php echo Html::linkAction('agregardetalles','Editar','class="btn"')?><?Php }else{?><?php echo Html::linkAction('salidas','Listado','class="btn"')?><?php }?>
+<?php echo Form::close();?>
+<button onclick="myFunction()" class="btn btn-info"> IMPRIMIR </button>
+
+<script>
+function myFunction() {
+    window.open("http://"+document.domain+"/imprimir/guias", "_blank", "toolbar=NO, scrollbars=yes, resizable=yes, top=100, left=250, width=600, height=400");
+}
+</script>

@@ -1,0 +1,117 @@
+<?php
+View::content();
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<script type="text/javascript">
+        $(document).ready(function() {
+            $("#prod").tokenInput("<?php echo "/santapatricia/repuestos/resultados"?>", 
+			{
+				tokenLimit: 1,minChars: 1,
+                onAdd: function (item) {
+                   var VAL=item.id;
+				   $("#tesproductos_id").val(VAL['id']);
+				   $("#tesproductos_testipoproductos_id").val(VAL['testipoproductos_id']);
+				   $("#tesproductos_codigo").val(VAL['codigo']);
+				   $("#tesproductos_codigo_ant").val(VAL['codigo_ant']);
+				   $("#tesproductos_nombre").val(VAL['nombre']);
+				   $("#tesproductos_nombrecorto").val(VAL['nombrecorto']);
+				   $("#tesproductos_abr").val(VAL['abr']);
+				   $("#tesproductos_detalle").val(VAL['detalle']);
+				   $("#tesproductos_precio").val(VAL['precio']);
+				    $("#tesproductos_preciod").val(VAL['preciod']);
+                },
+                onDelete: function (item) {
+					$("#tesproductos_id").val('');
+					$("#tesproductos_testipoproductos_id").val('');
+				   $("#tesproductos_codigo").val('<?php echo $codigo?>');
+				   $("#tesproductos_codigo_ant").val('');
+				   $("#tesproductos_nombre").val('');
+				   $("#tesproductos_nombrecorto").val('');
+				   $("#tesproductos_abr").val('');
+				   $("#tesproductos_detalle").val('');
+				   $("#tesproductos_precio").val('');
+				   $("#tesproductos_preciod").val('');
+                }
+            });
+		});
+        </script>
+<div class="card">
+    <h1><?php echo $titulo?></h1>
+</div>
+<strong>Si ya creó el producto puede buscarlo aqui</strong>
+<br /><input name="prod" id="prod" type="text">
+<hr />
+<div class="card-body">
+<?php echo Form::open(NULL, 'post', 'class="form-horizontal"');
+echo Form::hidden('tesproductos.id')
+?>
+<table width="94%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+  <tr>
+    <th width="15%" align="right" valign="top"><p>Codigo Sist:&nbsp;</p>
+    <p>Codigo del Repuesto:</p></th>
+    <td width="39%" valign="top">
+	  <p>
+	    <?php 
+	echo Form::text('tesproductos.codigo','size="20" readonly="readonly"',$codigo)?>
+	  </p>
+    <p>
+      <?php 
+	echo Form::text('tesproductos.codigo_ant','size="20"')?>
+    </p></td>
+    <th width="18%" align="right" valign="top">Codigo Proveedor&nbsp;<br /><br />Codigo Importado&nbsp;<br /><br />Codigo Fabricacion&nbsp;</th>
+    <td width="28%" valign="top"><?php echo Form::text('tesproductos.cod_proveedor')?><br /><?php echo Form::text('prorepuestos.codigo_importado') ?><br /><?php echo Form::text('prorepuestos.codigo_fabricacion') ?></td>
+  </tr>
+  <tr>
+    <th align="right" valign="top">Nombre corto:&nbsp;</th>
+    <td valign="top"><?php echo Form::text('tesproductos.nombrecorto','size="30"') ?></td>
+    <th align="right" valign="top">Sotk&nbsp;</th>
+    <td valign="top">Min: <?php echo Form::text('tesproductos.stokminimo','size="6"')?> Max<?php echo Form::text('tesproductos.stokmaximo','size="6"')?></td>
+  </tr>
+  <tr>
+    <th align="right" valign="top">Nombre:</th>
+    <td colspan="3" valign="top"><?php echo Form::text('tesproductos.nombre','size="50"') ?></td>  
+  </tr>
+  <tr>
+  <th align="right" valign="top">Pag. Libro:&nbsp;</th>
+    <td valign="top"><?php echo Form::text('prorepuestos.paglibro') ?></td>
+  <tr>
+    <th align="right" valign="top">Abreviatura:</th>
+    <td valign="top"><?php echo Form::text('tesproductos.abr','size="10"') ?></td>
+    <th align="right" valign="top">Ubicacion:&nbsp;</th>
+    <td valign="top"><?php echo Form::text('prorepuestos.ubicacion','size="9"') ?></td>
+  </tr>
+  <tr>
+    <th align="right" valign="top">Descripcion:&nbsp;</th>
+    <td valign="top"><?php echo Form::textarea('tesproductos.detalle','cols="35" rows="3"') ?></td>
+    <th align="right" valign="top">
+    Precio:</th>
+    <td valign="top">S/: <?php echo Form::text('tesproductos.precio','size="6"')?> $/.<?php echo Form::text('tesproductos.preciod','size="6"')?></td>
+  </tr>
+  <tr>
+    <th align="right" valign="top">Marca:&nbsp;</th>
+    <td valign="top"><?php echo Form::text('prorepuestos.marca') ?></td>
+   <th align="right" valign="top">Origen:&nbsp;</th>
+    <td rowspan="2" valign="top">
+	<?php echo Form::check('prorepuestos.fabricacion','1','',false) ?>Fabricacion.<br />
+	<?php echo Form::check('prorepuestos.compra','1','',false) ?>Compra.<br />
+	<?php echo Form::check('prorepuestos.nacional','1','',false) ?>Nacional.<br />
+	<?php echo Form::check('prorepuestos.importado','1','',false) ?> Importado</td>
+  </tr>
+    <tr>
+    <th align="right" valign="top">Modelo:&nbsp;</th>
+    <td valign="top"><?php echo Form::text('prorepuestos.modelo') ?></td>
+   
+    <th align="right" valign="top">&nbsp;</th>
+  </tr>
+    <tr>
+    <th align="right" valign="top">Forma del repuesto:&nbsp;</th>
+    <td valign="top"><?php echo Form::text('prorepuestos.formadelrepuesto') ?></td>
+    <th align="right" valign="top">Tipo de Repuesto:&nbsp;</th>
+    <td valign="top"><?php echo Form::dbSelect('tesproductos.testipoproductos_id','nombre',array('testipoproductos','find','conditions: teslineaproductos_id=6'))?></td>
+  </tr>
+</table>
+<div class="form-actions">
+    <?php echo Form::submit('Guardar Datos', 'class="btn btn-primary"') ?>
+    <?php echo Html::linkAction('listado', 'Cancelar', 'class="btn"'); ?>
+    </div> 
+</div>

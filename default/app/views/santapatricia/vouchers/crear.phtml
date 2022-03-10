@@ -1,0 +1,55 @@
+<?php
+View::content();
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<script type="text/javascript">
+
+$(document).ready(function()
+{	 
+/*Busqueda del Proveedores*/
+ $("#proveedor").tokenInput("<?php echo "/".$module_name."/proveedores/proveedor"?>", 
+		{
+		tokenLimit: 1,
+		minChars: 2,
+		onAdd: function (item) {
+		},
+		onDelete: function (item) {
+		}
+	});
+});
+</script>
+<div class="card">
+<h1><?php echo $titulo?></h1>
+</div>
+<div class="card-body">
+
+<?php echo Form::open()?>
+<?php echo Form::hidden('tesvauchers.id')?>
+<table width="70%" border="0" align="center" cellpadding="0" cellspacing="1">
+  <tr>
+    <th colspan="2"><h4>Ingresar Datos para generar un Boucher</h4></th>
+    </tr>
+  <tr>
+    <td width="20%"><h5>Proveedor:</h5></td>
+    <td width="80%" title="Elegir Documentos de un determinado Proveedor"><?php echo Form::text('proveedor','','14930')?></td>
+  </tr>
+   <tr>
+    <td><h5>Fecha del Voucher:</h5></td>
+    <td title="Elegir: Efectivo, Cheques, TLC, etc"><?php echo Calendar::text('tesvauchers.fecha','requerid');?></td>
+  </tr>
+  <tr>
+    <td><h5>Moneda:</h5></td>
+    <td title="Seleccionar Moneda S/. O $/."><?php echo Form::dbSelect('tesvauchers.tesmonedas_id','nombre',array('tesmonedas','find','conditions: aclempresas_id='.Session::get('EMPRESAS_ID')));?></td>
+  </tr>
+
+  <tr>
+    <td><h5>Forma de Pago:</h5></td>
+    <td title="Elegir: Efectivo, Cheques, TLC, etc"><?php echo Form::dbSelect('tesvauchers.voucherformadepagos_id');?></td>
+  </tr>
+  <tr>
+    <td colspan="2"><?php echo Form::submit('Continuar','class="btn btn-primary"');?></td>
+    </tr>
+</table>
+
+<?php echo Form::close()?>
+</div>

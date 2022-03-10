@@ -1,0 +1,82 @@
+<div class="card">
+    <h1>Venta!<span><?php echo Session::get('DOC_NOMBRE')?></span></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+
+<div class="form-actions">
+<?php echo Html::linkAction("venta/", 'Regresar ','class="btn"') ?>
+</div>
+<div class="card-body">
+<?php echo Form::open()?>
+<?php echo Form::hidden('detalle.id')?>
+<?php echo Form::hidden('detalle.tessalidas_id')?>
+<?php echo Form::hidden('detalle.tesproductos_id')?>
+<?php echo Form::hidden('detalle.tesunidadesmedidas_id')?>
+<?php echo Form::hidden('detalle.aclempresas_id')?>
+<?php echo Form::hidden('detalle.tescolores_id')?>
+<?php echo Form::hidden('detalle.prorollos_id')?>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr align="left">
+    <th>Codigo</th>
+    <th>Cantidad</th>
+    <th>Unidad</th>
+    <th>Descripcion</th>
+    <th>PU.</th>
+    <th>Descuento</th>
+    <th>Valor de Venta</th>
+  </tr>
+  <tr id="<?php echo $detalle->id?>">
+    <td><?php if(!empty($detalle->prorollos_id)){echo $detalle->getProrollos()->codigo?>-<?php echo $detalle->getProrollos()->numeroventa; echo ' '.$detalle->getProrollos()->getNprocesos($detalle->prorollos_id);}?></td>
+    <td><?Php echo Form::text('detalle.cantidad')?></td>
+    <td><?Php echo $detalle->getTesunidadesmedidas()->simbolo?></td>
+    <td><?php echo $detalle->getTesproductos()->nombre?> <?php echo $detalle->getTesproductos()->detalle?> <?Php if(!empty($detalle->tescolores_id))echo $detalle->getTescolores()->nombre?></td>
+    <td><?Php echo Form::text('detalle.preciounitario')?></td>
+    <td><?Php echo Form::text('detalle.descuento')?></td>
+    <td> <span id="importe"><?php	if(!empty($detalle->importe))echo number_format($detalle->importe,2,'.','');?> </span><?Php echo Form::hidden('detalle.importe')?></td>
+  </tr>
+</table>
+<?Php echo Form::submit('GRABAR','class="btn btn-primary"')?>
+<?php Form::close()?>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+
+$('#detalle_cantidad').change(function(){
+	var cantidad=$(this).val();
+	var precio=$('#detalle_preciounitario').val();
+	var descuento=$('#detalle_descuento').val();
+	
+	if(isNaN(cantidad)){c=0;}else{var c=cantidad;}
+	if(isNaN(descuento)){d=0;}else{var d=descuento;}
+	if(isNaN(precio)){p=0;}else{var p=precio;}
+	var importe=(c*p)-d;
+	$('#detalle_importe').val(importe.toFixed(2));
+	$('#importe').html(importe.toFixed(2));
+	});
+$('#detalle_preciounitario').change(function(){
+	var precio=$(this).val();
+	var cantidad=$('#detalle_cantidad').val();
+	var descuento=$('#detalle_descuento').val();
+	if(isNaN(cantidad)){c=0;}else{var c=cantidad;}
+	if(isNaN(descuento)){d=0;}else{var d=descuento;}
+	if(isNaN(precio)){p=0;}else{var p=precio;}
+	var importe=(c*p)-d;
+	$('#detalle_importe').val(importe.toFixed(2));
+	$('#importe').html(importe.toFixed(2));
+	});
+$('#detalle_descuento').change(function(){
+	var descuento=$(this).val();
+	var precio=$('#detalle_preciounitario').val();
+	var cantidad=$('#detalle_cantidad').val();
+	if(isNaN(cantidad)){c=0;}else{var c=cantidad;}
+	if(isNaN(descuento)){d=0;}else{var d=descuento;}
+	if(isNaN(precio)){p=0;}else{var p=precio;}
+	var importe=(c*p)-d;
+	$('#detalle_importe').val(importe.toFixed(2));
+	$('#importe').html(importe.toFixed(2));
+	});
+});
+
+</script>

@@ -1,0 +1,212 @@
+<script type="text/javascript">
+$(document).ready(function() {
+ $(function () {
+        $('#reporte').highcharts({
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'VENTAS POR MES'
+            },
+            subtitle: {
+                text: 'ventas + igv'
+            },
+            xAxis: {
+                categories: [<?php 
+			$n=0;
+			$categories=array();
+			foreach($valores as $mes):
+			$categories[$mes->fecha]="'".$mes->fecha."'";
+			?>
+            <?php
+			 if($n!=0) echo ","; 
+			 echo "'".$mes->fecha."'";
+			$n++;
+			?>
+            <?Php endforeach;?>
+                ]
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Soles (S/. )'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>S/. {point.y:.1f}</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series:[{
+                name: 'VENTA',
+                data: [<?php 
+			$n=0;
+			foreach($valores as $venta):?>
+            <?php
+			 if($n!=0) echo ","; 
+			 /*valida si existe registro para la categoria*/
+			 if(array_key_exists($venta->fecha,$categories)){$valor=$venta->total;}else{$valor=00;}
+			 echo number_format($valor,2,'.','');
+			$n++;
+			?>
+            <?Php endforeach;?>]
+    
+            }, {
+                name: 'IGV',
+                data: [<?php 
+			$n=0;
+			foreach($valores as $venta):?>
+            <?php
+			 if($n!=0) echo ","; 
+			 if(array_key_exists($venta->fecha,$categories)){$valor=$venta->igv;}else{$valor=00;}
+			 echo number_format($valor,2,'.','');
+			$n++;
+			?>
+            <?Php endforeach;?>]
+    
+            }, {
+                name: 'Abonos',
+                data: [<?php 
+			$n=0;
+			foreach($valores as $mes){
+			
+			if($n!=0) echo ",";
+			$a=0;
+			foreach($abonos as $abono):
+			
+			?>
+            <?php
+			 if($abono->fecha==$mes->fecha){echo number_format($abono->total,2,'.','');$a++;}
+			?>
+            <?Php endforeach;
+			if($a==0)echo 0;
+			$n++;
+			}?>]
+    
+            }/*, {
+                name: 'Berlin',
+                data: [42.4, 33.2, 34.5, 39.7, 52.6, 75.5, 57.4, 60.4, 47.6, 39.1, 46.8, 51.1]
+    
+            }*/]
+        });
+    });
+       
+
+/*GUIAS */
+ $(function () {
+        $('#reporte_guias').highcharts({
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'GUIAS POR MES'
+            },
+            subtitle: {
+                text: 'ventas'
+            },
+            xAxis: {
+                categories: [<?php 
+			$n=0;
+			foreach($guias as $mes):?>
+            <?php
+			 if($n!=0) echo ","; 
+			 echo "'".$mes->fecha."'";
+			$n++;
+			?>
+            <?Php endforeach;?>
+                ]
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Soles (S/. )'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>S/. {point.y:.1f}</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series:[{
+                name: 'GUIAS',
+                data: [<?php 
+			$n=0;
+			foreach($guias as $venta):?>
+            <?php
+			 if($n!=0) echo ","; 
+			 echo number_format($venta->total,2,'.','');
+			$n++;
+			?>
+            <?Php endforeach;?>]
+    
+            }, {
+                name: 'Abonos',
+				color:'',
+                data: [<?php 
+			$n=0;
+			foreach($guias as $mes){
+			
+			if($n!=0) echo ",";
+			$a=0;
+			foreach($abonos_i as $abono):
+			
+			?>
+            <?php
+			 if($abono->fecha==$mes->fecha){echo number_format($abono->total,2,'.','');$a++;}
+			?>
+            <?Php endforeach;
+			if($a==0)echo 0;
+			$n++;
+			}?>]
+    
+            }/*, {
+                name: 'London',
+                data: [48.9, 38.8, 39.3, 41.4, 47.0, 48.3, 59.0, 59.6, 52.4, 65.2, 59.3, 51.2]
+    
+            }, {
+                name: 'Berlin',
+                data: [42.4, 33.2, 34.5, 39.7, 52.6, 75.5, 57.4, 60.4, 47.6, 39.1, 46.8, 51.1]
+    
+            }*/]
+        });
+    });
+       
+	
+});
+</script>
+        
+<?Php echo Tag::js('jquery/graficos/js/highcharts');?>
+<?Php echo Tag::js('jquery/graficos/js/modules/exporting');?>
+
+<div class="card">
+    <h1>Repote <span></span></h1>
+</div>
+<div class="form-actions">
+<?php echo Menu::menuGraficos($action_name);?>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="card-body">
+<div id="reporte" style="min-width: 500px; height:auto; margin: 0 auto"></div>
+<hr />
+<div id="reporte_guias" style="min-width: 500px; height:auto; margin: 0 auto"></div>
+</div>

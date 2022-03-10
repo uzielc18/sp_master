@@ -1,0 +1,163 @@
+<?php echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<div class="card">
+    <h1>Detalle Salida<span><?php echo Session::get('DOC_NOMBRE')?></span></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="card-body">
+<?php echo Form::open(NULL,'POST','class=""')?>
+<?php echo Form::hidden('salida.id')?>
+<?php echo Form::hidden('prodetalletransportes.id')?>
+<?php echo Form::hidden('prodetalletransportes.tessalidas_id')?>
+    
+    <div class="input-prepend">
+    <span class="add-on">Pedido</span>
+    <?php echo Form::text('salida.npedido','size="8" readonly="readonly"');?>&nbsp;
+    <span class="add-on">Serie</span>
+    <?php echo Form::text('salida.serie','size="4"');?>&nbsp;
+    <span class="add-on">Numero</span>
+    <?php echo Form::text('salida.numero','size="10"');?>&nbsp;
+    <span class="add-on">Moneda</span>
+    <?php echo Form::dbSelect('salida.tesmonedas_id','simbolo,nombre',array("tesmonedas",'find','conditions: aclempresas_id='.Session::get('EMPRESAS_ID')));?>&nbsp;
+    <?php if(Session::get('DOC_ID')==15){?><span class="add-on">Numero de Factura:</span>
+	<?php echo Form::text('salida.numerofactura');?><?php }else{?><span class="add-on">Numero de Guia:</span>
+	<?php echo Form::text('salida.numeroguia');?><?php }?>	<br />
+    <span class="add-on">Proveedor</span><div style="margin-left:60px; width:50%; margin-top:-20px"><input id="CL" /></div>
+      <?php echo Form::hidden('salida.tesdatos_id')?>
+     <span class="add-on">Direccion de Fiscal</span>
+      <?php echo Form::text('salida.tesdatosdirecciones_id');//finiciotraslado?>&nbsp;<span class="add-on">Direccion de Entrega</span><?php echo Form::text('salida.direccion_entrega','class="span4"');//finiciotraslado?>&nbsp;
+      <br />
+    <span class="add-on">Condicion pago:</span>
+	<?php echo Form::dbSelect('salida.tescondicionespagos_id','nombre',array("tescondicionespagos",'find'));?>
+    <span class="add-on">Fecha </span>
+      <?php echo Calendar::selector('salida.femision');//finiciotraslado?><br /> 
+    <span class="add-on">Unir con la guia ruc: </span>
+<div style="margin-left:110px; width:50%; margin-top:-20px;"><?php echo Form::text('salida.numero_salida_ruc')/*IDs para la busquedas de la guia ruc*/?>
+<?php //echo $salida->tesdatos_id;?></div>
+  <div class="control-group">
+    <div class="controls">
+       <button type="submit" class="btn btn-primary" title="Si hizo alguna modificacion, Grabar	">Grabar</button> <?php echo Html::linkAction('guias/15','Cancelar','class="btn"')?>
+    </div>
+  </div>
+</div>
+<?php echo Form::close();?>
+<div id="guia">
+<div id="ingreso">
+
+</div>
+
+<table width="80%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped"><caption>Rollos en Guia</caption>
+  <tr style="font-size:12px; color:#333; font-weight:bold;">
+    <th width="13%" align="left">Codigo</th>
+    <th width="16%" align="left">Cantidad</th>
+    <th width="13%" align="left">Unidad</th>
+    <th width="41%" align="left">Descripcion</th>
+    <th width="17%" align="left">Accion</th>
+  </tr>
+  <?php 
+  $n=0;
+  foreach($detalles as $item){
+	  $n++;
+	  ?> 
+  <tr id="<?php echo $item->id?>">
+    <td><?php echo $n.'.';
+	if(!empty($item->prorollos_id))
+	{
+		echo $item->getProrollos()->codigo?>-
+		<?php echo $item->getProrollos()->numeroventa; 
+		echo ' '.$item->getProrollos()->getNprocesos($item->prorollos_id);
+	}?></td>
+    <td><?php echo $item->cantidad?></td>
+    <td><?Php echo $item->getTesunidadesmedidas()->simbolo?></td>
+    <td><?php if(!empty($item->tesproductos_id)){echo $item->getTesproductos()->nombre?> <?php echo $item->getTesproductos()->detalle?> <?Php echo $item->getTescolores()->nombre;}else{echo $item->concepto;}?></td>
+    <td><?php echo Ajax::link($module_name.'/rollos/grabarventatelas_i/0/'.$item->id,'Editar','ingreso','btn','id="'.$item->prorollos_id.'"')?> <?php echo Html::link($module_name.'/rollos/borrarventarollos_i/'.$item->id.'/'.$item->prorollos_id.'/','Elminar','mostrar','id="'.$item->prorollos_id.'"')?></td>
+  </tr>
+  <?php }?>
+</table>
+</div>
+<div class="form-actions">
+<?php 
+echo Html::linkAction("venta/", 'Siguente<i class="icon-hand-right"></i>','class="btn btn-primary"') ?>&nbsp;<?php //echo Html::linkAction("salidas", 'Volver ','class="btn"') ?>
+</div>
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus="" placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+<table id="rollos" width="80%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+<caption>Rollos en Almacen para Venta</caption>
+  <tr style="font-size:12px; color:#333; font-weight:bold;">
+    <th width="30%" align="left">Producto</th>
+    <th width="12%" align="left">Color</th>
+    <th width="11%" align="left"># Rollo</th>
+    <th width="8%" align="left">Peso</th>
+    <th width="5%" align="left">Metros</th>
+    <th width="4%" align="left">O. C.</th>
+    <th width="9%" align="left">Accion</th>
+  </tr>
+ <?Php foreach($rollos as $rollo){
+	 ?> 
+  <tr id="caja-<?php echo $rollo->id?>">
+    <td><?php echo $rollo->getTesproductos()->codigo_ant?> <?php echo $rollo->getTesproductos()->nombre?> <?php echo $rollo->getTesproductos()->detalle?>  <?php //echo $rollo->estadorollo?></td>
+    <td><?php //echo $rollo->tescolores_id; 
+	if(!empty($rollo->tescolores_id))echo $rollo->getTescolores()->nombre?></td>
+    <td><?php if(empty($rollo->prorollos_id)){echo $rollo->numero?>-M<?php echo $rollo->maquina_numero;}else{echo $rollo->codigo?>-<?php echo $rollo->numeroventa;}?></td>
+    <td><?php if(!empty($rollo->peso))echo number_format($rollo->peso,2,'.',' ')?> Kg</td>
+    <td><?php if(!empty($rollo->metros))echo number_format($rollo->metros,2,'.',' ')?> m</td>
+    <td><?php echo $rollo->ordencompra?></td>
+    <td width="9%" title="Elegir Rollo para Venta"><?php echo Ajax::link($module_name.'/rollos/grabarventatelas_i/'.$rollo->id,'ENVIAR','ingreso','ocultar','id="'.$rollo->id.'"')?></td>
+  </tr>
+ <?php }?>
+</table>
+</div>
+<script type="text/javascript">
+$(document).ready(function()
+{
+	$("#salida_numero_salida_ruc").tokenInput("/<?php echo $module_name?>/<?php echo $controller_name?>/numero_ruc", 
+		{
+			tokenLimit: 1,
+			minChars: 2,
+			<?php if(!empty($salida->numero_salida_ruc)){?>
+			prePopulate: [ 
+						 {id: <?Php echo $salida->numero_salida_ruc?>, name: "<?php echo $salida->numero_salida_ruc?>"},
+						 ],
+			<?php }?>
+			onAdd: function (item){
+			},
+			onDelete: function (item) {
+			}
+		});
+	$(".ocultar").live("click",function(){
+		var id=$(this).attr('id');
+		$("#caja-"+id).hide();
+		
+		});
+	
+	$("#CL").tokenInput("/<?php echo $module_name?>/salidas/buscarcliente", 
+		{
+			tokenLimit: 1,
+			minChars: 2,
+			<?php if(!empty($salida->tesdatos_id)){?>
+			prePopulate: [ 
+						 {id: <?Php echo $salida->tesdatos_id?>, name: "<?php echo $salida->getTesdatos()->razonsocial?>"},
+						 ],
+			<?php }?>
+			onAdd: function (item){
+			   var VAL=item.id;
+			   $("#salida_tesdatos_id").val(VAL);
+			   var DIR=item.name.split('(');
+			   $("#salida_direccion_entrega").val(DIR[1].replace(')',''));
+			   //$("#BC").hide();
+			   //GrabarCliente();
+			},
+			onDelete: function (item) {
+			}
+		});
+	
+	$('#txtBuscar').on('search',function(){
+		$.fntBuscarEnTabla($(this).val(),'rollos');
+	});	
+});
+</script>
+</div>

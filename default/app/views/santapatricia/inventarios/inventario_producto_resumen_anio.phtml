@@ -1,0 +1,114 @@
+
+<?php
+$simbolo="S/. ";
+switch ($inventario->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}?>
+<?php View::content();?>
+<div class="card">
+	<h1>Resumen-Linea de Productos <?php echo $ln->nombre?></h1>
+    </div>
+    <div class="form-actions">
+    <?php echo Html::linkAction("listado/".Session::get('FAMILIA_ID'),'Regresar ','class="btn btn"') ?>
+	</div>
+<div class="clear"></div>
+<?php echo $fecha.'/**/'.$fecha_fin;?>
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus="" placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+<?php echo Sp::imprimir('Abonos Adelanto - ','P');?> 
+<div class="card-body">
+    <div id="loading" style="display:none;"><img src="/img/spin.gif" /></div>
+  <div id="kardex">
+<h1>FORMATO 12.1 REGISTRO DE INVENTARIO PERMANENTE ES UNIDADES FISICAS - RESUMEN</h1>
+	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="exportar_excel">
+    <caption>FORMATO 12.1 REGISTRO DE INVENTARIO PERMANENTE ES UNIDADES FISICAS - RESUMEN</caption>
+		<thead>
+    	  <tr>
+	    <th colspan="7" align="left">PERIODO: <?php echo Sp::formatFecha('%m/%Y',$fecha)?></th>
+      </tr><tr>
+	    <th colspan="7" align="left">RUC: <?php echo $empresa->ruc;?></th>
+      </tr><tr>
+	    <th colspan="7" align="left">APELLIDOS U NOMBRES. DENOMINACION O RAZON SOCIAL: <?php echo $empresa->nombre?></th>
+      </tr>
+		  <tr>
+		    <th align="left">CODIGO</th>
+		    <th align="left">DESCRIPCION</th>
+		    <th align="left">MEDIDA</th>
+		    <th align="left">STOCK INICIAL</th>
+		    <th align="left">INGRESOS</th>
+		    <th align="left">SALIDAS</th>
+		    <th align="left">STOCK FINAL</th>
+      </tr>
+	</thead>
+    <tbody>
+    	  <?php
+		  $array_producto='';
+		  $id_productoA=0;
+		  $SALDO_INICIAL=0;
+		  $INGRESOS=0;
+		  $SALIDAS=0;
+		  $STOCK=0;
+		  $TOTAL_INICIAL=0;
+		  $TOTAL_INGRESOS=0;
+		  $TOTAL_SALIDAS=0;
+		  $TOTAL_STOCK=0;
+			  $n=0;
+			  //$igv=0;
+			  foreach($detalles as $item){
+				   $i_coma=',';
+				  if($n==0){$i_coma='';}
+				  if($id_productoA!=$item->tesproductos_id)$array_producto.=$i_coma.'{id: '.$item->tesproductos_id.', name: "'.$item->getTesproductos()->detalle.'"}';
+				  $id_productoA=$item->tesproductos_id;
+				  $n++;
+				  $SALDO_INICIAL=$item->getSaldo($item->tesproductos_id,0,0,$fecha);
+				  $TOTAL_INICIAL=$TOTAL_INICIAL+$SALDO_INICIAL;
+				  $INGRESOS=$item->getTotalingresos_entrefechas($item->tesproductos_id,0,0,$fecha,$fecha_fin);
+				  $TOTAL_INGRESOS=$TOTAL_INGRESOS+$INGRESOS;
+				  $SALIDAS=$item->getTotalsalidas_entrefechas($item->tesproductos_id,0,0,$fecha,$fecha_fin);
+				  $TOTAL_SALIDAS=$TOTAL_SALIDAS+$SALIDAS;
+				  $STOCK=(float)$item->getSaldo($item->tesproductos_id,0,0,$fecha_fin);
+				  $TOTAL_STOCK=$TOTAL_STOCK+$STOCK;
+			  ?>
+		  <tr id="<?php echo $n?>">
+           <td width="7%" align="left"> <?php echo $id_productoA?>-<?php echo $item->getTesproductos()->codigo?></td>
+		   <td width="19%" class="item-name"><?php echo $item->getTesproductos()->nombre?> <?php //echo $item->getTesproductos()->detalle?> <?php echo $item->getTesproductos()->getTestipoproductos()->nombre?></td>
+		   <td width="8%"><?php echo $item->getTesunidadesmedidas()->nombre?></td>
+           <td width="10%"><?php echo number_format($SALDO_INICIAL,'2','.','');?></td>
+           <td width="10%"><?php echo number_format($INGRESOS,'2','.','');?></td>
+           <td width="9%"><?php echo number_format($SALIDAS,'2','.','');?></td>
+		   <td width="8%"><?php echo number_format($STOCK,'2','.','');?></td>
+	      </tr>
+		  <?php } ?>
+          </tbody>
+          <tfoot>
+          <tr>
+          <th colspan="3">TOTAL: </th>
+          <td><?php echo number_format($TOTAL_INICIAL,'2','.','');?></td>
+          <td><?php echo number_format($TOTAL_INGRESOS,'2','.','');?></td>
+          <td><?php echo number_format($TOTAL_SALIDAS,'2','.','');?></td>
+          <td><?php echo number_format($TOTAL_STOCK,'2','.','');?></td>
+          </tr>
+          </tfoot>
+      </table>
+      </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function()
+{
+	$('#txtBuscar').on('search',function(){
+		//le decimos a la funcion que busque en la tabla tblTabla el
+		//valor que contiene el campo actual
+		$.fntBuscarEnTabla($(this).val(),'exportar_excel');
+		
+	});
+	
+});
+        </script>
+        

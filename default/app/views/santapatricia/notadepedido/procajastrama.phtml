@@ -1,0 +1,165 @@
+<?php
+View::content();
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<div class="card">
+    <h1>Elegir Trama!</h1>
+</div>
+<div class="form-actions">
+   <?php 
+	echo Html::linkAction("revisar/".$detalle_pedido->getPronotapedidos()->origen, 'Voler al Pedido','class="btn btn-primary grabar_form"') ?>&nbsp;<?php echo Html::linkAction("listado/".$detalle_pedido->getPronotapedidos()->origen, 'Cancelar ','class="btn btn"') ?>
+</div>
+<div class="card-body">
+<div class="span3">
+        <ul class="nav nav-list">
+          <li class="nav-header">Cajas de Hilo</li>
+          <li class="nav-header"> Lote: <?php echo $detalle_pedido->lote?></li>
+          <?php 
+		  $f=0;
+		  $n=0;foreach($CAJAS as $caja): $n++;
+		  		//echo $caja->id.'el id de la caja';
+				//$lote->getStockCC($lote->id);
+				$caja->getStockCC($caja->id);
+				$S=explode("-",$caja->getStockCC($caja->id));
+				$S[0];
+				if($S[1]!=0)$f=$S[0]/$S[1];
+				 if($S[0]>0.5){echo "<li>".$n.'. #numero: '.$caja->numerodecaja.' peso:'.$S[0].' conos:'.$S[1]."</li>";}endforeach;?>
+        </ul>
+</div>
+<div class="span9">
+<?php echo Form::open()?>
+<?php echo Form::hidden('procajastrama.prodetallepedidos_id','',$detalle_pedido->id)?>
+<?php echo Form::hidden('factor');?>
+<?php echo Form::hidden("procajastrama.numerodecaja");?>
+<table width="75%" border="0" align="center" cellpadding="0" cellspacing="1">
+  <tr>
+  <th colspan="5" align="left"><p>Salida de Cajas (Producto <?php echo $detalle_pedido->getTesproductos()->nombre?>,Color <?php echo $detalle_pedido->getTescolores()->nombre?>, Lote <?php echo $detalle_pedido->lote?>) Total a entragar: <?Php echo $total?> Kilos</p>
+  <br />
+  </th>
+  </tr>
+  <tr>
+    <td width="30%"><strong>Numero de caja(s)</strong><br />
+    <?php echo Form::text('procajastrama.tescajas_id','size="10"')?>
+    </td>
+    <td width="28%" align="center"><strong>#Conos</strong><br /><?php echo Form::text('procajastrama.conos','" size="10" class="conos"')?></td>
+    <td width="18%" align="left"> <strong>Peso</strong><br /><?php echo Form::text('procajastrama.peso','size="10" class="peso"')?>kg</td>
+    <td width="24%" align="center"><?php echo Form::submit('Enviar','class="btn btn-primary"')?></td>
+  </tr>
+</table>
+<?php echo Form::close();?>
+<?php ?>
+<table width="75%" border="0" align="center" cellpadding="0" cellspacing="1">
+  <tr>
+    <th width="30%" align="left">Numero de Caja(s)</th>
+    <th width="28%" align="left">#Conos</th>
+    <th width="18%" align="left">Peso</th>
+    <th width="24%" align="center">&nbsp;</th>
+  </tr>
+  <tr>
+  	<th colspan="4" align="right"><hr /></th>
+  	</tr>
+  <?php 
+  $k=0;
+  $c=0;
+  foreach($cajas as $cj):
+  $k=$k+$cj->peso;
+  $c=$c+$cj->conos;
+  ?>
+  <tr>
+    <td align="left"><?php echo $cj->tescajas_id?></td>
+    <td align="left"><?Php echo $cj->conos?></td>
+    <td align="left"><?php echo $cj->peso?></td>
+    <td align="center"><?php echo Html::linkAction('eliminar_cajastrama/'.$cj->id.'/'.$id.'/'.$p_id.'/'.$color_id,'Eliminar')?></td>
+  </tr>
+  <?php endforeach;?>
+  <tr>
+  <td colspan="4" align="right"><hr /></td>
+  </tr>
+  <tr>
+  	<td align="left"><strong>Total:</strong></td>
+  	<td align="left"><strong><?php echo $c?>Conos </strong></td>
+  	<td align="left"><strong><?php echo number_format($k,2,'.',' ')?> Kg </strong></td>
+  	<td align="right"></td>
+  	</tr>
+</table>
+<div align="center">
+   <?php 
+   if($k>0)
+   {
+	echo Form::open();
+    echo Form::hidden('detalle_pedido.id');
+    echo Form::hidden('detalle_pedido.pronotapedidos_id');
+    echo Form::hidden('detalle_pedido.tesproductos_id');
+    echo Form::hidden('detalle_pedido.tescolores_id');
+    echo Form::hidden('detalle_pedido.cantidad','',$k);
+    echo Form::hidden('detalle_pedido.cantidad_p');
+	echo Form::submit('Terminar y Continuar','class="btn btn-primary grabar_form"');
+   } ?>
+</div>
+</div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function()
+{	
+$("#procajastrama_tescajas_id").tokenInput(
+			[
+                <?php 
+				$array_lote='';
+				$n=0;
+				foreach($CAJAS as $lote):
+				//echo $lote->getStockCC($lote->id);
+				$S=explode('-',$lote->getStockCC($lote->id));
+				//print_r($S);
+				$pso=$S[0];
+				$con=$S[1];
+				$f=0;
+				if($S[1]!=0)$f=$S[0]/$S[1];
+				$i_coma=',';
+				if($n==0){$i_coma='';}
+				if($S[0]>0){$n++;$array_lote.=$i_coma.'{id: "'.$lote->id.'", name: "#:'.$lote->numerodecaja.', Peso: '.$pso.'Kg, Conos:'.$con.', f:'.number_format($f,2,'.','').'",peso :"'.$pso.'",conos :"'.$con.'"}';}
+				endforeach;
+				
+				echo $array_lote?>
+            ], 
+		{
+			
+		tokenLimit: 1,
+		minChars: 1,
+		onAdd: function (item) {
+		   var I = item.name.split(',');
+		   var F= I[3].split(':');
+		   $("#factor").val(F[1]);
+		   var II=I[0].split(':');
+		   var P=I[1].split(':');
+		   var C=I[2].split(':');
+		   alert('peso: '+item.peso+' conos: '+item.conos);
+		   $("#procajastrama_numerodecaja").val(II[1]);
+		   $("#procajastrama_conos").val(item.conos);
+		   $("#procajastrama_peso").val(item.peso);
+		   //grabarDetalle(ID);
+		},
+		onDelete: function (item) {
+		   //$("#tescajas_id-"+ID).val('');
+		  // $("#tescolores"+ID).val("");
+		   //grabarDetalle(ID);
+		  
+		}
+	});
+
+$(".peso").blur(function()
+{
+	var p=$(this).val();
+	var f=$("#factor").val();
+	var valor =p/f;
+	$("#procajastrama_conos").val(valor.toFixed(2));
+});
+$(".conos").blur(function(){
+	var c=$(this).val();
+	var f=$("#factor").val();
+	var valor =c*f;
+	$("#procajastrama_peso").val(valor.toFixed(2));
+});
+/* fin document*/
+});
+</script>

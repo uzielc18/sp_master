@@ -1,0 +1,26 @@
+
+<table width="75%" border="0" align="center" cellpadding="0" cellspacing="1" class="table table-hover">
+<caption> Lista de telas en Guia </caption>
+  <tr>
+    <th width="11%" align="left">Codigo</th>
+    <th width="9%" align="left">Peso</th>
+	<th width="13%" align="left">Metros</th>
+    <th width="13%" align="left">U/M</th>
+    <th width="43%" align="left">Descripcion</th>
+    <th width="11%" align="left">Accion</th>
+  </tr>
+  <?php 
+  $n=0;
+  foreach($detalles as $item){
+	  $n++;
+	  ?> 
+  <tr id="<?php echo $item->id?>">
+    <td><?php echo $n?>. <?php echo $item->getProrollos()->numero?>-<?php echo $item->getProrollos()->maquina_numero?></td>
+    <td><?php echo $item->pesoneto?></td>
+	<td><?php echo number_format($item->getProrollos()->metros,2,'.',' ')?></td>
+    <td><?Php echo $item->getTesunidadesmedidas()->simbolo?></td>
+    <td><?php echo $item->getTesproductos()->detalle?> <?Php echo $item->getTescolores()->nombre?></td>
+    <td><?php echo Html::link($module_name.'/rollos/borrarsalidarollos/'.$item->id.'/'.$item->prorollos_id.'/','Elminar','mostrar','id="'.$item->prorollos_id.'"')?></td>
+  </tr>
+  <?php }?>
+</table>

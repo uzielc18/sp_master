@@ -1,0 +1,63 @@
+<style type="text/css">
+.span_float
+{
+	float:right !important;
+	margin-left:0px;
+	margin-right:-5px;
+}
+</style>
+<div class="card">
+    <h1>Notas de Debito <span><?php //echo Auth::get('nombres')?></span></h1>
+</div>
+<div id="mensajes_flash" >       
+    <?php View::content();?>
+</div>
+
+<div class="form-actions">
+<?php echo Menu::menuVentas($action_name);?>
+</div>
+<div class="card-body">
+<div id="ver_resultado"></div>
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+<caption> Notas de Debito! <?php echo Html::linkAction('crear_nota','Crear Nota de Debito','class="btn btn-primary"');?> </caption>
+  <tr>
+  	<th width="17">Nº</th>
+    <th width="108">Cliente</th>
+    <th width="54">Número Doc.</th>
+    <th width="200">Referencias</th>
+    <th width="77">Sub-total</th>
+    <th width="60" align="right">Igv</th>
+    <th width="72" align="right">Total</th>
+    <th width="72" align="right">Acciones</th>
+  </tr>
+<?php $number=0;
+foreach($salidas as $item){ 
+$simbolo="S/. ";
+
+switch ($item->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+
+$number++;?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20"><?php echo $number?></td>
+  	<td height="20"><?php echo $item->getTesdatos()->razonsocial?></td>
+    <td><?php echo $item->serie?>-<?php echo $item->numero?></td>
+    <td>    </td>
+    <td align="right"><?php if($item->totalconigv!='NaN.00' && !empty($item->totalconigv))echo $simbolo.number_format($item->totalconigv-$item->igv,2,'.','');else echo('S/ 00.00');?></td>
+    <td align="right"><?php if($item->igv!='NaN.00' && !empty($item->totalconigv))echo $simbolo.number_format($item->igv,2,'.','');else echo('S/ 00.00')?></td>
+    <td align="right"><?php if($item->totalconigv!='NaN.00' && !empty($item->totalconigv))echo $simbolo.number_format($item->totalconigv,2,'.','');else echo('S/ 00.00')?></td>
+    <td align="right">
+    <?php if($item->estadosalida=="Editable")echo Html::linkAction('crear_nota/'.$item->id,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Editar!"')?>
+    <?php echo Html::linkAction('cargarsalida/'.$item->id.'/notadebito',Html::img("figuras/ver.png",'Ver','style="width: 20px;margin-left:1px;margin-right:1px;"'), 'title="ver Imprimir"');?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+
+</div>

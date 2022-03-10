@@ -1,0 +1,8 @@
+<?php if($caja){?>
+<div id="c-<?php echo $caja->id?>">
+<?php echo Form::hidden('detalle_id-'.$caja->id,'',$caja->tesdetalleingresos_id)?>
+<?php echo Form::text('numerodecaja-'.$caja->id,'class="save_caja" placeholder="numero" disabled="disabled" size="10" ',$caja->numerodecaja)?> <?php echo Form::dbSelect('tipodecaja-'.$caja->id,'nombre',array('tesproductos','find','conditions: testipoproductos_id=3'),'Seleccione...','',$caja->tipodecaja)?> <?php echo Form::text('pesoneto-'.$caja->id,'class="save_caja" placeholder="Peso neto" size="10"',$caja->pesoneto)?> <?php echo Form::text('conos-'.$caja->id,'class="save_caja" placeholder="# de conos" size="10"',$caja->conos)?><span><a id="<?php echo $caja->id?>" class="borrar" href="javascript:;">Eliminar</a></span></div>
+<?php }else
+{
+	echo "NO SE PUEDE CREAR";
+}?>

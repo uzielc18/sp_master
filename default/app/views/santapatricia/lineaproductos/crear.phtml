@@ -1,0 +1,65 @@
+<div class="card">
+    <h1><?php echo $titulo?></h1>
+</div>      
+<?php View::content() ?>
+<?php echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
+<?php echo Form::hidden('teslineaproductos.id') ?>
+<div class="control-group">
+    <label for="teslineaproductos_nombre"><strong>Nombre * : </strong></label>
+    <div class="controls">
+        <?php echo Form::text('teslineaproductos.nombre') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label for="usuario_clave2"><strong>Abreviatura* :</strong></label>
+    <div class="controls">
+        <?php echo Form::text('teslineaproductos.abr') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label for="teslineaproductos_detalle"><strong>Detalle* : </strong></label>
+    <div class="controls">
+        <?php echo Form::textarea('teslineaproductos.detalle') ?>
+    </div>
+</div>
+<div class="control-group">
+    <label for="teslineaproductos_detalle"><strong>Almacen* : </strong></label>
+    <div class="controls">
+        <?php echo Form::dbSelect('teslineaproductos.testipoalmacenes_id','nombre',array("testipoalmacenes",'find'),'Selecione...') ?>
+    </div>
+</div>
+
+<div class="form-actions">
+    <?php echo Form::submit('Guardar Datos', 'class="btn btn-primary"') ?>
+    <?php echo Html::linkAction('', 'Cancelar', 'class="btn"') ?>
+    </div>
+<?php echo Form::close() ?>
+<table class="table table-bordered table-striped">
+  <tr>
+  	<td><h4><strong>Nº</strong></h4></td>
+    <td><h4><strong>Nombre</strong></h4></td>
+    <td><h4><strong>Abr.</strong></h4></td>
+    <td><h4><strong>Detalle</strong></h4></td>
+    <td><h4><strong>Estado</strong></h4></td>
+    <td><h4><strong>Acciones</strong></h4></td>
+  </tr>
+<?php $n=0;
+foreach($lineas as $item){ $n++;?>
+  <tr>
+  	<td><?php echo $n?></td>
+    <td><?php echo $item->nombre?></td>
+    <td><?php echo $item->abr?></td>
+    <td><?php echo $item->detalle?></td>
+    <td>
+    <?php 
+	 if($item->activo=='0'){
+	 echo Html::linkAction('activar/'.$item->id,Html::img("figuras/circulo_rojo.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'');
+	 }else{
+	 echo Html::linkAction("desactivar/$item->id",Html::img("figuras/circulo_verde.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');}?>
+    </td>
+    <td><?php echo Html::linkAction('editar/'.$item->id,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'')?>
+    <?php echo Html::linkAction("borrar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+    </td>
+  </tr>
+<?php }?>
+</table>

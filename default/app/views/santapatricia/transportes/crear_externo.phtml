@@ -1,0 +1,53 @@
+<?php
+View::content();
+?>
+<div class="card">
+    <h1><?php echo $titulo?></h1>
+</div>
+<?php echo Ajax::form('otro','', 'post', 'form-horizontal');
+echo Form::hidden('tesproductos.id','',7431)
+?>
+
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+  <tr>
+    <th align="right" valign="top">Marca:&nbsp;</th>
+    <td valign="top"><?php echo Form::text('protransportes.marca') ?></td>
+    <th valign="top">Modelo:&nbsp;</th>
+    <td valign="top"><?php echo Form::text('protransportes.modelo') ?></td>
+  </tr>
+    <tr>
+    <th align="right" valign="top">Año Fab.:&nbsp;</th>
+    <td valign="top"><?php echo Form::text('protransportes.aniofab') ?></td>
+  </tr>
+    <tr>
+    <th align="right" valign="top">Número Motor:&nbsp;</th>
+    <td valign="top"><?php echo Form::text('protransportes.numeromotor') ?></td>
+    <th valign="top">Número de Chasis&nbsp;</th>
+    <td valign="top"><?php echo Form::text('protransportes.numerochasis') ?></td>
+  </tr>
+    <tr>
+    <th align="right" valign="top">Número de Placa:&nbsp;</th>
+    <td valign="top"><?php echo Form::text('protransportes.numeroplaca') ?></td>
+    <th valign="top">Número de Asientos &nbsp;</th>
+    <td valign="top"><?php echo Form::text('protransportes.numeroasientos') ?></td>
+  </tr>
+    <tr>
+    <th align="right" valign="top">Peso :&nbsp;</th>
+    <td valign="top">
+    Bruto <?php echo Form::text('protransportes.pesobruto','size="6"') ?> 
+    Neto <?php echo Form::text('protransportes.pesoneto','size="6"') ?> 
+    Util <?php echo Form::text('protransportes.pesoutil','size="6"') ?>
+    </td>
+    <th valign="top">Combustible &nbsp;</th>
+    <td valign="top"><?php echo Form::text('protransportes.combustible') ?></td>
+  </tr>
+    <tr>
+    <th align="right" valign="top">Color :&nbsp;</th>
+    <td valign="top"><?php echo Form::text('protransportes.color','size="30"') ?></td>
+    <th valign="top">&nbsp;</th>
+    <td valign="top"><?php //echo Form::text('protransportes.plato') ?></td>
+  </tr>
+</table>
+<div class="form-actions">
+    <?php echo Form::submit('Guardar Datos', 'class="btn btn-primary"') ?>
+    </div>

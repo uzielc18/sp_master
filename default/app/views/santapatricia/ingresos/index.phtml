@@ -1,0 +1,30 @@
+<div class="card">
+<h1>Registrar Documentos (Proveedores)</h1>
+</div>
+<div class="card-body">
+<ul class="tres_columnas">
+<?php foreach($documentos as $doc):
+$a=strlen($doc->nombre);
+if($a>30)
+{
+	$nombre=substr($doc->nombre, 0, 30).'... ';
+}else
+{
+	$nombre=$doc->nombre;
+}
+?>
+<li class="columnas orange">
+  <h3><?php echo $doc->nombre?></h3>
+  <span class="icono_grande"></span>
+  <div class="infomarcion">
+  <?php echo $nombre?> del mes: <br />
+  Pendientes: <br />
+  Canceladas: <br />
+	<div class="clear"></div>
+  </div>
+  <?php echo Html::linkAction('cargar/'.$doc->id,'Ingresar','')?>
+</li>
+<?php endforeach;?>
+</ul>
+<div class="clear"></div>
+</div>

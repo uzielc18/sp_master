@@ -1,0 +1,150 @@
+
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+<caption><b>Cliente: <?php echo $orden->getTesdatos()->razonsocial.'-'.$orden->tesdatos_id?> <br />Fecha: <?php //echo $orden->fecha?><?php echo Sp::formatFecha('%d / %m / %Y',$orden->fecha)?></b>
+<b>Numero de O/C (<?php echo $orden->numero_interno?>-<?php echo $orden->id?>)</b></caption>
+  <thead>
+  <tr>
+    <th width="15%" align="left" valign="top">Descripcion</th>
+    <th width="7%" align="left" valign="top">Color</th>
+    <th width="12%" align="right" valign="top">Cantidad-UNI</th>
+    <th width="11%" align="right" valign="top">Precio S/.</th>
+    <th width="12%" align="right"valign="top">Importe S/.</th>
+    <?php foreach($entregados_fecha as $fecha){?>
+    <th width="13%" valign="top" align="right"><?php echo $fecha->fecha?><br /><?php echo $fecha->factura?></th>
+    <?php }?>
+    <th width="11%" valign="top" align="right">Total</th>
+    <th width="19%" valign="top" align="right">Pendiente</th>
+  </tr>
+  </thead>
+  <tbody>
+  <?php 
+  $array=array();
+  $total_precio=0;
+  $total_cantidad=0;
+  $total_importe=0;
+  $total_total=0;
+  $total_pendiente=0;
+  foreach($detalles as $item){?>
+  <tr>
+    <td valign="top"><?php echo $item->tesproductos_id; if($item->tesproductos_id)echo $item->getTesproductos()->nombre?></td>
+    <td valign="top"><?php echo $item->getTescolores()->nombre?></td>
+    <td align="right" valign="top"><?php 
+	$total_cantidad=$total_cantidad+$item->cantidad;
+	echo $item->cantidad?></td>
+    <td align="right" valign="top"><?php 
+	$total_precio=$total_precio+$item->precio;
+	echo $item->precio?></td>
+    <td align="right" valign="top"><?php 
+	$total_importe=$total_importe+$item->total;
+	echo $item->total?></td>
+    
+    <?php 
+	$total_entregado=0;
+				
+		foreach($entregados_fecha as $fecha){?>
+    	<?php 
+				$t=0;
+				foreach($entregados as $entregado)
+				{
+					if(!isset(${'total_'.$entregado->id})){
+					${'total_'.$entregado->id}=0;
+					}
+					if(!isset(${'importe'.$entregado->id})){
+					${'importe'.$entregado->id}=0;
+					}
+					if($entregado->fecha==$fecha->fecha && $entregado->id==$fecha->id && $item->tesproductos_id==$entregado->tesproductos_id && $item->tescolores_id==$entregado->tescolores_id)
+					{
+						$t++;
+						$array[]=$entregado->id;
+						?>
+    					<td align="right" valign="top"><?php 
+						//echo $t;
+						//echo "<br />";
+						//echo $entregado->id;
+						//echo "<br />";
+						$total_entregado=$total_entregado+$entregado->cantidad;
+						${'total_'.$entregado->id}=${'total_'.$entregado->id}+$entregado->cantidad;
+						echo number_format($entregado->cantidad,2,'.','');
+						${'importe'.$entregado->id}=${'importe'.$entregado->id}+$entregado->importe;?></td>
+    	<?php 		}
+				}
+				if($t==0)echo "<td align='right' valign='top'> 0.00 </td>";
+				?>
+	<?php }?>
+  <td align="right" valign="top"><?php 
+  $total_total=$total_total+$total_entregado;
+  echo number_format($total_entregado,2,'.','');?></td>
+  <td align="right" valign="top"><?Php 
+  $total_pendiente=$total_pendiente+($item->cantidad-$total_entregado);
+  echo number_format($item->cantidad-$total_entregado,2,'.','')?></td>
+  </tr>
+  <?php }?>
+  
+  <?php
+  $array = array_unique($array);?>
+  </tbody>
+  <tfoot>
+  <tr>
+  <td valign="top"></td>
+  <td valign="top"><h4>SUM:</h4></td>
+  <td align="right" valign="top"><?php echo number_format($total_cantidad,2,'.','')?></td>
+  <td align="right" valign="top"><?php echo number_format($total_precio,2,'.','')?></td>
+  <td align="right" valign="top"><?php echo number_format($total_importe,2,'.','');?></td>
+  
+  <?php foreach($array as $item=>$value){
+	  ?>
+      <td align="right" valign="top"><?php //echo number_format(${'total_'.$value},2,'.','')?></td>
+      <?php 
+	  }?>
+   
+  <td align="right" valign="top"><?php echo number_format($total_total,2,'.','');?></td>
+  <td align="right" valign="top"><?php echo number_format($total_pendiente,2,'.','');?></td>
+ </tr>
+  <tr>
+  <td valign="top"></td>
+  <th colspan="3" align="right" valign="top">Sub Total  </th>
+  <td align="right" valign="top"><?php echo number_format($orden->totalconigv-$orden->igv,2,'.','');?></td>
+ <?php 
+ $total_i=0;
+ foreach($entregados_fecha as $factura){?>
+    <th width="13%" valign="top" align="right" title="<?php echo $factura->id;?>"><?php  
+	$total_i=$total_i+$factura->importe;
+	echo number_format($factura->importe,2,'.','')?></th>
+    <?php }?>
+   
+  <td align="right" valign="top"><?php echo number_format($total_i,2,'.','');?></td>
+  <td align="right" valign="top">&nbsp;</td>
+ </tr>
+  <tr>
+  <td valign="top"></td>
+  <th colspan="3" align="right" valign="top">IGV (<?php echo Session::get('IGV')*100?>%)</th>
+  <td align="right" valign="top"><?php echo number_format($orden->igv,2,'.','');?></td>
+  <?php 
+  $total_igv=0;
+  foreach($entregados_fecha as $factura){?>
+    <th width="13%" valign="top" align="right"><?php
+    $total_igv=$total_igv+$factura->importe*Session::get('IGV');
+	echo number_format($factura->importe*Session::get('IGV'),2,'.','')?></th>
+    <?php }?>
+   
+  <td align="right" valign="top"><?php echo number_format($total_igv,2,'.','');?></td>
+  <td align="right" valign="top">&nbsp;</td>
+ </tr>
+  <tr>
+  <td valign="top"></td>
+  <th colspan="3" align="right" valign="top">TOTAL</th>
+  <td align="right" valign="top"><?php echo number_format($orden->totalconigv,2,'.','');?></td>
+  <?php 
+  $total_t=0;
+  foreach($entregados_fecha as $factura){?>
+    <th width="13%" valign="top" align="right"><?php
+    $total_igv=$factura->importe*Session::get('IGV');
+	$total_t=$total_t+$factura->importe+$total_igv;
+	echo number_format($factura->importe+$total_igv,2,'.','')?></th>
+    <?php }?>
+   
+  <td align="right" valign="top"><?php echo number_format($total_t,2,'.','');?></td>
+  <td align="right" valign="top">&nbsp;</td>
+ </tr>
+ </tfoot>
+</table>

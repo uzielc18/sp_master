@@ -1,0 +1,32 @@
+<?php View::content();?>
+<style type="text/css">
+/*.container {
+  width: 1124px;
+}*/
+#items,input,tesarea,th,td{
+	font-size:11px !important;
+}
+.item-row td{
+	padding-left:15px !important;
+	}
+#paid
+{
+	width:80% !important;
+}
+.meta td{
+	font-size:14px !important;
+	
+	}
+ul.token-input-list{ width:150px !important;}
+</style>
+	<div class="card">
+	<h1>Reportes <span>Reportes para exportal a excel</span></h1>
+    </div>
+    
+    <div class="form-actions">
+    <?php echo Menu::menuReportes($action_name);?>
+	</div>
+    <div class="card-body">
+    <p class="well">- En esta seccion se tendra acceso a los reportes mas importantes del sistema.</p>
+    </div>
+    

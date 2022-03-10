@@ -1,0 +1,202 @@
+<?php echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<div class="card">
+    <h1>Salida de Repuestos!<span><?php echo Session::get('DOC_NOMBRE')?></span></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="card-body">
+<div id="ver_resultado"></div>
+<div class="span2"></div>
+<div class="span8">
+	<?php echo Form::open(NULL,'POST','class="form-horizontal"')?>
+    <legend>Formulario de salida de repuestos  - F5, Para Actualizar!</legend>
+	<?php echo Form::hidden('pedido.id')?>
+    <table width="50%" border="0" align="center" cellpadding="1" cellspacing="1">
+    <tr>
+    <td width="45%">Numero</td>
+    <td width="55%"><?php echo Form::text('pedido.codigo');?></td>
+    </tr>
+    <tr>
+      <td>Moneda:</td>
+      <td>Dolares Americanos <?php echo Form::hidden('pedido.tesmonedas_id','','2')?></td>
+    </tr>
+    <tr>
+      <td>Area:</td>
+      <td><span style="width:50%; display:inline;"><input id="CL" class="search-query"/></span>
+    <?php echo Form::hidden('pedido.plareas_id')?></td>
+    </tr>
+    <tr>
+      <td>Fecha de Emision:</td>
+      <td><?Php echo Sp::formatFecha('%d de %B del %Y',$pedido->fecha)?></span><?php //echo Calendar::selector('pedido.fecha');//finiciotraslado?></td>
+    </tr>
+    </table>
+<?php echo Form::close();?>
+</div>
+<div id="guia">
+<?php echo Ajax::form('guia',$module_name."/repuestos/grabardetalle_salidas/".$pedido->id,'form-inline','post')?>
+  <?php echo Form::hidden('detalles.tesunidadesmedidas_id','',13)?>
+  <?php echo Form::hidden('detalles.tescolores_id','',773)?>
+  <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0"  class="table-bordered">
+  <tr>
+  <td width="5%"><strong>Fecha</strong><br />
+  <?php echo Calendar::text('detalles.fecha_r','',date("Y-m-d"))?>
+  </td>
+  <td width="28%"><strong>Sr</strong><br />
+  <?php echo Form::text('detalles.acldatos_id')?>
+  </td>
+  <td width="20%"><strong>Repuesto</strong><br />
+  <?php echo Form::text('detalles.tesproductos_id')?>
+  </td>
+  <td width="6%">
+  <strong>Maquina</strong>:<br />
+  <?php echo Ajax::dbSelect('prorepuestosuso.promaquinas_id','nombre',array('promaquinas','find','aclempresas_id='.Session::get('EMPRESAS_ID')),'ubicacion',$module_name.'/'.$controller_name.'/getubicacionmaquina')?>
+  </td>
+  <td id="ubicacion" width="19%">
+  <strong>Posicion</strong><br />
+  <select> <option>Seleccione una maquina</option></select>
+  </td>
+  <td width="6%">
+  <strong>Cantidad</strong><br />
+  <?php echo Form::text('detalles.cantidad','size="3" class="qty"')?>
+  </td>
+  <td width="4%">
+  <strong>P/U $/.</strong><br />
+  <?php echo Form::text('detalles.precio','size="3" class="qty "')?>
+  </td>
+  <td width="5%">
+  <strong>Importe</strong><br />
+  <?php echo Form::text('detalles.importe','size="3" class="qty"')?>
+  </td>
+  <td width="7%">
+  <button type="submit" class="btn">Enviar!</button>
+  </td>
+  </tr>
+  </table>
+<?php echo Form::close()?>
+<table  class="table-bordered table-striped" width="75%" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <th width="10%" align="left">Codigo</th>
+    <th width="37%" align="left">Descripcion</th>
+    <th width="10%" align="center">Unidad</th>
+    <th width="13%" align="center">Cantidad</th>
+    <!--<th width="9%" align="right">P. S/IGV</th>
+    <th width="11%" align="right">Importe</th>-->
+
+  </tr>
+  <?php 
+  $n=0;
+  foreach($detalles as $item){
+	  $n++;
+	  ?> 
+  <tr id="<?php echo $item->id?>">
+    <td><?php echo $n?>. <?php if(!empty($item->tesproductos_id))echo $item->getTesproductos()->codigo_ant?></td>
+    <td><?php if(!empty($item->tesproductos_id))echo $item->getTesproductos()->nombre?></td>
+    <td align="center"><?Php if(!empty($item->tesunidadesmedidas_id))echo $item->getTesunidadesmedidas()->simbolo?></td>
+    <td align="center"><?php echo $item->cantidad?></td>
+    <!--<td align="right"><?php //if(!empty($item->precio))echo number_format($item->precio,2,'.','')?></td>
+    <td align="right"><?php //if(!empty($item->importe))echo number_format($item->importe,2,'.','')?></td>-->
+    
+  </tr>
+  <?php }?>
+</table>
+<script type="text/javascript">
+$(document).ready(function()
+{	
+	$("#CL").tokenInput("/<?php echo $module_name?>/repuestos/getareas", 
+		{
+			tokenLimit: 1,
+			minChars: 2,
+			<?php if(!empty($pedido->plareas_id)){?>
+			prePopulate: [ 
+						 {id: <?Php echo $pedido->plareas_id?>, name: "<?php echo $pedido->getPlareas()->nombre?>"},
+						 ],
+			<?php }?>
+			onAdd: function (item){
+			   var VAL=item.id;
+			   $("#salida_plareas_id").val(VAL);
+			},
+			onDelete: function (item) {
+			}
+		});
+		$("#detalles_acldatos_id").tokenInput("/<?php echo $module_name?>/repuestos/getdatos", 
+		{
+			tokenLimit: 1,
+			minChars: 2,
+			onAdd: function (item){
+			   var VAL=item.id;
+			   $("#prorepuestosuso_acldatos_id").val(VAL);
+			},
+			onDelete: function (item) {
+			}
+		});
+		
+		$("#detalles_tesproductos_id").tokenInput("/<?php echo $module_name?>/repuestos/getrepuestos", 
+		{
+			tokenLimit: 1,
+			minChars: 2,
+			onAdd: function (item){
+				//$("#detalles_ubicacion").val(item.oculto);
+				$("#detalles_precio").val(item.precio);
+				$.ajax({
+					type:"GET",
+					url:"/<?php echo $module_name?>/repuestos/resumen_repuesto/"+item.id+'/0',
+					success:function(response){
+						
+						$("#dialog").html(response);
+						openDialog();
+					}
+				});
+			},
+			onDelete: function (item) {
+			}
+		});
+	$("#detalles_cantidad").change(function(){
+		var cantidad=$(this).val();
+		var precio=$("#detalles_precio").val();
+		$("#detalles_importe").val(precio*cantidad);
+		});
+	$("#detalles_precio").change(function(){
+		var precio=$(this).val();
+		var cantidad=$("#detalles_cantidad").val();
+		$("#detalles_importe").val(precio*cantidad);
+	});
+	
+	$("#prorepuestosuso_promaquinas_id").change(function(){
+		
+		var p_id=$("#detalles_tesproductos_id").val();
+		var m_id=$("#prorepuestosuso_promaquinas_id option:selected").val();
+		$.ajax({
+					type:"GET",
+					url:"/<?php echo $module_name?>/repuestos/resumen_repuesto/"+p_id+'/'+m_id,
+					success:function(response){
+						$("#dialog").html(response);
+						openDialog();
+					}
+				});
+		});
+		
+});
+</script>
+</div>
+<div class="form-actions"><a onclick="return validar()"></a>
+<?php 
+echo Html::linkAction("versalida/", 'Siguiente <i class="icon-hand-right"></i>','class="btn btn-primary" onclick="return validar()"') ?>&nbsp;<?php echo Html::linkAction("salidas", 'Volver ','class="btn"') ?>
+</div>
+<hr />
+</div>
+<script>
+function openDialog(){
+$(function() {
+    $( "#dialog" ).dialog({
+	  width: 600,
+      modal: true
+    });
+  }); 
+}
+</script>
+ 
+<div id="dialog" title="Resumen">
+  <p></p>
+</div>

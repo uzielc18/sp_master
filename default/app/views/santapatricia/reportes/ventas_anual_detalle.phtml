@@ -1,0 +1,65 @@
+
+<div class="card">
+    <h1>Estadisticas de ventas</h1>
+</div>
+<div class="form-actions">
+<?php echo Menu::menuReportes($action_name);?>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div style="clear:both"></div>
+<?php echo Sp::imprimir('Ventas anual - ','P');?>
+
+<div class="card-body">
+  <div id="reporte">
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
+<caption>Ventas Ruc</caption>
+  <tr>
+    <th>Fecha</th>
+    <th>Numero Doc</th>
+    <th>Estado</th>
+    <th></th>
+    <th>Total</th>
+  </tr>
+  <?Php foreach($ventas as $venta):?>
+  <tr>
+    <td><?php echo $venta->femision?></td>
+    <td><?php echo $venta->serie.'-'.$venta->numero?></td>
+    <td><?Php echo $venta->estadosalida?></td>
+    <td><?Php //echo $venta->estadosalida?></td>
+    <td><?Php echo $venta->totalconigv?></td>
+  </tr>
+  <?php endforeach;?>
+</table>
+<br />
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
+  <caption>Ventas Internas</caption>
+  <tr>
+    <th>Fecha</th>
+    <th>Numero Doc</th>
+    <th>Estado</th>
+    <th></th>
+    <th>Total</th>
+  </tr>
+  <?Php foreach($internas as $interna):?>
+  <tr>
+    <td><?php echo $interna->femision?></td>
+    <td><?php echo $interna->serie.'-'.$interna->numero?></td>
+    <td><?Php echo $interna->estadosalida?></td>
+    <td><?Php //echo $venta->estadosalida?></td>
+    <td><?Php echo $interna->total?></td>
+  </tr>
+  <?php endforeach;?>
+</table>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#anio").change(function(event){
+    	var id = $("#anio").find(':selected').val();
+		location.href = '/<?php echo $module_name?>/reportes/ventas_anual/'+id;
+     });
+	
+});
+</script>
+</div>

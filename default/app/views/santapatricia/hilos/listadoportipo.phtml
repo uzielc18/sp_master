@@ -1,0 +1,14 @@
+<?php $n=0;
+foreach($productos as $item){ $n++;?>
+  <tr>
+  	<td><?php echo $n?></td>
+    <td><?php echo $item->prefijo?><?php echo $item->codigo?></td>
+    <td><?php echo $item->nombre?></td>
+    <td><?php if(!empty($item->hilosistema_id))echo $item->getHilosistema()->nombre.' ('.$item->getHilosistema()->abr.')'?></td>
+    <td><?php echo $item->nombrecorto?></td>
+    <td><?php echo $item->detalle?></td>
+    <td><?php echo Ajax::linkAction('editar/'.$item->id.'/'.$item->getTestipoproductos()->getTeslineaproductos()->id.'/'.$item->getTestipoproductos()->id,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'producto_nuevo-'.$item->getTestipoproductos()->id)?>
+    <?php echo Html::linkAction('borrar/'.$item->id.'/'.$item->getTestipoproductos()->getTeslineaproductos()->id.'/'.$item->getTestipoproductos()->id,Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?></td>
+
+  </tr>
+<?php }?>

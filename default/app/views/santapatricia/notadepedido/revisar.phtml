@@ -1,0 +1,161 @@
+<?php
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+
+<div class="card">
+<h1><?php echo $titulo//echo "id--->".Session::get('PROFORMA_ID')?><span><?php echo $origen;?></span></h1>
+</div>
+<?php 
+View::content();?>
+<div class="form-actions">
+    <?php echo Html::linkAction("listado/".$origen, 'Listado','class="btn btn-primary"') ?>
+	</div>
+	<div style="clear:both"></div>
+  <div id="loading" style="display:none;"><img src="/img/spin.gif" /></div>
+<div class="card-body">
+  	<table width="75%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered">
+    <tr>
+    	<th width="17%" align="left">Solicitado por:</th>
+        <th width="68%" align="left"><?php echo $pedido->getAclusuarios()->getAcldatos()->nombre?> <?php echo $pedido->getAclusuarios()->getAcldatos()->appaterno?> <?php echo $pedido->getAclusuarios()->getAcldatos()->apmaterno?></th>
+        <th width="9%" align="left">Estado:</th>
+        <th width="6%" align="left"><?php echo $pedido->estadonota;?></th>
+    </tr>
+    <tr>
+    	<th align="left" class="meta-head">No. Pedido:</th>
+        <th align="left"><?php echo $pedido->codigo;?></th>
+    </tr>
+    <tr>
+    	<th align="left">Origen:</th>
+        <th colspan="3" align="left"><?php echo $pedido->origen;?></th>
+    </tr>
+    <tr>
+    	<th align="left">Descripcion:</th>
+        <th align="left"><?php echo $pedido->descripcion;?></th>    
+    </tr>
+     
+  </table>
+     <br />
+   <div id="detalle">  
+	<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered" id="items">
+	  <thead>
+      <tr align="center">
+        <th width="8%" align="left">Cod.</th>
+        <th width="18%" align="left">Producto</th>
+        <th width="13%" align="left">Color</th>
+        <th width="11%" align="right">Kg. Entregado</th>
+        <th width="11%" align="center">Medida</th>
+        <th width="12%" align="center">Maquina</th>
+        <?php if($pedido->origen=='Produccion' or $pedido->origen=='Chenille'){ ?>
+        <th width="10%" align="left">Lote</th>
+        <th width="8%" align="left"># Caja</th>
+        <?php }?>
+        <th width="3%" align="left">Obs</th>              
+        <th width="6%" align="left">Accion</th>
+	  </tr>
+      </thead>
+      <tbody>
+      <?php foreach($detalles as $detalle){?>
+      <tr>
+        <td width="8%" align="left"><?php echo $detalle->getTesproductos()->codigo?></td>
+        <td width="18%" align="left"><?php echo $detalle->getTesproductos()->detalle?></td>
+        <td width="13%" align="left"><?php echo $detalle->getTescolores()->nombre?></td>
+        <td width="11%" align="right"><?Php echo $detalle->cantidad?></td>
+        <td width="11%" align="center"><?php echo $detalle->getTesunidadesmedidas()->nombre?></td>
+        <td width="12%" align="center">M-<?php echo $detalle->promaquinas_id?></td>
+        <?php if($pedido->origen=='Produccion' or $pedido->origen=='Chenille'){ ?>
+        <td width="10%" align="left"><?php echo $detalle->lote?></td>
+        <td width="8%" align="left"><?php echo $detalle->getTescajas()->numerodecaja?></td>
+        <?php }?>
+        <td width="3%" align="left">Obs</td>              
+        <td width="6%" align="left"><?php echo Html::linkAction('eliminar_caja_detalle/'.$detalle->id.'/'.$detalle->tescajas_id,'X','class="btn btn-warning"');?></td>
+      </tr>
+      <?php }?>
+      </tbody>
+    </table>
+    </div>
+<div class="form-actions">
+Tipo de hilos
+<?php foreach($tipos as $tipo)
+{
+	$activo='';
+	if($tipo->id==$id_t_p)$activo=' btn-success';
+	echo Html::linkAction($action_name.'/'.$origen.'/'.$tipo->id,$tipo->nombre,'class="btn btn-mini'.$activo.'"').' ';
+}?>
+</div>	
+       
+    <?php //View::content() ?>
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus="" placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+<table width="99%" border="0" align="center" cellpadding="0" cellspacing="0"  id="tblTabla" class="table table-hover">
+<caption>Lista de Cajas en Almacen</caption>
+  <tr style="font-size:12px; color:#333; font-weight:bold;">
+    <th width="9%">Producto</th>
+    <th width="12%">Color</th>
+    <th width="14%" align="center"># Caja</th>
+	<th width="14%" align="center"># Maq</th>
+    <th width="10%">Lote</th>
+    <th width="14%">Peso inicial</th>
+    <th width="14%">Peso Actual</th>
+    <th width="9%">Doc</th>
+    <th width="4%">Accion</th>
+  </tr>
+  <tbody>
+ <?Php foreach($cajas as $caja){
+	 $stok=explode('-',$caja->getStockCC($caja->id));
+	 ?> 
+  <tr id="caja-<?php echo $caja->id?>">
+    <td><?php echo $caja->getTesdetalleingresos()->getTesproductos()->nombrecorto?></td>
+    <td><?php echo $caja->getTesdetalleingresos()->getTescolores()->nombre?></td>
+    <td align="center"><?php echo $caja->numerodecaja?></td>
+	<td align="center">
+    <select name="maquinas-<?php echo $caja->id?>" id="maquinas-<?php echo $caja->id?>">
+	<option value="0">Seleccione...</option>
+	<?Php foreach($maquinas as $maquina){
+		echo '<option value="'.$maquina->id.'">'.$maquina->nombre.'</option>';
+		}?></select></td>
+    <td><?php echo $caja->getTesdetalleingresos()->lote?></td>
+    <td><?php echo $caja->pesoneto//echo number_format($caja->pesoneto,2,'.',' ')?> K, en <?php echo $caja->conos?> conos</td>
+    <td><?php echo $stok[0]//echo number_format($stok[0],2,'.',' ')?> K, en <?php echo $stok[1]?> conos</td>
+    <td><?php echo $caja->getTesdetalleingresos()->getTesingresos()->serie?>-<?php echo $caja->getTesdetalleingresos()->getTesingresos()->numero?></td>
+    <td width="4%"><a href="javascript:;" class="enviar" id="<?Php echo $caja->id?>" data-id="<?Php echo $pedido->id?>"><?php echo Html::img('figuras/vercajas.png','Enviar la caja','width="30px"');?></a></td>
+  </tr>
+ <?php }?>
+ </tbody>
+</table>
+
+     <div style="clear:both"></div>
+     <div class="form-actions">
+        <span id="total-entregar"><?php //echo $c_p?></span>
+        <span id="total-entregado"><?php //echo $c_e?></span>    
+	<?php $va='';
+	echo Html::linkAction("terminar/".Session::get('NOTA_ID')."/Pendiente/".$origen, 'Terminar ','id="entregar" class="btn btn-primary grabar_form"'.$va) ?>&nbsp;<?php echo Html::linkAction("listado/".$origen, 'Cancelar ','class="btn btn"') ?>
+	</div>
+</div>
+<script type="text/javascript">
+
+$(document).ready(function()
+{	
+
+$(".enviar").click(function(){
+	var c_id=$(this).attr("id");
+	var p_id=$(this).attr("data-id");
+	var m_id=$("#maquinas-"+c_id+" option:selected").val();
+	if(m_id!=0){
+	$("#caja-"+c_id).toggle();
+	 $.get("/<?php echo $module_name?>/<?php echo $controller_name?>/enviar_caja_trama/"+p_id+"/"+c_id+"/"+m_id, function(data){
+        $("#detalle").html(data);
+    });
+	
+	}
+	
+});
+$('#txtBuscar').on('search',function(){
+		//le decimos a la funcion que busque en la tabla tblTabla el
+		//valor que contiene el campo actual
+		$.fntBuscarEnTabla($(this).val(),'tblTabla');
+		
+	});
+});
+</script>

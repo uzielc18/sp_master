@@ -1,0 +1,83 @@
+<style type="text/css">
+.span_float
+{
+	float:right !important;
+	margin-left:0px;
+	margin-right:-5px;
+}
+</style>
+<div class="card">
+    <h1>Obligaciones por pagar semanal !<span><?php echo $empresa->razonsocial?></span></h1>
+</div>
+
+<div class="form-actions">
+<?php //echo Html::linkAction("cargaringreso/0", 'Nueva '.Session::get('DOC_NOMBRE'),'class="btn btn-primary"') ?>&nbsp;<?php echo Html::linkAction("", 'Volver ','class="btn"') ?>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content(); //echo Session::get('DOC_CODIGO'); ?>
+</div>
+<div class="card-body">
+<div id="ver_resultado"></div>
+<table width="75%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+<caption>OBLIGACIONES POR PAGAR SEMANAL TOTALIZADO!</caption>
+
+<?php 
+$number=0;
+$a=0;
+$total_soles=0;
+$total_dolares=0;
+foreach($letras as $item){ 
+$n=0;
+$simbolo="S/. ";
+$b=$item->tesmonedas_id;
+switch ($item->tesmonedas_id)
+{
+	case 1: $simbolo='S/. ';$total_soles=$item->total; break;
+	case 2: $simbolo='$. ';$total_dolares=$item->total; break;
+	case 4: $simbolo='S/. ';$total_soles=$item->total; break;
+	case 5: $simbolo='$. ';$total_dolares=$item->total; break;
+	case 0: $simbolo='S/. ';$total_soles=$item->total; break;
+}
+
+if($a==$b){
+$n++;
+$number++;
+$primer_dia=$item->primer_dia;
+$ultimo_dia=$item->ultimo_dia;
+$semana=$item->semana;
+$nletras=$item->nletras;
+}else{
+$number++;
+$primer_dia=$item->primer_dia;
+$ultimo_dia=$item->ultimo_dia;
+$semana=$item->semana;
+$nletras=$item->nletras;
+}
+?>  
+<?php if($a!=$b){?>
+<tr>
+  	<th colspan="6" align="left">TOTAL EN <?Php echo $item->getTesingresos()->getTesmonedas()->nombre?></th>
+    </tr>
+<tr>
+  	<th width="17">Nº</th>
+    <th width="195">Fechas</th>
+    <th width="127">Nº de semana</th>
+    <th width="107">Cantidad de letras</th>
+	<th width="125">Total</th>
+</tr>
+<?php }?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20" align="center"><?php echo $number?></td>
+  	<td height="20">Desde <?php echo Sp::formatFecha('%d / %m / %Y',$primer_dia)?> hasta <?php echo Sp::formatFecha('%d / %m / %Y',$ultimo_dia)?></td>
+    <td align="center"><?php echo $semana?></td>
+    <td align="center"><?php echo $nletras?></td>
+    <td align="right"><?php echo $simbolo; ?> <?php echo number_format($item->total,2,'.','');?></td>
+  </tr>
+<?php 
+$a=$item->tesmonedas_id;
+
+$total_soles=0;
+$total_dolares=0;
+}?>
+</table>
+</div>

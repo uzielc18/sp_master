@@ -1,0 +1,118 @@
+<?php
+View::content();
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<script type="text/javascript">
+        $(document).ready(function() {
+            $("#prod").tokenInput("<?php echo "/".$module_name."/transportes/resultados"?>", 
+			{
+				tokenLimit: 1,minChars: 1,
+                onAdd: function (item) {
+                   var VAL=item.id;
+				   $("#tesproductos_id").val(VAL['id']);
+				   //$("#tesproductos_testipoproductos_id").val(VAL['testipoproductos_id']);
+				   $("#tesproductos_codigo").val(VAL['codigo']);
+				   $("#tesproductos_nombre").val(VAL['nombre']);
+				   $("#tesproductos_nombrecorto").val(VAL['nombrecorto']);
+				   $("#tesproductos_abr").val(VAL['abr']);
+				   $("#tesproductos_detalle").val(VAL['detalle']);
+				   $("#tesproductos_precio").val(VAL['precio']);
+                },
+                onDelete: function (item) {
+					$("#tesproductos_id").val('');
+					//$("#tesproductos_testipoproductos_id").val('');
+				   $("#tesproductos_codigo").val('<?php echo $codigo?>');
+				   $("#tesproductos_nombre").val('');
+				   $("#tesproductos_nombrecorto").val('');
+				   $("#tesproductos_abr").val('');
+				   $("#tesproductos_detalle").val('');
+				   $("#tesproductos_precio").val('');
+                }
+            });
+		});
+        </script>
+<div class="card">
+    <h1><?php echo $titulo?></h1>
+</div>
+<strong>Si ya creó el producto puede buscarlo aqui</strong>
+<br /><input name="prod" id="prod" type="text">
+<hr />
+
+<?php echo Form::open(NULL, 'post', 'class="form-horizontal"');
+echo Form::hidden('tesproductos.id')
+?>
+
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+  <tr>
+    <th align="right" valign="top">Codigo:&nbsp;</th>
+    <td valign="top">
+	<?php 
+	echo Form::text('tesproductos.codigo','size="20" readonly="readonly"',$codigo)?></td>
+    <th align="right" valign="top">Nombre:&nbsp;</th>
+    <td valign="top"><?php echo Form::text('tesproductos.nombre','size="40"') ?></td>
+  </tr>
+  <tr>
+    <th align="right" valign="top">Nombre corto:&nbsp;</th>
+    <td valign="top"><?php echo Form::text('tesproductos.nombrecorto','size="30"') ?></td>
+    <th align="right" valign="top">Abreviatura:&nbsp;</th>
+    <td valign="top"><?php echo Form::text('tesproductos.abr','size="10"') ?></td>
+  </tr>
+  <tr>
+    <th align="right" valign="top">Descripcion:&nbsp;</th>
+    <td colspan="3" valign="top"><?php echo Form::textarea('tesproductos.detalle','cols="35" rows="4"') ?></td>
+  </tr>
+  <tr>
+    <th align="right" valign="top">Sotk Minimo</th>
+    <td valign="top"><?php echo Form::text('tesproductos.stokminimo','size="10"')?></td>
+    <th valign="top">Sotk Maximo:</th>
+    <td valign="top"><?php echo Form::text('tesproductos.stokmaximo','size="10"')?></td>
+  </tr>
+  <tr>
+    <th align="right" valign="top">Precio:&nbsp;</th>
+    <td valign="top"><?php echo Form::text('tesproductos.precio') ?></td>
+    <th align="right" valign="top">Codigo Proveedor: </th>
+    <td valign="top"><?php echo Form::text('testproductos.cod_proveedor','size="30"')?></td>
+  </tr>
+  <tr>
+    <th align="right" valign="top">Marca:&nbsp;</th>
+    <td valign="top"><?php echo Form::text('protransportes.marca') ?></td>
+    <th valign="top">Modelo:&nbsp;</th>
+    <td valign="top"><?php echo Form::text('protransportes.modelo') ?></td>
+  </tr>
+    <tr>
+    <th align="right" valign="top">Año Fab.:&nbsp;</th>
+    <td valign="top"><?php echo Form::text('protransportes.aniofab') ?></td>
+  </tr>
+    <tr>
+    <th align="right" valign="top">Número Motor:&nbsp;</th>
+    <td valign="top"><?php echo Form::text('protransportes.numeromotor') ?></td>
+    <th valign="top">Número de Chasis&nbsp;</th>
+    <td valign="top"><?php echo Form::text('protransportes.numerochasis') ?></td>
+  </tr>
+    <tr>
+    <th align="right" valign="top">Número de Placa:&nbsp;</th>
+    <td valign="top"><?php echo Form::text('protransportes.numeroplaca') ?></td>
+    <th valign="top">Número de Asientos &nbsp;</th>
+    <td valign="top"><?php echo Form::text('protransportes.numeroasientos') ?></td>
+  </tr>
+    <tr>
+    <th align="right" valign="top">Peso :&nbsp;</th>
+    <td valign="top">
+    Bruto <?php echo Form::text('protransportes.pesobruto','size="6"') ?> 
+    Neto <?php echo Form::text('protransportes.pesoneto','size="6"') ?> 
+    Util <?php echo Form::text('protransportes.pesoutil','size="6"') ?>
+    </td>
+    <th valign="top">Combustible &nbsp;</th>
+    <td valign="top"><?php echo Form::text('protransportes.combustible') ?></td>
+  </tr>
+    <tr>
+    <th align="right" valign="top">Color :&nbsp;</th>
+    <td valign="top"><?php echo Form::text('protransportes.color','size="30"') ?></td>
+    <th valign="top">&nbsp;</th>
+    <td valign="top"><?php //echo Form::text('protransportes.plato') ?></td>
+  </tr>
+</table>
+<div class="form-actions">
+    <?php echo Form::submit('Guardar Datos', 'class="btn btn-primary"') ?>
+    <?php echo Html::linkAction('listado', 'Cancelar', 'class="btn"'); ?>
+    </div>

@@ -1,0 +1,114 @@
+<style type="text/css">
+.span_float
+{
+	float:right !important;
+	margin-left:0px;
+	margin-right:-5px;
+}
+.rojo{
+	color:#FF0000;}
+	
+.verde{
+	color:#090;}
+</style>
+<div class="card">
+    <h1><em>Letras Pendientes de Pago !<span><?php echo $empresa->razonsocial?></span></em></h1>
+</div>
+<div class="form-actions">
+<?php //echo Html::linkAction("cargaringreso/0", 'Nueva '.Session::get('DOC_NOMBRE'),'class="btn btn-primary"') ?>&nbsp;<?php echo Html::linkAction("", 'Volver ','class="btn"') ?>
+</div>
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus="" placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="card-body">
+<div id="ver_resultado"></div>
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+  <thead>
+  <caption style="font-size:14px; color:#333; font-weight:bold;"><pre>Letras por Pagar segun Fecha de Vencimiento</pre></caption>
+  <tr>
+  	<th width="17">Nº</th>
+    <th width="189">Proveedor</th>
+    <th width="67">Número Doc.</th>
+    <th width="61">Numero unico</h4></th>
+    <th width="101">Fecha de Vencimiento</h4></th>
+    <th width="57">Banco</th>
+    <th width="96">>Total</th>
+    <th width="60">Estado</th>
+  </tr>
+  </thead>
+<?php $number=0;
+$semana=0;
+$a=0;
+$T_soles=0;
+$T_dolares=0;
+foreach($letras as $item){ 
+$simbolo="S/. ";
+/*echo "<pre>";
+print_r($item);
+echo "</pre>";*/
+$T_letras=$item->Totalletrasporsemana($item->semana,$item->getTesingresos()->fvencimiento);
+//echo " TOTAL DE LETRAS POR SEMANA ".$T_letras=$item->Totalletrasporsemana($item->semana,$item->getTesingresos()->fvencimiento).' de la semana '.$item->semana." <br />";
+$number++;?>
+<?php 
+$b=$item->semana;
+if($a!=$b){
+
+$number=1;
+$T_soles=0;
+$T_dolares=0;
+?>
+<thead>
+<tr id="<?php echo $item->id?>">
+  	<td height="20" colspan="9"><h4>Semana Nº <?php echo $item->semana?></h4></td>
+</tr>
+</thead>
+<?php 
+}
+$a=$item->semana;
+
+switch ($item->getTesingresos()->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; $T_soles=$T_soles+$item->monto; break;
+	case 2: $simbolo='$. '; $T_dolares=$T_dolares+$item->monto;break;
+	case 4: $simbolo='S/. ';$T_soles=$T_soles+$item->monto; break;
+	case 5: $simbolo='$. ';$T_dolares=$T_dolares+$item->monto;break;
+	case 0: $simbolo='S/. ';$T_soles=$T_soles+$item->monto; break;
+}
+/*pintar las fechas*/
+$class='';
+$dias='';
+if($item->getTesingresos()->fvencimiento<date("Y-m-d")){$class=' class="rojo" ';$dias=", hace ".$item->dd." dia(s)";}
+if($item->getTesingresos()->fvencimiento==date("Y-m-d"))$class=' class="verde" ';
+
+?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20"><?php echo $number?></td>
+  	<td height="20"><?php echo $item->getTesingresos()->getTesdatos()->razonsocial?></td>
+    <td><?php echo $item->getTesingresos()->serie?><?php echo $item->getTesingresos()->numero?></td>
+    <td><?php echo $item->numerounico?></td>
+    <td<?Php echo $class?>><?php echo Sp::formatFecha('%d/%m/%Y',$item->getTesingresos()->fvencimiento)?><?php echo $dias;?></td>
+    <td><?php echo $item->bancos?></td>
+    <td><?php if($item->getTesingresos()->totalconigv!='NaN.00' && !empty($item->getTesingresos()->totalconigv))echo $simbolo.number_format($item->getTesingresos()->totalconigv,2,'.','');else echo('S/ 00.00')?></td>
+   <td>
+   <?php echo $item->getTesingresos()->estadoingreso?><?php if(!empty($item->numerounico)){}else{echo " Sin # único";}?>
+    <?php //echo $number."==".$T_letras;echo "<br />"; echo $T_soles; echo "<br />"; echo $T_dolares; echo "<br />"; echo $item->getTesingresos()->tesmonedas_id;?>
+    </td>
+  </tr>
+  <?Php if($number==$T_letras){?>
+  <tr>
+  <td colspan="3">Total de la semana <?php echo $item->semana?></td>
+  <td colspan="3">Total en S/. <?php echo number_format($T_soles,2,'.',' ')?></td>
+  <td colspan="3">Total en $/. <?php echo number_format($T_dolares,2,'.',' ')?></td>
+  </tr>
+  <tr>
+  <td colspan="9">&nbsp;</td>
+  </tr>
+  <?php }?>
+<?php 
+	}?>
+</table>
+</div>

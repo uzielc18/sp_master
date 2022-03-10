@@ -1,0 +1,57 @@
+<?php 
+View::content();
+$simbolo="S/. ";
+
+switch ($monedas)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+  $preciounitario=0;
+  $D_id=$det->id;
+  $medida=$det->tesunidadesmedidas_id;
+  $detalle_id=$det->id;
+  $importe=$det->importe;
+  $lote=$det->lote;
+  $empaque=$det->empaque;
+  $bobinas=$det->bobinas;
+  $pesoneto=$det->pesoneto;
+  $pesobruto=$det->pesobruto;
+  $cantidad=$det->cantidad;
+  $color_id='';
+  $color_name='';
+  if(!empty($det->tescolores_id))
+  {
+	  $color_id=$det->tescolores_id;
+	  $color_name=$det->getTescolores()->nombre;
+  }
+ ?>
+		  <tr id="<?php echo $n?>" class="item-row duplicado">
+           <?php /*?><td><?php echo $n?></td><?php */?>
+           <td>
+                  <div class="delete-wpr">
+                  <?php echo Form::text('codigo-'.$n,'size="10" readonly="readonly"',$item->codigo)?>
+                  <a id="del-<?php echo $n?>" class="delete" href="javascript:;" title="Elimar registro" data-id="<?php echo $detalle_id?>">X</a>
+                  </div>
+              </td>
+		      <td class="item-name">
+                  <?php echo Form::hidden('productos_id-'.$n,'class="productos_id" readonly="readonly"',$item->id)?>
+                  <span id="ver-name<?php echo $n?>" style="display:none;"><?php echo Form::text('productoname-'.$n,'readonly="readonly"')?></span>
+                  <span id="ver<?php echo $n;?>" class="ver"><?php echo Form::text('producto'.$n,'class="producto" placeholder="Producto" size="30" readonly="readonly"',$item->nombre)?></span>
+              </td>
+		      <td><?php echo Form::dbSelect('tesunidadesmedidas_id-'.$n,'nombre',array('tesunidadesmedidas','find','aclempresas_id='.Session::get("EMPRESAS_ID")),'seleccione','',$medida)?> </td>
+              <td><?php echo Form::hidden('tescolores_id-'.$n,'readonly="readonly"',$color_id)?> <?php echo Form::text('tescolores-'.$n,'class="color" size="10"',$color_name)?></td>
+		      <td> <?php echo Form::text('lote-'.$n,'size="10" class="save"',$lote)?></td>
+              <td> <?php echo Form::text('empaque-'.$n,'size="5" class="save caja"',$empaque)?><div class="flotante" id="cajas-<?php echo $n?>"></div></td>
+              <td> <?php echo Form::text('bobinas-'.$n,'size="5" class="save"',$bobinas)?></td>
+              <td> <?php echo Form::text('pesoneto-'.$n,'size="5" class="save"',$pesoneto)?></td>
+              <td> <?php echo Form::text('pesobruto-'.$n,'size="5" class="save"',$pesobruto)?></td>
+              <td><span class="simbolo"><?php echo $simbolo?></span><?php //echo "preciounitario=> ".$preciounitario;?><?php echo Form::text('precio-'.$n,'size="10" class="cost" placeholder="0.0"',number_format($preciounitario,2,'.',''))?></td>
+		      <td><?php echo Form::text('cantidad-'.$n,' class="qty reload" size="10" placeholder="0.0"',$cantidad);?></td>
+		      <td><span class="simbolo"><?php echo $simbolo?></span><span id='total-<?php echo $n?>' class="price"><?php echo number_format($importe,2,'.','')?></span>
+              <a class="addrow" href="javascripd:;" id="add-<?php echo $n?>-<?php echo $D_id?>">Duplicar</a></td>
+		  </tr>
+		  

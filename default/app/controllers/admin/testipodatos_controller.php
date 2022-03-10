@@ -21,7 +21,7 @@ class TestipodatosController extends AppController {
                 if ($testipodatos->save()) {
                     Flash::valid('Estado fué agregado Exitosamente...!!!');
                     Aclauditorias::add("Agregó Estado {$testipodatos->nombre} al sistema");
-					return Router::toAction('');
+					return Redirect::toAction('');
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                 }
@@ -44,7 +44,7 @@ class TestipodatosController extends AppController {
                 if ($testipodatos->update(Input::post('testipodatos'))) {
                     Flash::valid('El Estado fué actualizado Exitosamente...!!!');
                     Aclauditorias::add("Editó el Estado {$testipodatos->nombre}", 'testipodatos');
-                    return Router::toAction('');
+                    return Redirect::toAction('');
                 } else {
                     Flash::warning('No se Pudieron Guardar los Datos...!!!');
                     unset($this->testipodatos); //para que cargue el $_POST en el form
@@ -71,7 +71,7 @@ class TestipodatosController extends AppController {
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::toAction('');
+        return Redirect::toAction('');
     }
 	public function desactivar($id) {
         try {
@@ -90,7 +90,7 @@ class TestipodatosController extends AppController {
         } catch (KumbiaException $e) {
             View::excepcion($e);
         }
-        return Router::toAction('');
+        return Redirect::toAction('');
     }
 	public function eliminar($id) {
         try {

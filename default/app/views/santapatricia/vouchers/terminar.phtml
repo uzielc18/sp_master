@@ -1,0 +1,220 @@
+<style type="text/css">
+.page {
+position: relative;
+z-index: 2;
+}
+
+.texto {
+	color:#F00;
+	position:absolute;
+	padding-top:10%;
+	text-align:center;
+	z-index:1;
+	top:100px;
+	left:0px;
+	right:0;
+	bottom:0;
+	font-size:36px !important;
+}
+</style>
+<?php 
+View::content();
+switch ($vc->tesmonedas_id)
+{
+	case 1: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES'; break;
+	case 2: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 4: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
+	case 5: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 0: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
+}
+if($vc->voucherformadepagos_id==10)$simbolo='S/. ';
+?>
+<div class="card">
+<h1>Vouchers !<span> Vista de Impresion de Vauchers</span></h1>
+</div>
+<div class="form-actions"><?php echo Html::linkAction("", 'Volver al Inicio','class="btn btn-primary"') ?></div>
+<?php echo Sp::imprimir('','P',array("P"=>"P"));?> 
+<div class="card-body">
+<?php if($vc->estadov=='ANULADO'){?><div class="texto"> ANULADO </div><?php }?>
+<table width="750" border="0" align="center" cellpadding="0" cellspacing="0">
+  <?php if($vc->estadov=='Pendiente'){?><caption>Vaucher, aun no grabado!</caption><?php }?>
+  <thead>
+  <tr>
+    <td colspan="2" valign="top"><?php echo $empresa->razonsocial?></td>
+    <td colspan="2" align="left" valign="top"><strong>Voucher General: #</strong><?php echo $numero?></td>
+    <td width="15%" align="right" valign="top"><strong>Operacion:</strong></td>
+    <td width="9%" align="left" valign="top"><?php echo $vc->getVoucherformadepagos()->operacion ; echo $vc->voucherformadepagos_id?></td>
+    <td width="7%" valign="top" align="right"><strong>Asiento:</strong></td>
+    <td width="8%" valign="top" align="left"><?Php echo $asiento?></td>
+    <td width="5%" valign="top"a align="left"><strong>Mes:</strong></td>
+    <td width="3%" valign="top" align="left"><?php echo date('m');?></td>
+  </tr>
+  <tr>
+    <td width="7%" valign="top"><strong>Fecha:</strong></td>
+    <td width="20%" valign="top"><?php echo Sp::formatFecha('%d/%m/%Y',$vc->fecha)?><?php //echo date('Y-m-d');?></td>
+    <td width="8%" align="left" valign="top"><strong>Importe:</strong></td>
+    <td colspan="2" valign="top"><?php echo $simbolo?> <?php if(!empty($vc->importe))echo number_format($vc->importe,2,'.','')?> <?php echo $moneda_letras?></td>
+    <td colspan="2" align="right"valign="top"><strong>T/C: </strong></td>
+    <td valign="top"><?php echo $vc->getTestipocambios()->compra;?></td>
+    <td valign="top">&nbsp;</td>
+    <td valign="top">&nbsp;</td>
+  </tr>
+  </thead>
+</table>
+<hr />
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" background="">
+ <tr>
+	<td width="59" valign="left"><h4>Cta.</h4></td>
+    <td width="113" valign="left"><h4>Nº Doc.</h4></td>
+    <td width="99" valign="left"><h4>F. Vto.</h4></td>
+    <td width="83" valign="left"><h4>Cod Auxiliar</h4></td>
+    <td colspan="4" valign="left"><h4>Descripcion</h4></td>
+    <td width="86" valign="left"><h4>Cargos</h4></td>
+    <td width="92" valign="left"><h4>Abonos</h4></td>
+  </tr>
+  <?php if($vc->voucherformadepagos_id==11){
+	/*validar que no muestre si tiene mas de una letra aplicada*/
+	$letras=$LI->getLetraAdelanto($vc->id);
+	
+	$T_letras_app_ant=0;
+	
+	foreach($letras as $letra):
+	$saldo_ant=$LI->getAplicacionesAnteriores($vc->id,$letra->id);	 
+	if(empty($letra->monto_n))
+	{
+		$monto_l=number_format($letra->monto-$saldo_ant,2,'.',''); 
+	}else{ 
+		$monto_l=number_format($letra->monto_n-$saldo_ant,2,'.','');
+	}
+	$T_letras_app_ant=$T_letras_app_ant+$monto_l;
+  ?>
+  <tr>
+    <td width="59" valign="left"><em><?php echo $letra->getTesingresos()->cuentaporpagar?></em></td>
+    <td width="113" valign="left"><em><?php echo $letra->getTesingresos()->numero?></em></td>
+    <td width="99" valign="left"><em><?php //echo Sp::formatFecha('%d/%m/%Y',$letra->getTesingresos()->fvencimiento)?><?php echo Sp::formatFecha('%d/%m/%Y',$letra->getTesingresos()->fvencimiento)?></em></td>
+    <td width="83" valign="left"><em><?php echo $letra->getTesingresos()->getTesdatos()->ruc?></em></td>
+    <td colspan="4" valign="left"><em>Saldo de aplicación anterior L/A [<?php echo $letra->gettesingresos()->getTesdatos()->razonsocial?>]</em></td>
+    <td width="86" valign="left"></td>
+    <td width="92" valign="left"><em><?php echo $simbolo?>
+	  <?php echo $monto_l;?>
+    </em></td>
+  </tr>
+  <?php 
+  endforeach;
+  }?>
+  <?Php 
+  foreach($detalles as $item):
+	$cuenta=$item->plancontable;
+	$fechavcto=NULL;
+	$descripcion=$vc->getVoucherformadepagos()->nombre;
+	if($vc->voucherformadepagos_id==2 && $item->tesdatos_id!=0)$descripcion=$item->getTesdatos()->razonsocial;
+	if(!empty($item->correlativo))$num_doc=$item->correlativo;else $num_doc=$item->noperacion;
+	$codauxiliar='-';
+  if($item->tesingresos_id!=0)
+  {
+	 $serie='';
+	 $cuenta=$item->getTesingresos()->cuentaporpagar;
+	  if(!empty($item->getTesingresos()->serie))$serie=$item->getTesingresos()->serie.'-';
+	  $num_doc=$serie.$item->getTesingresos()->numero;
+	  $fechavcto=$item->getTesingresos()->fvencimiento;
+	  $codauxiliar=$item->getTesingresos()->getTesdatos()->ruc;
+	  $descripcion=$item->getTesingresos()->getTesdatos()->razonsocial;
+  }
+  if($item->tessalidas_id!=0)
+  {
+	 $serie='';
+	 if(!empty($item->getTessalidas()->cuentaporpagar))$cuenta=$item->getTessalidas()->cuentaporpagar;
+	 if(!empty($item->getTessalidas()->serie))$serie=$item->getTessalidas()->serie.'-';
+	 $num_doc=$serie.$item->getTessalidas()->numero;
+	 $fechavcto=$item->getTessalidas()->fvencimiento;
+	 $codauxiliar=$item->getTessalidas()->getTesdatos()->ruc;
+	 $descripcion=$item->getTessalidas()->getTesdatos()->razonsocial;
+	 if($vc->voucherformadepagos_id==2)$descripcion=$item->getTessalidas()->getTescuentascorrientes()->getTesbancos()->nombre.' '.$item->getTessalidas()->getTescuentascorrientes()->detalle;
+	 if($vc->voucherformadepagos_id==13)$descripcion=$item->getTescuentascorrientes()->getTesbancos()->nombre.' '.$item->getTescuentascorrientes()->detalle;
+  }
+  ?>
+  <tr>
+    <td valign="top"><?php echo $cuenta?></td>
+    <td valign="top"><?php echo $num_doc?></td>
+    <td valign="top"><?php if(!empty($fechavcto))echo $fechavcto;else echo '-';?></td>
+    <td valign="top"><?php echo $codauxiliar?></td>
+    <td colspan="4" valign="top"><?php echo $descripcion?></td>
+    <td align="right" valign="top"><div align="left">
+      <?php if($item->cargos==1)echo $simbolo.' '.number_format($item->monto,2,'.',''); else echo '';?>
+    </div></td>
+    <td align="right" valign="top"> <div align="left">
+      <?php if($item->abono==1)echo $simbolo.' '.number_format($item->monto,2,'.',''); else echo '';?>
+    </div></td>
+  </tr>
+  <?php endforeach;?>
+  
+  <?php if($vc->voucherformadepagos_id==11){ 
+  ?>
+  <tr>
+    <td width="59" valign="left"><em><?php echo $letra->getTesingresos()->cuentaporpagar?></em></td>
+    <td width="113" valign="left"><em><?php echo $letra->getTesingresos()->numero?></em></td>
+    <td width="99" valign="left"><em><?php echo $letra->getTesingresos()->fvencimiento?></em></td>
+    <td width="83" valign="left"><em><?php echo $letra->getTesingresos()->getTesdatos()->ruc?></em></td>
+    <td colspan="4" valign="left"><em>Saldo [ <?php echo $letra->gettesingresos()->getTesdatos()->razonsocial?>]</em></td>
+    <td width="86" valign="left"></td>
+    <td width="92" valign="left"><em><?php echo $simbolo?>
+    <?php 
+	if(count($letras)==1)
+	{
+		if(empty($letra->monto_n))
+	  	{
+		 $TOTAL=$letra->monto-$saldo_ant-$vc->importe;
+	  	}else
+	  	{
+		  $TOTAL=$letra->monto_n-$saldo_ant-$vc->importe;
+	  	}
+	}else
+	{
+		$TOTAL=$T_letras_app_ant-$saldo_ant-$vc->importe;
+	}
+	if($TOTAL<0)$TOTAL=0;
+		echo number_format($TOTAL,2,'.','');
+	?>
+    </em></td>
+  </tr>
+  <?php }?>
+  <tr>
+    <th colspan="3">&nbsp;</th>
+    <th colspan="3">&nbsp;</th>
+    <th colspan="3">&nbsp;</th>
+    <th></th>
+  </tr>
+  <tr>
+    <th colspan="3">&nbsp;</th>
+    <th colspan="3">&nbsp;</th>
+    <th colspan="3">&nbsp;</th>
+    <th></th>
+  </tr>
+  
+  <tr>
+    <th colspan="3">&nbsp;</th>
+    <th colspan="3">&nbsp;</th>
+    <th colspan="3">&nbsp;</th>
+    <th></th>
+  </tr>
+  <tr>
+    <th colspan="3">&nbsp;</th>
+    <th colspan="3">&nbsp;</th>
+    <th colspan="3">&nbsp;</th>
+    <th></th>
+  </tr>
+  <tr>
+    <td colspan="3" align="center"><em>Aprobador por:</em></td>
+    <td colspan="3" align="center"><em>Contador :  </em></td>
+    <td colspan="3" align="center"><em>Recibido por:</em></td>
+    <td>&nbsp;</td>
+  </tr>
+  </table>
+<?php if($vc->estadov!='Terminado'){?>
+<div class="form-actions">
+    <?php echo Html::linkAction("grabardetalle/", 'Editar','class="btn btn-secondary"') ?>
+    <?php echo Html::linkAction("finalizar/1", 'Terminar','class="btn btn-primary"') ?>
+</div>
+<?php }?>
+<?php echo Form::close()?>
+</div>

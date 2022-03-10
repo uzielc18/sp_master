@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+ <html lang="es">
+	<head>
+    	<meta charset='UTF-8' />
+        <title>Santa Patricia</title>
+        <link href="/css/backend/bootstrap.css" rel="stylesheet" type="text/css" media="screen" />
+		<link href="/css/backend/estilos.css" rel="stylesheet" type="text/css" media="screen" />
+   		<script type="text/javascript"></script>
+        <!--link rel='stylesheet' type='text/css' href='/B1D671CF-E532-4481-99AA-19F420D90332/netdefender/hui/ndhui.css' /-->
+        </head>
+    <body>
+    <div id='cabecera' class="navbar navbar-fixed-top">
+ 	<div class="navbar-inner">
+        <div class="container">
+            <a href="/" class="brand" >Bienvenidos  a la Intranet</a>
+        </div>
+    </div>
+    </div>  
+	<div class="container">
+            <div id="contenido" class="content">
+            <div class="span12">
+               <?php 
+if(Session::get('EMPRESAS_ID')==2)
+{
+	$pre_fijo="SC-";
+}else
+{
+	$pre_fijo="SP-";
+}
+
+?>
+<div class="page-header">
+<h1>Datos <span>Datos importantes del documento</span></h1>
+</div>
+<?php 
+$i=1;
+foreach($letras as $letra):
+
+?>
+<?php 
+if($i==1)echo $numero1=$letra->numero;
+if($i==2)echo $numero2=$letra->numero;
+if($i==3)echo $numero3=$letra->numero;
+if($i==4)echo $numero4=$letra->numero;
+if($i==5)echo $numero5=$letra->numero;
+
+?> <br />
+<?php echo $factura=$letra->getFacturas($letra->factura)?> <br />
+<?php echo $giro='LIMA';?>
+<?php echo $a=$letra->a?><br />
+<?php echo $b=$letra->b?><br />
+<?php echo $c=$letra->c?><br />
+<?php 
+if($i==1)echo $d1=$letra->d;
+if($i==2)echo $d2=$letra->d;
+if($i==3)echo $d3=$letra->d;
+if($i==4)echo $d4=$letra->d;
+if($i==5)echo $d5=$letra->d;?><br />
+<?php  
+if($i==1)echo $e1=$letra->e;
+if($i==2)echo $e2=$letra->e;
+if($i==3)echo $e3=$letra->e;
+if($i==4)echo $e4=$letra->e;
+if($i==5)echo $e5=$letra->e;?><br />
+<?php 
+if($i==1)echo $f1=$letra->f;
+if($i==2)echo $f2=$letra->f;
+if($i==3)echo $f3=$letra->f;
+if($i==4)echo $f4=$letra->f;
+if($i==5)echo $f5=$letra->f;?><br />
+<?php 
+if($i==1)echo $importe1=$letra->importe;
+if($i==2)echo $importe2=$letra->importe;
+if($i==3)echo $importe3=$letra->importe;
+if($i==4)echo $importe4=$letra->importe;
+if($i==5)echo $importe5=$letra->importe;?><br />
+<?php
+$NUMERO =new NumerosLetras();
+if($i==1)echo $moned_en_letras1=$NUMERO->NL($letra->total,$letra->moneda);
+if($i==2)echo $moned_en_letras2=$NUMERO->NL($letra->total,$letra->moneda);
+if($i==3)echo $moned_en_letras3=$NUMERO->NL($letra->total,$letra->moneda);
+if($i==4)echo $moned_en_letras4=$NUMERO->NL($letra->total,$letra->moneda);
+if($i==5)echo $moned_en_letras5=$NUMERO->NL($letra->total,$letra->moneda);?><br /> 
+<?php echo $razonsocial=$letra->razonsocial?><br />
+<?php echo $ruc=$letra->ruc?><br />
+<?php echo $telefonos=$letra->telefonos?><br />
+<?php echo $direccion=$letra->direccion?><br />
+
+<?php //$n=$i++;
+endforeach;
+$n=1;
+?>
+<?php
+// Lee la plantilla
+$plantilla = file_get_contents('letra'.$n.'.rtf');
+ 
+// Agregamos los escapes necesarios
+$plantilla = addslashes($plantilla);
+//$plantilla = str_replace('\r','\\r',$plantilla);
+//$plantilla = str_replace('\t','\\t',$plantilla); 
+// Datos de la plantilla
+ 
+// Procesa la plantilla
+eval( '$rtf = <<<EOF_RTF
+' . $plantilla . '
+EOF_RTF;
+' );
+
+$archivo_nombre=$pre_fijo."LTR-".$dato->ruc.".rtf";
+// Guarda el RTF generado, el nombre del RTF en este caso sera el apellido-nombre.fechaactual.rtf
+file_put_contents("./letras/".$archivo_nombre,$rtf);
+$ruta=base64_encode("./letras/".$archivo_nombre);
+//chmod("./facturas/".$archivo_nombre, 0444);
+echo Html::linkAction('descargar/'.$ruta,'descargar','class="btn btn-warning"');
+
+//chmod("./facturas/".$archivo_nombre, 0444); echo "<a href=\"/letras/".$archivo_nombre."\" class='btn btn-info'>descargar</a>";
+?>
+<div class="cl"></div>
+			</div>
+<div class="cl"></div>
+            </div>
+<div class="cl"></div>
+    </div> 
+    </body>
+</html>
+

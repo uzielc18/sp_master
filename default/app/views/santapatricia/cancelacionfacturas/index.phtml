@@ -1,0 +1,47 @@
+<?php
+View::content();
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<script type="text/javascript">
+
+$(document).ready(function()
+{	  
+	
+  
+/*Busqueda del Proveedores*/
+ $("#tesdatos_id").tokenInput("<?php echo "/".$module_name."/clientes/resultados"?>", 
+		{
+		tokenLimit: 1,
+		minChars: 2,
+		onAdd: function (item) {
+		},
+		onDelete: function (item) {
+		}
+	}); 
+  
+});
+</script>
+<div class="card">
+<h1><?php echo $titulo?></h1>
+</div>
+<div class="card-body">
+
+<?php echo Form::open()?>
+<?php echo Form::hidden('abonos.id')?>
+<table width="70%" border="0" align="center" cellpadding="0" cellspacing="0">
+	<caption>Ingresar datos para busqueda de las facturas a canjear</caption>
+  <tr>
+    <th width="20%" align="right">Cliente:</th>
+    <td width="80%" title="Elegir Documentos de un determinado Proveedor"><?php echo Form::text('tesdatos_id','')?></td>
+  </tr>
+  <tr>
+    <th align="right">Moneda:</th>
+    <td title="Seleccionar Moneda S/. O $/."><?php echo Form::dbSelect('tesmonedas_id','nombre',array('tesmonedas','find','conditions: aclempresas_id='.Session::get('EMPRESAS_ID')));?></td>
+  </tr>
+  <tr>
+    <td colspan="2"><?php echo Form::submit('Continuar','class="btn btn-primary"');?></td>
+  </tr>
+</table>
+
+<?php echo Form::close()?>
+</div>

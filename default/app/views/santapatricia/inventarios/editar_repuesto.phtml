@@ -1,0 +1,543 @@
+<?php
+$simbolo="S/. ";
+
+switch ($monedas)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+
+
+View::content();
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<script type="text/javascript">
+// from http://www.mediacollege.com/internet/javascript/number/round.html
+function roundNumber(number,decimals)
+{
+  var newString;// The new rounded number
+  decimals = Number(decimals);
+  if (decimals < 1) {
+    newString = (Math.round(number)).toString();
+  } else {
+    var numString = number.toString();
+    if (numString.lastIndexOf(".") == -1) {// If there is no decimal point
+      numString += ".";// give it one at the end
+    }
+    var cutoff = numString.lastIndexOf(".") + decimals;// The point at which to truncate the number
+    var d1 = Number(numString.substring(cutoff,cutoff+1));// The value of the last decimal place that we'll end up with
+    var d2 = Number(numString.substring(cutoff+1,cutoff+2));// The next decimal, after the last one we want
+    if (d2 >= 5) {// Do we need to round up at all? If not, the string will just be truncated
+      if (d1 == 9 && cutoff > 0) {// If the last digit is 9, find a new cutoff point
+        while (cutoff > 0 && (d1 == 9 || isNaN(d1))) {
+          if (d1 != ".") {
+            cutoff -= 1;
+            d1 = Number(numString.substring(cutoff,cutoff+1));
+          } else {
+            cutoff -= 1;
+          }
+        }
+      }
+      d1 += 1;
+    } 
+    if (d1 == 10) {
+      numString = numString.substring(0, numString.lastIndexOf("."));
+      var roundedNum = Number(numString) + 1;
+      newString = roundedNum.toString() + '.';
+    } else {
+      newString = numString.substring(0,cutoff) + d1.toString();
+    }
+  }
+  if (newString.lastIndexOf(".") == -1) {// Do this again, to the new string
+    newString += ".";
+  }
+  var decs = (newString.substring(newString.lastIndexOf(".")+1)).length;
+  for(var i=0;i<decimals-decs;i++) newString += "0";
+  //var newNumber = Number(newString);// make it a number if you like
+
+  return newString; // Output the result to the form field (change for your purposes)
+}
+/*FIN DE REDONDEO*/
+function addCommas(nStr)
+{
+    nStr += '';
+    x = nStr.split('.');
+    x1 = x[0];
+    x2 = x.length > 1 ? '.' + x[1] : '';
+    var rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return x1 + x2;
+}
+function update_total()
+{
+  var total = 0.00;
+  $('.price').each(function(i)
+  {
+    price = $(this).html();
+    //alert ('precio: '+price+' ->>>>'+i);
+	if (!isNaN(price)) total =parseFloat(total)+parseFloat(price);
+   //alert ('el total es : '+total+' ->>>>');
+   
+   });
+   
+
+	total = roundNumber(total,2);
+	//alert ('el total es : '+total+' ->>>>');
+	var igv= total*0.18;
+	var totalconigv=(parseFloat(total)+parseFloat(igv));
+	//alert('el igv es: '+igv);
+	$("#paid").val(igv);
+	$("#igv").val(igv);
+	$("#totalconigv").val(totalconigv);
+	$('#subtotal').html(total);
+	$('#paid_total').html(total);
+	//update_balance();
+}
+
+function update_balance()
+{
+  //alert ($("#paid").val());
+  var due =parseFloat( $("#paid_total").html())+ parseFloat($("#paid").val());
+  due = roundNumber(due,2);
+ // alert ('===: '+due);
+	$('.due').html(due);
+	//GRABAR();
+}
+
+function update_price()
+{
+  var ID = $(this).attr('id');
+  var I=ID.split('-');
+  //alert ('id del tr que se manda a grabar->>>'+ID);
+  var row = $(this).parents('.item-row');
+  var price = row.find('.cost').val() * row.find('.qty').val();
+  price = roundNumber(price,2);
+  isNaN(price) ? row.find('.price').html("N/A") : row.find('.price').html(price);
+  //update_total();
+  
+  if($(this).attr('class')=='qty reload')
+  {
+	  $(".item-row").removeClass("duplicado");
+	  location.reload();
+  }
+  grabarDetalle(I[1]);
+}
+
+
+/*envio dew Formulario PROFORMAS*/
+function GRABAR(){
+     
+	 
+          $.ajax({
+            type:"POST",
+            url:"/santapatricia/inventarios/grabar/1",
+            data:$("#inventarios").serialize(),
+            beforeSend:function(){
+              $("#loading").show();
+            },
+            success:function(response){
+                $("#loading").hide();
+				$("#id").val(response);
+            }
+ 
+          	});
+ 
+      };
+
+/*GRABAR DETALLE DE PROFORMAS*/
+
+function grabarDetalle(tr_id) {
+
+ // alert(tr_id);
+  var producto_id=$('#productos_id-'+tr_id).val();
+  var pro_descripcion=$('#pro_descripcion-'+tr_id).val();
+  var costo=$('#precio-'+tr_id).val();
+  var cantidad=$('#cantidad-'+tr_id).val();
+  var lote=$('#lote-'+tr_id).val();
+  var empaque=$('#empaque-'+tr_id).val();
+  var bobinas=$('#bobinas-'+tr_id).val();
+  var pesoneto=$('#pesoneto-'+tr_id).val();
+  var pesobruto=$('#pesobruto-'+tr_id).val();
+  var price = $('#total-'+tr_id).html();
+  var id_detalle=$('#del-'+tr_id).attr("data-id");
+  var unidadmedida_id=$('#tesunidadesmedidas_id-'+tr_id).val();
+  var stokminimo=$('#stokminimo-'+tr_id).val();
+  var stokmaximo=$('#stokmaximo-'+tr_id).val();
+  var colores_id=$('#tescolores_id-'+tr_id).val();
+  var total=price;
+ //alert('ID del PRODUCTO'+producto_id);
+ //alert('id del detalle es 0 cuando es nuevo--->'+id_detalle);
+ //alert('id del tr que se graba-->'+tr_id);
+  
+  if(producto_id!='' && unidadmedida_id!='')
+  {
+	  var dataString ='id_detalle='+id_detalle+'&tescolores_id='+colores_id+'&tesunidadesmedidas_id='+ unidadmedida_id+'&productos_id='+ producto_id+'&pro_descripcion='+pro_descripcion+'&cantidad='+cantidad+'&precio='+costo+'&total='+total+'&lote='+lote+'&empaque='+empaque+'&bobinas='+bobinas+'&pesoneto='+pesoneto+'&pesobruto='+pesobruto+'&stokmaximo='+stokmaximo+'&stokminimo='+stokminimo;
+	//alert(dataString);
+	  $.ajax({
+            type:"POST",
+            url:"/santapatricia/inventarios/grabarDetalle/1",
+            data:dataString,
+            beforeSend:function(){
+              $("#loading").show();
+            },
+            success:function(response){
+                $("#loading").hide();
+				//alert('id del detalle grabado'+response);
+				if($("#add-"+tr_id).attr('id')=='add-'+tr_id)
+				{
+					//alert($("#add-"+tr_id).attr('id'));
+					$("#add-"+tr_id).attr('id','add-'+tr_id+'-'+response);
+				}
+				$('#del-'+tr_id).attr("data-id", response);
+            }
+ 
+         });
+  }
+  
+}
+function bind() {
+  //$(".delete").hide()
+  $(".cost").blur(update_price);
+  $(".qty").blur(update_price);
+  $(".color").click(function(){
+	  	var ID=$(this).attr("id").split('-');
+		buscarColor(ID[1]);
+		});
+	$(".caja").blur(function(){ var ID = $(this).attr('id');
+  	var I=ID.split('-');
+	Mostrar(I[1]); });
+	$("#tipoproducto").change(function(){
+                var op = $("#tipoproducto option:selected").val();
+                document.location = "/santapatricia/inventarios/editar/<?php echo $linea_id?>/"+op;
+        });
+		$("#mas").click(function(){
+			var op = $(this).attr("data-id");
+			//alert(op);
+			document.location = "/santapatricia/inventarios/editar/<?php echo $tipos_id?>/"+op;
+			}); 
+  $("#paid").blur(update_balance);
+  $(".save").blur(function(){
+	var ID = $(this).attr('id');
+  	var I=ID.split('-');
+  	//alert(I+ID);
+	grabarDetalle(I[1]);
+	});
+
+}
+/*cajas*/
+function Mostrar(ID){
+	//alert(ID);
+	grabarDetalle(ID);
+	  var numerocajas=$('#empaque-'+ID).val();
+	  var id_detalle=$('#del-'+ID).attr("data-id");
+	  var dataString ="id_detalle="+id_detalle;
+	  //alert(numerocajas);
+	  if(numerocajas!="")
+	  {
+	  $.ajax({
+            type:"POST",
+            url:"/santapatricia/cajas/crear/"+numerocajas+"/"+ID,
+            data:dataString,
+            beforeSend:function(){
+              $("#loading").show();
+            },
+            success:function(response){
+                $("#loading").hide();
+				$("#cajas-"+ID).html(response);
+				$("#cajas-"+ID).show();
+				$("#cajas-"+ID).dialog({
+					title: "Ingrese las Etiquetas de las Cajas",
+					width: 600,
+					height: 460,
+					modal: true,
+					buttons: 
+					{
+					Ok: function() {
+					$( this ).dialog( "close" );
+					}
+					}
+				});
+				
+            }
+ 
+         });
+	  }
+}
+/*Buscar Color*/
+function buscarColor(ID)
+{
+	if($("#tescolores-"+ID).val()!=""){
+	$("#tescolores-"+ID).tokenInput("/santapatricia/ingresos/colores/", 
+		{
+			
+		tokenLimit: 1,
+		minChars: 1,
+		prePopulate: [ 
+		             {id: $("#tescolores_id-"+ID).val(), name: ""+$("#tescolores-"+ID).val()+""},
+					],
+		onAdd: function (item) {
+		   var VAL=item.id;
+		   $("#tescolores_id-"+ID).val(item.id);
+		   $("#tescolores-"+ID).val(item.name);
+		   grabarDetalle(ID);
+		},
+		onDelete: function (item) {
+		  $("#tescolores_id-"+ID).val("");
+		   $("#tescolores-"+ID).val("");
+		}
+	});
+	}else
+	{
+	$("#tescolores-"+ID).tokenInput("/santapatricia/ingresos/colores/", 
+		{
+			
+		tokenLimit: 1,
+		minChars: 1,
+		onAdd: function (item) {
+		   var VAL=item.id;
+		   $("#tescolores_id-"+ID).val(item.id);
+		   $("#tescolores-"+ID).val(item.name);
+		   grabarDetalle(ID);
+		},
+		onDelete: function (item) {
+		  $("#tescolores_id-"+ID).val("");
+		   $("#tescolores-"+ID).val("");
+		}
+	});
+	}	
+}
+
+$(document).ready(function()
+{
+	$(".addrow").live("click",function()
+	{
+		event.preventDefault()
+		var NID = $('.item-row:last').attr('id');
+		var ID= $(this).attr('id').split('-');
+		var IDnew=Number(NID)+Number(1);
+		//alert(IDnew);
+			$.ajax({
+					type:"GET",
+					url:"/santapatricia/inventarios/duplicar/"+ID[2]+"/"+IDnew,
+					success:function(response){
+						//alert(response);
+						$("#"+ID[1]).after(response);
+						bind();
+					}
+			});
+  });	 	
+
+
+  
+	bind();
+
+	$("#glosa").change(function(){GRABAR();});
+  	$("#femision").change(function(){GRABAR();});
+	$("#monedas").change(function()
+	{
+		GRABAR();
+		var op = $("#monedas option:selected").val();
+		if(op==1)
+		{
+			$(".simbolo").html("S/. ");
+		}
+		if(op==2)
+		{
+			$(".simbolo").html("$. ");
+		}
+	});
+$(".delete").live("click",function()
+		{
+		  var row =$(this).parents(".item-row")
+		  var id=row.find('.delete').attr('data-id');
+		  EliminarDetalle(id);
+			$(this).parents('.item-row').remove();
+		  	update_total();
+			if ($(".delete").length < 2) $(".delete").hide();
+	    });
+});
+
+function EliminarDetalle(id)
+{
+	if(id!=0){
+	$.ajax({
+            type:"POST",
+            url:"/santapatricia/ingresos/eliminarDetalle/"+id,
+            beforeSend:function(){
+              $("#loading").show();
+            },
+            success:function(response){
+				alert('Se elimino de la base de dato');
+            }
+ 
+         });
+	}else
+	{
+		return false;
+	}
+}
+</script>
+<style type="text/css">
+.simbolo
+{
+	position:absolute;
+	float:left;
+	margin-left:-15px !important;
+}
+.item-row td{
+	padding-left:15px !important;
+	font-size:10px !important;
+	}
+#paid
+{
+	width:80% !important;
+}
+.duplicado{
+	background-color:#CF9;
+}
+</style>
+<?php echo $linea_id?>
+<div id="page-wrap">
+	<div id="header">INVENTARIO <?php echo "EDITAR "?></div>
+	<div id="identity">
+        <div id="address">
+            <?php echo $empresa->razonsocial?><br />
+            <?php echo $empresa->direccion?>
+        </div>
+        <div id="logo">
+            <img id="image" src="/img/<?php echo $empresa->logo?>" alt="logo" />
+        </div>
+	</div>
+	<div style="clear:both"></div>
+	<div id="customer">
+    <?php echo Form::open('','post','id="inventarios"');?>
+    <?php echo Form::hidden('id')?>
+    <div id="descripcion">
+		  <label>Descripcion: </label>
+		  <?php echo Form::textArea('glosa');?>
+	</div>
+    <?php echo Form::hidden('cliente_id')?>
+	 <table width="100%">
+                <tr>
+                    <th width="117" class="meta-head">Moneda:</th>
+                    <th width="64"><?php echo Form::dbSelect('monedas','nombre',array('tesmonedas','find','aclempresas_id='.Session::get("EMPRESAS_ID")))?></th>
+                    <th width="84" class="meta-head">Número #:</th>
+                    <th width="49"><?php echo Form::text('numero',' readonly="readonly"',$numero)?></th>
+                </tr>
+                <tr>
+					<th>F. de Emision:</th>
+                    <th><?php echo Calendar::selector('femision');?></th>
+                    <th class="meta-head">Monto Total:</th>
+                    <th><span class="simbolo"><?php echo $simbolo?></span></span><span class="due"><?php echo number_format($totalconigv-$igv,2,'.','')?></span></th>
+       </tr>
+
+            </table>
+	 <?php echo Form::text('totalconigv');?>
+            <?php echo Form::text('igv');?>
+        <?php echo Form::close();?>
+	</div>
+    <p>
+	Seleccione Tipo de Producto!
+	  <?php echo Form::dbSelect('tipoproducto','nombre',array("testipoproductos",'find','conditions: activo=1 AND teslineaproductos_id='.$linea_id),'Cambiar de tipo de producto','',$tipos_id);?>
+    </p>
+   <div class="card">
+    <?php View::partial('paginators/classic', false, array('page' => $productos ,'url' => Router::get('controller_path').'/editar/'.$linea_id.'/'.$tipos_id)); ?><?php echo Html::linkAction("listado/".Session::get('FAMILIA_ID'),'REGRESAR','class="btn btn-primary"')?></div>
+	<table width="98%" id="items">
+		  <tr>
+		      <?php /*?><th width="7%">Nº</th><?php */?>
+              <th width="7%">Codigo</th>
+		      <th width="9%">Producto</th>
+              <th width="5%">Stock_min</th>
+		      <th width="5%">Sotk_max</th>
+		      <th width="7%">Costo Unit</th>
+		      <th width="9%">Cantidad</th>
+		      <th width="27%">Precio</th>
+		  </tr>
+		  <?php 
+			  $n=0;
+			  $subtotal=0;
+			  $preciounitario=0;
+			foreach($productos->items as $item):
+			$color_id='';
+			$color_name='';
+			$preciounitario=0;
+			$detalle_id=0;
+			$medida=0;
+			$importe=0;
+			$lote='';
+			$empaque='';
+			$bobinas='';
+			$pesoneto='';
+			$pesobruto='';
+			$cantidad='';
+			if(!empty($item->precio))if(!is_string($item->precio))$preciounitario=floatval($item->precio);
+			
+			if($detalles->exists('tesingresos_id='.$id.' AND tesproductos_id='.$item->id))
+			{
+				$dets=$detalles->find('conditions: tesingresos_id='.$id.' AND tesproductos_id='.$item->id);
+				  foreach($dets as $det)
+				  {
+					  $n++;
+					  $D_id=$det->id;
+					  $medida=$det->tesunidadesmedidas_id;
+					  $detalle_id=$det->id;
+					  $importe=$det->importe;
+					  if(!empty($det->preciounitario))if(!is_string($det->preciounitario))$preciounitario=floatval($det->preciounitario);
+					  $lote=$det->lote;
+					  $empaque=$det->empaque;
+				  	  $bobinas=$det->bobinas;
+				      $pesoneto=$det->pesoneto;
+				      $pesobruto=$det->pesobruto;
+					  $cantidad=$det->cantidad;
+					  $color_id='';
+					  $color_name='';
+					  if(!empty($det->tescolores_id))
+					  {
+						  $color_id=$det->tescolores_id;
+						  $color_name=$det->getTescolores()->nombre;
+					  }
+					  echo Form::hidden('tesunidadesmedidas_id-'.$n,'',$medida);
+					  echo Form::hidden('tescolores_id-'.$n,'readonly="readonly"',$color_id);
+					  echo Form::hidden('lote-'.$n,'size="8" class="save"',$lote);
+					  echo Form::hidden('empaque-'.$n,'size="5" class="save caja"',$empaque);
+					  echo Form::hidden('bobinas-'.$n,'size="5" class="save"',$bobinas);
+				  ?>
+		  <tr id="<?php echo $n?>" title="<?Php echo $item->nombre?>" class="item-row">
+           <?php /*?><td><?php echo $n?></td><?php */?>
+           <td>
+                  <div class="delete-wpr">
+                  <?php echo Form::hidden('codigo-'.$n,'size="10" readonly="readonly"',$item->codigo)?>
+                  <?php echo $item->codigo_ant?>
+                  <a id="del-<?php echo $n?>" class="delete" href="javascript:;" title="Elimar registro" data-id="<?php echo $detalle_id?>">X</a>
+                  </div>
+              </td>
+		      <td class="item-name">
+                  <?php echo Form::hidden('productos_id-'.$n,'class="productos_id" readonly="readonly"',$item->id)?>
+                  <?php echo $item->nombre?>
+              </td>
+		      
+              <td title="sTOK minimo"> o <?php echo Form::text('stokminimo-'.$n,'size="5" class="save"')?></td>
+              <td title="sTOK maximo"> o <?php echo Form::text('stokmaximo-'.$n,'size="5" class="save"')?></td>
+              <td><span class="simbolo"><?php echo $simbolo?></span><?php //echo "preciounitario=> ".$preciounitario;?><?php echo Form::text('precio-'.$n,'size="10" class="cost" placeholder="0.0"',number_format($preciounitario,2,'.',''))?></td>
+		      <td title="SOTK ACTUAL"><?php echo Form::text('cantidad-'.$n,' class="qty" size="10" placeholder="0.0"',$cantidad);?></td>
+		      <td><span class="simbolo"><?php echo $simbolo?></span><span id='total-<?php echo $n?>' class="price"><?php echo number_format($importe,2,'.','')?></span>
+              <a class="addrow" href="javascripd:;" id="add-<?php echo $n?>-<?php echo $D_id?>">Duplicar</a></td>
+		  </tr>
+		  
+		  <?php
+				}
+			}			  
+			endforeach;
+		/*FIN FOREACH*/?>
+          </table>
+  <div id="loading" style="display:none;"><img src="/img/spin.gif" /></div>
+     <div style="clear:both"></div>
+	<div id="terms">
+	  <h5>Inventario Inicial<?php echo $n?></h5><?php echo Form::textArea('pre_descripcion');?>
+		</div>
+</div>

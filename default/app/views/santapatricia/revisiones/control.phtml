@@ -1,0 +1,160 @@
+<?php //if(Auth::get('id')==3){?>
+<div class="card">
+<h1> Control de Rollos <span>Ingresar los datos por rollos</span> </h1>
+</div>
+
+<div class="form-actions">
+<?php echo Menu::menuProduccion($action_name);?>
+</div>
+<?php View::content()?>
+<style type="text/css">
+.link a{
+display:inline-table;
+width:20px;
+padding:2px 2px 7px 2px;
+background-color:#F5F5F5;
+margin:auto;}
+</style>
+<script type="text/jscript">
+function rend(tr_id)
+{
+  var metros=isNaN($('#metros-'+tr_id).val())? 0 : $('#metros-'+tr_id).val();
+  var peso=isNaN($('#peso-'+tr_id).val())? 0 : $('#peso-'+tr_id).val();
+  var rendimiento=(parseFloat(metros)/parseFloat(peso)); 
+  $("#rendimiento-"+tr_id).val(rendimiento.toFixed(2)); 
+  grabarDetalle(tr_id);
+  
+}
+function grabarDetalle(tr_id) 
+{
+  var id=tr_id;
+ // alert(tr_id);
+  var numero=$("#numero-"+tr_id).val();
+  var ordencompra=$("#ordencompra-"+tr_id).val();
+ // alert(ordencompra)
+  var metros=isNaN($('#metros-'+tr_id).val())? 0 : $('#metros-'+tr_id).val();
+  var peso=isNaN($('#peso-'+tr_id).val())? 0 : $('#peso-'+tr_id).val();
+  var rendimiento=$("#rendimiento-"+tr_id).val();
+  var tesordendecompras_id=$("#tesordendecompras_id-"+tr_id).val();
+  var revisador=$("#revisador-"+tr_id).val();
+  var observacion_control=$("#observacion_control-"+tr_id).val();
+  var dataString ='id='+id+'&metros='+ metros+'&peso='+ peso+'&rendimiento='+rendimiento+'&ordencompra='+ordencompra+'&tesordendecompras_id='+tesordendecompras_id+'&numero='+numero+'&revisador='+revisador;
+	// alert(dataString);
+	  $.ajax({
+            type:"POST",
+            url:"/santapatricia/revisiones/grabarrollo/",
+            data:dataString,
+            beforeSend:function(){
+              $("#loading").show();
+            },
+            success:function(response){
+                $("#loading").hide();
+				//alert(response);
+            }
+ 
+         });
+  
+}
+
+function orden(tr)
+{
+	//ordencompra
+	$("#ordencompra-"+tr).tokenInput("<?php echo "/santapatricia/produccion/ordenescompra"?>", 
+		{
+			
+		tokenLimit: 1,
+		minChars: 1,
+		/*if($("#ordencompra-"+tr).val()!=''){*/
+		prePopulate: [ 
+		             {id: $("#ordencompra-"+tr).val(), name: ""+$("#ordencompra-"+tr).val()+""},
+					 ],
+		/*}*/
+		preventDuplicates: true,
+		onAdd: function (item) {
+			//alert(item.name);
+			$("#ordencompra-"+tr).val(item.name);
+			$("#tesordendecompras_id-"+tr).val(item.id);
+				grabarDetalle(tr);
+		  },
+		onDelete: function (item) {
+			$("#ordencompra-"+tr).val('');
+			$("#tesordendecompras_id-"+tr).val('');
+			grabarDetalle(tr);
+		}
+	});
+}
+
+$(document).ready(function()
+{
+	$('.rend').blur(function()
+	{
+		var ID=$(this).attr('id').split('-');
+		rend(ID[1]);
+	})
+	$('.save').blur(function()
+	{
+		var ID=$(this).attr('id').split('-');
+		grabarDetalle(ID[1]);
+	})
+	$('.ord').click(function()
+	{
+		var ID=$(this).attr('id').split('-');
+		orden(ID[1]);
+	})
+
+
+});
+</script>
+<div class="card-body">
+<table width="100%" border="0" cellspacing="1" cellpadding="0">
+  <tr>
+   <td width="50%" align="right"><strong>Mes:</strong><?php echo date('m');?><br />
+      	<strong>Año:</strong><?php echo date('Y');?></td>
+  </tr>
+</table>
+<table width="99%" border="0" cellspacing="0" cellpadding="0" class="table table-bordered table-striped">
+ <caption>Ingresar Datos de los Rollos Revisados</caption>
+  <tr>
+    <th width="9%" align="left">Fecha</th>
+    <th width="12%" align="left">NºRollo</th>
+    <th width="12%" align="left">Programado</th>
+    <th width="8%" align="left">Metraje</th>
+    <th width="5%" align="left">Peso.</th>
+    <th width="7%" align="center">Maq.</th>
+    <th width="7%" align="left">Rend.</th>
+    <th width="25%" align="left"> Articulos.</th>
+    <th width="7%" align="left">Revisador.</th>
+    <th width="5%" align="left">O.C.</th>
+    <th width="10%" align="center">Acciones</th>
+  </tr>
+  <?php foreach($rollos as $rollo){?>
+  <tr id="tr-<?php echo $rollo->id?>">
+    <td align="left" valign="top"><?php $hora=explode('-',Sp::formatFecha('%d/%b/%y-%H:%M',$rollo->fechacorte)); echo $hora[0].' <br />'.$hora[1];?></td>
+    <td valign="top"><?php echo Form::text('numero-'.$rollo->id,'size="10"',$rollo->numero)?></td>
+    <td valign="top"><?php if($rollo->prodetalleproduccion_id!=0)echo $rollo->getProdetalleproduccion()->metroprogramados?></td>
+    <td valign="top"><?php echo Form::text('metros-'.$rollo->id,'size="8" class="save rend"',$rollo->metros)?></td>
+    <td valign="top"><?php echo Form::text('peso-'.$rollo->id,'size="8" class="save rend"',$rollo->peso)?></td>
+    <td align="center" valign="top"><?php if($rollo->prodetalleproduccion_id!=0)echo $rollo->getProdetalleproduccion()->getProproduccion()->getPromaquinas()->prefijo.$rollo->getProdetalleproduccion()->getProproduccion()->getPromaquinas()->numero; else echo 'M-'.$rollo->maquina_numero?></td>
+    <td align="center" valign="top"><?php echo Form::text('rendimiento-'.$rollo->id,'size="8" class="save"',$rollo->rendimiento)?></td>
+    <td valign="top"><?php //echo $rollo->getTesproductos()->getTestipoproductos()->nombre.' '.$rollo->getTesproductos()->nombre?><?php echo $rollo->getTesproductos()->nombre?></td>
+    <td valign="top">
+	<?php echo Form::text('revisador-'.$rollo->id,'placeholder="Revisador"')?>
+    <?php echo Form::text('observacion_control-'.$rollo->id,'placeholder="Observacion"')?>
+    </td>
+    <td valign="top"><?php if(!empty($rollo->getProdetalleproduccion()->tesordendecompras_id)){$oc=$rollo->getProdetalleproduccion()->getTesordendecompras()->codigo;}else{$oc=$rollo->ordencompra;}?>
+	<?php echo Form::text('ordencompra-'.$rollo->id,'size="8" class="ord save"',$oc)?>
+    <?php echo Form::hidden('tesordendecompras_id-'.$rollo->id,'',$rollo->tesordendecompras_id)?>
+    </td>
+      <td valign="top" align="center"><span class="link">
+	  <?php if($rollo->prodetalleproduccion_id){echo Ajax::linkAction('cambiarestado/'.$rollo->id.'/Sin procesos/control',Html::img("figuras/enviar_almacen.png",'Visto Bueno','style="width: 20px;margin-left:1px;margin-right:1px;" title="Enviar Almacen"'),'tr-'.$rollo->id);}else{?>
+	  <?php echo Ajax::linkAction('cambiarestado/'.$rollo->id.'/Control de Calidad Venta/control',Html::img("figuras/numero_lote.png",'Visto Bueno','style="width: 20px;margin-left:1px;margin-right:1px;" title="Almacen Ventas"'),'tr-'.$rollo->id);echo Ajax::linkAction('cambiarestado/'.$rollo->id.'/Sin procesos/control',Html::img("figuras/enviar_almacen.png",'Visto Bueno','style="width: 20px;margin-left:1px;margin-right:1px;" title="Enviar Almacen"'),'tr-'.$rollo->id);}?>
+      <?php echo Ajax::linkAction('cambiarestado/'.$rollo->id.'/Sin Revisar/control',Html::img("figuras/produccion.png",'Visto Bueno','style="width: 20px;margin-left:1px;margin-right:1px;" title="Voler a revisar"'),'tr-'.$rollo->id);?>
+      </span></td>
+  </tr>
+  <?php }?>
+</table>
+</div>
+<?php
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<?php //}?>

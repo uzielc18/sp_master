@@ -1,0 +1,55 @@
+<?php View::content();?>
+<div class="card">
+    <h1><?php echo $titulo?></h1>
+</div>
+<div class="card-body">
+
+<?php if($e==0)echo Ajax::form('otro','', 'post', 'form-horizontal'); ?>
+<?php if($e==1)echo Form::open('', 'post', 'form-horizontal'); ?>
+<?php 
+echo Form::hidden('datos.id','','37');
+echo Form::hidden('transportistas.acldatos_id','','37');
+echo Form::hidden('transportistas.id');
+?> 
+			<div class="control-group">                
+                <label for="transportistas.nombre">Nombre: </label>
+                <div class="controls">
+				<?php echo Form::text('transportistas.nombre','class="span10"') ?>
+                </div>
+            </div>
+			<div class="control-group">                
+                <label for="transportistas.direccion">Direccion: </label>
+                <div class="controls">
+				<?php echo Form::text('transportistas.direccion','class="span10"') ?>
+                </div>
+            </div>
+			
+			<div class="control-group">                
+                <label for="transportistas.ruc">Nro. Ruc: </label>
+                <div class="controls">
+				<?php echo Form::text('transportistas.ruc','class="span10"') ?>
+                </div>
+            </div>
+            <div class="control-group">                
+                <label for="transportistas.numerobrevete">Numero de Brevete : </label>
+                <div class="controls">
+				<?php echo Form::text('transportistas.numerobrevete','size="30"') ?>
+                </div>
+            </div>
+            <div class="control-group">                
+                <label for="transportistas.categoria">Categoria : </label>
+                <div class="controls">
+				<?php echo Form::text('transportistas.categoria','size="30"') ?>
+                </div>
+            </div>
+            <div class="control-group">                
+                <label for="transportistas.categoria">Fecha de Caducidad : </label>
+                <div class="controls">
+				<?php echo Calendar::text('transportistas.fechacadiucidad') ?>
+                </div>
+            </div>
+            <div class="form-actions">
+                <?php echo Form::submit($boton.' Cambios', 'name="datos_personas" class="btn btn-primary"') ?> <?php if($e==1){echo Html::linkAction('listado','TERMINAR','class="btn"');}?>
+            </div>
+        <?php echo Form::close() ?>
+</div>

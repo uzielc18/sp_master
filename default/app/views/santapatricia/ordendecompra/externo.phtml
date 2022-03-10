@@ -1,0 +1,203 @@
+<?php
+$simbolo="S/. ";
+
+switch ($monedas)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+
+
+View::content();
+?>
+<div class="card">
+<h1>Ver Pedido del cliente<span>Vista para imprimir la orden de compra</span></h1></div>
+<div class="form-actions">
+<?php echo Html::linkAction("listado/$orden->origenorden", 'Listado de ordenes','class="btn btn-secondary"');?></div>
+<?php echo Sp::imprimir('Pedido de clientes - ','P',array('P'=>'P'));?> 
+<div class="card-body">
+
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered">
+  <tr>
+    <th colspan="4" rowspan="2" align="left" valign="bottom" scope="row"><?php ?><img id="image" src="/img/logoSP.png" alt="logo"><?php ?></th>
+    <th colspan="4" align="center" valign="bottom" scope="row"><h2>Pedido de Cliente</h2></th>
+    </tr>
+  <tr>
+    <td colspan="4" align="center" valign="bottom" scope="row"><b><?php echo $codigo?>-<?php echo $fecha;?></b></td>
+    </tr>
+  <tr>
+    <td scope="row">&nbsp;</td>
+    <td scope="row">&nbsp;</td>
+    <td scope="row">&nbsp;</td>
+    <td scope="row">&nbsp;</td>
+    <td align="center" valign="bottom" scope="row">&nbsp;</td>
+    <td align="center" valign="bottom" scope="row">&nbsp;</td>
+    <td align="center" valign="bottom"></td>
+    <td align="center" valign="bottom">&nbsp;</td>
+  </tr>
+  <tr>
+    <th colspan="4" align="left"><h3>Facturar a:</h3></th>
+    <th height="0" colspan="4" align="left"><h3>Dirigido a:
+    </h3></th>
+  </tr>
+  <tr>
+    <td width="7%">&nbsp;</td>
+    <td colspan="3"><?php echo $orden->getTesdatos()->razonsocial?> <br />
+      Ruc: <?php echo $orden->getTesdatos()->ruc?> <br />
+      Direccion:<?php echo $orden->getTesdatos()->departamento?>-<?php echo $orden->getTesdatos()->provincia?>-<?php echo $orden->getTesdatos()->distrito?>-<?php echo $orden->getTesdatos()->direccion?><br />
+      Contacto: <?php echo ($orden->getTesdatos()->dato_id($orden->getTesdatos()->id)->contacto);?></td>
+    <td width="10%">&nbsp;</td>
+    <td colspan="3"><?php echo $empresa->razonsocial?> - Ruc:<?php echo $empresa->ruc?><br />
+      <?php echo $empresa->direccion?><br /></td>
+    </tr>
+  <tr>
+    <td width="7%">&nbsp;</td>
+    <td width="5%">&nbsp;</td>
+    <td width="22%">&nbsp;</td>
+    <td width="21%">&nbsp;</td>
+    <td width="10%">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td width="12%">&nbsp;</td>
+    <td width="9%">&nbsp;</td>
+  </tr>
+ <tr>
+   <th width="7%" align="center">Cotizacion</th>
+   <th colspan="2" align="center">Forma de pago</th>
+   <th width="21%" align="center">Moneda</th>
+   <th width="10%" align="center">Fecha de entrega</th>
+   <th colspan="2" align="center">Lugar de entrega</th>
+   <th width="9%">&nbsp;</th>
+ </tr>
+ <tr>
+   <td align="center">&nbsp;</td>
+   <td colspan="2" align="center"><?php echo $formapago;?></td>
+   <td align="center"><?php echo $monedas_nombre?></td>
+   <td align="center"><?php echo $fechaentrega ?></td>
+   <td colspan="2" align="center"><?php echo $direccionentrega?></td>
+   <td>&nbsp;</td>
+ </tr>
+ 
+ <tr>
+   <th colspan="8" align="center">&nbsp;</th>
+   </tr>
+ 
+ <tr>
+          	  <th width="7%">Item</th>
+              <th width="5%">Codigo</th>
+		      <th width="22%">Producto</th>
+		      <th width="21%">Descripcion</th>
+		      <th width="10%" align="right">Costo Unit</th>
+		      <th width="14%" align="right">Cantidad</th>
+		      <th width="12%" align="right">Medida</th>
+		      <th width="9%">Precio</th>
+    </tr>
+		  <?php 
+			  $n=0;
+			  $subtotal=0;
+			  foreach($detalles as $item){
+				  $n++;
+				  $subtotal=$subtotal+$item->total;
+			  ?>
+		  <tr id="<?php echo $n?>" class="item-row">
+          	 <td><?php echo $n;?></td>
+             <td><?php echo $item->getTesproductos()->codigo?></td>
+		     <td class="item-name">
+                 <?php echo $item->getTesproductos()->nombre?></td>
+		      <td class="description">
+              <?php echo $item->getTesordendecompras()->descripcion?></td>
+		      <td align="right"><?php echo $simbolo?> <?php echo number_format($item->precio,2,'.','')?>
+              </td>
+		      <td align="right">
+              <?php echo $item->cantidad;?>
+              </td>
+              <td align="right">
+              <?php echo $item->getTesunidadesmedidas()->nombre?>
+              </td>
+		      <td align="right"><?php echo $simbolo?><span id='total-<?php echo $n?>' class="price"><?php echo number_format($item->total,2,'.','')?></span></td>
+		  </tr>
+		  
+		  <?php
+			  }/*FIN FOREACH*/?>
+         
+         <tr>
+          	  <td width="7%">&nbsp;</td>
+              <td width="5%">&nbsp;</td>
+		      <td width="22%">&nbsp;</td>
+		      <td width="21%">&nbsp;</td>
+		      <td width="10%">&nbsp;</td>
+		      <td width="14%">&nbsp;</td>
+		      <th width="12%" align="right"><b>Subtotal :</b></th>
+		      <td width="9%" align="right" class="total-value"><?php echo $simbolo?><span id="subtotal"><?php echo number_format($subtotal,2)?></span></td>
+         </tr>		 
+	  <tr>
+          	  <td width="7%">&nbsp;</td>
+              <td colspan="4" rowspan="3" align="center" valign="top"><?php echo $totalenletras?> </td>
+		      <td width="14%">&nbsp;</td>
+		      <th width="12%" align="right"><b>Descuento :</b></th>
+		      <td align="right" class="total-value"><?php echo $simbolo?>
+		        <?php if(!empty($paid))echo $paid;else echo "00.00";?></td>
+    </tr>		 
+	  <tr>
+          	  <td width="7%">&nbsp;</td>
+              <td width="14%">&nbsp;</td>
+		      <th width="12%" align="right"><b>Total :</b></th>
+		      <td align="right" class="total-value"><?php echo $simbolo?><span id="paid_total"><?php echo number_format($subtotal-$paid,2,'.','')?></span></td>
+    </tr>		 
+	  <tr>
+          	  <td width="7%">&nbsp;</td>
+              <td width="14%">&nbsp;</td>
+		      <th width="12%" align="right"><b>IGV :</b></th>
+		      <td align="right" class="total-value"><?php echo $simbolo?><span id="igv_due"><?php echo number_format($igv,2,'.','')?></span></td>
+    </tr>		 
+	  <tr>
+          	  <td width="7%">&nbsp;</td>
+              <td width="5%">&nbsp;</td>
+		      <td width="22%">&nbsp;</td>
+		      <td width="21%">&nbsp;</td>
+		      <td width="10%">&nbsp;</td>
+		      <td width="14%">&nbsp;</td>
+		      <th width="12%" align="right"><b>Total a Pagar :</b></th>
+		      <td align="right" class="total-value balance"><?php echo $simbolo?><span class="due"><?php echo number_format($totalconigv,2,'.','')?></span></td>
+    </tr> 		 
+	  <tr>
+          	  <td colspan="8">&nbsp;</td>
+    </tr>		 
+	  <tr>
+          	  <td colspan="8">INDICACIONES ESPECIALES</td>
+    </tr>		 
+	  <tr>
+          	  <td colspan="8"><?php echo $pre_descripcion;?></td>
+    </tr>		 
+	  <tr>
+          	  <td width="7%" height="59">&nbsp;</td>
+              <td width="5%">&nbsp;</td>
+		      <td width="22%" align="center" valign="bottom">_____________</td>
+		      <td width="21%" align="center" valign="bottom">______________</td>
+		      <td colspan="2" align="center" valign="bottom">________________</td>
+		      <td width="12%" align="right">&nbsp;</td>
+		      <td align="right" class="total-value balance">&nbsp;</td>
+    </tr>		 
+	  <tr>
+          	  <td width="7%">&nbsp;</td>
+              <td width="5%">&nbsp;</td>
+		      <td width="22%" align="center" valign="bottom">ELaborado por</td>
+		      <td width="21%" align="center" valign="bottom">Aprobado por:</td>
+		      <td colspan="2" align="center" valign="bottom">Recibi conforme</td>
+		      <td width="12%" align="right">&nbsp;</td>
+		      <td align="right" class="total-value balance">&nbsp;</td>
+    </tr>
+	  <tr>
+	    <td>&nbsp;</td>
+	    <td>&nbsp;</td>
+	    <td align="center" valign="bottom"><b><?php echo $orden->getAclusuarios()->getAcldatos()->nombre?> <?php echo $orden->getAclusuarios()->getAcldatos()->appaterno?></b></td>
+	    <td>&nbsp;</td>
+	    <td>&nbsp;</td>
+	    <td>&nbsp;</td>
+	    <td align="right">&nbsp;</td>
+	    <td align="right" class="total-value balance">&nbsp;</td>
+    </tr>  
+ </table>
+</div>

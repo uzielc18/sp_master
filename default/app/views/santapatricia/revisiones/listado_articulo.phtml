@@ -1,0 +1,157 @@
+<?Php
+//echo $id;
+if($id==0){?>
+<?php
+View::content();
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+
+<div class="card"><h1>Listado General de rollos<span>Todos los rollos programdos y cortados</span></h1></div>
+<div class="form-actions">
+<?php echo Menu::menuProduccion($action_name);?>
+</div>
+<b>Busque el producto a consultar</b>
+<?php echo Sp::imprimir('Reporte por articulos - ','P');?> 
+<?php echo Form::text('producto','');?>
+<div class="card-body" id="exportar_excel">
+<?php }?>
+
+<?php if($id!=0){?>
+<h3><?php echo $producto->detalle;?></h3>
+<?php }?>
+
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+<?php 
+$a=0;
+$estado_a='';
+$t_peso=0;
+$t_metro=0;
+foreach($produccion as $rollo)
+{
+$t_peso=$t_peso+$rollo->kilos;
+$t_metro=$t_metro+$rollo->metros;
+$estado_b=$rollo->estadorollo;
+?>
+<?php
+if($estado_b!=$estado_a)
+{
+	$estado_a=$rollo->estadorollo;
+?>
+<?php if($a==0){?><caption><?php echo $rollo->descripcion?> ( PRODUCCION )</caption><?Php }?>
+<thead>
+<tr>
+	<th width="17%" align="left">Fecha</th>
+    <th width="21%" align="left">Nº Rollo</th>
+    <th width="19%" align="left">Estado</th>
+    <th width="19%" align="left">UBI.</th>
+    <th width="20%" align="right">Metros</th>
+    <th width="15%" align="right">Peso</th>
+    <th width="8%">O.C.</th>
+</tr> 
+</thead>
+<?php }else{}$a++;?>
+  <tr title="<?php echo $rollo->id?> produccion: <?Php echo $rollo->produccion_id ?>">
+     <td align="left" valign="top"><?php echo Sp::formatFecha('%d / %m / %Y',$rollo->fecha)?>
+		<?php //echo $rollo->fechacorte?></td>
+    <td align="left" valign="top"><?php echo $a;?> <?php echo $rollo->maquina?> Guia:(<?php echo $rollo->guia?>)</td>
+    <td align="left" valign="top"><?php echo $rollo->estadorollo?></td>
+    <td align="left" valign="top"><?php echo $rollo->ubicacion?></td>
+    <td align="right" valign="top"><?php if(!empty($rollo->metros))echo number_format($rollo->metros,2,'.','')?></td>
+    <td align="right" valign="top"><?php if(!empty($rollo->kilos))echo number_format($rollo->kilos,2,'.','')?></td>
+    <td align="center" valign="top"><?php echo $rollo->oc?></td>
+      <!--<td valign="top" align="left"><span class="link"><?php //echo Html::linkAction('cambiarestado/'.$rollo->id.'/Control de Calidad/telacruda',Html::img("figuras/produccion.png",'Visto Bueno','style="width: 20px;margin-left:1px;margin-right:1px;" title="Regresar a Control de calidad"'));?>
+      </span></td>-->
+  </tr>
+  <?php 
+  if($estado_b==$estado_a);
+  /*fin de foreach*/}?>
+  <tr>
+    <td>&nbsp;</td>
+    <td></td>
+    <td align="right">Total:</td>
+    <td align="right"><?php echo number_format($t_metro,2,'.','')?></td>
+    <td align="right"><?php echo number_format($t_peso,2,'.','')?></td>
+    <td></td>
+  </tr>
+</table>
+<hr />
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+<?php 
+$a=0;
+$estado_a='';
+$t_peso=0;
+$t_metro=0;
+foreach($rollos as $rollo)
+{
+$t_peso=$t_peso+$rollo->kilos;
+$t_metro=$t_metro+$rollo->metros;
+$estado_b=$rollo->estadorollo;
+?>
+<?php
+if($estado_b!=$estado_a)
+{
+	$estado_a=$rollo->estadorollo;
+?>
+<?php if($a==0){?><caption><?php echo $rollo->descripcion?> ( PROCESOS )</caption><?Php }?>
+<thead>
+<tr>
+	<th width="17%" align="left">Fecha</th>
+    <th width="21%" align="left">N&deg; Rollo</th>
+    <th width="19%" align="left">Estado</th>
+    <th width="20%" align="right">Metros</th>
+    <th width="15%" align="right">Peso</th>
+    <th width="8%">O.C.</th>
+</tr> 
+</thead>
+<?php }else{}?>
+  <tr id="<?php echo $rollo->id?>">
+     <td align="left" valign="top"><?php echo Sp::formatFecha('%d / %m / %Y',$rollo->fecha)?>
+		<?php //echo $rollo->fechacorte?></td>
+    <td align="left" valign="top"><?php echo $rollo->codigo.' / ';
+	if($rollo->estadorollo=='VENTA')echo $rollo->pieza;else echo $rollo->numero?></td>
+    <td align="left" valign="top"><?php echo $rollo->estadorollo?> <?php if($rollo->estadorollo=='Tintoreria' or $rollo->estadorollo=='Tintoreria-2') echo $rollo->color ;?></td>
+    <td align="right" valign="top"><?php if(!empty($rollo->metros))echo number_format($rollo->metros,2,'.','')?></td>
+    <td align="right" valign="top"><?php if(!empty($rollo->kilos))echo number_format($rollo->kilos,2,'.','')?></td>
+    <td align="center" valign="top"><?php echo $rollo->oc?> </td>
+      <!--<td valign="top" align="left"><span class="link"><?php //echo Html::linkAction('cambiarestado/'.$rollo->id.'/Control de Calidad/telacruda',Html::img("figuras/produccion.png",'Visto Bueno','style="width: 20px;margin-left:1px;margin-right:1px;" title="Regresar a Control de calidad"'));?>
+      </span></td>-->
+  </tr>
+  <?php 
+  if($estado_b==$estado_a);
+  $a++;
+  /*fin de foreach*/}?>
+  <tr>
+    <td>&nbsp;</td>
+    <td></td>
+    <td align="right">Total:</td>
+    <td align="right"><?php echo number_format($t_metro,2,'.','')?></td>
+    <td align="right"><?php echo number_format($t_peso,2,'.','')?></td>
+    <td></td>
+  </tr>
+</table>
+
+<?Php if($id==0){?>
+<script type="text/JavaScript">
+$(document).ready(function(){
+    $("#producto").tokenInput("<?php echo "/santapatricia/produccion/producto/1"?>", 
+		{
+			
+		tokenLimit: 1,
+		minChars: 1,
+		preventDuplicates: true,
+		onAdd: function (item) {
+			//alert(item.id);
+			$.get( "<?Php echo $action_name?>/"+item.id,function(data)
+			{
+				//alert(data);
+				$("#exportar_excel").html(data);
+			});
+			
+		  },
+		onDelete: function (item) {
+		}
+	});
+});
+</script>
+</div>
+<?php }?>

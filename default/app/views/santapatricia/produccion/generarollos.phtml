@@ -1,0 +1,43 @@
+<?php View::content()?>
+<?php foreach($prorollos as $rollo){?>
+<?php echo Form::open('santapatricia/produccion/grabarrollo')?>
+<?php echo Form::text('prorollos.id');?>
+<table width="261" border="1">
+  <tr>
+    <td width="172">Codigo</td>
+    <td width="73"><?php echo Form::text('prorollos.codigo');?></td>
+  </tr>
+  <tr>
+    <td>Numero</td>
+    <td><?php echo Form::text('prorollos.numero');?></td>
+  </tr>
+  <tr>
+    <td>Metros</td>
+    <td><?php echo Form::text('prorollos.metros');?></td>
+  </tr>
+  <tr>
+    <td>Peso</td>
+    <td><?php echo Form::text('prorollos.peso');?></td>
+  </tr>
+  <tr>
+    <td>Ancho</td>
+    <td><?php echo Form::text('prorollos.ancho');?></td>
+  </tr>
+  <tr>
+    <td>Color</td>
+    <td><?php echo Form::text('prorollos.color');?></td>
+  </tr>
+  <tr>
+    <td>Fecha de corte</td>
+    <td><?php echo Form::text('prorollos.fechacorte');?></td>
+  </tr>
+  <tr>
+    <td>Estado del rollo</td>
+    <td><?php echo Form::text('prorollos.estadorollo');?></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<?php }?>

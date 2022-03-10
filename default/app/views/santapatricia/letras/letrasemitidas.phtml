@@ -1,0 +1,183 @@
+<style type="text/css">
+/*.container {
+  width: 1124px;
+}*/
+#items,input,tesarea,th,td{
+	font-size:11px !important;
+}
+.item-row td{
+	padding-left:15px !important;
+	}
+#paid
+{
+	width:80% !important;
+}
+.meta td{
+	font-size:14px !important;
+	
+	}
+ul.token-input-list{ width:150px !important;}
+</style>
+
+<style type="text/css">
+.menu {position:relative;}
+.menu ul {padding:0; margin:0; list-style:none; float:left;}
+.menu ul ul {position:absolute;
+-webkit-transition: 0.5s;
+-moz-transition: 0.5s;
+-ms-transition: 0.5s;
+-o-transition: 0.5s;
+transition: 0.5s;
+transition-delay: 0.5s;
+-o-transition-delay: 0.5s;
+-moz-transition-delay: 0.5s;
+-ms-transition-delay: 0.5s;
+-webkit-transition-delay: 0.5s;
+}
+.menu ul ul ul {position:absolute; left:150px; top:0;}
+.menu ul ul ul.rgt {position:absolute; left:auto; right:150px; top:0;}
+
+.menu ul li {float:left; position:relative;
+-webkit-transition: 0.25s;
+-moz-transition: 0.25s;
+-ms-transition: 0.25s;
+-o-transition: 0.25s;
+}
+
+.menu ul li a {display:block; height:29px; padding:2px 10px; background:#ddd; font:normal 12px/29px arial, sans-serif; color:#000; text-decoration:none; margin-bottom:1px; margin-right:1px;
+-o-border-radius: 10px;
+-moz-border-radius: 10px;
+-ms-border-radius: 10px;
+-webkit-border-radius: 10px;
+border-radius: 10px;
+}
+.menu ul li a.fly {background:#ddd no-repeat right center;}
+.menu ul li:hover > a {background-color:#999; color:#fff;}
+.menu ul li:hover > a.fly {background:#999 no-repeat right center;}
+.menu ul li a.active {background-color:#999; color:#fff;}
+.reporte
+{
+	display:block;
+	margin-top:20px;
+}
+.reporte h2 span{color:#333333;}
+.reporte h2
+{
+	padding:0 20%;
+	border-bottom:#000000 solid 1px;
+}
+.reporte h2 span{
+	font-weight:lighter;
+	}
+.sin_reporte{
+	border-bottom:#666666 1px solid; padding:5px;}
+.sin_reporte span
+{
+	padding:35%;
+}
+</style>
+
+<div class="card">
+    <h1>Letras Emitidas<span><?php echo $empresa->razonsocial?></span></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="card-body">
+<div id="ver_resultado"></div>
+<div class="form-actions">
+Cambie de Año 
+<select id="anio">
+<?php
+for($i=2011;$i<=2020;$i++)
+{
+	$selec='';
+	if($anio==$i){
+	$selec=' selected="selected"';
+	}
+	echo '<option value="'.$i.'" '.$selec.'>'.$i.'</option>';
+}
+?>
+</select> 
+<div class="menu">
+<?php 
+$mes_actual=date('Y-m');
+foreach($meses as $clave => $mes):
+//if($anio.'-'.$clave<=$mes_actual){
+$class='';
+if($mes_activo==$clave)$class=' active';
+echo '<ul>';
+echo '<li><a class="enviar'.$class.'" id="mes-'.$mes.'" href="javascript:;" data-id="'.$anio.'-'.$clave.'-01">'.$mes.'</a></li>'; 
+echo '</ul>';
+//}
+endforeach;?>
+</div>
+<div style="clear:both"></div>
+    <span class="print btn btn-primary"> Print </span> 
+<a href="javascript:;" class="btn botonExcel">Enviar a Excel<img src="/img/export_to_excel.gif" class="" /></a>
+<form action="/utiles/excel" method="post" target="_blank" id="FormularioExportacion" class="form-inline">
+<input type="hidden" id="datos_a_enviar" name="datos_a_enviar"/>
+<input type="hidden" id="nombre" name="nombre" value="Letras_emitidas-<?php echo $anio.'-'.$mes_activo;?>"/>
+</form>
+<?php //echo Menu::menuLetras($action_name);?></div>
+
+<table width="90%" border="0" align="center" cellpadding="00" cellspacing="00" class="table table-bordered table-striped">
+  <tr>
+  	<th width="208" valign="top" align="left">CLIENTE</th>
+	<th width="197" valign="top" align="left">REFERENCIA FACT.</th>
+	<th width="111" valign="top" align="center">NRO DE LETRA</th>
+    <th width="89" valign="top" align="center">F. EMISION</th>
+    <th width="107" valign="top" align="center">F. VTO</th>
+    <th width="94" valign="top" align="right">TOTAL</th>
+    <th width="24">LD</th>
+  </tr>
+<?php $number=0;
+foreach($letras as $item){ 
+$simbolo="S/. ";
+
+switch ($item->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+
+$number++;?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20" valign="top"><?php echo $item->razonsocial?></td>
+    <td valign="top"> <?php if(!empty($item->factura_id))echo $item->factura_id;else echo 'No encontrado';?></td>
+	<td height="20" align="center" valign="top"><?php echo $item->numerodeletra?><?Php if(!empty($item->nrenovacion))echo $item->nrenovacion; else echo "00";?></td>
+	<td height="20" align="center" valign="top"><?php echo Sp::formatFecha('%d / %m / %Y',$item->femision)?></td>
+    <td align="center" valign="top"><?php echo Sp::formatFecha('%d / %m / %Y',$item->fvencimiento)?></td>
+    <td align="right" valign="top">
+    <?php echo $simbolo?> <?php echo number_format($item->monto,2,'.',' ')?>
+    </td>
+    <td align="center">
+    <?php if($item->estado!='PAGADO')echo "NO";else echo "SI";?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#anio").change(function(event){
+    	var id = $("#anio").find(':selected').val();
+		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/<?php echo $action_name?>/'+id;
+     });
+	$(".enviar").click(function()
+	{
+		var fecha = $(this).attr('data-id');
+		var F=fecha.split('-');
+		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/<?php echo $action_name?>/'+F[0]+'/'+F[1];
+	});
+	$(".botonExcel").click(function(event)
+	{
+		$("#datos_a_enviar").val( $("<div>").append( $("#exportar_excel").eq(0).clone()).html());
+		$("#FormularioExportacion").submit();
+	});
+});
+</script>

@@ -1,0 +1,69 @@
+<div id="pago_con_cheques">
+<h3> Pago Deposito en Banco </h3>
+<script type="text/javascript">
+$(document).ready(function()
+{
+	$('#tesbancos_id').live("change",function(){
+		var value = $('#tesbancos_id option:selected').html();
+		$("#bancos").html(value);
+		});
+	$('#cuentas_id').live("change",function(){
+		var value = $('#cuentas_id option:selected').val();
+		var v = $('#cuentas_id option:selected').html();
+		$("#tesdetallevauchers_tescuentascorrientes_id").val(value);
+		$.ajax({
+            type:"POST",
+            url:"/<?php echo $module_name?>/abonos/plancontable/"+value,
+            success:function(response){
+			$("#tesdetallevauchers_plancontable").val(response);
+			$("#plan").html(response);
+            }
+ 		});
+		
+		
+	 });
+
+});
+</script>
+<?php if($tessalidas_id==0){?>
+<div>Seleccione el Banco: <?php echo Ajax::dbSelect('tesbancos_id','nombre',array('tesbancos','find','conditions: aclempresas_id='.Session::get('EMPRESAS_ID')),'cuentas',$module_name.'/abonos/cuentacorriente/','Seleccione');?></div>
+<div id="cuentas"></div>
+<?php }?>
+<div id="detalle">
+<?php echo Form::open()?>
+<?php echo Form::hidden('tesdetallevauchers.id');?>
+<?php echo Form::hidden('tesdetallevauchers.tesabonos_id','',Session::get('A_ID'));?>
+<?php echo Form::hidden('tesdetallevauchers.tesingresos_id','',0);?>
+<?php echo Form::hidden('tesdetallevauchers.tessalidas_id','',0);?>
+<?php echo Form::hidden('tesdetallevauchers.tessalidasinternas_id','',0);?>
+<?php echo Form::hidden('tesdetallevauchers.abono','',1);?>
+<?php echo Form::hidden('tesdetallevauchers.cargos','',0);?>
+<?php echo Form::hidden('tesdetallevauchers.tesdatos_id','',0);?>
+<?php echo Form::hidden('tesdetallevauchers.tescuentascorrientes_id','');?>
+<?php echo Form::hidden('tesdetallevauchers.estado','',1);?>
+<?php echo Form::hidden('tesdetallevauchers.cargos','',0);?>
+<?php echo Form::hidden('tesdetallevauchers.plancontable'); ?>
+<table width="86%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="abonos">
+  <tr>
+    <th width="13%" align="left">Cta General</th>
+    <th width="18%" align="left">Nº Doc.</th>
+    <th width="14%" align="left">F. Vto</th>
+    <th width="14%" align="left">Cod. Auxiliar</th>
+    <th width="14%" align="left">Descripcion</th>
+    <th width="13%" align="left">Cargo</th>
+    <th width="14%" align="left">Abono</th>
+  </tr>
+  <tr>
+    <td width="13%" id="plan"></td>
+    <td width="18%"><?php echo Form::text('tesdetallevauchers.noperacion','placeholder="# operacion"'); ?></td>
+    <td width="14%">-</td>
+    <td width="14%">-</td>
+    <td width="14%"><?php echo $pago->nombre;?></td>
+    <td width="13%">-</td>
+    <td width="14%"><?php echo Form::text('tesdetallevauchers.monto','',number_format($total,2,'.','')); ?></td>
+  </tr>
+</table>
+<?php echo Form::submit('GRABAR','class="btn btn-primary"');?>
+<?php echo Form::close()?>
+</div>
+</div>

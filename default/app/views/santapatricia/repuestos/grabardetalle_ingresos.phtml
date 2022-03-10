@@ -1,0 +1,95 @@
+<?Php View::content();?>
+<?php echo Ajax::form('guia',$module_name."/repuestos/grabardetalle_ingresos/".$id,'form-inline','post')?>
+<?php echo Form::hidden('detalles.tesunidadesmedidas_id','',13)?>
+  <?php echo Form::hidden('detalles.tescolores_id','',773)?>
+ <table width="76%" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+  <th width="36%" align="left">
+  <div class="input-prepend input-append">
+  <span>Repuesto</span>
+  <?php echo Form::text('detalles.tesproductos_id','size="5"')?>
+  </div>
+  </th>
+  <th width="14%" align="left">
+  <div class="input-prepend input-append">
+  <span>Ubicacion</span>
+  <?php echo Form::text('detalles.ubicacion','size="5"')?>
+  </div>  
+  </th>
+  <th width="13%" align="left">
+  <div class="input-prepend input-append">
+  <span>Cantidad</span>
+  <?php echo Form::text('detalles.cantidad','size="5" class="qty"')?>
+  </div>
+  </th>
+  <th width="12%" align="left">
+  <div class="input-prepend input-append">
+  <span>Precio</span>
+   <?php echo Form::text('detalles.preciounitario','size="5" class="qty "')?>
+  </div>
+  </th>
+  <th width="11%" align="left">
+  <div class="input-prepend input-append">
+  <span>Importe</span>
+  <?php echo Form::text('detalles.importe','size="5" class="qty"')?>
+  </div>
+  </th>
+  <th width="14%" align="left">
+  <button type="submit" class="btn">Enviar</button>
+  </th>
+  </tr>
+  </table>
+<?php echo Form::close()?>
+<table class="table-bordered" width="75%" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <th width="9%" align="left">Codigo</th>
+    <th width="11%" align="left">Unidad</th>
+    <th width="17%" align="left">Cantidad</th>
+    <th width="11%" align="left">Precio</th>
+    <th width="11%" align="left">importe</th>
+    <th width="53%" align="left">Descripcion</th>
+    <th width="10%" align="left">Accion</th>
+  </tr>
+  <?php 
+  $n=0;
+  foreach($detalles as $item){
+	  $n++;
+	  ?> 
+  <tr id="<?php echo $item->id?>">
+    <td><?php echo $n?>.<?php echo $item->getTesproductos()->codigo_ant?></td>
+    <td><?Php echo $item->getTesunidadesmedidas()->simbolo?></td>
+    <td><?php echo $item->cantidad?></td>
+    <td><?php echo number_format($item->preciounitario,2,'.','')?></td>
+    <td><?php echo number_format($item->importe,2,'.','')?></td>
+    <td><?php echo $item->getTesproductos()->nombre?></td>
+    <td><?php echo Ajax::linkAction('eliminardetalleingreso/'.$item->id,'Elminar','guia')?></td>
+  </tr>
+  <?php }?>
+</table>
+<script type="text/javascript">
+$(document).ready(function()
+{	
+	$("#detalles_tesproductos_id").tokenInput("/<?php echo $module_name?>/repuestos/getrepuestos", 
+		{
+			tokenLimit: 1,
+			minChars: 2,
+			onAdd: function (item){
+				$("#detalles_ubicacion").val(item.oculto);
+				$("#detalles_preciounitario").val(item.precio);
+			},
+			onDelete: function (item) {
+			}
+		});
+		$("#detalles_cantidad").change(function(){
+		var cantidad=$(this).val();
+		var precio=$("#detalles_preciounitario").val();
+		$("#detalles_importe").val(precio*cantidad);
+		});
+	$("#detalles_preciounitario").change(function(){
+		var precio=$(this).val();
+		var cantidad=$("#detalles_cantidad").val();
+		$("#detalles_importe").val(precio*cantidad);
+		});	
+		
+});
+</script>

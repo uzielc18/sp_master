@@ -1,0 +1,165 @@
+<?php echo Menu::menuControl($action_name);?>
+<div class="card">
+<h1>Rollos <span><?php echo $rollos->getTesproductos()->detalle?> peso: <?php echo $rollos->peso ?> metros: <?php echo $rollos->metros; echo $rollos->prorollos_id; ?></span></h1>
+</div>
+
+<?php View::content()?>
+<div class="card-body">  
+<?php 
+$n=0;
+foreach($prorollos as $rollo){
+	$n++;
+	//$t=count($prorollos);
+	$factor=$rollos->metros/$rollos->peso;
+	//echo $rollo->id.'p';
+	//echo $rollo->metros.'m';
+ 	//echo $rollo->observacion_control;
+	?>
+<div id="rollo<?php echo $n?>" style="float:left; margin:2px; border:1px #999999 inset; padding:5px;">
+<?php echo Ajax::form('rollo'.$n,'santapatricia/tintoreria/grabarrollo/')?>
+<?php echo Form::hidden('a','',$n)?>
+<?php echo Form::hidden('prorollos'.$n.'.id','',$rollo->id);?>
+<?php echo Form::hidden('prorollos'.$n.'.enalmacen','','1');?>
+<?php //echo($rollo->prorollos_id)?>
+<?php echo Form::hidden('prorollos'.$n.'.prodetalleproduccion_id','',$rollo->prodetalleproduccion_id);?>
+<table width="97%" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <td width="94" align="left" valign="top">Codigo:</td>
+    <td width="25" valign="top"><?php
+    if(empty($rollo->codigo)){
+	if(empty($rollo->getTesproductos()->codigo_ant))$COD=$rollo->getTesproductos()->codigo; else $COD=$rollo->getTesproductos()->codigo_ant;
+	}else
+	{
+		$COD=$rollo->codigo;
+	}
+	echo Form::text('prorollos'.$n.'.codigo','readonly="readonly"',$COD);?></td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">Numero:</td>
+    <td valign="top"><?php 
+	if(empty($rollo->numeroventa))$numero=$R->numero_venta($rollo->tesproductos_id);else $numero=$rollo->numeroventa;
+	echo Form::text('prorollos'.$n.'.numeroventa','size="15"',$numero);?><?php echo Form::hidden('prorollos'.$n.'.numero','size="15"');?></td>
+  </tr>
+  <tr>
+    <td>Metros</td>
+    <td><?php 
+	if(empty($rollo->metros)){$m=$rollos->metros/$t;}else{$m=$rollo->metros;}
+	echo Form::text('prorollos'.$n.'.metros',' class="calc"',$m);?></td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">Peso en kilos:</td>
+    <td valign="top"><?php 
+	if(empty($rollo->peso)){$p=$rollos->peso/$t;}else{$p=$rollo->peso;}
+	echo Form::text('prorollos'.$n.'.peso','size="5" class="calc"',$p);?></td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">Ancho en metros:</td>
+    <td valign="top"><?php echo Form::text('prorollos'.$n.'.ancho','size="5"',$rollo->ancho);?></td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">Color:</td>
+    <td valign="top"><?php echo Form::text('prorollos'.$n.'.color','',$rollo->color);?></td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">Calidad:</td>
+    <td valign="top"><?php 
+	if(empty($rollo->calidad)){$calidad='1';}else{$calidad=$rollo->calidad;}
+	echo Form::select('prorollos'.$n.'.calidad',array('1'=>'Primera','2'=>'Segunda','3'=>'Tercera'),'Seleccione...',$calidad);?></td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">Fecha de corte:</td>
+    <td valign="top"><?php echo Calendar::text('prorollos'.$n.'.fechacorte','style="width:90%"',$rollo->fechacorte);?></td>
+  </tr>  
+  <tr>
+    <td valign="top">
+    Origen:<br />
+    Enviar a: </td>
+    <td valign="top"><?php
+	if(empty($rollo->estadorollo)){$estado='VENTA';}else{$estado=$rollo->estadorollo;}
+	echo $rollo->estadorollo;
+	 echo Form::select('prorollos'.$n.'.estadorollo',array('VENTA'=>'Almacen venta','Re-Proceso'=>'Re-Proceso'),'Seleccione...',$estado);?></td>
+  </tr>
+  <tr id="ver<?php echo $n?>" <?php if(empty($rollo->observacion_control)){?>style="display:none;"<?php }?>>
+    <td>Describa el Problema: </td>
+    <td>
+	<?php echo Form::textArea('prorollos'.$n.'.observacion_control','',$rollo->observacion_control);?>
+	</td>
+  </tr>
+  <tr>
+    <td colspan="2"><?php echo Form::submit('Grabar','id="'.$n.'" class="btn btn-primary"')?></td>
+  </tr>
+</table>
+<?php echo Form::close()?>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+       $("#prorollos<?php echo $n?>_estadorollo").change(function(){
+                var op = $("#prorollos<?php echo $n?>_estadorollo option:selected").val();
+                //alert(op);
+				if (op=="Re-Proceso"){$("#ver<?php echo $n?>").show();}else{$("#ver<?php echo $n?>").hide();}
+				
+        });
+	});
+</script>
+<?php }?>
+<div class="clear"></div>
+
+<div class="form-actions">
+<?php echo Html::linkAction('control','Terminar','class="btn btn-primary"');?>
+</div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function(){
+		$(".calc").blur(function()
+		{
+			var f=($(this).attr('id')).split('_');
+			var a=f[0].substr(-1);
+			if(f[1]=="metros")
+			{
+				/*Para calcular el peso si se modifica el metro*/
+				var metro=$(this).val();
+				$("#prorollos"+a+"_peso").val((metro/<?Php echo $factor?>))
+				//alert((metro/<?Php echo $factor?>));
+			}if(f[1]=="peso")
+			{
+				/*Para calcular el metro si se modifica el peso*/
+				var peso=$(this).val();
+				$("#prorollos"+a+"_metros").val((peso*<?Php echo $factor?>))
+				//alert((peso*<?Php echo $factor?>))
+			}
+		});
+		
+$(".masunrollo").live("click",function(){
+	
+	var id =$(this).attr('id');
+	var numero = $("#numero-"+id).val();
+	var rollosecundario = $("#rollosecundario-"+id).val();
+	if(confirm("Esta por generar "+numero+" rollos del rollo principal "+" ("+id+") el rollo secundario es "+rollosecundario)){
+	if(numero>1){
+	$.ajax({
+            type:"POST",
+            url:"/<?php echo $module_name?>/tintoreria/generarollos/"+id+"/"+numero+'/'+rollosecundario,
+            beforeSend:function(){
+              $("#loading").show();
+            },
+            success:function(response){
+                $("#loading").hide();
+				alert(response);
+				url = "/<?php echo $module_name?>/tintoreria/rollos_listados/"+id;  
+				$(location).attr('href',url);  
+            }
+ 
+          	});
+		
+	}else
+	{
+		alert('Ingreso un numero mayor a 1');
+	}
+	}else
+	{
+		return false;
+	}
+	});	
+	
+	});
+</script>

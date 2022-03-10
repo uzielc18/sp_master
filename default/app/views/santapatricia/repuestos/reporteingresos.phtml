@@ -1,0 +1,130 @@
+<?php View::content();?>
+<div class="card">
+    <h1>Compras de Repuestos<span>Reporte de compras por mes</span></h1>
+</div>
+<div class="form-actions">
+<?php echo Html::linkAction('','Volver','class="btn btn-primary"');?> 
+</div>
+<?php echo Sp::imprimir('Repuestos Ingresos','P');?> 
+
+<div class="menu">
+<ul><li><a>Año 
+<select id="anio">
+<?php
+for($i=2011;$i<=2020;$i++)
+{
+	$selec='';
+	if($anio==$i){
+	$selec=' selected="selected"';
+	}
+	echo '<option value="'.$i.'" '.$selec.'>'.$i.'</option>';
+}
+?>
+
+</select>
+</a></li></ul>
+<?php 
+$mes_actual=date('Y-m');
+foreach($meses as $clave => $mes):
+if($anio.'-'.$clave<=$mes_actual){
+$class='';
+if($mes_activo==$clave)$class=' active';
+echo '<ul>';
+echo '<li><a class="enviar'.$class.'" id="mes-'.$mes.'" href="javascript:;" data-id="'.$anio.'-'.$clave.'-01">'.$mes.'</a></li>'; 
+echo '</ul>';
+}
+endforeach;?>
+</div>
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="card-body">
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0"  class="table table-bordered table-striped" id="tblTabla">
+  <thead>
+  <tr>
+  	<th width="17" align="left">Nº</th>
+    <th width="45" align="left">Fecha
+    	<?php //echo Html::linkAction($action_name.'/stokminimo/ASC/',Html::img("figuras/ascendente.gif",'Editar','style="width: 8px;"'),'');?>
+	<?php //echo Html::linkAction($action_name.'/stokminimo/DESC/',Html::img("figuras/descendente.gif",'Editar','style="width: 8px;"'),'');?></th>
+    <th width="51" align="left">Codigo
+    	<?php //echo Html::linkAction($action_name.'/codigo/ASC/',Html::img("figuras/ascendente.gif",'Editar','style="width: 8px;"'),'');?>		  <?php //echo Html::linkAction($action_name.'/codigo/DESC/',Html::img("figuras/descendente.gif",'Editar','style="width: 8px;"'),'');?>    	</th>
+    <th width="147" align="left">Descripción
+    	<?php //echo Html::linkAction($action_name.'/nombre/ASC/',Html::img("figuras/ascendente.gif",'Editar','style="width: 8px;"'),'');?>
+	<?php //echo Html::linkAction($action_name.'/nombre/DESC/',Html::img("figuras/descendente.gif",'Editar','style="width: 8px;"'),'');?></th>
+    <th width="65" align="right">Cantidad <?php //echo Html::linkAction($action_name.'/stokactual/ASC/',Html::img("figuras/ascendente.gif",'Editar','style="width: 8px;"'),'');?>
+    <?php //echo Html::linkAction($action_name.'/stokactual/DESC/',Html::img("figuras/descendente.gif",'Editar','style="width: 8px;"'),'');?>
+   </th>
+    <th width="55" align="right">Precio Uni
+	<?php //echo Html::linkAction($action_name.'/preciosoles/ASC/',Html::img("figuras/ascendente.gif",'Editar','style="width: 8px;"'),'');?>
+    <?php //echo Html::linkAction($action_name.'/preciosoles/DESC/',Html::img("figuras/descendente.gif",'Editar','style="width: 8px;"'),'');?>
+   </th>
+    <th width="46" align="right">Total <?php //echo Html::linkAction($action_name.'/preciodolares/ASC/',Html::img("figuras/ascendente.gif",'Editar','style="width: 8px;"'),'');?>
+    <?php //echo Html::linkAction($action_name.'/preciodolares/DESC/',Html::img("figuras/descendente.gif",'Editar','style="width: 8px;"'),'');?>
+   </th>
+  </tr>
+ </thead>
+ <tbody>
+<?php $n=0;
+
+	$total_a=0;
+	$total_ps=0;
+	$total_pd=0;
+	$ps=0;
+	$pd=0;
+foreach($repuestos as $item){ 
+	$n++;
+	$ps=0;
+	$pd=0;
+	if(!empty($item->preciounitario))$ps=$item->preciounitario;
+	if(!empty($item->total))$pd=$item->total;
+	
+	$total_ps=$total_ps+$ps;
+	$total_pd=$total_pd+$pd;
+	?>
+  <tr>
+  	<td width="17" align="left"><?php echo $n?></td>
+    <td width="45" align="left"><?php echo $item->fecha?></td>
+    <td width="51" align="left"><?Php echo $item->codigo?></td>
+    <td width="147" align="left"><?php echo $item->nombre?></td>
+    <td width="65" align="right"><?php echo number_format($item->cantidad,2,'.','')?></td>
+    <td width="55" align="right"><?php echo number_format($ps,2,'.','')?></td>
+    <td width="46" align="right"><?php echo number_format($pd,2,'.','')?></td>
+  </tr>
+<?php }?>
+</tbody>
+<tfoot>
+<tr>
+  	<td colspan="3" align="right">&nbsp;</td>
+    <td width="147" align="right"><?php //echo $item->stokminimo?>
+    	TOTALES:</td>
+    <td width="65" align="center"></td>
+    <td width="55" align="right"><?php echo number_format($total_ps,2,'.','')?></td>
+    <td width="46" align="right">&nbsp;</td>
+  </tr>
+</tfoot>
+</table>
+<?php //echo number_format($total_pd,2,'.','')?> </div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#anio").change(function(event){
+    	var id = $("#anio").find(':selected').val();
+		location.href = '/<?php echo $module_name?>/<?Php echo $controller_name?>/<?php echo $action_name?>/'+id;
+     });
+	$(".enviar").click(function()
+	{
+		var fecha = $(this).attr('data-id');
+		var F=fecha.split('-');
+		location.href = '/<?php echo $module_name?>/<?Php echo $controller_name?>/<?php echo $action_name?>/'+F[0]+'/'+F[1];
+	});
+	$(".botonExcel").click(function(event)
+	{
+		$("#datos_a_enviar").val( $("<div>").append( $("#tblTabla").eq(0).clone()).html());
+		$("#FormularioExportacion").submit();
+	});
+});
+</script>

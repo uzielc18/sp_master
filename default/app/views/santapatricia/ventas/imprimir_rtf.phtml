@@ -1,0 +1,160 @@
+
+<?php 
+$monedas= $salida->tesmonedas_id;
+switch ($monedas)
+{
+	case 1: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES'; break;
+	case 2: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 4: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
+	case 5: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 0: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
+}
+
+?><span class="print btn btn-primary"> Print </span> <?php echo Html::linkAction('guias/'.Session::get('DOC_ID'),'Regresar <i class="icon-hand-left"></i>','class="btn"')?>
+<div class="card-body">
+$codigo=<?Php if(!empty($salida->getTesdatos()->codigo_ant)) $codigo=$salida->getTesdatos()->codigo_ant; else $codigo= $salida->getTesdatos()->codigo.'-'.$salida->getTesdatos()->sufijo;
+echo $codigo;?><br />
+$razonsocial=<?php echo $razonsocial=$salida->getTesdatos()->razonsocial; ?><br />
+$numeroguia=<?php echo $numeroguia=$salida->numeroguia?><br />
+$fecha=<?php echo $fecha=Sp::formatFecha('%d / %m / %Y',$salida->femision)?><br />
+$ruc=<?php echo $ruc=$salida->getTesdatos()->ruc?><br />
+$direccion=<?php echo $direccion=$salida->getTesdatos()->direccion?> - <?php echo $salida->getTesdatos()->departamento?><?php //echo $empresa->direccion?><br />
+$tipopago=<?php echo $tipopago=$salida->getTescondicionespagos()->nombre?><br />
+<?php 
+$c_1='';
+$c_2='';
+$c_3='';
+$c_4='';
+$c_5='';
+$c_6='';
+$c_7='';
+/* \n salto de linea */
+?>
+<?php $n_total_r=10;?>
+<?php  $n=0;$total=0;
+foreach($detalles as $item){
+  		$total=$total+$item->totalimporte;
+	  $n++;
+	 ?>
+<?php if(empty($item->getTesproductos()->codigo_ant))$c_1.=$item->getTesproductos()->codigo ;else $c_1.=$item->getTesproductos()->codigo_ant; 
+$c_1.="\n";
+?>
+<?php $c_2.=number_format($item->totalcantidad,2,'.','')."\n"?>
+<?Php $c_3.=$item->getTesunidadesmedidas()->simbolo."\n"?>
+<?php //echo $item->getTesproductos()->codigo?> <?php $c_4.=$item->getTesproductos()->detalle.' '.$item->getTesproductos()->nombre."\n"?> <?Php //echo $item->getTescolores()->nombre?>
+<?php //echo $simbolo ?><?php $c_5.=number_format($item->preciounitario,2,'.','')."\n";?>
+<?php if(empty($item->descuento))$c_6.="0.00";else $c_6.=$item->totaldescuento/100;
+$c_6.="\n";
+?>
+<?php $c_7.=$simbolo.' '.number_format($item->totalimporte,2,'.','')."\n";?>
+<?php }?>
+
+<?php 
+   /*muesra la aplicacion a esta factura */
+  if($aplicaciones){
+  foreach($aplicaciones as $aplicacion){
+  $n++;
+  ?>
+  <?php $c_6.="Pago adelantado en Fac.".$aplicacion->getTesfacturasadelantos()->getTessalidas()->serie.'-'.$aplicacion->getTesfacturasadelantos()->getTessalidas()->numero."\n"?>
+  <?php 
+	$total=$total-$aplicacion->montototal;
+	$c_6.=$simbolo.' -('.number_format($aplicacion->montototal,2,'.','').')'."\n"?>
+    
+  <?php }
+   }?>
+  
+  <?php $c_7.="-----------"."\n";?>
+  <?php $c_7.=$simbolo.' '.number_format($total,2,'.','')."\n"?>
+/**/
+ 
+$c_1=<?php echo $c_1;?><br /> 
+$c_2=<?php echo $c_2;?><br />
+$c_3=<?php echo $c_3;?><br /> 
+$c_4=<?php echo $c_4;?><br /> 
+$c_5=<?php echo $c_5;?><br /> 
+$c_6=<?php echo $c_6;?><br /> 
+$c_7=<?php echo $c_7;?><br /> 
+
+$monedaletras=<?php echo $monedaletras="SON:".NumerosLetras::NL($salida->totalconigv,$moneda_letras);?><br />
+  <?php
+  $letras='';
+	$nl=0;
+	foreach($lets as $let){
+	$nl++;
+	$q=$let->id;
+	$letras.='
+<table width="155" border="0" cellspacing="1" style="float:left;">
+	<tr>
+		<td width="50">Número</td>
+		<td width="175">'.$let->getTessalidas()->numero.'</td>
+	</tr>
+	<tr>
+		<td>F.VTO:</td>
+		<td width="175">'.Sp::formatFecha('%d/%m/%Y',$let->getTessalidas()->fvencimiento).'</td>
+	</tr>
+	<tr>
+		<td>MONTO:</td>
+		<td>'.$simbolo.' '.number_format($let->getTessalidas()->totalconigv,2,'.','').'</td>
+	</tr>
+	<tr>
+		<td>DIAS</td>
+		<td>'.Sp::Ndias($let->getTessalidas()->fvencimiento,$let->getTessalidas()->femision).'</td>
+	</tr>
+</table>';
+	}
+?>
+$letras=<?php echo $letras;?><br />
+$igv=<?php echo $igv=$simbolo.' '.number_format($salida->totalconigv-$total,2,'.','')?><br />
+
+$total=<?php echo $total=$simbolo.' '.number_format($salida->totalconigv,2,'.','')?> <br />
+
+</div>
+
+<?php 
+$texto = file("facturas/factura.rtf");  //la ruta de nuestra plantilla , la que contiene nuestras variables
+$tam = sizeof($texto);
+
+for($i=0;$i<=$tam;$i++){
+$todo= $todo.$texto[$i];
+}
+      
+$todo=str_replace("$codigo",$codigo,$todo); //remplazamos nuestra variable del archivo rtf por una variable php
+$todo=str_replace("$razonsocial",$razonsocial,$todo);
+$todo=str_replace("$numeroguia",$numeroguia,$todo);
+$todo=str_replace("$fecha",$fecha,$todo);
+$todo=str_replace("$ruc",$ruc,$todo);
+$todo=str_replace("$direccion",$direccion,$todo);
+$todo=str_replace("$tipopago",$tipopago,$todo);
+$todo=str_replace("$c_1",$c_1,$todo);
+$todo=str_replace("$c_2",$c_2,$todo);
+$todo=str_replace("$c_3",$c_3,$todo);
+$todo=str_replace("$c_4",$c_4,$todo);
+$todo=str_replace("$c_5",$c_5,$todo);
+$todo=str_replace("$c_6",$c_6,$todo);
+$todo=str_replace("$c_7",$c_7,$todo);
+$todo=str_replace("$monedaletras",$monedaletras,$todo);
+$todo=str_replace("$letras",$letras,$todo);
+$todo=str_replace("$igv",$igv,$todo);
+$todo=str_replace("$total",$total,$todo);
+      
+$fp=fopen("facturas/factura.rtf","w"); //ojo con la ruta del ducumento, tu ruta puede ser distinta
+fwrite($fp,$todo);
+fclose($fp);
+
+$file = "../facturas/factura.rtf";
+      
+if (file_exists($file)) {
+header('Content-Description: File Transfer');
+header('Content-Type: application/octet-stream');
+header('Content-Disposition: attachment; filename='.$salida->serie.'-'.$salida->numero.'.doc');
+header('Content-Transfer-Encoding: binary');
+header('Expires: 0');
+header('Cache-Control: must-revalidate');
+header('Pragma: public');
+header('Content-Length: ' . filesize($file));
+ob_clean();
+flush();
+readfile($file);
+exit;
+}
+?>

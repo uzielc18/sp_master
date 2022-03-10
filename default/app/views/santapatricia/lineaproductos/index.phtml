@@ -1,0 +1,43 @@
+<div class="card">
+    <h1>Linea de Productos</h1>
+</div>
+<?php View::content() ?>
+<div class="form-actions">        
+    <?php echo Html::linkAction("crear", 'Crear Linea de Producto', 'class="btn btn-primary"') ?>
+</div>
+<div class="card-body">
+<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+  <tr>
+  	<th>Nº</th>
+    <th>Nombre</th>
+    <th>Abr.</th>
+    <th>Detalle</th>
+    <th>Tipo de Almacen</th>
+    <th>Estado</th>
+    <th>Acciones</th>
+  </tr>
+<?php $n=0;
+foreach($teslineaproductos->items as $item){ $n++;?>
+  <tr>
+  	<td><?php echo $n?></td>
+    <td><?php echo Html::link($module_name."/tipoproductos/index/$item->id",$item->nombre)?></td>
+    <td><?php echo $item->abr?></td>
+    <td><?php echo $item->detalle?></td>
+    <td><?php if($item->testipoalmacenes_id!=0)echo $item->getTestipoalmacenes()->nombre?></td>
+    <td>
+    <?php 
+	 if($item->activo=='0'){
+	 echo Html::linkAction('activar/'.$item->id,Html::img("figuras/circulo_rojo.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'');
+	 }else{
+	 echo Html::linkAction("desactivar/$item->id",Html::img("figuras/circulo_verde.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');}?>
+    </td>
+    <td><?php echo Html::linkAction('editar/'.$item->id,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:10px;margin-right:10px;"'),'')?>
+    <?php echo Html::linkAction("borrar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+    <?php echo Html::link($module_name.'/tipoproductos/crear/'.$item->id,' Crear Tipos de Productos', 'class="btn btn-primary"','title="Crear tipos de productos para esta linea de productos"');?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+<?php View::partial('paginators/extended', false, array('page' => $teslineaproductos ,'url' => Router::get('controller_path').'/index')); ?>
+</div>
+ 

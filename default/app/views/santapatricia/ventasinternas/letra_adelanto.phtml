@@ -1,0 +1,109 @@
+<?php echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<div class="card">
+    <h1><em>Crear Letra por Adelanto<span><?php echo Session::get('DOC_NOMBRE')?></span></em></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="card-body">
+<div id="ver_resultado"></div>
+<?php echo Form::open(NULL,'POST','class="form-horizontal"')?>
+<?php echo Form::hidden('salida.id');?><?php echo Form::hidden('salida.npedido');?>
+  <div class="control-group">
+    <label class="control-label" for="salida_serie">Numero:</label>
+    <div class="controls">
+	<?php echo Form::text('salida.numero','size="10"');?>
+    </div>
+  </div>  
+  <div class="control-group">
+    <label class="control-label" for="salida_tesmonedas_id">Moneda:</label>
+    <div class="controls">
+      <?php echo Form::dbSelect('salida.tesmonedas_id','simbolo,nombre',array("tesmonedas",'find','conditions: aclempresas_id='.Session::get('EMPRESAS_ID')));?>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="CL">Cliente</label>
+    :
+    <div class="controls">
+    	<div style="float:left; width:70%;"><input id="CL" /></div>
+      <?php echo Form::hidden('salida.tesdatos_id');?>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="salida_direccion_entrega">Direccion de Entrega:</label>
+    <div class="controls">
+      <?php echo Form::text('salida.direccion_entrega','class="span8"');//finiciotraslado?>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="salida_hilodestino">Condiciones de Pago:</label>
+    <div class="controls">
+      <?php echo Form::dbSelect('salida.tescondicionespagos_id','nombre',array("tescondicionespagos",'find'));?>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="salida_femision">Fecha de Emision:</label>
+    <div class="controls">
+      <?php echo Calendar::selector('salida.femision');//finiciotraslado?>
+    </div>
+  </div>  
+  <div class="control-group">
+    <label class="control-label" for="salida_direccion_entrega">IMPORTE sin IGV:</label>
+    <div class="controls">
+      <?php echo Form::text('salida.total','class="qty"');//finiciotraslado?>
+    </div>
+  </div>
+  
+  <div class="control-group">
+    <div class="controls">
+       <button type="submit" class="btn btn-primary">Siguiente</button> <?php echo Html::linkAction('facturas','Cancelar','class="btn"')?>
+    </div>
+  </div>
+<?php echo Form::close();?>
+</div>
+<script type="text/javascript">
+$(document).ready(function()
+{
+	$("#CL").tokenInput("/<?php echo $module_name?>/salidas/buscarcliente", 
+		{
+			tokenLimit: 1,
+			minChars: 2,
+			<?php if(!empty($salida->tesdatos_id)){?>
+			prePopulate: [ 
+						 {id: <?Php echo $salida->tesdatos_id?>, name: "<?php echo $salida->getTesdatos()->razonsocial?>"},
+						 ],
+			<?php }?>
+			onAdd: function (item){
+			   var VAL=item.id;
+			   $("#salida_tesdatos_id").val(VAL);
+			   var DIR=item.name.split('(');
+			   $("#salida_direccion_entrega").val(DIR[1].replace(')',''));
+			   //$("#BC").hide();
+			   //GrabarCliente();
+			},
+			onDelete: function (item) {
+			}
+		});
+		$("#ordendecompra").tokenInput("/<?php echo $module_name?>/ventas/ordencompra", 
+		{
+			tokenLimit: 1,
+			minChars: 2,
+			<?php if(!empty($salida->ordendecompra)){?>
+			prePopulate: [ 
+						 {id: <?Php echo $salida->ordendecompra?>, name: '<?php echo $salida->getTesdatos()->razonsocial?> Nº<?php echo $salida->ordendecompra?>'},
+						 ],
+			<?php }?>
+			onAdd: function (item){
+			   var VAL=item.id;
+			   alert(item.id);
+			   //$("#salida_tesdatos_id").val(VAL);
+			   //$("#salida_direccion_entrega").val(DIR[1].replace(')',''));
+			   //$("#BC").hide();
+			   //GrabarCliente();
+			},
+			onDelete: function (item) {
+			}
+		});
+});
+</script>

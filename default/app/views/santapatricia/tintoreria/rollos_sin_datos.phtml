@@ -1,0 +1,115 @@
+<div class="card">
+<h1>Rollos* <span>Rollos sin datos </span></h1>
+</div>
+
+<div class="form-actions">
+<?php echo Menu::menuControl($action_name);?>
+</div>
+<?php View::content()?>
+
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus="" placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+<?php echo Sp::imprimir('Rollos en Venta - ','P',array('P'=>'1','EX'=>1));?> 
+<div id="ver"></div>
+<div class="card-body">
+<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="exportar_excel">
+<thead>
+  <tr>
+
+    <th width="51" align="left">Numero (Maq)</th>
+    <th width="24" align="left">No Vta.</th>
+    <th width="53" align="left">Maquina</th>
+    <th width="41" align="left">Estado</th>
+    <th width="64" align="left">Fecha de corte</th>
+    <th width="64" align="left">Fecha de produccion</th>
+    <th width="160" align="left">Articulo</th>
+    <th width="31" align="left">Color</th>
+    <th width="26" align="left">MTS</th>
+    <th width="28" align="left">Peso</th>
+    <th width="38" align="left">Ancho</th>
+    <th width="41" align="left">Ancho Util</th>
+    <th width="322" align="left">Observacion</th>
+    <th width="43" align="left">EDITAR</th>
+  </tr>
+</thead>
+<tbody>
+  <?php $n=0;foreach($rollos as $item){$n++;
+?>
+  <tr title="<?php //echo $item->getTesdetalleingresos()->getTesingresos()->getTesdatos()->razonsocial?>">
+    <td><?php if(empty($item->codigo)){if(empty($item->getTesproductos()->codigo_ant))$COD=$item->getTesproductos()->codigo; else $COD=$item->getTesproductos()->codigo_ant;}else{$COD=$item->codigo;}
+	echo $COD?>-<?php if(!empty($item->tescolores_id))echo $item->getTescolores()->codigo?>-<?php echo $item->calidad?>-<?php echo $item->numeroventa;?></td>
+    <td><?php echo $item->numeroventa;?></td>
+    <td><?php echo $item->maquina_numero;?><?php echo $item->getProdetalleproduccion()?></td>
+    <td><?php echo $item->estadorollo;?></td>
+    <td><?php echo Sp::formatFecha('%d-%b-%Y',$item->fechacorte);?></td>
+    <td><?php echo Sp::formatFecha('%d-%b-%Y',$item->getProdetalleproduccion()->getProproduccion()->fecha);?></td>
+    <td><?php echo $item->getTesproductos()->nombre?></td>    
+    <td width="31"><?php if(is_numeric($item->color)){echo $item->getTescolores()->nombre;}else{ echo $item->color;}?></td>
+    <td><?php if(!empty($item->metros))echo number_format($item->metros,2,'.',' ');?></td>
+    <td><?php if(!empty($item->peso))echo number_format($item->peso,2,'.',' ')?></td>
+    <td><?php if(!empty($item->ancho))echo number_format($item->ancho,2,'.',' ')?></td>
+    <td><?php if(!empty($item->anchoutil))echo number_format($item->anchoutil,2,'.',' ')?></td>
+    <td>Ubicacion del rollo <?php 
+if($item->enalmacen==1)echo "En Almacen";if($item->enalmacen==0)echo "En produccion";if($item->enalmacen==2)echo "en Tintoreria"; ?>. Rollos principal :<?php if(!empty($item->prorollos_id))echo $item->getProrollos()->numero;else echo "Es principal";?><br />
+<?php //echo($rollo->rollo_id)?>
+Produccion <?php if(!empty($item->prodetalleproduccion_id))echo $item->getProdetalleproduccion()->getProproduccion()->titulo.', guia=> '.$item->getProdetalleproduccion()->getProproduccion()->guianumero;
+echo ' /estado del rollo=>'.$item->estadorollo;echo 'USUARIO: '.$item->userid.$item->getUsuarios()->nombres
+?></td>
+    <td><?Php echo Html::linkAction('modificar_rollos/'.$item->id,'Editar','class="btn btn-info"');?></td>
+  </tr>
+  <?php }?>
+</tbody>
+</table>
+</div>
+<script type="text/javascript">
+$(document).ready(function()
+{
+		
+//hacemos la busqueda en el evento search del control de busqueda
+	$('#txtBuscar').on('search',function(){
+		//le decimos a la funcion que busque en la tabla tblTabla el
+		//valor que contiene el campo actual
+		$.fntBuscarEnTabla($(this).val(),'exportar_excel');
+		
+	});
+
+});
+</script>
+<script type="text/javascript">
+$(document).ready(function()
+{
+$(".enviar").live("click",function(){
+	
+	var id =$(this).attr('id');
+	var numero = $("#numero-"+id).val();/*producto_id*/
+	var producto_id = $("#producto_id-"+id).val();
+	if(confirm("Esta por generar "+numero+" rollos del rollo principal "+" ("+id+")")){
+	if(numero>1){
+	$.ajax({
+            type:"POST",
+            url:"/<?php echo $module_name?>/tintoreria/divir_venta/"+id+"/"+numero,
+            beforeSend:function(){
+              $("#loading").show();
+            },
+            success:function(response){
+                $("#loading").hide();
+				alert(response);
+				url = "/<?php echo $module_name?>/tintoreria/ver_divir_venta/"+id+'/'+producto_id+'/'+response;  
+				$(location).attr('href',url); 
+            }
+ 
+          	});
+		
+	}else
+	{
+		alert('Ingreso un numero mayor a 1');
+	}
+	}else
+	{
+		return false;
+	}
+	});
+});
+</script>

@@ -1,0 +1,84 @@
+<?php echo Menu::menuProduccion();?>
+<?php View::content()?>
+<div class="card">
+<h3>Rollos <span style="float:right; font-size:22px"><?php echo Session::get('MAQUINA_PREFIJO')?><?php echo Session::get('MAQUINA_NUMERO')?></span></h3>
+</div>
+<div class="card-body">  
+<?php 
+$n=0;
+foreach($prorollos as $rollo){
+	$n++;
+	?>
+<div id="rollo<?php echo $n?>" style="float:left; margin:2px; border:1px #999999 inset; padding:5px;">
+<?php echo Ajax::form('rollo'.$n,'santapatricia/produccion/grabarrollo/'.$id)?>
+<?php echo Form::hidden('a'.$n,'',$n)?>
+<?php echo Form::hidden('prorollos'.$n.'.id','',$rollo->id);?>
+<?php echo Form::hidden('prorollos'.$n.'.prodetalleproduccion_id','',$rollo->prodetalleproduccion_id);?>
+<table width="97%" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <td width="94" align="left" valign="top">Codigo:</td>
+    <td width="25" valign="top"><?php echo Form::text('prorollos'.$n.'.codigo','readonly="readonly"',$rollo->codigo);?></td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">Numero:</td>
+    <td valign="top"><?php echo Form::text('prorollos'.$n.'.numero','size="15"',$rollo->numero);?></td>
+  </tr><?php /*?>
+  <tr>
+    <td>Metros</td>
+    <td><?php echo Form::text('prorollos'.$n.'.metros','',$rollo->metros);?></td>
+  </tr><?php */?>
+  <tr>
+    <td align="left" valign="top">Peso en kilos:</td>
+    <td valign="top"><?php echo Form::text('prorollos'.$n.'.peso','size="5" class="calc"',$rollo->peso);?></td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">Ancho en metros:</td>
+    <td valign="top"><?php echo Form::text('prorollos'.$n.'.ancho','size="5" class="calc"',$rollo->ancho);?></td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">Color:</td>
+    <td valign="top"><?php echo Form::text('prorollos'.$n.'.color','',$rollo->color);?></td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">Fecha de corte:</td>
+    <td valign="top"><?php echo Calendar::text('prorollos'.$n.'.fechacorte','style="width:90%"',$rollo->fechacorte);?></td>
+  </tr>
+<?php /*?>  <tr>
+    <td>Estado del rollo</td>
+    <td><?php echo Form::text('prorollos'.$n.'.estadorollo','',$rollo->estadorollo);?></td>
+  </tr><?php */?>
+  <tr>
+    <td colspan="2"><?php echo Form::submit('Grabar','id="'.$n.'" class="btn btn-primary"')?></td>
+  </tr>
+</table>
+<?php echo Form::close()?>
+</div>
+<?php }?>
+<div class="clear"></div>
+
+<div class="form-actions">
+<?php echo Html::linkAction('corte','Terminar','class="btn btn-primary"');?>
+</div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function(){
+		$(".calc").blur(function()
+		{
+			var f=($(this).attr('id')).split('_');
+			var a=f[0].substr(-1);
+			//alert(f[1]);
+			if(f[1]=="ancho")
+			{
+				/*Para calcular el peso si se modifica el metro*/
+				var ancho=$(this).val();
+				$("#prorollos"+(parseInt(a)+1)+"_ancho").val(ancho)
+			}if(f[1]=="peso")
+			{
+				
+				/*Para calcular el metro si se modifica el peso*/
+				var peso=$(this).val();
+				$("#prorollos"+(parseInt(a)+1)+"_peso").val(peso)
+			}
+		});
+	});
+</script>

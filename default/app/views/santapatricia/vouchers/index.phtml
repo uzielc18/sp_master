@@ -1,0 +1,177 @@
+<div class="card">
+<h1>Vouchers<span>Listado de vouchers por mes y tipo de vauchers</span></h1>
+</div>
+<div class="form-actions">
+<?php echo Html::linkAction("crear/",'Crear Vouchers','class="btn btn-primary"','title="Crear Vaucher"','') ?>
+</div>
+<div class="tabbable"> <!-- Only required for left/right tabs -->
+  <ul class="nav nav-tabs">
+    <?php foreach($pagos as $p){?>
+    <li <?php if($p->id==$id){echo "class='active'";}?>><a class="ver" data-id="<?Php echo $p->id?>" href="#tab<?php echo $p->id?>" data-toggle="tab" title="<?php echo $p->nombre?>"><?Php echo $p->abr?></a></li>
+    <?Php }?>
+  </ul>
+  <div class="tab-content">
+    <div class="tab-pane active" id="tab<?php echo $id?>">
+<div class="menu">
+<ul>
+<li>
+<a href="javascript:;">Año 
+<select id="anio">
+<?php
+for($i=2011;$i<=2020;$i++)
+{
+	$selec='';
+	if($anio==$i){
+	$selec=' selected="selected"';
+	}
+	echo '<option value="'.$i.'" '.$selec.'>'.$i.'</option>';
+}
+?>
+</select>
+</a>
+</li>
+</ul> 
+<?php 
+$mes_actual=date('Y-m');
+foreach($meses as $clave => $mes):
+if($anio.'-'.$clave<=$mes_actual){
+$class='';
+if($mes_activo==$clave){$class=' active';$name_mes=$mes;}
+echo '<ul>';
+echo '<li><a class="enviar'.$class.'" id="mes-'.$mes.'" href="javascript:;" data-id="'.$anio.'-'.$clave.'-01">'.$mes.'</a></li>'; 
+echo '</ul>';
+}
+endforeach;?>
+</div>
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus="" placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+<?php echo Sp::imprimir('Listado de Vouchers '.$name_mes.'- ','P',array("EX"=>"EX","P"=>"P"));?> 
+	<div class="card-body">
+    <table id="exportar_excel" width="100%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
+<caption>
+ Vouchers generados en el Mes de <?php echo $name_mes?>
+</caption>
+ <thead>
+  <tr>
+  	<th width="3%" align="left">Nº.</th>
+	<th width="5%" align="left">Numero</th> 
+	<th width="10%" align="left">Forma de Pago</th> 
+	<th width="7%" align="left">Ref. Doc</th> 
+    <th width="27%" align="left">Proveedores</th> 
+    <th width="7%" align="left">Fecha</th> 
+    <th width="17%" align="left">Moneda</th> 
+    <th width="11%" align="left">Importe</th>
+    <th width="13%" align="left">Acciones</th>
+  </tr>
+</thead>
+<tbody>
+<?php $n=0;
+foreach($vouchers as $item){ 
+$n++;
+$importe=0;
+switch ($item->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+
+if(!empty($item->importe))$importe=$item->importe;
+?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20"><?php echo $n?></td>
+    <td><?php echo $item->numero?> <?php if($item->estadov=="ANULADO") echo "Anulado";?></td>
+    <td><?php echo $item->getVoucherformadepagos(('DOC_ID')==10)->nombre?></td>
+	<td><?php echo $item->getVoucherformadepagos()->numero?></td>
+    <td><small><?php $i=0;foreach($item->getProveedores() as $det)
+	{
+		if($i<4)
+		{
+			if(!empty($det->tesdatos_id))
+			{
+			$i++;
+			if($i==1)echo $det->getTesdatos()->razonsocial;else echo ", ".$det->getTesdatos()->razonsocial;
+			}
+		}else{echo '.';}
+	}?></small></td>
+    <td><?php echo Sp::formatFecha('%d/%m/%Y',$item->fecha)?></td>
+    <td><?php echo $item->getTesmonedas()->nombre;?></td>
+    
+    <td align="right"><?php echo $simbolo;?> <?php echo number_format($importe,2,'.','');?></td>
+   <td>
+   <?php if($item->obligacion=='1'){?>
+   <?php 
+   if($item->estadov!="Terminado" && $item->estadov!="ANULADO")echo Html::link($module_name.'/letras/cargar/'.$item->id.'/grabardetalle',Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'')?>
+   <?php echo Html::link($module_name.'/letras/cargar/'.$item->id.'/terminar',Html::img("figuras/ver.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Visualizar Voucher !"','')?>
+   <?php if($item->activo==0)echo Html::link($module_name."/letras/eliminar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
+   <?php if($item->estadov!="ANULADO")echo Html::linkAction("cargar/$item->id/anularvouchers",'X', 'class="btn btn-danger" onclick="return confirm(\'¿Está seguro?\')"'); }else{?>
+   <?php 
+   if($item->estadov!="Terminado" && $item->estadov!="ANULADO")echo Html::linkAction('cargar/'.$item->id.'/grabardetalle',Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'')?>
+   <?php echo Html::linkAction('cargar/'.$item->id.'/finalizar',Html::img("figuras/ver.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Visualizar Vaucher"','')?>
+   <?php if(($item->activo==0 || Auth::get('id')==3) and $item->estadov!="Terminado"){echo Html::linkAction("eliminar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');}
+   if($item->estadov!="ANULADO")echo Html::linkAction("cargar/$item->id/anularvouchers",'X', 'class="btn btn-danger" onclick="return confirm(\'¿Está seguro?\')"');?>
+   <?php }?>
+    </td>
+  </tr>
+<?php }?>
+</tbody>
+</table>
+	</div>
+    
+  </div>
+</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	
+	
+$(".ver").click(function(){
+	var op=$(this).attr('data-id');
+	document.location = "/<?php echo $module_name?>/<?php echo $controller_name?>/index/"+op;
+	});	
+//hacemos la busqueda en el evento search del control de busqueda
+	$('#txtBuscar').on('search',function(){
+		//le decimos a la funcion que busque en la tabla tblTabla el
+		//valor que contiene el campo actual
+		$.fntBuscarEnTabla($(this).val(),'exportar_excel');
+		
+	});
+	
+	$("#anio").change(function(event){
+    	var id = $("#anio").find(':selected').val();
+		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/<?Php echo $action_name?>/<?php echo $id?>/'+id;
+     });
+	$(".enviar").click(function()
+	{
+		var fecha = $(this).attr('data-id');
+		var F=fecha.split('-');
+		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/<?Php echo $action_name?>/<?php echo $id?>/'+F[0]+'/'+F[1];
+	});
+});
+</script>
+<style type="text/css">
+.reporte
+{
+	display:block;
+	margin-top:20px;
+}
+.reporte h2 span{color:#333333;}
+.reporte h2
+{
+	padding:0 20%;
+	border-bottom:#000000 solid 1px;
+}
+.reporte h2 span{
+	font-weight:lighter;
+	}
+.sin_reporte{
+	border-bottom:#666666 1px solid; padding:5px;}
+.sin_reporte span
+{
+	padding:35%;
+}
+</style>

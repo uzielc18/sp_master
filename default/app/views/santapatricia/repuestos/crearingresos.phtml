@@ -1,0 +1,70 @@
+<?php echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<div class="card">
+    <h1><em>Crear Ingreso de Repuesto<span><?php echo Session::get('DOC_NOMBRE')?></span></em></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="card-body">
+<div id="ver_resultado"></div>
+<?php echo Form::open(NULL,'POST','class="form-horizontal"')?>
+<?php echo Form::hidden('ingreso.id');?>
+  <div class="control-group">
+    <label class="control-label" for="ingreso_serie"><strong>Serie - Nro</strong></label>
+    :
+    <div class="controls">
+      <?php echo Form::text('ingreso.serie','size="4"');?>-<?php echo Form::text('ingreso.numero','size="10"');?>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="ingreso_serie"><strong>Nro de Pedido:</strong></label>
+    <div class="controls">
+      <?php echo Form::text('ingreso.npedido','size="10"');?>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="ingreso_tesmonedas_id"><strong>Moneda:</strong></label>
+    <div class="controls">
+      <?php echo Form::dbSelect('ingreso.tesmonedas_id','simbolo,nombre',array("tesmonedas",'find','conditions: aclempresas_id='.Session::get('EMPRESAS_ID')));?>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="CL"><strong>Proveedor</strong></label>
+    <div class="controls">
+    	<input id="CL" />
+      <?php echo Form::hidden('ingreso.tesdatos_id')?>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="ingreso_femision"><strong>Fecha:</strong></label>
+    <div class="controls">
+      <?php echo Calendar::selector('ingreso.femision');//finiciotraslado?>
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+       <button type="submit" class="btn btn-primary">Siguiente</button> <?php echo Html::linkAction('ingresos/','Cancelar','class="btn"');?>
+    </div>
+  </div>
+<?php echo Form::close();?>
+</div>
+<script type="text/javascript">
+$(document).ready(function()
+{
+	$("#CL").tokenInput("/<?php echo $module_name?>/salidas/buscarproveedor", 
+		{
+			tokenLimit: 1,
+			minChars: 2,
+	
+			onAdd: function (item){
+			   var VAL=item.id;
+			   $("#ingreso_tesdatos_id").val(VAL);
+			},
+			onDelete: function (item) {
+			}
+		});
+		
+		
+});
+</script>

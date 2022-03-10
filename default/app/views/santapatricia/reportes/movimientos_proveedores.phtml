@@ -1,0 +1,79 @@
+<style type="text/css">
+.span_float
+{
+	float:right !important;
+	margin-left:0px;
+	margin-right:-5px;
+}
+.mediano{
+	float:left; max-width:30% !important; padding-left:10px;
+	}
+</style>
+<div class="card">
+	<h1>Movimientos  <span>Ultimos movimientos de Proveedores</span></h1>
+    </div>
+<div class="form-actions">
+    <?php echo Menu::menuReportes($action_name);?>
+</div>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <th scope="col">Fecha Inicio</th>
+    <th scope="col">Fecha Fin</th>
+    <th scope="col">Ingrese su Busqueda</th>
+    <th scope="col">&nbsp;</th>
+  </tr>
+  <tr>
+    <td><?php 
+$fecha=date('Y-m-d',strtotime('-20 day',strtotime(date('Y-m-d'))));
+echo Calendar::selector('fecha_inicio','',$fecha)?></td>
+    <td><?php echo Calendar::selector('fecha_fin')?></td>
+    <td><?php echo Form::text('clientes_id')?></td>
+    <td><a id="ver_reporte" class="btn btn-primary" href="javascript:;"> Ver Reporte</a><?php echo Form::hidden('cliente_id')?><?php echo Form::hidden('proveedor_id')?></td>
+  </tr>
+</table>
+
+<div id="ver" class="card-body">
+	<h3>*Visualizacion del reporte</h3>
+</div>
+<script type="text/javascript">
+        $(document).ready(function() {
+            $("#clientes_id").tokenInput("<?php echo "/".$module_name."/reportes/tesdatos_p"?>", 
+			{
+				tokenLimit: 1,minChars: 3,
+                onAdd: function (item) {
+                   //item.name;
+				   //alert(item.id);
+				   $("#cliente_id").val(item.id_cliente);
+			 	   $("#proveedor_id").val(item.id_proveedor);
+				   var fi=$("#fecha_inicio").val();
+			 	   var ff=$("#fecha_fin").val();
+				   //$("#ver").load("/<?php //echo $module_name?>/reportes/ver_movimientos_cliente/"+item.id_cliente+"/"+item.id_proveedor+'/'+fi+'/'+ff);
+				   //$("#ver").html('display','block');
+                },
+                onDelete: function (item) {
+				  $("#ver").html('<h3>*Visualizacion del reporte</h3>');
+                }
+            });
+			
+					
+			$("#ver_reporte").click(function()
+			{
+			 var fi=$("#fecha_inicio").val();
+			 var ff=$("#fecha_fin").val();
+			 var c=$("#cliente_id").val();
+			 var p=$("#proveedor_id").val();
+			 //alert(fi+'-'+ff+'-'+c+'-'+p);
+			 if(c!='')
+			 {
+				$.get("/<?php echo $module_name?>/reportes/ver_movimientos_proveedores/"+c+"/"+p+'/'+fi+'/'+ff,function(data,status)
+				{
+					//alert("Status: " + status);
+					$("#ver").html(data);
+				});
+			 //$("#ver").load("/<?php //echo $module_name?>/reportes/ver_movimientos_cliente/"+c+"/"+p+'/'+fi+'/'+ff);
+			 }
+			});
+			
+        });
+        </script>
+<?php echo Tag::js('jquery/jquery.tokeninput');Tag::css('token-input');?>

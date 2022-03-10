@@ -1,0 +1,48 @@
+
+<div class="card">
+    <h1>Orden de Pedido (Clientes)</h1>
+</div>
+<div class="form-actions">
+<?php echo Menu::menuPedido_Cliente($estado)?>
+</div>
+<div class="well">
+<span  class="mediano">Cliente o orden de compra<br />
+<?php echo Form::text('reporte')?></span><a id="ver_reporte" class="btn btn-primary" href="javascript:;"> Ver Reporte</a>
+<div class="clear"></div><?php echo Form::hidden('reporte_id')?>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div id="ver" class="card-body">
+
+
+
+</div>
+<script type="text/javascript">
+        $(document).ready(function() {
+            $("#reporte").tokenInput("<?php echo "/".$module_name."/".$controller_name."/lista"?>", 
+			{
+				tokenLimit: 1,minChars: 2,
+                onAdd: function (item) {
+				   $("#reporte_id").val(item.id);
+				   $("#ver").load("/<?php echo $module_name?>/<?php echo $controller_name?>/reporte/"+item.id);
+				   //$("#ver").html('display','block');
+                },
+                onDelete: function (item) {
+				  $("#ver").html('<h3>*La busqueda por codigo: devolvera solo</h3>');
+                }
+            });
+			
+					
+			$("#ver_reporte").click(function()
+			{
+			 var c=$("#reporte_id").val();
+			 if(c!=''){
+			 $("#ver").load("/<?php echo $module_name?>/<?php echo $controller_name?>/reporte/"+c);
+			 }
+			});
+			
+        });
+        </script>
+<?php echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>

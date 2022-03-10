@@ -1,0 +1,136 @@
+<?php
+View::content();
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+
+<div class="card">
+<h1> Ingresos para <?Php echo Session::get('MAQUINA_NOMBRE').' '.Session::get('MAQUINA_PREFIJO').'-'.Session::get('MAQUINA_NUMERO')?><span>Ingresar la produccion en valor numérico</span></h1>
+</div>
+<div class="form-actions">
+<?php echo Html::link('santapatricia/produccion','Volver Produccion','class="btn btn-info"')?>
+<?php echo Html::link('santapatricia/eficiencias/maquinas','Volver Eficacia por maquinas','class="btn"')?>
+</div>
+<div id="guia" class="card-body">
+<?php echo Ajax::form('guia',$module_name."/eficiencias/grabar_eficiencia/",'form-inline','post')?>
+<?php echo Form::hidden('eficiencia.id')?>
+<?php echo Form::hidden('eficiencia.tejedor')?>
+<?php echo Form::hidden('eficiencia.promaquinas_id','',Session::get('MAQUINA_ID'))?>
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered">
+  <tr>
+    <th valign="top" align="left">Tejedor</th>
+    <th valign="top" align="left">Turno</th>
+    <th valign="top" align="left">Fecha</th>
+    <th valign="top" align="left">Valor</th>
+    <th valign="top" align="left">Observacion</th>
+    <th valign="top"></th>
+  </tr>
+  <tr>
+    <td>
+	<?php echo Form::text('eficiencia.acldatos_id')?></td>
+    <td>
+	<?php echo Form::dbSelect('eficiencia.proturnos_id')?></td>
+    <td>
+	<?php 
+	$fecha = date('Y-m-d');
+$nuevafecha = strtotime ( '-1 day' , strtotime ( $fecha ) ) ;
+$nuevafecha = date ( 'Y-m-d' , $nuevafecha );
+	echo Calendar::text('eficiencia.fecha','',$nuevafecha)?></td>
+    <td>
+	<?php echo Form::text('eficiencia.valor','size="6" class="qty"')?></td>
+	<td><?php echo Form::textArea('eficiencia.observaciones','')?></td>
+    <th valign="top"><?php echo Form::submit('Ingresar')?></th>
+    </tr>
+</table>
+<?php echo Form::close()?>
+<i id="max_vl"></i>
+<i id="vl"></i>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table table-bordered">
+  <tr>
+    <th align="left">Nro.</th>
+    <th valign="top" align="left">Tejedor</th>
+    <th valign="top" align="left">Turno</th>
+    <th valign="top" align="left">Maquina</th>
+    <th valign="top" align="left">Fecha</th>
+    <th valign="top" align="left">Valor</th>
+    <th valign="top" align="left">Observacion</th>
+    <th valign="top" align="left">Acción</th>
+  </tr>
+ <?php $n=0;foreach($detalles as $item){
+	 $n++;
+	 ?>
+  <tr>
+    <td><?php echo $n?></td>
+    <td><?php echo $item->tejedor?></td>
+    <td><?Php echo $item->getProturnos()->nombre?></td>
+    <td><?php echo Session::get('MAQUINA_NOMBRE')?></td>
+    <td class="td_<?php echo Sp::formatFecha('%d',$item->fecha)?>"><?php echo Sp::formatFecha('%Y/%m/%d',$item->fecha)?></td>
+    <td align="right"><?php echo $item->valor?></td>
+    <td align="right"><?php echo $item->observaciones?></td>
+    <td align="right"><?php $fecha = date('Y-m-d');
+$nuevafecha = strtotime ( '-1 day' , strtotime ( $fecha ) ) ;
+$nuevafecha = date ( 'Y-m-d' , $nuevafecha );
+	if($nuevafecha==$item->fecha)echo Html::linkAction('eliminar/'.$item->id,'[ Eliminar ]');?> </td>
+  </tr>
+  <?php }?>
+</table>
+
+
+
+<script type="text/javascript">
+
+$(document).ready(function()
+{
+	$("#eficiencia_acldatos_id").tokenInput("/<?php echo $module_name?>/eficiencias/getdatos", 
+		{
+			tokenLimit: 1,
+			minChars: 2,
+	
+			onAdd: function (item){
+			   var VAL=item.id;
+			   $("#eficiencia_acldatos_id").val(VAL);
+			   $("#eficiencia_tejedor").val(item.tejedor);
+			},
+			onDelete: function (item) {
+			}
+		});
+		
+ 	$("#eficiencia_proturnos_id").change(function()
+ 	{
+	   $.ajax({
+            type:"GET",
+            url:"/<?php echo $module_name?>/eficiencias/anterior_ingreso/<?php echo Session::get('MAQUINA_ID')?>/"+$("#eficiencia_proturnos_id option:selected").val()+'/'+$("#eficiencia_acldatos_id").val(),
+            beforeSend:function(){
+            },
+            success:function(response){
+				var V=response.split('-');
+				$("#max_vl").html(V[1]);
+				$("#vl").html(V[0]);
+            }
+ 		});			
+ 	});
+
+$("#eficiencia_valor").change(function(){
+	 var v=$("#vl").html();
+	 var max_v=$("#max_vl").html();
+	 var n=$(this).val();
+	 var diferencia=max_v-v;
+	 //alert(diferencia);
+	 if(diferencia<n){ var v=0; }
+	 //alert(n+"<"+v);
+	  if(parseInt(n)<parseInt(v))
+	  {
+		  var r = confirm('Cuidado! Esta reniciando el contador!!!!\nEl valor ingresado es '+n+"\n¿Desea continuar?");
+			if (r == true)
+			  {
+			  $("#eficiencia_valor").val(n);
+			  }
+			else
+			  {
+			  $("#eficiencia_valor").val(v);
+			  }
+		  
+	  }
+	  });
+});
+</script>
+</div>

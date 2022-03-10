@@ -1,0 +1,191 @@
+
+<?php 
+$monedas= $salida->tesmonedas_id;
+switch ($monedas)
+{
+	case 1: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES'; break;
+	case 2: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 4: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
+	case 5: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 0: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
+}
+
+?><span class="print btn btn-primary"> Print </span> <?php echo Html::linkAction('guias/'.Session::get('DOC_ID'),'Regresar <i class="icon-hand-left"></i>','class="btn"')?>
+<div class="card-body">
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<table width="100%" border="0" align="left" cellspacing="0">
+  <tr>
+   
+    <td width="82" height="53" align="center"><?php if(!empty($salida->getTesdatos()->codigo_ant)) echo $salida->getTesdatos()->codigo_ant; else echo $salida->getTesdatos()->codigo.'-'.$salida->getTesdatos()->sufijo?></td>
+    <td width="363" align="lefth"><?php echo $salida->getTesdatos()->razonsocial?></td>
+    <td width="109" align="lefth"><?php echo $salida->numeroguia?></td>
+    <td width="58" align="left"><?php echo Sp::formatFecha('%d / %m / %Y',$salida->femision)?></td>
+  </tr>
+
+</table>
+<BR />
+<br />
+<br />
+<table width="100%" border="0" cellspacing="1">
+  <tr>
+    
+    <td width="14%" height="59" align="center"><?php echo $salida->getTesdatos()->ruc?></td>
+    <td width="68%" align="left"><?php echo $empresa->direccion?></td>
+    <td width="18%"><?php echo $salida->getTescondicionespagos()->nombre?></td>
+  </tr>
+</table>
+<br />
+<br />
+<br />
+<table width="100%" border="0" cellspacing="1">
+    <?php $n_total_r=10;?>
+	<?php  $n=0;$total=0;
+  foreach($detalles as $item){
+  		$total=$total+$item->totalimporte;
+	  $n++;
+	 ?>
+  <tr>
+    <td width="71" height="27" align="center" valign="top"><?php $PA=explode('-',$salida->npedido); echo $PA[0]?></td>
+    <td width="102" align="center" valign="top"> <?php if(empty($salida->ordendecompra)){echo "1";}?> </td>
+    
+    <td width="61" align="center" valign="top"> <?php if(empty($salida->ordendecompra)){echo "UNI";}?> </td>
+   <td width="403" valign="top"> <?php echo $item->concepto;if(!empty($salida->ordendecompra))echo " Con order de Compra ".$salida->ordendecompra;?></td>
+   <td width="83" valign="top"><?php if(empty($salida->ordendecompra)){ //echo $simbolo ?><?php echo number_format($item->totalimporte,2,'.','');}?></td>
+   <td width="72" valign="top"><?php if(empty($salida->ordendecompra)){ if(empty($item->descuento))echo "0.00";else echo $item->totaldescuento/100;}?></td>
+   <td width="92" align="left" valign="top"><?php if(empty($salida->ordendecompra)){ echo $simbolo ?><?php echo number_format($item->totalimporte,2,'.','');}?></td>
+  </tr>
+  <?php }?>
+  <?Php if(!empty($salida->ordendecompra))
+  {
+	  $n++;
+	  $detalles_orden=$salida->getDetallesorden($salida->ordendecompra);
+	  foreach($detalles_orden as $d_o){
+	  ?>
+  <tr>
+    <td width="71" height="27" align="center" valign="top"><?php if(empty($d_o->getTesproductos()->codigo_ant)){echo $d_o->getTesproductos()->codigo;}else{echo $d_o->getTesproductos()->codigo_ant;}?></td>
+    <td width="102" align="center" valign="top"><?php echo $d_o->cantidad?></td>
+    
+    <td width="61" align="center" valign="top"><?php echo $d_o->getTesunidadesmedidas()->simbolo?></td>
+   <td width="403" valign="top"><?php echo $d_o->getTesproductos()->detalle?> <?php echo $d_o->getTesproductos()->nombre?>  <?Php //echo $d_o->getTescolores()->nombre?></td>
+   <td width="83" valign="top"><?php echo $simbolo?><?php echo number_format($d_o->precio,2,'.','');?></td>
+   <td width="72" valign="top">0.00</td>
+   <td width="92" align="left" valign="top"><?php echo $simbolo?><?php echo number_format($d_o->total,2,'.','');?></td>
+  </tr>
+  <?php }
+  }?>
+  
+  <tr>
+  <td width="71" align="center" valign="top">&nbsp;</td>
+    <td width="102" align="center" valign="top">&nbsp;</td>
+    
+    <td width="61" align="center" valign="top">&nbsp;</td>
+   <td width="403" valign="top">&nbsp;</td>
+   <td valign="top">&nbsp;</td>
+   <td valign="top">&nbsp;</td>
+   <td align="left" valign="top">-----------<br /><?php echo $simbolo ?><?php echo number_format($total,2,'.','')?></td>
+   </tr>
+  <?php for($i=0;$i<=$n_total_r-$n;$i++){?>
+   
+   <?php if($i==0){ ?><tr>
+   <td valign="top">&nbsp;</td>
+  <td colspan="6" align="left" valign="top"><?php echo NumerosLetras::NL($salida->totalconigv,$moneda_letras);?></td>
+    </tr>
+    <?php }?>
+    <tr>
+  <td colspan="6" align="center">&nbsp;</td>
+    </tr>
+    <?php }?>
+    
+    <tr>
+    <td>&nbsp;</td>
+  <td colspan="6" align="center">
+  <?php
+	$nl=0;
+	foreach($lets as $let){
+	$nl++;
+	$q=$let->id;
+	?>
+<table width="155" border="0" cellspacing="1" style="float:left;">
+	<tr>
+		<td width="50">Número</td>
+		<td width="175"><?php echo $let->getTessalidas()->numero?> </td>
+	</tr>
+	<tr>
+		<td>F.VTO:</td>
+		<td width="175"><?php echo Sp::formatFecha('%d/%m/%Y',$let->getTessalidas()->fvencimiento);?></td>
+	</tr>
+	<tr>
+		<td>MONTO:</td>
+		<td><?php echo $simbolo ?><?php echo number_format($let->getTessalidas()->totalconigv,2,'.','');?></td>
+	</tr>
+	<tr>
+		<td>DIAS</td>
+		<td><?php echo Sp::Ndias($let->getTessalidas()->fvencimiento,$let->getTessalidas()->femision);?></td>
+	</tr>
+</table>
+<?php }if($nl==0)
+{
+	echo "<br />";
+	echo "<br />";
+	echo "<br />";
+	echo "<br />";
+}?>
+</td>
+    </tr>
+</table>
+<br />
+<br />
+<br />
+<br />
+<table width="100%" border="0" cellspacing="1">
+  <tr>
+    <td width="25%" height="26">&nbsp;</td>
+    <td width="20%">&nbsp;</td>
+    <td width="6%">&nbsp;</td>
+    <td width="26%">&nbsp;</td>
+    <td width="12%">IGV.(<?php echo Session::get('IGV')*100?>%)</td>
+    <td width="9%"><?php echo $simbolo ?><?php echo number_format($salida->totalconigv-$total,2,'.','')?></td>
+    <td width="2%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td><?php echo $simbolo ?><?php echo number_format($salida->totalconigv,2,'.','')?></td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	$(".botonTxt").click(function(event) {
+		$("#datos_a_enviar").val( $("<div>").append( $("#exportar-txt").eq(0).clone()).html());
+		$("#FormularioExportacion").submit();
+});
+});
+</script>

@@ -1,0 +1,58 @@
+<div class="card"><h1>Listado General de rollos<span>Rollos crudos (Sin procesos)</span></h1></div>
+<div class="form-actions">
+<?php echo Html::linkAction('telacruda','Volver','class="btn btn-primary"')?>
+</div>
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus="" placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+<?php echo Sp::imprimir('Abonos Adelanto - ','P');?> 
+<div class="card-body">
+<table width="75%" border="0" cellpadding="0" cellspacing="1" class="table table-bordered table-striped"id="exportar_excel">
+  <thead>
+  <tr>
+    <th width="12%" align="left">FECHA</th>
+    <th width="8%" align="left">Nº ROLLO</th>
+    <th width="8%" align="left">MAQ.</th>
+	<th width="10%" align="left">CODIGO</th>
+    <th width="28%" align="left">DESCR.</th>
+    <th width="7%" align="left">UBI.</th>
+    <th width="10%" align="left">METROS</th>
+    <th width="7%" align="left">PESO</th>
+    <th width="9%" align="left">REND.</th>
+    <th width="8%">O.C.</th>
+    <!--<th width="6%" align="left">Acc.</th>-->
+  </tr>
+  </thead>
+  
+  <?php foreach($rollos as $rollo){?>
+  <tr id="<?php echo $rollo->id?>">
+     <td align="left" valign="top"><?php echo Sp::formatFecha('%d / %m / %Y',$rollo->fechacorte)?>
+		<?php //echo $rollo->fechacorte?></td>
+    <td align="left" valign="top"><?php echo $rollo->numero?>
+		<?php if($rollo->prodetalleproduccion_id!=0)//echo '-'.$rollo->getProdetalleproduccion()->getProproduccion()->getPromaquinas()->prefijo.$rollo->getProdetalleproduccion()->getProproduccion()->getPromaquinas()->numero?></td>
+    <td align="left" valign="top"><?php if($rollo->prodetalleproduccion_id!=0)echo $rollo->getProdetalleproduccion()->getProproduccion()->getPromaquinas()->prefijo.$rollo->getProdetalleproduccion()->getProproduccion()->getPromaquinas()->numero?></td>
+    <td align="left" valign="top"><?php echo $rollo->getTesproductos()->codigo_ant?></td>
+	<td align="left" valign="top"><?php echo $rollo->getTesproductos()->nombre?></td>
+    <td align="left" valign="top"><?php echo $rollo->ubicacion?></td>
+    <td align="left" valign="top"><?php echo number_format($rollo->metros,2,'.','')?></td>
+    <td valign="top" align="left"><?php echo number_format($rollo->peso,2,'.','')?></td>
+    <td valign="top" align="left"><?php echo number_format($rollo->rendimiento,2,'.','')?></td>
+    <td valign="top"><?php if(!empty($rollo->getProdetalleproduccion()->tesordendecompras_id)){$oc=$rollo->getProdetalleproduccion()->getTesordendecompras()->codigo;}else{$oc=$rollo->ordencompra;}?><?php echo $oc?></td>
+      <!--<td valign="top" align="left"><span class="link"><?php //echo Html::linkAction('cambiarestado/'.$rollo->id.'/Control de Calidad/telacruda',Html::img("figuras/produccion.png",'Visto Bueno','style="width: 20px;margin-left:1px;margin-right:1px;" title="Regresar a Control de calidad"'));?>
+      </span></td>-->
+  </tr>
+  <?php }?>
+</table>
+</div>
+<script type="text/JavaScript">
+$(document).ready(function(){
+  
+	$('#txtBuscar').on('search',function(){
+		//le decimos a la funcion que busque en la tabla tblTabla el
+		//valor que contiene el campo actual
+		$.fntBuscarEnTabla($(this).val(),'exportar_excel');
+		
+	});
+});
+</script>

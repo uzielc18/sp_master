@@ -1,0 +1,114 @@
+<?php echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<div class="card">
+    <h1>Reporte precios<span>Reporte de precios por cliente o tela</span></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="span12">
+  <div style="margin:5px;float:left; width:40%; display:inline-block;"> 
+   <label>Cliente</label>
+    <input id="CL" />
+      <?php echo Form::hidden('tesdatos_id');?>
+     <a href="javascript:;" id="ver_d" class="btn"> Ver >></a>
+    </div>
+    <div style="margin:5px; width:40%; display:inline-block;">
+    <label>Telas</label>
+   	<input id="TL" />
+      <?php echo Form::hidden('tesproductos_id');?>
+      <a href="javascript:;" id="ver_p" class="btn"> Ver >></a>
+	</div>
+<div class="clear"></div>
+</div>
+<div class="clear"></div>
+<div class="menu">
+<ul>
+<li>
+<a href="javascript:;">Año 
+<select id="anio">
+<?php
+for($i=2011;$i<=2020;$i++)
+{
+	$selec='';
+	if($anio==$i){
+	$selec=' selected="selected"';
+	}
+	echo '<option value="'.$i.'" '.$selec.'>'.$i.'</option>';
+}
+?>
+</select>
+</a>
+</li>
+</ul> 
+</div>
+<div class="input-prepend input-append">
+  <span class="add-on">Buscar :</span>
+ <input type="search" id="txtBuscar" autofocus placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+</div>
+<div class="clear"></div>
+<hr />
+<div id="ver">
+<div class="form-actions"><?php echo Html::linkAction('cantidades','Ver Reporte de cantidades','class="btn btn-primary"')?></div>
+</div>
+<script type="text/javascript">
+$(document).ready(function()
+{
+	$(".botonExcel").click(function(event)
+	{
+		$("#datos_a_enviar").val( $("<div>").append( $("#cliente").eq(0).clone()).html());
+		$("#FormularioExportacion").submit();
+	});
+	
+
+	$("#CL").tokenInput("/<?php echo $module_name?>/salidas/buscarcliente", 
+		{
+			tokenLimit: 1,
+			minChars: 2,
+	
+			onAdd: function (item){
+			   var VAL=item.id;
+			   $("#tesdatos_id").val(VAL);
+			},
+			onDelete: function (item) {
+				$("#ver").html('');
+			}
+		});
+	$("#TL").tokenInput("/<?php echo $module_name?>/produccion/producto/1", 
+		{
+			tokenLimit: 1,
+			minChars: 2,
+	
+			onAdd: function (item){
+			   var VAL=item.id;
+			   $("#tesproductos_id").val(VAL);
+			},
+			onDelete: function (item) {
+				$("#ver").html('');
+			}
+		});
+
+$("#ver_d").click(function(){
+	var anio = $("#anio").find(':selected').val();
+	$.ajax({
+		type:"POST",
+		url:"/<?php echo $module_name?>/<?php echo $controller_name?>/precios_clientes/"+$("#tesdatos_id").val()+"/"+anio,
+		success:function(response)
+		{
+			$("#ver").html(response);
+		}
+		});
+	});
+$("#ver_p").click(function(){
+	var anio = $("#anio").find(':selected').val();
+	$.ajax({
+		type:"POST",
+		url:"/<?php echo $module_name?>/<?php echo $controller_name?>/precios_telas/"+$("#tesproductos_id").val()+"/"+anio,
+		success:function(response)
+		{
+			$("#ver").html(response);
+		}
+		});
+	});
+});
+</script>

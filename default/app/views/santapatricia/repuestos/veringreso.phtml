@@ -1,0 +1,58 @@
+<?php echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?><div class="card">
+    <h1><em>Detalle-Guia Repuestos<span><?php echo Session::get('DOC_NOMBRE')?></span></em></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+    
+</div>
+    
+  <div class="hoja">
+	<div class="caja3">
+    <div class="input-prepend">
+    	<p>
+    		<span class="add-on">Numero:</span>&nbsp; <?php echo Form::text('ingreso.serie','size="4"  readonly="readonly"');?> - <?php echo Form::text('ingreso.numero','size="10"  readonly="readonly"');?></p>
+    	<p><span class="add-on">Moneda:</span>
+   		<?php echo $ingreso->getTesmonedas()->nombre?>&nbsp;</p>
+    	<p>
+    		<span class="add-on">Proveedor:</span>
+    		<?php echo $ingreso->getTesdatos()->razonsocial?><br />
+   		</p>
+	</div> 
+	</div> 
+    
+  <div class="hoja">
+	<div class="caja3">
+<table width="75%" border="0" align="center" cellpadding="0" cellspacing="1" class="table table-hover">
+   <tr>
+    <th width="10%" align="left"><h4>Codigo</h4></th>
+    <th width="10%" align="left"><h4>Unidad</h4></th>
+    <th width="13%" align="left"><h4>Cantidad</h4></th>
+    <th width="12%" align="left"><h4>P. S/IGV</h4></th>
+    <th width="11%" align="left"><h4>Importe</h4></th>
+    <th width="44%" align="left"><h4>Descripcion</h4></th>
+  </tr>
+  <?php 
+  $n=0;
+  foreach($detalles as $item){
+	  $n++;
+	  ?> 
+  <tr id="<?php echo $item->id?>">
+    <td><?php echo $n?>.<?php echo $item->getTesproductos()->codigo_ant?></td>
+    <td><?Php echo $item->getTesunidadesmedidas()->simbolo?></td>
+    <td><?php echo $item->cantidad?></td>
+    <td><?php echo number_format($item->preciounitario,2,'.','')?></td>
+    <td><?php echo number_format($item->importe,2,'.','')?></td>
+    <td><?php echo $item->getTesproductos()->nombre?></td>
+  </tr>
+  <?php }?>
+</table>
+</div>
+</div>
+<div class="form-actions">
+<?php 
+if($ingreso->estadoingreso!='Pendiente')//echo Html::linkAction("veringreso/".$ingreso->id, 'Finalizar<i class="icon-ok-sign"></i>','class="btn btn-primary"')?>
+&nbsp;<?php echo Html::linkAction("ingresos", 'Volver ','class="btn"') ?>
+</div>
+</div>
+

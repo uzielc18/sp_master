@@ -1,0 +1,28 @@
+<div class="card">
+    <h1><em>Detalle de <?php echo $origen?></em></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<table class="table table-bordered table-striped">
+  <tr>
+  	<td width="17"><h4>Nº</h4></td>
+    <td width="67"><h4>Transportista </h4></td>
+    <td width="107"><h4>Transporte</h4></td>
+    <td width="28"><h4>Nº Doc</h4></td>
+    <td width="67"><h4>Destino</h4></td>
+    <td width="79"><h4>Cliente/Proveedor</h4></td>
+  </tr>
+<?php $n=0;
+foreach($detalles as $item){ $n++;?>
+  <tr>
+  	<td><?php echo $n?></td>
+    <td><?php echo $item->chofer?></td>
+    <td><?php echo $item->carro?></td>
+    <td><?php echo $item->numero?></td>
+    <td><?php echo $item->destino?></td>
+    
+    <td><?php echo $item->cliente?></td>
+  </tr>
+<?php }?>
+</table>

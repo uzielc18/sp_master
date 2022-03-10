@@ -1,0 +1,495 @@
+<?php
+$simbolo="S/. ";
+
+switch ($monedas)
+{
+	case 1: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES'; break;
+	case 2: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 4: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
+	case 5: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
+	case 0: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
+}
+Session::get('INGRESO_ID');
+
+View::content();
+echo Tag::js('jquery/jquery.tokeninput');
+Tag::css('token-input');?>
+<script type="text/javascript">	
+$(document).ready(function()
+{
+	$(".page").click(function(){
+		var n = $("#numero").val();
+		if($("#numero").val().length < 1){
+		//alert('Debe ingresar un numero de documento para poder continuar');
+		$("#alert").html('Debe ingresar un numero de documento para poder continuar');
+		$("#numero").focus();
+		}else
+		{
+			$("#alert").html('');
+		}
+		});
+});
+
+
+/*
+CONVERTIR NUMERO SEN LETRAS
+*/
+// Funcin modulo, regresa el residuo de una divisin 
+function mod(dividendo , divisor) 
+{ 
+  resDiv = dividendo / divisor ;  
+  
+  parteEnt = Math.floor(resDiv);            // Obtiene la parte Entera de resDiv 
+  
+  parteFrac = resDiv - parteEnt ;      // Obtiene la parte Fraccionaria de la divisin
+  
+  modulo = Math.round(parteFrac * divisor);  // Regresa la parte fraccionaria * la divisin (modulo) 
+  return modulo; 
+} // Fin de funcin mod
+
+// Funcin ObtenerParteEntDiv, regresa la parte entera de una divisin
+function ObtenerParteEntDiv(dividendo , divisor) 
+{ 
+  resDiv = dividendo / divisor ;  
+  parteEntDiv = Math.floor(resDiv); 
+  return parteEntDiv; 
+} // Fin de funcin ObtenerParteEntDiv
+
+// function fraction_part, regresa la parte Fraccionaria de una cantidad
+function fraction_part(dividendo , divisor) 
+{ 
+  resDiv = dividendo / divisor ;  
+  f_part = Math.floor(resDiv); 
+  return f_part; 
+} // Fin de funcin fraction_part
+
+
+// function string_literal conversion is the core of this program 
+// converts numbers to spanish strings, handling the general special 
+// cases in spanish language. 
+function string_literal_conversion(number) 
+{   
+   // first, divide your number in hundreds, tens and units, cascadig 
+   // trough subsequent divisions, using the modulus of each division 
+   // for the next. 
+
+   centenas = ObtenerParteEntDiv(number, 100); 
+   
+   number = mod(number, 100); 
+
+   decenas = ObtenerParteEntDiv(number, 10); 
+   number = mod(number, 10); 
+
+   unidades = ObtenerParteEntDiv(number, 1); 
+   number = mod(number, 1);  
+   string_hundreds="";
+   string_tens="";
+   string_units="";
+   // cascade trough hundreds. This will convert the hundreds part to 
+   // their corresponding string in spanish.
+   if(centenas == 1){
+      string_hundreds = "ciento ";
+   } 
+   
+   
+   if(centenas == 2){
+      string_hundreds = "doscientos ";
+   }
+    
+   if(centenas == 3){
+      string_hundreds = "trescientos ";
+   } 
+   
+   if(centenas == 4){
+      string_hundreds = "cuatrocientos ";
+   } 
+   
+   if(centenas == 5){
+      string_hundreds = "quinientos ";
+   } 
+   
+   if(centenas == 6){
+      string_hundreds = "seiscientos ";
+   } 
+   
+   if(centenas == 7){
+      string_hundreds = "setecientos ";
+   } 
+   
+   if(centenas == 8){
+      string_hundreds = "ochocientos ";
+   } 
+   
+   if(centenas == 9){
+      string_hundreds = "novecientos ";
+   } 
+   
+ // end switch hundreds 
+
+   // casgade trough tens. This will convert the tens part to corresponding 
+   // strings in spanish. Note, however that the strings between 11 and 19 
+   // are all special cases. Also 21-29 is a special case in spanish. 
+   if(decenas == 1){
+      //Special case, depends on units for each conversion
+      if(unidades == 1){
+         string_tens = "once";
+      }
+      
+      if(unidades == 2){
+         string_tens = "doce";
+      }
+      
+      if(unidades == 3){
+         string_tens = "trece";
+      }
+      
+      if(unidades == 4){
+         string_tens = "catorce";
+      }
+      
+      if(unidades == 5){
+         string_tens = "quince";
+      }
+      
+      if(unidades == 6){
+         string_tens = "dieciseis";
+      }
+      
+      if(unidades == 7){
+         string_tens = "diecisiete";
+      }
+      
+      if(unidades == 8){
+         string_tens = "dieciocho";
+      }
+      
+      if(unidades == 9){
+         string_tens = "diecinueve";
+      }
+   } 
+   //alert("STRING_TENS ="+string_tens);
+   
+   if(decenas == 2){
+      string_tens = "veinti";
+   }
+   if(decenas == 3){
+      string_tens = "treinta";
+   }
+   if(decenas == 4){
+      string_tens = "cuarenta";
+   }
+   if(decenas == 5){
+      string_tens = "cincuenta";
+   }
+   if(decenas == 6){
+      string_tens = "sesenta";
+   }
+   if(decenas == 7){
+      string_tens = "setenta";
+   }
+   if(decenas == 8){
+      string_tens = "ochenta";
+   }
+   if(decenas == 9){
+      string_tens = "noventa";
+   }
+   
+    // Fin de swicth decenas
+
+
+   // cascades trough units, This will convert the units part to corresponding 
+   // strings in spanish. Note however that a check is being made to see wether 
+   // the special cases 11-19 were used. In that case, the whole conversion of 
+   // individual units is ignored since it was already made in the tens cascade. 
+
+   if (decenas == 1) 
+   { 
+      string_units="";  // empties the units check, since it has alredy been handled on the tens switch 
+   } 
+   else 
+   { 
+      if(unidades == 1){
+         string_units = "un";
+      }
+      if(unidades == 2){
+         string_units = "dos";
+      }
+      if(unidades == 3){
+         string_units = "tres";
+      }
+      if(unidades == 4){
+         string_units = "cuatro";
+      }
+      if(unidades == 5){
+         string_units = "cinco";
+      }
+      if(unidades == 6){
+         string_units = "seis";
+      }
+      if(unidades == 7){
+         string_units = "siete";
+      }
+      if(unidades == 8){
+         string_units = "ocho";
+      }
+      if(unidades == 9){
+         string_units = "nueve";
+      }
+       // end switch units 
+   } // end if-then-else 
+   
+
+//final special cases. This conditions will handle the special cases which 
+//are not as general as the ones in the cascades. Basically four: 
+
+// when you've got 100, you dont' say 'ciento' you say 'cien' 
+// 'ciento' is used only for [101 >= number > 199] 
+if (centenas == 1 && decenas == 0 && unidades == 0) 
+{ 
+   string_hundreds = "cien " ; 
+}  
+
+// when you've got 10, you don't say any of the 11-19 special 
+// cases.. just say 'diez' 
+if (decenas == 1 && unidades ==0) 
+{ 
+   string_tens = "diez " ; 
+} 
+
+// when you've got 20, you don't say 'veinti', which is used 
+// only for [21 >= number > 29] 
+if (decenas == 2 && unidades ==0) 
+{ 
+  string_tens = "veinte " ; 
+} 
+
+// for numbers >= 30, you don't use a single word such as veintiuno 
+// (twenty one), you must add 'y' (and), and use two words. v.gr 31 
+// 'treinta y uno' (thirty and one) 
+if (decenas >=3 && unidades >=1) 
+{ 
+   string_tens = string_tens+" y "; 
+} 
+
+// this line gathers all the hundreds, tens and units into the final string 
+// and returns it as the function value.
+final_string = string_hundreds+string_tens+string_units;
+
+
+return final_string ; 
+
+} //end of function string_literal_conversion()================================ 
+
+// handle some external special cases. Specially the millions, thousands 
+// and hundreds descriptors. Since the same rules apply to all number triads 
+// descriptions are handled outside the string conversion function, so it can 
+// be re used for each triad. 
+
+
+function covertirNumLetras(number)
+{
+   
+  //number = number_format (number, 2);
+   number1=number;
+   //alert(number1+'letras');
+   //settype (number, "integer");
+   number1=number1.toString();
+   cent = number1.split('.');   
+   centavos = cent[1];
+   numerparchado=cent[0];
+   if (centavos == 0 || centavos == undefined){
+   centavos = "00";}
+
+   if (number == 0 || number == "") 
+   { // if amount = 0, then forget all about conversions, 
+      centenas_final_string=" cero "; // amount is zero (cero). handle it externally, to 
+      // function breakdown 
+  } 
+   else 
+   { 
+   
+     millions  = ObtenerParteEntDiv(number, 1000000); // first, send the millions to the string 
+      number = mod(numerparchado, 1000000);           // conversion function 
+      
+     if (millions != 0)
+      {                      
+      // This condition handles the plural case 
+         if (millions == 1) 
+         {              // if only 1, use 'millon' (million). if 
+            descriptor= " millon ";  // > than 1, use 'millones' (millions) as 
+            } 
+         else 
+         {                           // a descriptor for this triad. 
+              descriptor = " millones "; 
+            } 
+      } 
+      else 
+      {    
+         descriptor = " ";                 // if 0 million then use no descriptor. 
+      } 
+      millions_final_string = string_literal_conversion(millions)+descriptor; 
+          
+      
+      thousands = ObtenerParteEntDiv(number, 1000);  // now, send the thousands to the string 
+        number = mod(number, 1000);            // conversion function. 
+      //print "Th:".thousands;
+     if (thousands != 1) 
+      {                   // This condition eliminates the descriptor 
+         thousands_final_string =string_literal_conversion(thousands) + " mil "; 
+       //  descriptor = " mil ";          // if there are no thousands on the amount 
+      } 
+      if (thousands == 1)
+      {
+         thousands_final_string = " mil "; 
+     }
+      if (thousands < 1) 
+      { 
+         thousands_final_string = " "; 
+      } 
+  
+      // this will handle numbers between 1 and 999 which 
+      // need no descriptor whatsoever. 
+
+     centenas  = number;                     
+      centenas_final_string = string_literal_conversion(centenas) ; 
+      
+   } //end if (number ==0) 
+
+   /*if (ereg("un",centenas_final_string))
+   {
+     centenas_final_string = ereg_replace("","o",centenas_final_string); 
+   }*/
+   //finally, print the output. 
+
+   /* Concatena los millones, miles y cientos*/
+   cad = millions_final_string+thousands_final_string+centenas_final_string; 
+   
+   /* Convierte la cadena a Maysculas*/
+   cad = cad.toUpperCase();       
+
+   if (centavos.length>2)
+   {   
+      if(centavos.substring(2,3)>= 5){
+         centavos = centavos.substring(0,1)+(parseInt(centavos.substring(1,2))+1).toString();
+      }   else{
+        centavos = centavos.substring(0,2);
+       }
+   }
+
+   /* Concatena a los centavos la cadena "/100" */
+   if (centavos.length==1)
+   {
+      centavos = centavos+"0";
+   }
+   centavos = centavos+ "/100"; 
+   
+   if (number == 1)
+   {
+      moneda = " <?php echo $monedas_nombre?> ";  
+   }
+   else
+   {
+      moneda = " <?php echo $monedas_nombre?>  ";  
+   }
+   /* Regresa el número en cadena entre paréntesis y con tipo de moneda y la fase M.N.*/
+  return ('SON: '+cad+' CON '+centavos+" <?php echo $monedas_nombre?> ");
+}
+/*INICIO */
+<?php echo Scriptingresos::script(Session::get('DOC_CODIGO'),$simbolo,$totalconigv,$igv,$cliente_id,$nombre,$cuantagastos,$cuantagastos_name,$cuentaporpagar,$cuentaporpagar_name,$module_name)?>
+/*FIN*/
+</script>
+<style type="text/css">
+/*.container {
+  width: 1124px;
+}*/
+/*.flotante{position:relative; width:350px; margin:0 auto; z-index:99999;} */
+.simbolo
+{
+	position:absolute;
+	float:left;
+	margin-left:-15px !important;
+}
+.table th
+{
+	font-size:12px;
+	text-align:center;
+}
+#items .item-row td{
+	font-size:10px !important;
+	padding-left:15px !important;
+	}
+#items .item-row input[type="text"]{
+	font-size:10px !important;
+	padding:0;
+	}
+#paid
+{
+	width:80% !important;
+}
+#glosa
+{
+	width:99% !important;
+}
+.page ul {
+margin:0 !important;
+}
+</style>
+<div class="card">
+<h1><?php echo Session::get('DOC_NOMBRE')?> <?php //echo "id--->".Session::get('INVENTARIO_ID')?></h1>
+</div>
+
+<div class="card-body"> 
+
+<?php 
+/* ID DE LOS INGRESOS ES INVENTARIO*/
+echo Form::open('','post','id="inventarios"');?>
+    <?php echo Form::hidden('id')?>
+    <?php echo Form::hidden('totalenletras')?>
+   <table width="75%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+     <tr>
+      	<th align="left" valign="top"><span class="meta-head">Serie-Número:</span></th>
+      	<td align="left" valign="top"><?php if(Session::get('DOC_CODIGO')!='101'){echo Form::text('serie','size="4" required="required" ',"001")?>
+-
+	<?php } echo Form::text('numero','size="14"')?>*
+    <br /><span id="alert" style="color:red; font-size:9px;"></span> </td>
+      	<th align="left" valign="top" class="meta-head">F. Emision:</th>
+      	<td align="left" valign="top"><?php echo Calendar::selector('femision','required="required"');?></td>
+      	</tr>
+     <tr>
+     	<th width="65" align="left" valign="top" class="meta-head">Moneda:</th>
+        <td width="51" align="left" valign="top"><?php echo Form::dbSelect('monedas','nombre',array('tesmonedas','find','aclempresas_id='.Session::get("EMPRESAS_ID")),'Seleccione...','required="required" ')?> *</td>
+     	<th width="74" align="left" valign="top">Proveedor:</th>
+        <td width="183" align="left" valign="top"><input id="CL" type="text" />
+			<?php echo Form::hidden('cliente_id')?></td>
+       </tr>
+      <?php echo Scripthead::head(Session::get('DOC_CODIGO'),$simbolo,$totalconigv,$igv)?>
+    </table>
+	<label><strong>Glosa:</strong></label>
+    
+  <?php 
+  $placeholder='Glosa, Comentario u Observacion del Documento';
+  if(Session::get('DOC_CODIGO')=='09')
+  {
+	  $placeholder='Glosa, Comentario u Observacion del Documento';
+	  //$placeholder="HILOS: 75/34 POL PA. PESM.TEXT.CRUDO, ANCHO: 1.56 m, #HILOS: 12800, METROS: 1500, TOTAL: 325.20, PLEGADORES: 11 Y 113";
+  }
+  if(Session::get('DOC_CODIGO')=='09' || Session::get('DOC_CODIGO')=='01')echo Form::textArea('glosa','placeholder="'.$placeholder.'"');?>
+	 <?php echo Form::hidden('totalconigv');?>
+            <?php echo Form::hidden('igv');?>
+        <?php echo Form::close();
+		/*echo Session::get('DOC_CODIGO')*/
+		if(empty($npedido))$pedido='';else $pedido=$npedido;
+		?>
+<table width="70%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-striped" id="items">
+		  <?php echo Documentos::doc($detalles,Session::get('DOC_CODIGO'),$DETALLE,$simbolo,$igv,$subt,$subtotal,$pedido)?>
+      <tr>
+     	<td colspan="5">&nbsp;</td>
+       </tr>
+  </table>
+    <div style="text-align:left; width: 68%; float: left;"id="moneda_en_letras"><?php echo $totalenletras?></div>
+<div class="form-actions">
+    <?php echo Html::linkAction("ver/", 'Grabar!'.Session::get('DOC_NOMBRE'),'class="btn btn-primary grabar_form" onclik="grabar()"') ?>&nbsp;<?php echo Html::linkAction("listado", 'Cancelar ','class="btn btn"') ?>
+</div>
+        <div id="loading" style="display:none;"><img src="/img/spin.gif" /></div>
+     <div style="clear:both"></div>
+</div>

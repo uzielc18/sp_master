@@ -1,0 +1,61 @@
+<div class="card">
+	<h1><?php echo $titulo?>r<span><?php echo $empresa->razonsocial?></span></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="form-actions">
+<?php echo Menu::menuLetras($action_name);?>
+</div>
+<?php echo Sp::imprimir('Letras sin Numero Unico de Pago - ','P',array("W"=>1,"P"=>1,"EX"=>1));?> 
+
+<div id="ver_resultado"></div>
+<div class="card-body">
+<table id="exportar_excel" width="90%" border="0" align="center" cellpadding="00" cellspacing="00" class="table table-bordered table-striped">
+<caption>Letras sin Numero Unico de Pago</caption>
+  <tr>
+  	<td width="17">Nº</td>
+    <td width="124">Proveedor<?php echo Sp::order_campo($action_name,'t.tesdatos_id');?></td>
+	<td width="70">Nro Doc. </td>
+	<td width="88">F. Emision<?php echo Sp::order_campo($action_name,'t.femision');?></td>
+    <td width="79">F. Vto.<?php echo Sp::order_campo($action_name,'t.fvencimiento');?></td>
+    <td width="82">Monto</td>
+    <td width="98" class="no_imprimir">Acciones</td>
+  </tr>
+<?php $number=0;
+foreach($salidas as $item){ 
+$simbolo="S/. ";
+
+switch ($item->getTessalidas()->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+
+$number++;?>
+  <tr id="<?php echo $item->id?>" title="<?php echo $item->estadoletras?>">
+  	<td height="20" align="right"><?php echo $number?> <?php echo $item->tesmonedas_id?></td>
+  	<td height="20" align="left"><?php echo $item->getTessalidas()->getTesdatos()->razonsocial?></td>
+	<td height="20" align="center"><?php 
+	$a=$item->numerodeletra;	
+	$b=strlen($a);
+	if($b>=6){$a=substr($a, 0, -2);}
+	echo $a?><?Php if(!empty($item->nrenovacion))echo $item->nrenovacion; else echo "00";?></td>
+	<td height="20" align="center"><?php echo Sp::formatFecha('%d/%m/%Y',$item->getTessalidas()->femision)?><?php //echo $item->getTesingresos()->femision?></td>
+    <td align="center"><?php echo Sp::formatFecha('%d/%m/%Y',$item->getTessalidas()->fvencimiento)?><?php //echo $item->getTesingresos()->fvencimiento?></td>
+    <td align="right">
+    <?php echo $simbolo?>  <?php echo number_format($item->getTessalidas()->totalconigv,2,'.',' ')?>
+	    </td>
+    <td align="right" class="no_imprimir">
+    <?php echo Html::linkAction('editar/'.$item->id.'/',Html::img("figuras/editar.png",'VER','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Editar  !"','')?> 
+	<?php echo Html::linkAction('letrara/'.$item->id.'/',Html::img("figuras/ver.png",'VER','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Ver para Imprimir formato Nuevo !"','')?>
+	<?php if($item->estadoletras=='ACEPTADO')echo Html::linkAction('ingresarnumero/'.$item->id.'/',Html::img("figuras/facturar.png",'VER','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Clic! para registrar la LETRA!!"','')?>
+    <?php echo Html::linkAction('eliminar_letras_r/'.$item->id,'<i class="icon-remove"></i>')?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+</div>

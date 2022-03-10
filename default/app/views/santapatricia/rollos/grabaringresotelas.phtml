@@ -1,0 +1,12 @@
+<?Php View::content()?>
+<?php echo Ajax::form('guia');?>
+<?php echo Form::hidden('detalleingreso.id');?>
+<?php echo Form::hidden('detalleingreso.tesingresos_id');?>
+ <div class="input-prepend">
+    <span class="add-on">Metros: </span>
+    <?php echo Form::text('detalleingreso.cantidad','size="8"');?>&nbsp;
+    <span class="add-on">Kilos</span>
+    <?php echo Form::text('detalleingreso.pesoneto','size="4"');/*Prodetalleprocesos*/?>&nbsp;
+</div>
+<?php echo Form::submit('GRABAR','class="btn btn-primary"')?>
+<?php echo Form::close();?>

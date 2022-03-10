@@ -1,0 +1,86 @@
+<style type="text/css">
+.span_float
+{
+	float:right !important;
+	margin-left:0px;
+	margin-right:-5px;
+}
+</style>
+<div class="card">
+    <h1><em>Facturacion!<span><?php echo $titulo?> <?php echo Session::get('DOC_NOMBRE')?></span></em></h1>
+</div>
+<div id="mensajes_flash" >        
+    <?php View::content() ?>
+</div>
+<div class="form-actions" title="Clic - Volver">
+<?php echo Html::linkAction(" ", 'Volver ','class="btn"').' '.Html::linkAction("cargarsalida/15/crearsalidas_guias", 'Crear Guia de devolucion','class="btn btn-primary"') ?> 
+</div>
+<div class="card-body">
+<div id="ver_resultado"></div>
+<table width="75%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
+<caption style="font-size:14px; color:#333; font-weight:bold;">
+<pre><?php $titulos="Facturas Emitidas";if(Session::get('DOC_ID')==15)$titulos="Guias Emitidas"; echo $titulos?></pre>
+</caption>
+<thead>
+  <tr>
+ 	<th width="17">Nº</th>
+    <th width="108">Cliente</th>
+    <th width="54">Número Doc.</th>
+    <th width="200">Productos </th>
+    <th width="77">Sub-total</th>
+    <th width="60">Igv</th>
+    <th width="72">Total</th>
+    <th width="60">Acciones </th>
+  </tr>
+</thead>
+<?php $number=0;
+foreach($salidas as $item){ 
+$simbolo="S/. ";
+
+switch ($item->tesmonedas_id)
+{
+	case 1: $simbolo='S/. '; break;
+	case 2: $simbolo='$. '; break;
+	case 4: $simbolo='S/. '; break;
+	case 5: $simbolo='$. '; break;
+	case 0: $simbolo='S/. '; break;
+}
+
+$number++;?>
+  <tr id="<?php echo $item->id?>">
+  	<td height="20"><?php echo $number?></td>
+ 	<td height="20"><?php echo $item->getTesdatos()->razonsocial?></td>
+    <td><?php echo $item->serie?>-<?php echo $item->numero?></td>
+    <td>
+    <small style="color:#666; font-size:10px !important; font-style:italic; ">
+	<?php
+	$n=0;$m=0;
+	foreach($item->getTesdetallesalidas() as $det)
+	{
+		if($det->tesproductos_id!=0){$n++;
+		echo $det->getTesproductos()->nombre;if(count($item->getTesdetallesalidas())>$n){echo ", ";}
+		}else{
+			echo $det->concepto;
+			}
+	}
+	?>
+    </small>
+    </td>
+    <td><?php if($item->totalconigv!='NaN.00' && !empty($item->totalconigv))echo $simbolo.number_format($item->totalconigv-$item->igv,2,'.','');else echo('S/ 00.00');?></td>
+    <td><?php if($item->totalconigv!='NaN.00' && !empty($item->totalconigv))echo $simbolo.number_format($item->igv,2,'.','');else echo('S/ 00.00')?></td>
+    <td><?php if($item->totalconigv!='NaN.00' && !empty($item->totalconigv))echo $simbolo.number_format($item->totalconigv,2,'.','');else echo('S/ 00.00')?></td>
+  <td>
+   <?php if($item->estadosalida=="Editable"){
+	   echo Html::linkAction('cargarsalida/'.$item->id.'/agregardetalles_guia',Html::img("figuras/editar.png",'EDITAR','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Editar Guia - 001"');
+   }?>
+	<?php 
+	//echo $item->npedido;
+	$pos=strpos($item->npedido,'PA');	
+	echo Html::linkAction('cargarsalida/'.$item->id.'/versalida_guia',Html::img("figuras/ver.png",'Ver','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Ver e Imprimir Factura!"');
+	//echo Html::linkAction('cargarsalida/'.$item->id.'/agregardetalles_guia',Html::img("figuras/editar.png",'Ver','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Ver e Imprimir Factura!"');
+	?>
+    </td>
+  </tr>
+<?php }?>
+</table>
+</div>
