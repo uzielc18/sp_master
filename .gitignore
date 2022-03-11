@@ -27,3 +27,4 @@ default/public/temp
 .scannerwork
 sonar-project.properties
 composer.lock
+default/app/config/databases.php
