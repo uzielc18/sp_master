@@ -4,45 +4,15 @@
 <div class="card">
 	<div class="card-header">
 		<h3 class="card-title">Ventas por mes!</h3>
-
 		<div class="card-tools">
 			<?php echo Menu::menuVentas($action_name); ?>
 		</div>
 	</div>
 	<div class="card-body">
-		<div class="row">
-			<ul class="pagination pagination-sm">
-				<li class='page-item'><a href="#" class="page-link">Año
-						<select id="anio">
-							<?php
-							for ($i = 2011; $i <= Session::get('ANIO'); $i++) {
-								$selec = '';
-								if ($anio == $i) {
-									$selec = ' selected="selected"';
-								}
-								echo '<option value="' . $i . '" ' . $selec . '>' . $i . '</option>';
-							}
-							?>
-						</select>
-					</a>
-				</li>
-				<?php
-			$mes_actual = date('Y-m');
-			foreach ($meses as $clave => $mes) :
-				if ($anio . '-' . $clave <= $mes_actual) {
-					$class = '';
-					if ($mes_activo == $clave) $class = ' active';
-					echo '';
-					echo '<li class="page-item ' . $class . '"><a class="page-link enviar' . $class . '" id="mes-' . $mes . '" href="javascript:;" data-id="' . $anio . '-' . $clave . '-01">' . $mes . '</a></li>';
-					echo '';
-				}
-			endforeach; ?>
-			</ul>
-			
-		</div>
+		<?php echo Calendar::getMeses($anio,$meses,$mes_activo)?>
 		<div class="input-group mb-3">
                   <div class="input-group-prepend">
-                    <button type="button" class="btn btn-info">Buscar :</button>
+                    <button type="button" class="btn btn-sm">Buscar :</button>
                   </div>
                   <!-- /btn-group -->
 				  <input type="search" id="txtBuscar" autofocus="" placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." 

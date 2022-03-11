@@ -1,125 +1,133 @@
-<?php echo Tag::js('jquery/jquery.tokeninput');
-Tag::css('token-input');?>
+<div id="mensajes_flash">
+  <?php View::content() ?>
+</div>
 <div class="card">
-    <h1><em>Crear Factura por Adelanto<span><?php echo Session::get('DOC_NOMBRE')?></span></em></h1>
-</div>
-<div id="mensajes_flash" >        
-    <?php View::content() ?>
-</div>
-<div class="card-body">
-<div id="ver_resultado"></div>
-<?php echo Form::open(NULL,'POST','class="form-horizontal"')?>
-<?php echo Form::hidden('salida.id');?><?php echo Form::hidden('detalle.id');?><?php echo Form::hidden('salida.npedido');?>
-  <div class="control-group">
-    <label class="control-label" for="salida_serie">Serie - Numero:</label>
-    <div class="controls">
-      <?php echo Form::text('salida.serie','size="4" readonly="readonly"');?>-<?php echo Form::text('salida.numero','size="10"');?>
-    </div>
-  </div>  
-  <div class="control-group">
-    <label class="control-label" for="salida_tesmonedas_id">Moneda:</label>
-    <div class="controls">
-      <?php echo Form::dbSelect('salida.tesmonedas_id','simbolo,nombre',array("tesmonedas",'find','conditions: aclempresas_id='.Session::get('EMPRESAS_ID')));?>
+  <div class="card-header">
+    <h3 class="card-title">Crear Factura por Adelanto <?php echo Session::get('DOC_NOMBRE') ?></h3>
+    <div class="card-tools">
+      <?php echo Menu::menuVentas($action_name); ?>
     </div>
   </div>
-  <div class="control-group">
-    <label class="control-label" for="CL">Cliente</label>
-    :
-    <div class="controls">
-    	<div style="float:left; width:70%;"><input id="CL" /></div>
-      <?php echo Form::hidden('salida.tesdatos_id');?>
+  <div class="card-body">
+    <div id="ver_resultado"></div>
+    <?php echo Form::open(NULL, 'POST', 'class="form-horizontal"') ?>
+    <?php echo Form::hidden('salida.id'); ?><?php echo Form::hidden('detalle.id'); ?><?php echo Form::hidden('salida.npedido'); ?>
+
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label" for="salida_serie">Serie - Numero:</label>
+      <div class="col-sm-9">
+        <div class="row">
+
+          <div class="col-sm-4"><?php echo Form::text('salida.serie', 'class="form-control form-control-sm" size="4" readonly="readonly"'); ?></div>
+          <div class="col-sm-1 text-center">-</div>
+          <div class="col-sm-7"><?php echo Form::text('salida.numero', 'class="form-control form-control-sm" size="10"'); ?></div>
+
+        </div>
+      </div>
     </div>
-  </div>  
-  <div class="control-group">
-  <label class="control-label" for="salida_tesdatosdirecciones_id">Direccion de Fiscal:</label>
-  <div class="controls" id="direccion_fiscal">
-  
-  </div>
-  <div class="control-group">
-    <label class="control-label" for="salida_direccion_entrega">Direccion de Entrega:</label>
-    <div class="controls">
-      <?php echo Form::text('salida.direccion_entrega','class="span8"');//finiciotraslado?><span id="script_autocargar"></span>
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label" for="salida_hilodestino">Condiciones de Pago:</label>
+      <div class="col-sm-9">
+        <?php echo Form::dbSelect('salida.tescondicionespagos_id', 'nombre', array("tescondicionespagos", 'find'), 'Seleccione', 'class="form-control form-control-sm"'); ?>
+      </div>
     </div>
-  </div>
-  <div class="control-group">
-    <label class="control-label" for="salida_hilodestino">Condiciones de Pago:</label>
-    <div class="controls">
-      <?php echo Form::dbSelect('salida.tescondicionespagos_id','nombre',array("tescondicionespagos",'find'));?>
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label" for="salida_tesmonedas_id">Moneda:</label>
+      <div class="col-sm-9">
+        <?php echo Form::dbSelect('salida.tesmonedas_id', 'nombre', array("tesmonedas", 'find', 'conditions: aclempresas_id=' . Session::get('EMPRESAS_ID')), 'Seleccione', 'class="form-control form-control-sm"'); ?>
+      </div>
     </div>
-  </div>
-  <div class="control-group">
-    <label class="control-label" for="salida_femision">Fecha de Emision:</label>
-    <div class="controls">
-      <?php echo Calendar::selector('salida.femision');//finiciotraslado?>
+
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label" for="CL">Cliente</label>
+      <div class="col-sm-9">
+        <div><input id="CL" class="form-control form-control-sm" /></div>
+        <?php echo Form::hidden('salida.tesdatos_id'); ?>
+      </div>
     </div>
-  </div>
-  <div class="control-group">
-    <label class="control-label" for="salida_ordendecompra">Orden de compra:</label>
-    <div class="controls">
-      <div style="float:left; width:50%;"><?php echo Form::text('ordendecompra','');//finiciotraslado?></div>
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label" for="salida_tesdatosdirecciones_id">Direccion de Fiscal:</label>
+      <div class="col-sm-9" id="direccion_fiscal">
+      </div>
     </div>
-  </div>
-  <div class="control-group">
-    <label class="control-label" for="salida_direccion_entrega">Concepto:</label>
-    <div class="controls">
-      <?php echo Form::textArea('detalle.concepto','rows="7" cols="70"');//finiciotraslado?>
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label" for="salida_direccion_entrega">Direccion de Entrega:</label>
+      <div class="col-sm-9">
+        <?php echo Form::text('salida.direccion_entrega', 'class="form-control form-control-sm"'); //finiciotraslado
+        ?><span id="script_autocargar"></span>
+        <span id="script_autocargar"></span>
+      </div>
     </div>
+      <div class="form-group row">
+        <label class="col-sm-3 col-form-label" for="salida_femision">Fecha de Emision:</label>
+        <div class="col-sm-9">
+          <?php echo Calendar::selector('salida.femision','class="form-control form-control-sm"'); //finiciotraslado
+          ?>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-3 col-form-label" for="salida_ordendecompra">Orden de compra:</label>
+        <div class="col-sm-9">
+          <?php echo Form::text('ordendecompra', ''); //finiciotraslado
+                                              ?>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-3 col-form-label" for="salida_direccion_entrega">Concepto:</label>
+        <div class="col-sm-9">
+          <?php echo Form::textArea('detalle.concepto', 'class="form-control form-control-sm" rows="7" cols="70"'); //finiciotraslado
+          ?>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-sm-3 col-form-label" for="salida_direccion_entrega">IMPORTE sin IGV:</label>
+        <div class="col-sm-9">
+          <?php echo Form::text('detalle.importe', 'class="form-control form-control-sm qty"'); //finiciotraslado
+          ?>
+        </div>
+      </div>
   </div>
-  
-  <div class="control-group">
-    <label class="control-label" for="salida_direccion_entrega">IMPORTE sin IGV:</label>
-    <div class="controls">
-      <?php echo Form::text('detalle.importe','class="qty"');//finiciotraslado?>
-    </div>
-  </div>
-  
-  <div class="control-group">
-    <div class="controls">
-       <button type="submit" class="btn btn-primary">Siguiente</button> <?php echo Html::linkAction('facturas','Cancelar','class="btn"')?>
-    </div>
-  </div>
-<?php echo Form::close();?>
-</div>
-<script type="text/javascript">
-$(document).ready(function()
-{
-	$("#CL").tokenInput("/<?php echo $module_name?>/salidas/buscarcliente", 
-		{
-			tokenLimit: 1,
-			minChars: 2,
-			<?php if(!empty($salida->tesdatos_id)){?>
-			prePopulate: [ 
-						 {id: <?Php echo $salida->tesdatos_id?>, name: "<?php echo $salida->getTesdatos()->razonsocial?>"},
-						 ],
-			<?php }?>
-			onAdd: function (item){
-			   $("#salida_tesdatos_id").val(item.id);
-			   $( "#direccion_fiscal" ).load( "/<?php echo $module_name?>/salidas/direcciones_clientes/"+item.id );
-			   //$("#BC").hide();
-			   //GrabarCliente();
-			},
-			onDelete: function (item) {
-			}
-		});
-		$("#ordendecompra").tokenInput("/<?php echo $module_name?>/ventas/ordencompra", 
-		{
-			tokenLimit: 1,
-			minChars: 2,
-			<?php if(!empty($salida->ordendecompra)){?>
-			prePopulate: [ 
-						 {id: <?Php echo $salida->ordendecompra?>, name: '<?php echo $salida->getTesdatos()->razonsocial?> Nº<?php echo $salida->ordendecompra?>'},
-						 ],
-			<?php }?>
-			onAdd: function (item){
-			   var VAL=item.id;
-			   alert(item.id);
-			   //$("#salida_tesdatos_id").val(VAL);
-			   //$("#salida_direccion_entrega").val(DIR[1].replace(')',''));
-			   //$("#BC").hide();
-			   //GrabarCliente();
-			},
-			onDelete: function (item) {
-			}
-		});
-});
-</script>
+
+  <div class="card-footer"> <button type="submit" class="btn btn-primary float-righ">Siguiente</button> <?php echo Html::linkAction('facturas', 'Cancelar', 'class="btn float-righ"') ?></div>
+      <?php echo Form::close(); ?>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $("#CL").tokenInput("/<?php echo $module_name ?>/salidas/buscarcliente", {
+        tokenLimit: 1,
+        minChars: 2,
+        <?php if (!empty($salida->tesdatos_id)) { ?>
+          prePopulate: [{
+            id: <?Php echo $salida->tesdatos_id ?>,
+            name: "<?php echo $salida->getTesdatos()->razonsocial ?>"
+          }, ],
+        <?php } ?>
+        onAdd: function(item) {
+          $("#salida_tesdatos_id").val(item.id);
+          $("#direccion_fiscal").load("/<?php echo $module_name ?>/salidas/direcciones_clientes/" + item.id);
+          //$("#BC").hide();
+          //GrabarCliente();
+        },
+        onDelete: function(item) {}
+      });
+      $("#ordendecompra").tokenInput("/<?php echo $module_name ?>/ventas/ordencompra", {
+        tokenLimit: 1,
+        minChars: 2,
+        <?php if (!empty($salida->ordendecompra)) { ?>
+          prePopulate: [{
+            id: <?Php echo $salida->ordendecompra ?>,
+            name: '<?php echo $salida->getTesdatos()->razonsocial ?> Nº<?php echo $salida->ordendecompra ?>'
+          }, ],
+        <?php } ?>
+        onAdd: function(item) {
+          var VAL = item.id;
+          alert(item.id);
+          //$("#salida_tesdatos_id").val(VAL);
+          //$("#salida_direccion_entrega").val(DIR[1].replace(')',''));
+          //$("#BC").hide();
+          //GrabarCliente();
+        },
+        onDelete: function(item) {}
+      });
+    });
+  </script>

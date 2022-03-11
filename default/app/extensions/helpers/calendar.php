@@ -191,4 +191,36 @@ class Calendar
                       </script>";
 		return $code;
 	}
+	public static function getMeses($anio,$meses,$mes_activo){
+		$code='<div class="row">
+			<ul class="pagination pagination-sm">
+				<li class="page-item"><a href="#" class="page-link">Año
+						<select id="anio">';
+							
+							for ($i = 2011; $i <= Session::get('ANIO'); $i++) {
+								$selec = '';
+								if ($anio == $i) {
+									$selec = ' selected="selected"';
+								}
+								$code.='<option value="' . $i . '" ' . $selec . '>' . $i . '</option>';
+							}
+		$code.='
+						</select>
+					</a>
+				</li>';
+			$mes_actual = date('Y-m');
+			foreach ($meses as $clave => $mes) :
+				if ($anio . '-' . $clave <= $mes_actual) {
+					$class = '';
+					if ($mes_activo == $clave) $class = ' active';
+					$code.='<li class="page-item ' . $class . '"><a class="page-link enviar' . $class . '" id="mes-' . $mes . '" href="javascript:;" data-id="' . $anio . '-' . $clave . '-01">' . $mes . '</a></li>';
+					
+				}
+			endforeach;
+			$code.='</ul>
+			
+		</div>';
+
+		return $code;
+	}
 }

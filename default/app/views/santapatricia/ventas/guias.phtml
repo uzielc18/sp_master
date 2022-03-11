@@ -11,13 +11,13 @@
 
 	</div>
 
-	<div class="form-actions">
-		<?php echo Html::linkAction($url . "/", 'Nueva ' . Session::get('DOC_NOMBRE'), 'class="btn btn-primary"') ?> <?php echo Html::linkAction("guias_mes", 'Guias por mes ', 'class="btn btn-info"') ?>
+	<div class="col-sm-12">
+		
 	</div>
 	<div class="card-body">
 		<div id="ver_resultado"></div>
 		<table id="exportar_excel" width="99%" class="table-bordered table-striped">
-			<caption>Guias Generadas para Facturar! (Telas)</caption>
+			<caption>Guias Generadas para Facturar! (Telas) <?php echo Html::linkAction($url . "/", '<i class="fa fa-plus"></i>', 'class="btn btn-primary float-right"') ?></caption>
 			<thead>
 				<tr>
 					<th width="17">Nº</th>
@@ -73,7 +73,7 @@
 							?>
 						</small>
 					</td>
-					<td align="center">
+					<td>
 						<?php if ($item->estadosalida == "Editable" or Auth::get('aclroles_id') == 4 or Auth::get('aclroles_id') == 2) echo Html::linkAction('cargarsalida/' . $item->id . '/', Html::img("figuras/editar.png", 'EDITAR', 'style="width: 20px;margin-left:1px;margin-right:1px;"'), 'title="Editar Guia - 002 - Hilos"') ?>
 						<?php echo Html::linkAction('cargarsalida/' . $item->id . '/versalida', Html::img("figuras/ver.png", 'Ver', 'style="width: 20px;margin-left:1px;margin-right:1px;"'), 'title="Ver e Imprimir Guia - 002 - Hilos"') ?>
 						<?php //echo Html::linkAction("borrar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:1px;margin-right:1px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');

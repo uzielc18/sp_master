@@ -1,149 +1,145 @@
-
-<div id="mensajes_flash" >        
-    <?php View::content() ?>
+<div id="mensajes_flash">
+  <?php View::content() ?>
 </div>
 <div class="card">
   <div class="card-header">
-    <h3 class="card-title">Crear Guia para Venta <span><?php echo Session::get('DOC_NOMBRE')?></span></h3>
+    <h3 class="card-title">Crear Guia para Venta <span><?php echo Session::get('DOC_NOMBRE') ?></span></h3>
   </div>
 
-<?php echo Form::open(NULL,'POST','class="form-horizontal"')?>
-<div class="card-body">
-<div id="ver_resultado"></div>
-  <div class="form-group row">
-    <label class="col-sm-3 col-form-label" for="salida_serie">Serie - Numero:</label>
-    <div class="col-sm-9">
-      <div class="row">
-        
-      <div class="col-sm-4"><?php echo Form::text('salida.serie','class="form-control form-control-sm" size="4" readonly="readonly"');?></div>
-      <div class="col-sm-1 text-center">-</div>
-      <div class="col-sm-7"><?php echo Form::text('salida.numero','class="form-control form-control-sm" size="10"');?></div>
+  <?php echo Form::open(NULL, 'POST', 'class="form-horizontal"') ?>
+  <div class="card-body">
+    <div id="ver_resultado"></div>
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label" for="salida_serie">Serie - Numero:</label>
+      <div class="col-sm-9">
+        <div class="row">
 
+          <div class="col-sm-4"><?php echo Form::text('salida.serie', 'class="form-control form-control-sm" size="4" readonly="readonly"'); ?></div>
+          <div class="col-sm-1 text-center">-</div>
+          <div class="col-sm-7"><?php echo Form::text('salida.numero', 'class="form-control form-control-sm" size="10"'); ?></div>
+
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label" for="salida_serie">Numero de Pedido:</label>
+      <div class="col-sm-9">
+        <?php echo Form::text('salida.npedido', 'class="form-control form-control-sm" size="10" readonly="readonly"'); ?>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label" for="salida_serie">Serie y Numero de Factura:</label>
+      <div class="col-sm-9">
+        <?php echo Form::text('salida.numerofactura', 'class="form-control form-control-sm" size="20"'); ?>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label" for="salida_tesmonedas_id">Moneda:</label>
+      <div class="col-sm-9">
+        <?php echo Form::dbSelect('salida.tesmonedas_id', 'nombre', array("tesmonedas", 'find', 'conditions: aclempresas_id=' . Session::get('EMPRESAS_ID')), 'Seleccione', 'class="form-control form-control-sm"'); ?>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label" for="salida_hilodestino">Condiciones de Pago:</label>
+      <div class="col-sm-9">
+        <?php echo Form::dbSelect('salida.tescondicionespagos_id', 'nombre', array("tescondicionespagos", 'find'), 'Seleccione', 'class="form-control form-control-sm"'); ?>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label" for="CL">Cliente</label>
+      <div class="col-sm-9">
+        <div><input id="CL" class="form-control form-control-sm" /></div>
+        <?php echo Form::hidden('salida.tesdatos_id'); ?>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label" for="salida_tesdatosdirecciones_id">Direccion de Fiscal:</label>
+      <div class="col-sm-9" id="direccion_fiscal">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label" for="salida_direccion_entrega">Direccion de Entrega:</label>
+      <div class="col-sm-9">
+        <?php echo Form::text('salida.direccion_entrega', 'class="form-control form-control-sm"'); //finiciotraslado
+        ?><span id="script_autocargar"></span>
+        <span id="script_autocargar"></span>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label" for="salida_finiciotraslado">Fecha de Traslado:</label>
+      <div class="col-sm-9">
+        <?php echo Calendar::selector('salida.finiciotraslado', 'class="form-control form-control-sm"'); //finiciotraslado
+        ?>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label" for="salida_femision">Fecha de Emision:</label>
+      <div class="col-sm-9">
+        <?php echo Calendar::selector('salida.femision', 'class="form-control form-control-sm"'); //finiciotraslado
+        ?>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label" for="inputEmail">Transportista: <?php echo Ajax::link($module_name . '/transportistas/crear_externo', 'Transportista Externo!', 'otro', 'ventana') ?></label>
+      <div class="col-sm-9">
+        <?php echo Form::text('prodetalletransportes.protransportistas_id', 'class="form-control form-control-sm"') ?>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label" for="inputEmail">Transporte: <?php echo Ajax::link($module_name . '/transportes/crear_externo', 'Transporte Externo!', 'otro', 'ventana') ?></label>
+      <div class="col-sm-9">
+        <?php echo Form::text('prodetalletransportes.protransportes_id') ?>
       </div>
     </div>
   </div>
-  <div class="form-group row">
-    <label class="col-sm-3 col-form-label" for="salida_serie">Numero de Pedido:</label>
-    <div class="col-sm-9">
-      <?php echo Form::text('salida.npedido','class="form-control form-control-sm" size="10" readonly="readonly"');?>
-    </div>
+  <div class="card-footer">
+    <button type="submit" class="btn btn-primary float-right">Siguiente</button> <?php echo Html::linkAction('guias/15', 'Cancelar', 'class="btn float-righ"') ?>
   </div>
-  
-  <div class="form-group row">
-    <label class="col-sm-3 col-form-label" for="salida_serie">Serie y Numero de Factura:</label>
-    <div class="col-sm-9">
-      <?php echo Form::text('salida.numerofactura','class="form-control form-control-sm" size="20"');?>
-    </div>
-  </div>
-  
-  <div class="form-group row">
-    <label class="col-sm-3 col-form-label" for="salida_tesmonedas_id">Moneda:</label>
-    <div class="col-sm-9">
-      <?php echo Form::dbSelect('salida.tesmonedas_id','nombre',array("tesmonedas",'find','conditions: aclempresas_id='.Session::get('EMPRESAS_ID')),'Seleccione','class="form-control form-control-sm"');?>
-    </div>
-  </div>
-  <div class="form-group row">
-    <label class="col-sm-3 col-form-label" for="salida_hilodestino">Condiciones de Pago:</label>
-    <div class="col-sm-9">
-      <?php echo Form::dbSelect('salida.tescondicionespagos_id','nombre',array("tescondicionespagos",'find'),'Seleccione','class="form-control form-control-sm"');?>
-    </div>
-  </div>
-  <div class="form-group row">
-    <label class="col-sm-3 col-form-label" for="CL">Cliente</label>
-    <div class="col-sm-9">
-    	<div><input id="CL" class="form-control form-control-sm" /></div>
-      <?php echo Form::hidden('salida.tesdatos_id');?>
-    </div>
-  </div>  
-  <div class="form-group row">
-  <label class="col-sm-3 col-form-label" for="salida_tesdatosdirecciones_id">Direccion de Fiscal:</label>
-  <div class="col-sm-9" id="direccion_fiscal">
-  
-  </div>
-  </div>
-  <div class="form-group row">
-    <label class="col-sm-3 col-form-label" for="salida_direccion_entrega">Direccion de Entrega:</label>
-    <div class="col-sm-9">
-      <?php echo Form::text('salida.direccion_entrega','class="form-control form-control-sm"');//finiciotraslado?><span id="script_autocargar"></span>
-    <span id="script_autocargar"></span>
-    </div>
-  </div>
-  <div class="form-group row">
-    <label class="col-sm-3 col-form-label" for="salida_finiciotraslado">Fecha de Traslado:</label>
-    <div class="col-sm-9">
-      <?php echo Calendar::selector('salida.finiciotraslado','class="form-control form-control-sm"');//finiciotraslado?>
-    </div>
-  </div>
-  <div class="form-group row">
-    <label class="col-sm-3 col-form-label" for="salida_femision">Fecha de Emision:</label>
-    <div class="col-sm-9">
-      <?php echo Calendar::selector('salida.femision','class="form-control form-control-sm"');//finiciotraslado?>
-    </div>
-  </div>
-  <div class="form-group row">
-    <label class="col-sm-3 col-form-label" for="inputEmail">Transportista: <?php echo Ajax::link($module_name.'/transportistas/crear_externo','Transportista Externo!','otro','ventana')?></label>
-    <div class="col-sm-9">
-      <?php echo Form::text('prodetalletransportes.protransportistas_id','class="form-control form-control-sm"')?>
-    </div>
-  </div>
-  <div class="form-group row">
-    <label class="col-sm-3 col-form-label" for="inputEmail">Transporte: <?php echo Ajax::link($module_name.'/transportes/crear_externo','Transporte Externo!','otro','ventana')?></label>
-    <div class="col-sm-9">
-      <?php echo Form::text('prodetalletransportes.protransportes_id')?>
-    </div>
-  </div>
-  <div class="form-group row">
-    <div class="col-sm-9">
-       <button type="submit" class="btn btn-primary">Siguiente</button> <?php echo Html::linkAction('guias/15','Cancelar','class="btn"')?>
-    </div>
-  </div>
-<?php echo Form::close();?>
-</div>
 
-<script type="text/javascript">
-$(document).ready(function()
-{
-	$("#CL").tokenInput("/<?php echo $module_name?>/salidas/buscarcliente", 
-		{
-			tokenLimit: 1,
-			minChars: 2,
-	
-			onAdd: function (item){
-			   $("#salida_tesdatos_id").val(item.id);
-			   $( "#direccion_fiscal" ).load( "/<?php echo $module_name?>/salidas/direcciones_clientes/"+item.id );
-			   //GrabarCliente();
-			},
-			onDelete: function (item) {
-			}
-		});
-		
-		/*transporte*/
-		$("#prodetalletransportes_protransportes_id").tokenInput("/<?php echo $module_name?>/salidas/transportes", 
-		{
-			tokenLimit: 1,
-			minChars: 2,
-		});
-		
-		/*transportistas*/
-		
-		$("#prodetalletransportes_protransportistas_id").tokenInput("/<?php echo $module_name?>/salidas/transportistas", 
-		{
-			tokenLimit: 1,
-			minChars: 2,
-	    });
-		$('.ventana').on("click",function(){
-		$("#myModal").modal("show");});
-});
-</script>
-<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-    <h3 id="myModalLabel">Nuevo </h3>
+  <?php echo Form::close(); ?>
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $("#CL").tokenInput("/<?php echo $module_name ?>/salidas/buscarcliente", {
+        tokenLimit: 1,
+        minChars: 2,
+
+        onAdd: function(item) {
+          $("#salida_tesdatos_id").val(item.id);
+          $("#direccion_fiscal").load("/<?php echo $module_name ?>/salidas/direcciones_clientes/" + item.id);
+          //GrabarCliente();
+        },
+        onDelete: function(item) {}
+      });
+
+      /*transporte*/
+      $("#prodetalletransportes_protransportes_id").tokenInput("/<?php echo $module_name ?>/salidas/transportes", {
+        tokenLimit: 1,
+        minChars: 2,
+      });
+
+      /*transportistas*/
+
+      $("#prodetalletransportes_protransportistas_id").tokenInput("/<?php echo $module_name ?>/salidas/transportistas", {
+        tokenLimit: 1,
+        minChars: 2,
+      });
+      $('.ventana').on("click", function() {
+        $("#myModal").modal("show");
+      });
+    });
+  </script>
+  <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h3 id="myModalLabel">Nuevo </h3>
+    </div>
+    <div class="modal-body" id="otro">
+    </div>
+    <div class="modal-footer">
+    </div>
   </div>
-  <div class="modal-body" id="otro">
-  </div>
-  <div class="modal-footer">
-  </div>
-</div>
 
 </div>

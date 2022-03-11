@@ -7,11 +7,15 @@
 	margin-right:-5px;
 }
 </style>
-<div class="card">
-    <h1>Facturacion!<span><?php echo $titulo?> <?php echo Session::get('DOC_NOMBRE')?></span></h1>
-</div>
 <div id="mensajes_flash" >        
     <?php View::content() ?>
+</div>
+<div class="card">
+<div class="card-header">
+    <h3 class="card-title">Facturacion! <?php echo $titulo?> <?php echo Session::get('DOC_NOMBRE')?></h3>
+    <div class="card-tools">
+      <?php echo Menu::menuVentas($action_name); ?>
+    </div>
 </div>
 
 <div class="form-actions">
@@ -157,4 +161,7 @@ $(document).ready(function(){
 });
 </script>
 <?php }?>
+</div>
+
+	
 </div>

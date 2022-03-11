@@ -1040,19 +1040,25 @@ public function versalida_servicio()
 	
 public function ordencompra()
 {
-	$this->data='';
-		$q=$_GET['q'];
-		$obj = new Tesordendecompras();
-		$results = $obj->find('conditions: estado=1 AND origenorden="externo" and codigo like "%'.$q.'%" AND aclempresas_id='.Session::get('EMPRESAS_ID'));
-		foreach ($results as $value)
-		{
-			$id=(string)$value->codigo;
-			$name=$value->getTesdatos()->razonsocial.' Nº'.$value->codigo;
-			$json = array();
-			$json['id'] =$id;
-			$json['name'] = $name;
-			$this->data[] = $json;
-		}
+	try{
+		
+	$this->data=[];
+	$q=$_GET['q'];
+	$obj = new Tesordendecompras();
+	$results = $obj->find('conditions: estado=1 AND origenorden="externo" and codigo like "%'.$q.'%" AND aclempresas_id='.Session::get('EMPRESAS_ID'));
+	foreach ($results as $value)
+	{
+		$id=(string)$value->codigo;
+		$name=$value->getTesdatos()->razonsocial.' Nº'.$value->codigo;
+		$json = array();
+		$json['id'] =$id;
+		$json['name'] = $name;
+		$this->data[] = $json;
+	}
+	}catch(\Exception $e){
+		var_dump($e);
+		exit();
+	}
  
 }
 /*Actualizar el detalle la salida obteniedo la url y redireccionar*/

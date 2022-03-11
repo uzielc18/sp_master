@@ -1,16 +1,16 @@
-<br />
 <div class="card">
-    <h1>Facturacion!</h1>
-</div>
- <div class="form-actions" align="center">
-<?php echo Html::linkAction("", 'Volver ','class="btn"') ?>
- - <?php echo Html::linkAction("cargar_doc/7/facturas", 'Facturas de telas','class="btn btn-primary"') ?>
- - <?php echo Html::linkAction("cargar_doc/7/factura_adelanto", 'Factura por Adelanto ','class="btn btn-primary"') ?>
- - <?php echo Html::linkAction("cargar_doc/7/listado_servicio", 'Facturas por Servicio','class="btn btn-primary"') ?>
- - <?php echo Html::link($module_name."/ventasproductos", 'Facturas de productos','class="btn btn-primary"') ?>
-<?php /*?><a href="/<?Php echo $module_name;?>/<?Php echo $controller_name;?>/index/141" class="btn btn-primary">Urdido</a>
-<a href="/<?Php echo $module_name;?>/<?Php echo $controller_name;?>/index/142" class="btn btn-primary">Control de Calidad</a>
-<a href="/<?Php echo $module_name;?>/<?Php echo $controller_name;?>/index/143" class="btn btn-primary">Estampado</a>
-<a href="/<?Php echo $module_name;?>/<?Php echo $controller_name;?>/index/144" class="btn btn-primary">Soporte</a>
-<a href="/<?Php echo $module_name;?>/<?Php echo $controller_name;?>/index/163" class="btn btn-primary">Enconado</a><?php */?>
+    <div class="card-header">
+        <h3 class="card-title">Facturacion!</h3>
+		<div class="card-tools">
+			<?php echo Menu::menuVentas($action_name); ?>
+		</div>
+    </div>
+    <div class="card-body">
+        <div class="col-sm-12">
+            <?php echo Html::linkAction("cargar_doc/7/facturas", 'Facturas de telas', 'class="btn btn-primary"') ?>
+            - <?php echo Html::linkAction("cargar_doc/7/factura_adelanto", 'Factura por Adelanto ', 'class="btn btn-primary"') ?>
+            - <?php echo Html::linkAction("cargar_doc/7/listado_servicio", 'Facturas por Servicio', 'class="btn btn-primary"') ?>
+            - <?php echo Html::link($module_name . "/ventasproductos", 'Facturas de productos', 'class="btn btn-primary"') ?>
+        </div>
+    </div>
 </div>
