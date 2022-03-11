@@ -3,9 +3,9 @@
 </div>
 
 <div class="form-actions">
-<?php echo Html::link($module_name."/repuestos/ingresos/",'Ingreso','class="btn btn-info"') ?>   
-<?php echo Html::link($module_name."/repuestos/salidas/",'Salida','class="btn btn-success"') ?> 
-<?php foreach($tipos as $tipo):echo Html::link($module_name."/maquinas/index/".$tipo->id,$tipo->nombre,'class="btn btn-primary"'); endforeach; ?>
+<?php echo Html::link($module_name."/repuestos/ingresos/",'Ingreso','class="btn btn-xs btn-info"') ?>   
+<?php echo Html::link($module_name."/repuestos/salidas/",'Salida','class="btn btn-xs btn-success"') ?> 
+<?php foreach($tipos as $tipo):echo Html::link($module_name."/maquinas/index/".$tipo->id,$tipo->nombre,'class="btn btn-xs btn-primary"'); endforeach; ?>
 </div> 
 <?php View::content() ?>  
 <div class="card-body">
@@ -14,7 +14,7 @@ $a=0;
 foreach($maquinas as $maquina):
 $b=$maquina->m_id;
 ?>
-<?php if($a!=$b){$a=$maquina->m_id; if($a!=0){echo "<div class='clear'></div></div></div>";}?><h5><?php echo $maquina->maquina?><br></h5><?php echo Html::linkAction("agregarubicaciones/".$maquina->m_id,'Agregar Parte!','class="btn"');?>
+<?php if($a!=$b){$a=$maquina->m_id; if($a!=0){echo "<div class='clear'></div></div></div>";}?><h5><?php echo $maquina->maquina?><br></h5><?php echo Html::linkAction("agregarubicaciones/".$maquina->m_id,'Agregar Parte!','class="btn btn-xs"');?>
 <div style="border:solid 1px #e5e5e5; margin-bottom:18px; min-height:100px;"> 
   <div style="width:40%;" align="left">
   <?php echo Html::img("maquina/".$maquina->imagen,"","style='float:left;'");?>

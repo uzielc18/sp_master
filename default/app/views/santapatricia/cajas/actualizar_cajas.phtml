@@ -7,7 +7,7 @@
 {
 	$activo='';
 	if($tipo->id==$id_t_p)$activo=' btn-success';
-	echo Html::linkAction($action_name.'/'.$tipo->id,$tipo->nombre,'class="btn btn-mini'.$activo.'"').' ';
+	echo Html::linkAction($action_name.'/'.$tipo->id,$tipo->nombre,'class="btn btn-xs btn-mini'.$activo.'"').' ';
 }?>
 <?Php foreach($cajas as $c)
 {

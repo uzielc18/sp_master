@@ -5,7 +5,7 @@
     <?php View::content() ?>
 </div>
 <div class="form-actions">
-	<?php echo Html::linkAction("",'Volver','class="btn btn-secondary"')?>
+	<?php echo Html::linkAction("",'Volver','class="btn btn-xs btn-secondary"')?>
 </div>
 <div class="card-body">
 
@@ -36,11 +36,11 @@
     <td align="right">
     <?php 
 	$resta=number_format($fa->totalconigv,2,'.','')-number_format($fa->total,2,'.','');
-	if($resta<1.00)echo Html::linkAction('cambiar_estado/'.$fa->id,'Terminar' ,'class="btn-info"'); else echo $resta?>
+	if($resta<1.00)echo Html::linkAction('cambiar_estado/'.$fa->id,'Terminar' ,'class="btn btn-xs-info"'); else echo $resta?>
     </td>
   </tr>
   <?php endforeach;?>
  </tbody>
 </table>
-<div class="form-actions"><?php echo Html::linkAction('facturasConAbonos/index/'.$empresas_id.'/43408841','Terminar Todo','class="btn btn-info"')?></div>
+<div class="form-actions"><?php echo Html::linkAction('facturasConAbonos/index/'.$empresas_id.'/43408841','Terminar Todo','class="btn btn-xs btn-info"')?></div>
 </div>

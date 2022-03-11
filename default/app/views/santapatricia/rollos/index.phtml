@@ -111,8 +111,8 @@ endforeach;?>
   </tr>
 </table>
 <div class="form-actions">
-    <?php echo Form::submit('Guardar Datos', 'class="btn btn-primary"') ?>
-    <?php if($tipo_id==0){echo Html::linkAction('listado', 'Cancelar', 'class="btn"');} ?>
+    <?php echo Form::submit('Guardar Datos', 'class="btn btn-xs btn-primary"') ?>
+    <?php if($tipo_id==0){echo Html::linkAction('listado', 'Cancelar', 'class="btn btn-xs"');} ?>
     </div>
 <?php echo Form::close() ?>
 <?php if($tipo_id==0){?>

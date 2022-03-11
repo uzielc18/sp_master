@@ -97,7 +97,7 @@ switch ($monedas) {
             <a href="javascript:;" data-id="<?php echo $n ?>" class="clickme" title="Modificar el descuento"><?php echo Html::img('figuras/editar.png', 'Editar', 'style="width: 15px;margin-left:1px;margin-right:1px;"') ?></a>
             <span id="descuento-<?php echo $n ?>" style="display:none;">
               <?php echo Form::text('detalle-' . $n . '.descuento', 'size="10"'); ?>
-              <?php echo Form::submit('Grabar descuento', 'class="btn btn-info"') ?></span>
+              <?php echo Form::submit('Grabar descuento', 'class="btn btn-xs btn-info"') ?></span>
           </td>
           <td width="23%">
             <?php echo $simbolo ?> <?php echo number_format($total, 2, '.', ''); ?>
@@ -183,7 +183,7 @@ switch ($monedas) {
     <?php echo Form::hidden('salida.totalconigv', '', $TOTAL); ?>
     <?php echo Form::hidden('salida.igv', '', $igv); ?>
     <?php echo Form::hidden('salida.totalenletras', '', $texto); ?>
-    <?php echo Form::submit('Siguente', 'class="btn btn-primary float-right"') ?><?php echo Html::linkAction('factura_adelanto/' . Session::get('SALIDA_ID'), ' Editar', 'class="btn btn-secondary float-right"') ?>
+    <?php echo Form::submit('Siguente', 'class="btn btn-xs btn-primary float-right"') ?><?php echo Html::linkAction('factura_adelanto/' . Session::get('SALIDA_ID'), ' Editar', 'class="btn btn-xs btn-secondary float-right"') ?>
     <?php echo Form::close(); ?>
   </div>
   <script type="text/javascript">

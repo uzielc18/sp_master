@@ -6,7 +6,7 @@ Tag::css('token-input');?>
 <div class="alert-info info alert flash" data-alert="alert" data-dismiss="alert">
 <?php View::content();?>La informacion del rollo a modificar <b>!!!</b></div>
 <div class="card-body">
-<div class="span1"><?php echo Html::linkAction('rollos_venta/','Volver','class="btn btn-primary"')?></div>
+<div class="span1"><?php echo Html::linkAction('rollos_venta/','Volver','class="btn btn-xs btn-primary"')?></div>
 <div class="span10">
 <?php echo Form::open()?>
 <div class="well">
@@ -89,7 +89,7 @@ echo Form::hidden('rollo.enalmacen','');echo Form::hidden('rollo.prodetalleprodu
     <td> <?php echo Form::textArea('rollo.observacion_control','');?> </td>
   </tr>
   <tr>
-    <td colspan="2"><?php echo Form::submit('Grabar','class="btn btn-primary"')?></td>
+    <td colspan="2"><?php echo Form::submit('Grabar','class="btn btn-xs btn-primary"')?></td>
   </tr>
   </tbody>
 </table>

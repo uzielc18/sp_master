@@ -70,7 +70,7 @@ Tag::css('token-input');?>
   <?php echo Form::text('detalles.importe','size="3" class="qty"')?>
   </td>
   <td width="7%">
-  <button type="submit" class="btn">Enviar!</button>
+  <button type="submit" class="btn btn-xs">Enviar!</button>
   </td>
   </tr>
   </table>
@@ -182,7 +182,7 @@ $(document).ready(function()
 </div>
 <div class="form-actions"><a onclick="return validar()"></a>
 <?php 
-echo Html::linkAction("versalida/", 'Siguiente <i class="icon-hand-right"></i>','class="btn btn-primary" onclick="return validar()"') ?>&nbsp;<?php echo Html::linkAction("salidas", 'Volver ','class="btn"') ?>
+echo Html::linkAction("versalida/", 'Siguiente <i class="icon-hand-right"></i>','class="btn btn-xs btn-primary" onclick="return validar()"') ?>&nbsp;<?php echo Html::linkAction("salidas", 'Volver ','class="btn btn-xs"') ?>
 </div>
 <hr />
 </div>

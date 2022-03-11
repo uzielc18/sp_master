@@ -59,7 +59,7 @@ Tag::css('token-input');?><div class="card">
   </div>
   <div class="control-group">
     <div class="controls">
-       <button type="submit" class="btn">Generar</button>
+       <button type="submit" class="btn btn-xs">Generar</button>
     </div>
   </div>
 <?php echo Form::close();?>

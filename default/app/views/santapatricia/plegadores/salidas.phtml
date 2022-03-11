@@ -12,7 +12,7 @@
 </div>
 
 <div class="form-actions">
-<?php echo Html::linkAction("cargarsalida/0", 'Nueva '.Session::get('DOC_NOMBRE'),'class="btn btn-primary"') ?>&nbsp;<?php echo Html::linkAction("plegadoresmov", 'Volver ','class="btn"') ?>
+<?php echo Html::linkAction("cargarsalida/0", 'Nueva '.Session::get('DOC_NOMBRE'),'class="btn btn-xs btn-primary"') ?>&nbsp;<?php echo Html::linkAction("plegadoresmov", 'Volver ','class="btn btn-xs"') ?>
 </div>
 <div class="menu">
 <ul><li><a>Año
@@ -94,7 +94,7 @@ $number++;?>
     <td align="center">
    <?php if($item->codigo=='P')echo Html::linkAction('cargarsalida/'.$item->id.'/',Html::img("figuras/editar.png",'EDITAR','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Editar Guia - 002 - Plegadores"')?>
 	<?php echo Html::linkAction('cargarsalida/'.$item->id.'/versalida',Html::img("figuras/ver.png",'Ver','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Ver e Imprimir Guia - 002 - Plegadores"')?>
-	<?php if($item->codigo=='P')echo Html::linkAction('anular_salida/'.$item->id,"[ X ]",'class="btn btn-danger" title="ANULAR LA SALIDA DE PLEGADORES"')?>
+	<?php if($item->codigo=='P')echo Html::linkAction('anular_salida/'.$item->id,"[ X ]",'class="btn btn-xs btn-danger" title="ANULAR LA SALIDA DE PLEGADORES"')?>
     </td>
   </tr>
 <?php }?>

@@ -115,9 +115,9 @@ $n++;?>
 <?php 
 if(Session::get('MAQUINA_NUMERO')!=10)
 {
-	if($maquina->estadomaquina!="Produccion")echo Html::linkAction("cargarhoja/0/hojaderuta", 'Crear hoja para '.Session::get('MAQUINA_NOMBRE'),'class="btn btn-primary"'); 
+	if($maquina->estadomaquina!="Produccion")echo Html::linkAction("cargarhoja/0/hojaderuta", 'Crear hoja para '.Session::get('MAQUINA_NOMBRE'),'class="btn btn-xs btn-primary"'); 
 }?> 
-<?php echo Html::linkAction("", 'Escoger Maquina','class="btn btn-info"') ?>
+<?php echo Html::linkAction("", 'Escoger Maquina','class="btn btn-xs btn-info"') ?>
 </div>
 <?Php /*if($maquina->estadomaquina!="Produccion"){*/
 if(Session::get('MAQUINA_NUMERO')==10){
@@ -185,7 +185,7 @@ if($DP->getValidarGuia($item->id)==0)echo Html::linkAction('generarhojaderuta/'.
 if(Session::get('MAQUINA_NUMERO')==10){
 ?>
 
-<button type="submit" class="btn btn-primary">Generar Hoja de Ruta</button> 
+<button type="submit" class="btn btn-xs btn-primary">Generar Hoja de Ruta</button> 
   </fieldset>
   <?php echo Form::text('guias.ids');?>
 <?Php echo Form::close();

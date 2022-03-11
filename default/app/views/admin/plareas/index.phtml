@@ -1,6 +1,6 @@
 
 <div class="card-header">
-<?php echo Html::linkAction("crear", 'Crear Area','class="btn btn-primary"') ?>
+<?php echo Html::linkAction("crear", 'Crear Area','class="btn btn-xs btn-primary"') ?>
     <h1>Listado de Areas Santa Carmela</h1>
 </div>
 <div id="mensajes_flash" >        
@@ -37,7 +37,7 @@ foreach($plareasC->items as $item){ $n++;?>
 </table>
 <?php View::partial('paginators/extended', false, array('page' => $plareasC ,'url' => Router::get('controller_path').'/index')); ?>
 <div class="form-actions">
-    <?php //echo Html::linkAction("crear", 'Crear Area','class="btn btn-primary"') ?>
+    <?php //echo Html::linkAction("crear", 'Crear Area','class="btn btn-xs btn-primary"') ?>
 </div>
 
     <h1>Listado de Areas Santa Patricia</h1>

@@ -33,8 +33,8 @@ Tag::css('token-input');?>
     <?php View::content() ?>
 </div>
 <div class="form-actions">
-    <?php echo Html::linkAction('crear/'.$campo.'/'.$direccion.'/'.$page, 'Nuevo Cliente','class="btn btn-primary"') ?>			    <?php echo Html::linkAction('reporte_clientes/'.$campo.'/'.$direccion.'/', 'Reporte de Clientes','class="btn btn-info"') ?>
-    <?php echo Html::linkAction('listar_direcciones', 'Direcciones','class="btn btn-info"') ?>
+    <?php echo Html::linkAction('crear/'.$campo.'/'.$direccion.'/'.$page, 'Nuevo Cliente','class="btn btn-xs btn-primary"') ?>			    <?php echo Html::linkAction('reporte_clientes/'.$campo.'/'.$direccion.'/', 'Reporte de Clientes','class="btn btn-xs btn-info"') ?>
+    <?php echo Html::linkAction('listar_direcciones', 'Direcciones','class="btn btn-xs btn-info"') ?>
 </div>
 <label>Busqueda por: (Razon Social,Ruc,Codigo, Direccion)</label>
 <input id="cliente" name="cliente" type="text"/> <hr />
@@ -94,6 +94,6 @@ foreach($datos->items as $item){ $n++;?>
 </table>
 <?php View::partial('paginators/classic', false, array('page' => $datos ,'url' => Router::get('controller_path').'/listado/'.$campo.'/'.$direccion.'')); ?>
 <div class="form-actions">
-    <?php //echo Html::linkAction('crear/'.$campo.'/'.$direccion.'/'.$page, 'Crear Clientes','class="btn btn-primary"') ?>
+    <?php //echo Html::linkAction('crear/'.$campo.'/'.$direccion.'/'.$page, 'Crear Clientes','class="btn btn-xs btn-primary"') ?>
 </div>
 </div>

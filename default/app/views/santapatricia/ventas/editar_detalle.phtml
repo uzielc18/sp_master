@@ -7,7 +7,7 @@
 </div>
 
 <div class="form-actions">
-<?php echo Html::linkAction("venta/", 'Regresar ','class="btn"') ?>
+<?php echo Html::linkAction("venta/", 'Regresar ','class="btn btn-xs"') ?>
 </div>
 <div class="card-body">
 <?php echo Form::open()?>
@@ -39,7 +39,7 @@
     <td> <span id="importe"><?php	if(!empty($detalle->importe))echo number_format($detalle->importe,2,'.','');?> </span><?Php echo Form::hidden('detalle.importe')?></td>
   </tr>
 </table>
-<?Php echo Form::submit('GRABAR','class="btn btn-primary"')?>
+<?Php echo Form::submit('GRABAR','class="btn btn-xs btn-primary"')?>
 <?php Form::close()?>
 </div>
 <script type="text/javascript">

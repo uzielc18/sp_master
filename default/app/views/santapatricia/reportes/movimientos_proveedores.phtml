@@ -28,7 +28,7 @@ $fecha=date('Y-m-d',strtotime('-20 day',strtotime(date('Y-m-d'))));
 echo Calendar::selector('fecha_inicio','',$fecha)?></td>
     <td><?php echo Calendar::selector('fecha_fin')?></td>
     <td><?php echo Form::text('clientes_id')?></td>
-    <td><a id="ver_reporte" class="btn btn-primary" href="javascript:;"> Ver Reporte</a><?php echo Form::hidden('cliente_id')?><?php echo Form::hidden('proveedor_id')?></td>
+    <td><a id="ver_reporte" class="btn btn-xs btn-primary" href="javascript:;"> Ver Reporte</a><?php echo Form::hidden('cliente_id')?><?php echo Form::hidden('proveedor_id')?></td>
   </tr>
 </table>
 

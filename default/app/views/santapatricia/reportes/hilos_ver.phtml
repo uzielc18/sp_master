@@ -28,9 +28,9 @@ margin-top: -20px
 {
 	$activo='';
 	if($tipo->id==$id)$activo=' btn-success';
-	echo Html::linkAction($action_name.'/'.$tipo->id,$tipo->nombre,'class="btn btn-mini'.$activo.'"').' ';
+	echo Html::linkAction($action_name.'/'.$tipo->id,$tipo->nombre,'class="btn btn-xs btn-mini'.$activo.'"').' ';
 }
-//echo Html::linkAction($action_name.'/0','Todos los Hilos','class="btn btn-mini'.$activo.'"').' ';?>
+//echo Html::linkAction($action_name.'/0','Todos los Hilos','class="btn btn-xs btn-mini'.$activo.'"').' ';?>
 
 <div class="card-body">
   <table id="exportar_excel" width="75%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">

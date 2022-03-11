@@ -26,7 +26,7 @@ if($tipos_id==0){
 foreach($tipos as $tipo){
 ?>
 <h4><?php echo $linea->nombre?> - <?php echo $tipo->nombre?> <i><?php echo $tipo->detalle?> // <?php echo $tipo->abr?>-<?php echo $tipo->id?></i></h4>
-<?php echo Ajax::linkAction("crear/".$tipo->id, 'Crear Producto','producto_nuevo-'.$tipo->id, 'class="btn btn-primary"') ?>
+<?php echo Ajax::linkAction("crear/".$tipo->id, 'Crear Producto','producto_nuevo-'.$tipo->id, 'class="btn btn-xs btn-primary"') ?>
 <div id="producto_nuevo-<?php echo $tipo->id?>"></div>
 <table class="table table-bordered table-striped">
   <thead>
@@ -61,7 +61,7 @@ foreach($PRO as $item){ $n++;?>
 }else{
 	?>
  <h4><?php echo $linea->nombre?> - <?php echo $tipo->nombre?> <i><?php echo $tipo->detalle?> // <?php echo $tipo->abr?>-<?php echo $tipo->id?></i></h4>
-<?php echo Ajax::linkAction("crear/".$tipo->id, 'Crear Producto','producto_nuevo-'.$tipo->id, 'class="btn btn-primary"') ?>
+<?php echo Ajax::linkAction("crear/".$tipo->id, 'Crear Producto','producto_nuevo-'.$tipo->id, 'class="btn btn-xs btn-primary"') ?>
 <div id="producto_nuevo-<?php echo $tipo->id?>"></div>
 <table class="table table-bordered table-striped">
   <thead>

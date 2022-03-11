@@ -26,13 +26,13 @@ $(document).ready(function(){
 	{
 	}elseif($origen=='Muestra')
 	{
-		echo Html::linkAction("cargarnota/0/crearm/".$origen, 'Crear Nota','class="btn btn-primary"');
+		echo Html::linkAction("cargarnota/0/crearm/".$origen, 'Crear Nota','class="btn btn-xs btn-primary"');
 	}elseif($origen=='Chenille' && Session::get('tipo_nota')=='salida')
 	{
-		echo Html::linkAction("cargaringreso/0/crear_s_ch/".$origen, 'Crear Nota','class="btn btn-primary"');
+		echo Html::linkAction("cargaringreso/0/crear_s_ch/".$origen, 'Crear Nota','class="btn btn-xs btn-primary"');
 	}elseif($origen=='Chenille' && Session::get('tipo_nota')=='ingreso')
 	{
-		echo Html::linkAction("cargaringreso/0/ingreso_hilo/".$origen, 'Crear Nota','class="btn btn-primary"');
+		echo Html::linkAction("cargaringreso/0/ingreso_hilo/".$origen, 'Crear Nota','class="btn btn-xs btn-primary"');
 	}?>
 </div>
 <div id="mensajes_flash" >        

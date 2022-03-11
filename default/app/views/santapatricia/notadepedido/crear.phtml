@@ -37,11 +37,11 @@ $(document).ready(function()
 <h1>Crear Nota de pedido</h1>
 </div>
 <div class="form-actions">
-<?php echo Html::linkAction("listado/", 'Listado','class="btn btn-primary"') ?>
+<?php echo Html::linkAction("listado/", 'Listado','class="btn btn-xs btn-primary"') ?>
     <?php
 	$estado='Pendiente'; 
 	if(Session::get('tipo_nota')=='ingreso')$estado='Ingresado';
-	echo Html::linkAction("terminar/".Session::get('NOTA_ID')."/".$estado.'/'.$origen, 'Terminar ','class="btn btn-primary grabar_form"') ?>&nbsp;<?php echo Html::linkAction("listado/".$origen, 'Cancelar ','class="btn btn"') ?>
+	echo Html::linkAction("terminar/".Session::get('NOTA_ID')."/".$estado.'/'.$origen, 'Terminar ','class="btn btn-xs btn-primary grabar_form"') ?>&nbsp;<?php echo Html::linkAction("listado/".$origen, 'Cancelar ','class="btn btn-xs btn"') ?>
 </div>
    
 <div class="card-body">   
@@ -77,8 +77,8 @@ echo Form::open('','post','id="proformas"');?>
      
      </table>
             <div class="form-actions">
-            <a href="javascript:;" class="btn btn-primary grabar">GRABAR</a>
-			<?php echo Html::linkAction("revisar/Produccion", 'Siguente','class="btn btn-info"') ?>
+            <a href="javascript:;" class="btn btn-xs btn-primary grabar">GRABAR</a>
+			<?php echo Html::linkAction("revisar/Produccion", 'Siguente','class="btn btn-xs btn-info"') ?>
             </div>
             
             <?php echo Form::close();

@@ -13,8 +13,8 @@
 <div class="form-actions">
 <?php $url='';
 if(Session::get('DOC_ID')==36)$url="/varios";?>
-<?php echo Html::linkAction("cargaringreso/0".$url, 'Nueva '.Session::get('DOC_NOMBRE'),'class="btn btn-primary"') ?>&nbsp;<?php echo Html::linkAction(" ", 'Volver ','class="btn"')?>&nbsp;
-<?php if(Session::get('DOC_ID')==7){echo Html::linkAction('pendientes','Ver todos los pendientes','class="btn btn-info"');}?>
+<?php echo Html::linkAction("cargaringreso/0".$url, 'Nueva '.Session::get('DOC_NOMBRE'),'class="btn btn-xs btn-primary"') ?>&nbsp;<?php echo Html::linkAction(" ", 'Volver ','class="btn btn-xs"')?>&nbsp;
+<?php if(Session::get('DOC_ID')==7){echo Html::linkAction('pendientes','Ver todos los pendientes','class="btn btn-xs btn-info"');}?>
 </div>
 <div id="mensajes_flash" >        
     <?php if(Session::get('DOC_ID')==7){echo "Solo se muestran ".count($facturas).' si ver mas --> Ver todos los pendientes';}

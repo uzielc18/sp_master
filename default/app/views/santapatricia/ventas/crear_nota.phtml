@@ -8,8 +8,8 @@ Tag::css('token-input');?>
 </div>
 
 <div class="form-actions">
-<?php if(Session::get('DOC_ID')==14)echo Html::linkAction("nota_creditos/", 'Listado ','class="btn"') ?>
-<?php if(Session::get('DOC_ID')==13)echo Html::linkAction("nota_debitos/", 'Listado ','class="btn"') ?>
+<?php if(Session::get('DOC_ID')==14)echo Html::linkAction("nota_creditos/", 'Listado ','class="btn btn-xs"') ?>
+<?php if(Session::get('DOC_ID')==13)echo Html::linkAction("nota_debitos/", 'Listado ','class="btn btn-xs"') ?>
 </div>
 <div class="card-body">
 <div id="ver_resultado"></div>
@@ -73,7 +73,7 @@ Tag::css('token-input');?>
   
   <div class="control-group">
     <div class="controls">
-       <button type="submit" class="btn btn-primary">Siguiente</button> <?php echo Html::linkAction($url,'Cancelar','class="btn"')?>
+       <button type="submit" class="btn btn-xs btn-primary">Siguiente</button> <?php echo Html::linkAction($url,'Cancelar','class="btn btn-xs"')?>
     </div>
   </div>
 <?php echo Form::close();?>

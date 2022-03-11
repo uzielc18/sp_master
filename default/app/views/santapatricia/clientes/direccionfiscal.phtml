@@ -29,7 +29,7 @@ Tag::css('token-input');?>
 <div class="card">
     <h1><?php echo $titulo?></h1>
 </div>
-<div class="form-actions"><?Php echo Html::linkAction("listar_direcciones",'Volver al listado de direcciones','class="btn btn-info"')?> <?Php echo Html::linkAction("listado",'Volver al listado de Clientes','class="btn btn-info"')?>
+<div class="form-actions"><?Php echo Html::linkAction("listar_direcciones",'Volver al listado de direcciones','class="btn btn-xs btn-info"')?> <?Php echo Html::linkAction("listado",'Volver al listado de Clientes','class="btn btn-xs btn-info"')?>
 
 </div>
 <div class="card-body">      
@@ -57,14 +57,14 @@ Tag::css('token-input');?>
                     
         <!-- FIN DE NACIONAL-->
         
-           <?php echo Form::submit($boton.' Cambios', 'name="datos_personas" class="btn btn-primary"') ?>
+           <?php echo Form::submit($boton.' Cambios', 'name="datos_personas" class="btn btn-xs btn-primary"') ?>
            
  <?php echo Form::close() ?>
 </div>
 <div class="span8">
-<a class="btn btn-info" href="http://www.sunat.gob.pe/cl-ti-itmrconsruc/jcrS00Alias" target="hola">Ver direcccion de la sunat</a><?Php echo Html::linkAction("siguente/".($clave+1),'Siguente Dato','class="btn btn-danger"')?>
-<?Php echo Html::linkAction("siguente/".($clave-1),'Dato anterior','class="btn btn-danger"')?>
-<?Php echo Html::linkAction("siguente/0",'Primer dato','class="btn btn-info"')?><br />
+<a class="btn btn-xs btn-info" href="http://www.sunat.gob.pe/cl-ti-itmrconsruc/jcrS00Alias" target="hola">Ver direcccion de la sunat</a><?Php echo Html::linkAction("siguente/".($clave+1),'Siguente Dato','class="btn btn-xs btn-danger"')?>
+<?Php echo Html::linkAction("siguente/".($clave-1),'Dato anterior','class="btn btn-xs btn-danger"')?>
+<?Php echo Html::linkAction("siguente/0",'Primer dato','class="btn btn-xs btn-info"')?><br />
   <iframe name="hola" style="width:100%;height:400px;" scrolling="yes"></iframe>
 </div>
 </div>

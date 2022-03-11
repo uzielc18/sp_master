@@ -16,14 +16,14 @@
 <?php //echo Html::linkAction('cargar/0/',Html::img("figuras/nuevo.png",'VER','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Ingrese un nuevo produto al Inventario"')?>
 <div id="ver_resultado"></div>
 <div class="form-actions">
-    <?php echo Html::linkAction("",'Regresar ','class="btn btn"') ?> 
+    <?php echo Html::linkAction("",'Regresar ','class="btn btn-xs btn"') ?> 
 <?php if($id==1){?>
-<span> <?php echo html::linkAction('inventario_tipo_ingreso/3/1/ALMACEN','ALMACEN','class="btn btn-secondary"')?></span>
-<span> <?php echo html::linkAction('inventario_tipo_ingreso/3/2/URDIDO','URDIDO','class="btn btn-secondary"')?></span>
-<span> <?php echo html::linkAction('inventario_tipo_ingreso/3/3/CHENILLE','CHENILLE','class="btn btn-secondary"')?></span>
-<span> <?php echo html::linkAction('inventario_tipo_ingreso/3/4/DEVOLUCION','DEVOLUCION','class="btn btn-secondary"')?></span>
-<span> <?php echo html::linkAction('inventario_tipo_ingreso/3/5/OTROS','OTROS','class="btn btn-secondary"')?></span>
-<span> <?php echo html::linkAction('reporte_cajas/','Cajas','class="btn btn-secondary"')?></span>
+<span> <?php echo html::linkAction('inventario_tipo_ingreso/3/1/ALMACEN','ALMACEN','class="btn btn-xs btn-secondary"')?></span>
+<span> <?php echo html::linkAction('inventario_tipo_ingreso/3/2/URDIDO','URDIDO','class="btn btn-xs btn-secondary"')?></span>
+<span> <?php echo html::linkAction('inventario_tipo_ingreso/3/3/CHENILLE','CHENILLE','class="btn btn-xs btn-secondary"')?></span>
+<span> <?php echo html::linkAction('inventario_tipo_ingreso/3/4/DEVOLUCION','DEVOLUCION','class="btn btn-xs btn-secondary"')?></span>
+<span> <?php echo html::linkAction('inventario_tipo_ingreso/3/5/OTROS','OTROS','class="btn btn-xs btn-secondary"')?></span>
+<span> <?php echo html::linkAction('reporte_cajas/','Cajas','class="btn btn-xs btn-secondary"')?></span>
 <?php }?>
 </div>
 <div class="card-body">
@@ -61,7 +61,7 @@ foreach($inventarios as $item){ $n++;?>
 <?php foreach($lineas as $ln):?>
 
 <div class="card">
-    <h4> Inventario por Tipo de Producto de la Linea <?php echo $ln->nombre?><?php echo Html::linkAction('editar/'.$ln->id.'/0/',Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Ingreso del detalle Del Inventario Incial Por linea de Producto"')?><?php echo Html::linkAction('inventario_producto_resumen/'.$ln->id.'/'.base64_encode('tesproductos_id'),'Reporte Del mes','class="btn btn-primary"')?></h4>
+    <h4> Inventario por Tipo de Producto de la Linea <?php echo $ln->nombre?><?php echo Html::linkAction('editar/'.$ln->id.'/0/',Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Ingreso del detalle Del Inventario Incial Por linea de Producto"')?><?php echo Html::linkAction('inventario_producto_resumen/'.$ln->id.'/'.base64_encode('tesproductos_id'),'Reporte Del mes','class="btn btn-xs btn-primary"')?></h4>
 </div>
 
 <?php 

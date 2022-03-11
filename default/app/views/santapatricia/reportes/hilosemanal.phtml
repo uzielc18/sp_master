@@ -75,9 +75,9 @@ for($i=2011;$i<=2020;$i++)
 {
 	$activo='';
 	if($tipo->id==$tipo_id)$activo=' btn-success';$tiponombre=$tipo->nombre;
-	echo Html::linkAction($action_name.'/'.$s.'/'.$anio.'/'.$tipo->id.'/',$tipo->nombre,'class="btn btn-mini'.$activo.'"').' ';
+	echo Html::linkAction($action_name.'/'.$s.'/'.$anio.'/'.$tipo->id.'/',$tipo->nombre,'class="btn btn-xs btn-mini'.$activo.'"').' ';
 }
-echo Html::linkAction($action_name.'/'.$s.'/'.$anio.'/0/','Todos','class="btn btn-mini"')
+echo Html::linkAction($action_name.'/'.$s.'/'.$anio.'/0/','Todos','class="btn btn-xs btn-mini"')
 ?>
 
 <div class="card-body">

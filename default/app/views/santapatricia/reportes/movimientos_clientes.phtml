@@ -23,7 +23,7 @@ $fecha=date('Y-m-d',strtotime('-30 day',strtotime(date('Y-m-d'))));
 echo Calendar::selector('fecha_inicio','',$fecha)?></span><span  class="mediano">Fecha Fin<br />
 <?php echo Calendar::selector('fecha_fin')?></span><span class="mediano">Busca el cliente:<br />
 <?php echo Form::text('clientes_id')?></span>
-<span class="mediano"><a id="ver_reporte" class="btn btn-primary" href="javascript:;"> Ver Reporte</a></span>
+<span class="mediano"><a id="ver_reporte" class="btn btn-xs btn-primary" href="javascript:;"> Ver Reporte</a></span>
 <div class="clear"><?php echo Form::hidden('cliente_id')?><?php echo Form::hidden('proveedor_id')?></div>
 
 </div>

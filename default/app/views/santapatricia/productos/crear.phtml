@@ -9,7 +9,7 @@ $(document).ready(function(){
         $("#listado-'.$tipo_id.'").load("/'.$module_name.'/productos/listadoportipo/'.$tipo_id.'");
         });
 </script>';
-	echo '&nbsp;'.Ajax::linkAction("none", '[ X ]','producto_nuevo-'.$tipo_id, 'class="btn btn-primary"') ;}?>
+	echo '&nbsp;'.Ajax::linkAction("none", '[ X ]','producto_nuevo-'.$tipo_id, 'class="btn btn-xs btn-primary"') ;}?>
 <?php View::content() ?>
 
 <?php if($tipo_id==0){echo Form::open(NULL, 'post', 'class="form-horizontal"');}else{echo Ajax::form('producto_nuevo-'.$tipo_id,NULL, 'form-horizontal');} ?>
@@ -77,8 +77,8 @@ $(document).ready(function(){
   </tr>
 </table>
 <div class="form-actions">
-    <?php echo Form::submit('Guardar Datos', 'class="btn btn-primary"') ?>
-    <?php if($tipo_id==0){echo Html::linkAction('listado', 'Cancelar', 'class="btn"');} ?>
+    <?php echo Form::submit('Guardar Datos', 'class="btn btn-xs btn-primary"') ?>
+    <?php if($tipo_id==0){echo Html::linkAction('listado', 'Cancelar', 'class="btn btn-xs"');} ?>
     </div>
 <?php echo Form::close() ?>
 <?php if($tipo_id==0){?>

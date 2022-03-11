@@ -15,7 +15,7 @@ Tag::css('token-input');?>
 	  <span class="add-on">Stock por estado de </span>
 	<?php echo Form::dbSelect('estado','estadorollo',array('prorollos','getEstados'),'Seleccione el estado del rollo','',$e)?>
 
-	<a href="javascript:;" id="ver" class="btn">Ver</a>
+	<a href="javascript:;" id="ver" class="btn btn-xs">Ver</a>
 	</div>
 	<?php if($e=='VENTA' || $e=='Sin procesos'){?>
 		<div class="input-prepend input-append">
@@ -33,11 +33,11 @@ Tag::css('token-input');?>
 		echo Form::dbSelect('anchos','ancho',array('prorollos','getMetros',$e),'Seleccione el ancho','',$ancho);
 		?>
 
-	<a href="javascript:;" id="ver-anchos" class="btn">Filtrar</a>
+	<a href="javascript:;" id="ver-anchos" class="btn btn-xs">Filtrar</a>
 	</div>
 	<?php }?>
 	<br>
-	<a href="javascript:;" id="ver-ocultar" class="btn">Mostrar/Ocultar Totales</a>
+	<a href="javascript:;" id="ver-ocultar" class="btn btn-xs">Mostrar/Ocultar Totales</a>
 </div>
 </div>
 

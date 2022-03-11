@@ -18,7 +18,7 @@ $(document).ready(function()
 	echo $numerofactura;echo $ids.'sesion '.Session::get('DOC_ID');
  if($tessalidas_id==0){?>
 <h4>
-	<strong>Nro. de Letras internas a Ingresar !<br /></strong><?php echo Form::text('letras');?> <a href="javascript:;" class="btn btn-primary" id="enviar_numero_de_letras">Enviar</a>
+	<strong>Nro. de Letras internas a Ingresar !<br /></strong><?php echo Form::text('letras');?> <a href="javascript:;" class="btn btn-xs btn-primary" id="enviar_numero_de_letras">Enviar</a>
 </h4>
 <div>
 	<?php
@@ -59,7 +59,7 @@ $(document).ready(function()
     <td><?php echo Calendar::selector('salidas-'.$q.'.fvencimiento','');?></td>
     <td> 
      <?php echo Form::text('salidas-'.$q.'.total','',number_format(($total/$nletras),2,'.',''))?>
-<?php echo Form::submit('GRABAR','class="btn btn-primary"');?>
+<?php echo Form::submit('GRABAR','class="btn btn-xs btn-primary"');?>
      </td>
     </tr>
 </table>
@@ -104,7 +104,7 @@ foreach($tesdetallevauchers as $detalle){
     <td width="14%"><?php echo $detalle->getTessalidasinternas()->getTesdatos()->razonsocial;?></td>
     <td width="14%">-</td>
     <td width="15%"><?php echo Form::text('tesdetalles-'.$q.'.monto','',$detalle->monto); ?>
-<?php echo Form::submit('GRABAR','class="btn btn-primary"');?></td>
+<?php echo Form::submit('GRABAR','class="btn btn-xs btn-primary"');?></td>
   </tr>
 </table>
 <?php echo Form::close()?>
@@ -115,7 +115,7 @@ foreach($tesdetallevauchers as $detalle){
 <?php //echo Ajax::form('pago_con_letras',$module_name.'/vouchers/ingresoletras/')?>
 <?php echo Form::open($module_name.'/abonos/ingresoletras_i/'.$q)?>
 <?php echo Form::hidden('terminar.id','',$detalle->id);?>
-<?php echo Form::submit('Terminar','class="btn btn-primary"');?>
+<?php echo Form::submit('Terminar','class="btn btn-xs btn-primary"');?>
 <?php echo Form::close()?>
 <?php
 }?>

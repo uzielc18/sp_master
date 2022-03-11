@@ -48,7 +48,7 @@ foreach($prorollos as $rollo){
     <td><?php echo Form::text('prorollos'.$n.'.estadorollo','',$rollo->estadorollo);?></td>
   </tr><?php */?>
   <tr>
-    <td colspan="2"><?php echo Form::submit('Grabar','id="'.$n.'" class="btn btn-primary"')?></td>
+    <td colspan="2"><?php echo Form::submit('Grabar','id="'.$n.'" class="btn btn-xs btn-primary"')?></td>
   </tr>
 </table>
 <?php echo Form::close()?>
@@ -57,7 +57,7 @@ foreach($prorollos as $rollo){
 <div class="clear"></div>
 
 <div class="form-actions">
-<?php echo Html::linkAction('corte','Terminar','class="btn btn-primary"');?>
+<?php echo Html::linkAction('corte','Terminar','class="btn btn-xs btn-primary"');?>
 </div>
 </div>
 <script type="text/javascript">

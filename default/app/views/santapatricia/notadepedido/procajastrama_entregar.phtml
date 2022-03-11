@@ -7,7 +7,7 @@ Tag::css('token-input');?>
 </div>
 <div class="form-actions">
    <?php 
-	echo Html::linkAction("produccion/".$detalle_pedido->getPronotapedidos()->origen, 'Voler al Pedido','class="btn btn-primary grabar_form"') ?>&nbsp;<?php echo Html::linkAction("listado/".$detalle_pedido->getPronotapedidos()->origen, 'Cancelar ','class="btn btn"') ?>
+	echo Html::linkAction("produccion/".$detalle_pedido->getPronotapedidos()->origen, 'Voler al Pedido','class="btn btn-xs btn-primary grabar_form"') ?>&nbsp;<?php echo Html::linkAction("listado/".$detalle_pedido->getPronotapedidos()->origen, 'Cancelar ','class="btn btn-xs btn"') ?>
 </div>
 <div class="card-body">
 <div class="span4">
@@ -46,7 +46,7 @@ Tag::css('token-input');?>
     </td>
     <td width="28%" align="center"><strong>#Conos</strong><br /><?php echo Form::text('procajastrama.conos','" size="10" class="conos"')?></td>
     <td width="18%" align="left"> <strong>Peso</strong><br /><?php echo Form::text('procajastrama.peso','size="10" class="peso"')?>kg</td>
-    <td width="24%" align="center"><?php echo Form::submit('Enviar','class="btn btn-primary"')?></td>
+    <td width="24%" align="center"><?php echo Form::submit('Enviar','class="btn btn-xs btn-primary"')?></td>
   </tr>
   </tbody>
 </table>
@@ -100,7 +100,7 @@ Tag::css('token-input');?>
     echo Form::hidden('detalle_pedido.cantidad','',$k);
     echo Form::hidden('detalle_pedido.tescajas_id','',$tescajas);
     echo Form::hidden('detalle_pedido.cantidad_p');
-	echo Form::submit('Terminar y Continuar','class="btn btn-info grabar_form"');
+	echo Form::submit('Terminar y Continuar','class="btn btn-xs btn-info grabar_form"');
 	echo Form::close();
    } ?></th>
   </tr>

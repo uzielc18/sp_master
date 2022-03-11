@@ -65,7 +65,7 @@
 <div class="card">
     <h1>Calendario<span>Calendario de Eventos y Cumpleaños</span></h1>
 </div>
-<div class="form-actions"><?php foreach($tipos as $tipo){echo Html::linkAction('cargartipo/'.$tipo->id.'/crear','Crear '.$tipo->nombre,'class="btn"'); } ?></div>
+<div class="form-actions"><?php foreach($tipos as $tipo){echo Html::linkAction('cargartipo/'.$tipo->id.'/crear','Crear '.$tipo->nombre,'class="btn btn-xs"'); } ?></div>
 <div class="card-body">
 <div id='calendar'></div>
 </div>

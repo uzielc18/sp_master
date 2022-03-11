@@ -31,9 +31,9 @@ switch ($ab->tesmonedas_id)
 <h1>Abonos !<span> Abono de los clientes  </span></h1>    
 </div>
 <div class="form-actions">
-<?php echo Html::linkAction("", 'Volver','class="btn btn-primary"') ?><?php if($ab->estadov=='Pendiente'){?>
-<?php echo Html::linkAction("grabardetalle/", 'Editar','class="btn btn-secondary"') ?>
-<?php echo Html::linkAction("finalizar/1", 'Terminar','class="btn btn-primary"') ?>
+<?php echo Html::linkAction("", 'Volver','class="btn btn-xs btn-primary"') ?><?php if($ab->estadov=='Pendiente'){?>
+<?php echo Html::linkAction("grabardetalle/", 'Editar','class="btn btn-xs btn-secondary"') ?>
+<?php echo Html::linkAction("finalizar/1", 'Terminar','class="btn btn-xs btn-primary"') ?>
 <?php }?> 
 </div>
 <?php echo Sp::imprimir('Abono'.$numero,'P',array("W"=>"W","EX"=>"EX","P"=>"P"));?>

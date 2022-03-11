@@ -16,7 +16,7 @@ switch ($monedas)
     <?php View::content() ?>
 </div>
 <div class="form-actions">
-<?php //echo Html::linkAction("facturas/7", 'Regresar ','class="btn"') ?>
+<?php //echo Html::linkAction("facturas/7", 'Regresar ','class="btn btn-xs"') ?>
 </div>
 <div class="card-body">
 <table width="75%" border="0" align="center" cellpadding="0" cellspacing="1">
@@ -47,7 +47,7 @@ echo Form::open();
     <th colspan="6" align="left">Concepto:<?php echo Form::text('detalle.tesproductos_id')?></th>
     <th width="15%" align="left">Cantidad:<br /><?php echo Form::text('cantidad','class="qty" size="6"')?></th>
     <th width="20%" align="left">Precio:<br /><?php echo Form::text('preciounitario','class="qty" size="6"')?></th>
-    <th width="13%" align="left"><?php echo Form::submit('Ingresar','class="btn btn-primary"')?></th>
+    <th width="13%" align="left"><?php echo Form::submit('Ingresar','class="btn btn-xs btn-primary"')?></th>
   </tr>
 </table>
 <?php echo Form::close();}?>
@@ -113,7 +113,7 @@ echo Form::open();
 <?php echo Form::hidden('salida.totalconigv','',$TOTAL);?>
 <?php echo Form::hidden('salida.igv','',$igv);?>
 <?php echo Form::hidden('salida.totalenletras','',$texto);?> - 
-<?php echo Form::submit('Siguente','class="btn btn-primary"')?><?php echo Html::linkAction('listado_servicio/',' Volver','class="btn btn-secondary"')?><?php echo Html::linkAction('factura_servicio/'.Session::get('SALIDA_ID'),' Editar esta factura','class="btn btn-primary"')?>
+<?php echo Form::submit('Siguente','class="btn btn-xs btn-primary"')?><?php echo Html::linkAction('listado_servicio/',' Volver','class="btn btn-xs btn-secondary"')?><?php echo Html::linkAction('factura_servicio/'.Session::get('SALIDA_ID'),' Editar esta factura','class="btn btn-xs btn-primary"')?>
 <?php echo Form::close();?>
 </div>
 <?php

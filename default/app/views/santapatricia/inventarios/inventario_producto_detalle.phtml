@@ -26,12 +26,12 @@ ul.token-input-list{ width:200px !important;
 	<h1>Reporte de <?php echo Session::get('NOMBRE_INVENTARIO')?> Por Lotes</h1>
     </div>
     <div class="form-actions" title="Regresar">
-    <?php echo Html::linkAction("listado/".Session::get('FAMILIA_ID'),'Regresar ','class="btn btn"') ?>
-	<?php echo Html::linkAction('inventario_producto_detalle/'.$item->id.'/d.tesproductos_id','por producto','class="btn btn"');?>
-	<?php echo Html::linkAction('inventario_producto_detalle/'.$item->id.'/d.tescolores_id','por color','class="btn btn"');?>
-	<?php echo Html::linkAction('inventario_producto_detalle/'.$item->id.'/d.lote','por lote','class="btn btn"');?>
-	<?php echo Html::linkAction('inventario_producto_detalle/'.$item->id.'/d.tesingresos_id','por ingreso','class="btn btn"');?>
-	<?php echo Html::linkAction('inventario_producto_detalle/'.$item->id.'/d.id','Por registro','class="btn btn"');?>
+    <?php echo Html::linkAction("listado/".Session::get('FAMILIA_ID'),'Regresar ','class="btn btn-xs btn"') ?>
+	<?php echo Html::linkAction('inventario_producto_detalle/'.$item->id.'/d.tesproductos_id','por producto','class="btn btn-xs btn"');?>
+	<?php echo Html::linkAction('inventario_producto_detalle/'.$item->id.'/d.tescolores_id','por color','class="btn btn-xs btn"');?>
+	<?php echo Html::linkAction('inventario_producto_detalle/'.$item->id.'/d.lote','por lote','class="btn btn-xs btn"');?>
+	<?php echo Html::linkAction('inventario_producto_detalle/'.$item->id.'/d.tesingresos_id','por ingreso','class="btn btn-xs btn"');?>
+	<?php echo Html::linkAction('inventario_producto_detalle/'.$item->id.'/d.id','Por registro','class="btn btn-xs btn"');?>
     </div>
     <div style="clear:both"></div>
     <div class="card-body">

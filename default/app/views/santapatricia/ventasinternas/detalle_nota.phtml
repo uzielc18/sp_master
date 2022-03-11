@@ -19,7 +19,7 @@ switch ($monedas)
 </div>
 
 <div class="form-actions">
-<?php //echo Html::linkAction("facturas/7", 'Regresar ','class="btn"') ?>
+<?php //echo Html::linkAction("facturas/7", 'Regresar ','class="btn btn-xs"') ?>
 </div>
 <div class="card-body">
 <?php echo Form::open()?>
@@ -89,6 +89,6 @@ switch ($monedas)
 <?php echo Form::hidden('salida.estadosalida','','Pendiente');?>
 <?php echo Form::hidden('salida.total','',$TOTAL);?>
 <?php echo Form::hidden('salida.totalenletras','',$texto);?> - 
-<?php echo Form::submit('Siguente','class="btn btn-primary"')?><?php echo Html::linkAction('crear_nota/'.Session::get('SALIDA_ID'),' Editar','class="btn btn-secondary"')?>
+<?php echo Form::submit('Siguente','class="btn btn-xs btn-primary"')?><?php echo Html::linkAction('crear_nota/'.Session::get('SALIDA_ID'),' Editar','class="btn btn-xs btn-secondary"')?>
 <?php echo Form::close();?>
 </div>

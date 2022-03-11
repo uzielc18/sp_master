@@ -13,9 +13,9 @@
     <?php View::content() ?>
 </div>
 <div class="form-actions">
-<?php echo Html::linkAction("", 'Volver ','class="btn"') ?>
-<?php //echo Html::linkAction("cargar_doc/7/factura_adelanto", 'Factura por Adelanto ','class="btn btn-primary"') ?>
-<?php //echo Html::linkAction("cargar_doc/7/listado_servicio", 'Facturas por Servicio','class="btn btn-primary"') ?>
+<?php echo Html::linkAction("", 'Volver ','class="btn btn-xs"') ?>
+<?php //echo Html::linkAction("cargar_doc/7/factura_adelanto", 'Factura por Adelanto ','class="btn btn-xs btn-primary"') ?>
+<?php //echo Html::linkAction("cargar_doc/7/listado_servicio", 'Facturas por Servicio','class="btn btn-xs btn-primary"') ?>
 </div>
 <div class="card-body">
 <div id="ver_resultado"></div>
@@ -87,7 +87,7 @@ $number++;?>
 	{
 		echo Html::linkAction('cargarsalida/'.$item->id.'/versalida',Html::img("figuras/ver.png",'Ver','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Ver e Imprimir Factura!"');}else{echo Html::linkAction('cargarsalida/'.$item->id.'/versalida_adelanto',Html::img("figuras/ver.png",'Ver','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Ver e Imprimir Factura!"');}?>
     <?php //echo Html::linkAction("borrar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:1px;margin-right:1px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
-    <?php if($item->estadosalida!='ANULADO')echo Html::linkAction("anularfacturas/$item->id/",' X ','class="btn btn-danger" title="Anular" onclick="return confirm(\'¿Está seguro de anular esta factura ?\')"'); else echo "Anulado";?>
+    <?php if($item->estadosalida!='ANULADO')echo Html::linkAction("anularfacturas/$item->id/",' X ','class="btn btn-xs btn-danger" title="Anular" onclick="return confirm(\'¿Está seguro de anular esta factura ?\')"'); else echo "Anulado";?>
     </td>
   </tr>
 <?php }?>
@@ -129,13 +129,13 @@ $number++;?>
           <input type="checkbox" name="itemSelect[]" value="<?php echo $item->id?>" class="sele"> Seleccionar
         </label>
 
-		<?php if($item->estadosalida!='ANULADO')echo Html::linkAction("anularguias/$item->id/",' X ','class="btn btn-danger" title="Anular" onclick="return confirm(\'¿Está seguro de anular esta guia los rollos seran restablecidos ?\')"'); else echo "Anulado";?>
+		<?php if($item->estadosalida!='ANULADO')echo Html::linkAction("anularguias/$item->id/",' X ','class="btn btn-xs btn-danger" title="Anular" onclick="return confirm(\'¿Está seguro de anular esta guia los rollos seran restablecidos ?\')"'); else echo "Anulado";?>
     </td>
   </tr>
 <?php }?>
 </table>
 <?php if($number!=0){?>
- <button type="submit" class="btn btn-primary">Emitir Factura!</button> 
+ <button type="submit" class="btn btn-xs btn-primary">Emitir Factura!</button> 
  <?php }?> 
   </fieldset>
   <?php echo Form::hidden('facturas.ids');?>

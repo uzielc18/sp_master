@@ -37,7 +37,7 @@ Tag::css('token-input');?><div class="card">
 	</div>      
   <div class="control-group">
     <div class="controls">
-       <button type="submit" class="btn btn-primary">Modificar</button> <?php echo Html::linkAction('salidas','Cancelar','class="btn"')?>
+       <button type="submit" class="btn btn-xs btn-primary">Modificar</button> <?php echo Html::linkAction('salidas','Cancelar','class="btn btn-xs"')?>
     </div>
   </div>
 <?php echo Form::close();?>
@@ -68,7 +68,7 @@ Tag::css('token-input');?><div class="card">
 </div>
 <div class="form-actions">
 <?php 
-echo Html::linkAction("versalida/", 'Siguente<i class="icon-hand-right"></i>','class="btn btn-primary"') ?>&nbsp;<?php //echo Html::linkAction("salidas", 'Volver ','class="btn"') ?>
+echo Html::linkAction("versalida/", 'Siguente<i class="icon-hand-right"></i>','class="btn btn-xs btn-primary"') ?>&nbsp;<?php //echo Html::linkAction("salidas", 'Volver ','class="btn btn-xs"') ?>
 </div>
 <hr />
 <div>
@@ -77,7 +77,7 @@ echo Html::linkAction("versalida/", 'Siguente<i class="icon-hand-right"></i>','c
 {
 	$activo='';
 	if($tipo->id==$id_t_p)$activo=' btn-success';
-	echo Html::linkAction($action_name.'/'.$tipo->id,$tipo->nombre,'class="btn btn-mini'.$activo.'"').' ';
+	echo Html::linkAction($action_name.'/'.$tipo->id,$tipo->nombre,'class="btn btn-xs btn-mini'.$activo.'"').' ';
 }?>
 </div>			
 <div class="input-prepend input-append">

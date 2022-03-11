@@ -1,7 +1,26 @@
  <!-- Navbar -->
  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
       <div class="navbar-collapse" id="navbarCollapse">
-        <?php View::renderMenu(Menu::BACKEND,1,'class="navbar-nav"') ?>
+      <?php
+        $empreas_id=$modulo = Router::get('module');
+        switch($empreas_id){
+          case $empreas_id == 'admin': 
+            View::renderMenu(Menu::BACKEND,1,'class="navbar-nav"');
+            break;
+          case $empreas_id == 'santapatricia': 
+            View::renderMenu(Menu::SPATRICIA,1,'class="navbar-nav"');
+            break;
+          case $empreas_id == 'santacarmela': 
+            View::renderMenu(Menu::SCARMELA,1,'class="navbar-nav"');
+            break; 
+          default:
+            View::renderMenu(Menu::BACKEND,1,'class="navbar-nav"');
+            break;
+
+        }
+        
+        ?>  
+      <?php //View::renderMenu(Menu::BACKEND,1,'class="navbar-nav"') ?>
       </div>
     <!-- Left navbar links -->
     <!-- Right navbar links -->
@@ -16,10 +35,10 @@
             <div class="input-group input-group-sm">
               <input class="form-control form-control-sm form-control form-control-sm-navbar" type="search" placeholder="Search" aria-label="Search">
               <div class="input-group-append">
-                <button class="btn btn-navbar" type="submit">
+                <button class="btn btn-xs btn-navbar" type="submit">
                   <i class="fas fa-search"></i>
                 </button>
-                <button class="btn btn-navbar" type="button" data-widget="navbar-search">
+                <button class="btn btn-xs btn-navbar" type="button" data-widget="navbar-search">
                   <i class="fas fa-times"></i>
                 </button>
               </div>

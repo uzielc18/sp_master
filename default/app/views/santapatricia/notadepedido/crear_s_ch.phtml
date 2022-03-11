@@ -231,7 +231,7 @@ function buscarUnidad(id)
             success:function(response){
                 $("#loading").hide();
 				$("#id").val(response);
-				$("#link_terminar").html('<a href="/<?php echo $module_name?>/notadepedido/terminar/'+response+'/Pendiente/Chenille" class="btn btn-primary grabar_form">Terminar </a>');
+				$("#link_terminar").html('<a href="/<?php echo $module_name?>/notadepedido/terminar/'+response+'/Pendiente/Chenille" class="btn btn-xs btn-primary grabar_form">Terminar </a>');
 				//alert(response);
             }
  
@@ -371,11 +371,11 @@ $(".producto").click(function(){
 </script>
 	<div class="card"><h1><?php echo $titulo//echo "id--->".Session::get('PROFORMA_ID')?></h1></div>
      <div class="form-actions">
-    <?php echo Html::linkAction("listado/", 'Listado','class="btn btn-primary"') ?>
+    <?php echo Html::linkAction("listado/", 'Listado','class="btn btn-xs btn-primary"') ?>
     <?php
 	$estado='Pendiente'; 
 	if(Session::get('tipo_nota')=='ingreso')$estado='Ingresado';
-	echo '<span id="link_terminar">'.Html::linkAction("terminar/".Session::get('NOTA_ID')."/".$estado.'/'.$origen, 'Terminar ','class="btn btn-primary grabar_form"').'</span>'?>&nbsp;<?php echo Html::linkAction("listado/".$origen, 'Cancelar ','class="btn btn"') ?>
+	echo '<span id="link_terminar">'.Html::linkAction("terminar/".Session::get('NOTA_ID')."/".$estado.'/'.$origen, 'Terminar ','class="btn btn-xs btn-primary grabar_form"').'</span>'?>&nbsp;<?php echo Html::linkAction("listado/".$origen, 'Cancelar ','class="btn btn-xs btn"') ?>
 </div>
 <div class="card-body">
 <?php 
@@ -566,10 +566,10 @@ if($origen=='Produccion'){?>
           </table>
        
 <div class="form-actions">
-    <?php echo Html::linkAction("listado/", 'Listado','class="btn btn-primary"') ?>
+    <?php echo Html::linkAction("listado/", 'Listado','class="btn btn-xs btn-primary"') ?>
     <?php
 	$estado='Pendiente'; 
 	if(Session::get('tipo_nota')=='ingreso')$estado='Ingresado';
-	echo '<span id="link_terminar">'.Html::linkAction("terminar/".Session::get('NOTA_ID')."/".$estado.'/'.$origen, 'Terminar ','class="btn btn-primary grabar_form"').'</span>'?>&nbsp;<?php echo Html::linkAction("listado/".$origen, 'Cancelar ','class="btn btn"') ?>
+	echo '<span id="link_terminar">'.Html::linkAction("terminar/".Session::get('NOTA_ID')."/".$estado.'/'.$origen, 'Terminar ','class="btn btn-xs btn-primary grabar_form"').'</span>'?>&nbsp;<?php echo Html::linkAction("listado/".$origen, 'Cancelar ','class="btn btn-xs btn"') ?>
 </div>
 </div>

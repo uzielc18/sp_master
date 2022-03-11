@@ -11,7 +11,7 @@ Tag::css('token-input');?>
    <label><b>Cliente</b></label>
     <input id="CL" />
       <?php echo Form::hidden('tesdatos_id');?>
-     <a href="javascript:;" id="ver_d" class="btn"> Ver >></a>
+     <a href="javascript:;" id="ver_d" class="btn btn-xs"> Ver >></a>
   </div>
   <div style="margin:5px;float:left; width:40%; display:inline-block;"> 
    <label><b>Fecha inicio</b></label><?php echo Calendar::text('inicio')?>
@@ -21,7 +21,7 @@ Tag::css('token-input');?>
 </div>
 <div class="clear"></div>
 <hr />
-<div id="ver"><div class="form-actions"><?php echo Html::linkAction('precios','Ver Reporte de Precios','class="btn btn-primary"')?></div></div>
+<div id="ver"><div class="form-actions"><?php echo Html::linkAction('precios','Ver Reporte de Precios','class="btn btn-xs btn-primary"')?></div></div>
 <script type="text/javascript">
 $(document).ready(function()
 {

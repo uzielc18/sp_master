@@ -3,7 +3,7 @@
 </div>
 <div class="form-actions">
     
-    <?php echo Html::linkAction('listado', 'Listado de Clientes','class="btn btn-info"') ?>
+    <?php echo Html::linkAction('listado', 'Listado de Clientes','class="btn btn-xs btn-info"') ?>
     </div>
     
 <div class="card-body">
@@ -33,6 +33,6 @@ foreach($direcciones as $item){ $n++;?>
 </table>
 <?php //View::partial('paginators/classic', false, array('page' => $datos ,'url' => Router::get('controller_path').'/listado/'.$campo.'/'.$direccion.'')); ?>
 <div class="form-actions">
-    <?php //echo Html::linkAction('crear/'.$campo.'/'.$direccion.'/'.$page, 'Crear Clientes','class="btn btn-primary"') ?>
+    <?php //echo Html::linkAction('crear/'.$campo.'/'.$direccion.'/'.$page, 'Crear Clientes','class="btn btn-xs btn-primary"') ?>
 </div>
 </div>

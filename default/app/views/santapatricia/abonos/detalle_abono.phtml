@@ -76,7 +76,7 @@ foreach($tesdetalles as $detalle){
     <td width="14%"><?php echo $detalle->getTessalidas()->getTesdatos()->razonsocial;?><?php echo $detalle->getTessalidas()->totalconigv;?></td>
     <td width="14%">-</td>
     <td width="15%"><?php echo Form::text('tesdetalles-'.$q.'.monto','',$detalle->monto); ?>
-<?php echo Form::submit('GRABAR','class="btn btn-primary"');?></td>
+<?php echo Form::submit('GRABAR','class="btn btn-xs btn-primary"');?></td>
   </tr>
 </table>
 <?php echo Form::close()?>
@@ -87,6 +87,6 @@ foreach($tesdetalles as $detalle){
 <?php //echo Ajax::form('pago_con_letras',$module_name.'/vouchers/ingresoletras/')?>
 <?php echo Form::open($module_name.'/abonos/ingresoletras/'.$q)?>
 <?php echo Form::hidden('terminar.id','',$detalle->id);?>
-<?php echo Form::submit('Terminar','class="btn btn-primary"');?>
+<?php echo Form::submit('Terminar','class="btn btn-xs btn-primary"');?>
 <?php echo Form::close()?>
 </div>

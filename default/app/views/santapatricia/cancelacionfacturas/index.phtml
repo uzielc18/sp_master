@@ -39,7 +39,7 @@ $(document).ready(function()
     <td title="Seleccionar Moneda S/. O $/."><?php echo Form::dbSelect('tesmonedas_id','nombre',array('tesmonedas','find','conditions: aclempresas_id='.Session::get('EMPRESAS_ID')));?></td>
   </tr>
   <tr>
-    <td colspan="2"><?php echo Form::submit('Continuar','class="btn btn-primary"');?></td>
+    <td colspan="2"><?php echo Form::submit('Continuar','class="btn btn-xs btn-primary"');?></td>
   </tr>
 </table>
 

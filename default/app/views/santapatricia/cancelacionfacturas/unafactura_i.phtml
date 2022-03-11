@@ -34,7 +34,7 @@ $letra->getTessalidasinternas()->getTesdatos()->diascredito;
     <td><?php echo Calendar::selector('salida-'.$q.'.fvencimiento','',$letra->getTessalidasinternas()->fvencimiento);?></td>
     <td> 
      <?php echo Form::text('salida-'.$q.'.total','',$letra->getTessalidasinternas()->total)?>
-<?php if($ajax)echo Form::submit('GRABAR','class="btn btn-primary"');?>
+<?php if($ajax)echo Form::submit('GRABAR','class="btn btn-xs btn-primary"');?>
      </td>
     </tr>
 </table>
@@ -42,4 +42,4 @@ $letra->getTessalidasinternas()->getTesdatos()->diascredito;
 </div>
 
 <?php }?>
-<?php echo Html::Link($module_name.'/ventasinternas/versalida','Finalizar','class="btn btn-primary"');?>
+<?php echo Html::Link($module_name.'/ventasinternas/versalida','Finalizar','class="btn btn-xs btn-primary"');?>

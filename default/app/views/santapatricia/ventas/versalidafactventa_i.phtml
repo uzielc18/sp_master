@@ -10,7 +10,7 @@ switch ($monedas)
 	case 0: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
 }
 
-?><span class="print btn btn-primary"> Print </span> <?php if(Auth::get('id')==3){echo Html::linkAction("imprimir_rtf","IDEMO");} echo Html::linkAction('guias/'.Session::get('DOC_ID'),'Regresar <i class="icon-hand-left"></i>','class="btn"')?>
+?><span class="print btn btn-primary"> Print </span> <?php if(Auth::get('id')==3){echo Html::linkAction("imprimir_rtf","IDEMO");} echo Html::linkAction('guias/'.Session::get('DOC_ID'),'Regresar <i class="icon-hand-left"></i>','class="btn btn-xs"')?>
 <?php echo Html::link("../facturas/factura.rtf","descargar");?>
 <div class="card-body">
 

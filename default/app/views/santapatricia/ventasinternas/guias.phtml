@@ -14,18 +14,18 @@
 </div>
 
 <div class="form-actions">
-<?php echo Html::linkAction("crear/", 'Crear Guia sin Detalles','class="btn btn-primary"') ?>
- - <?php echo Html::linkAction($url."/", 'Crear Nueva Guia ','class="btn btn-primary"') ?> <?php echo Html::linkAction("", 'Regresar ','class="btn"') ?> <?php echo Html::linkAction("cargar_doc/13/nota_creditos", 'NC ','class="btn"') ?>  <?php echo Html::linkAction("cargar_doc/14/nota_debitos", 'ND ','class="btn"') ?>
+<?php echo Html::linkAction("crear/", 'Crear Guia sin Detalles','class="btn btn-xs btn-primary"') ?>
+ - <?php echo Html::linkAction($url."/", 'Crear Nueva Guia ','class="btn btn-xs btn-primary"') ?> <?php echo Html::linkAction("", 'Regresar ','class="btn btn-xs"') ?> <?php echo Html::linkAction("cargar_doc/13/nota_creditos", 'NC ','class="btn btn-xs"') ?>  <?php echo Html::linkAction("cargar_doc/14/nota_debitos", 'ND ','class="btn btn-xs"') ?>
 </div>
 <?Php 
 $clas='';
 if($Ped=='MT')$clas='btn-success';else $clas='';
-echo Html::linkAction('guias/15/MT','Muestras','class="btn btn-mini '.$clas.'"').' ';
+echo Html::linkAction('guias/15/MT','Muestras','class="btn btn-xs btn-mini '.$clas.'"').' ';
 $clas='';
 if($Ped=='VT')$clas='btn-success';else $clas='';
-echo Html::linkAction('guias/15/VT','Ventas','class="btn btn-mini '.$clas.'"').' ';
+echo Html::linkAction('guias/15/VT','Ventas','class="btn btn-xs btn-mini '.$clas.'"').' ';
 if($Ped=='PT')$clas='btn-success'; else $clas='';
-echo Html::linkAction('guias/15/PT','Transformaciones','class="btn btn-mini '.$clas.'"');?>
+echo Html::linkAction('guias/15/PT','Transformaciones','class="btn btn-xs btn-mini '.$clas.'"');?>
 <div class="card-body">
 <div id="ver_resultado"></div>
 <table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
@@ -85,7 +85,7 @@ $number++;?>
 		  }}?>
 	<?php echo Html::linkAction('cargarsalida/'.$item->id.'/versalida',Html::img("figuras/ver.png",'Ver','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Ver e Imprimir Guia - 002 - Hilos"')?>
 
-    <?php if($item->estadosalida!='ANULADO')echo Html::linkAction("anularguias/$item->id/",' X ','class="btn btn-danger" title="Anular" onclick="return confirm(\'¿Está seguro de anular esta guia los rollos seran restablecidos ?\')"'); else echo "Anulado";?>
+    <?php if($item->estadosalida!='ANULADO')echo Html::linkAction("anularguias/$item->id/",' X ','class="btn btn-xs btn-danger" title="Anular" onclick="return confirm(\'¿Está seguro de anular esta guia los rollos seran restablecidos ?\')"'); else echo "Anulado";?>
     </td>
   </tr>
 <?php }?>

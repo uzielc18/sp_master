@@ -1,6 +1,6 @@
 
 <div class="card-header">
-<?php echo Html::linkAction("crear", 'Crear Cuenta Corriente','class="btn btn-primary"') ?>
+<?php echo Html::linkAction("crear", 'Crear Cuenta Corriente','class="btn btn-xs btn-primary"') ?>
     <h1>Listado de Cuentas Corrientes Santa Carmela</h1>
 </div>   
 
@@ -41,7 +41,7 @@ foreach($tescuentascorrientesC->items as $item){ $n++;?>
 </table>
 <?php View::partial('paginators/extended', false, array('page' => $tescuentascorrientesC ,'url' => Router::get('controller_path').'/index')); ?>
 <div class="form-actions">
-    <?php //echo Html::linkAction("crear", 'Crear Cuenta Corriente','class="btn btn-primary"') ?>
+    <?php //echo Html::linkAction("crear", 'Crear Cuenta Corriente','class="btn btn-xs btn-primary"') ?>
 </div>
 
     <h1>Listado de Cuentas Corrientes Santa Patricia</h1>

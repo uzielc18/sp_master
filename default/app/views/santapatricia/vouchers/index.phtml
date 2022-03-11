@@ -2,7 +2,7 @@
 <h1>Vouchers<span>Listado de vouchers por mes y tipo de vauchers</span></h1>
 </div>
 <div class="form-actions">
-<?php echo Html::linkAction("crear/",'Crear Vouchers','class="btn btn-primary"','title="Crear Vaucher"','') ?>
+<?php echo Html::linkAction("crear/",'Crear Vouchers','class="btn btn-xs btn-primary"','title="Crear Vaucher"','') ?>
 </div>
 <div class="tabbable"> <!-- Only required for left/right tabs -->
   <ul class="nav nav-tabs">
@@ -108,12 +108,12 @@ if(!empty($item->importe))$importe=$item->importe;
    if($item->estadov!="Terminado" && $item->estadov!="ANULADO")echo Html::link($module_name.'/letras/cargar/'.$item->id.'/grabardetalle',Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'')?>
    <?php echo Html::link($module_name.'/letras/cargar/'.$item->id.'/terminar',Html::img("figuras/ver.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Visualizar Voucher !"','')?>
    <?php if($item->activo==0)echo Html::link($module_name."/letras/eliminar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
-   <?php if($item->estadov!="ANULADO")echo Html::linkAction("cargar/$item->id/anularvouchers",'X', 'class="btn btn-danger" onclick="return confirm(\'¿Está seguro?\')"'); }else{?>
+   <?php if($item->estadov!="ANULADO")echo Html::linkAction("cargar/$item->id/anularvouchers",'X', 'class="btn btn-xs btn-danger" onclick="return confirm(\'¿Está seguro?\')"'); }else{?>
    <?php 
    if($item->estadov!="Terminado" && $item->estadov!="ANULADO")echo Html::linkAction('cargar/'.$item->id.'/grabardetalle',Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'')?>
    <?php echo Html::linkAction('cargar/'.$item->id.'/finalizar',Html::img("figuras/ver.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Visualizar Vaucher"','')?>
    <?php if(($item->activo==0 || Auth::get('id')==3) and $item->estadov!="Terminado"){echo Html::linkAction("eliminar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:10px;margin-right:10px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');}
-   if($item->estadov!="ANULADO")echo Html::linkAction("cargar/$item->id/anularvouchers",'X', 'class="btn btn-danger" onclick="return confirm(\'¿Está seguro?\')"');?>
+   if($item->estadov!="ANULADO")echo Html::linkAction("cargar/$item->id/anularvouchers",'X', 'class="btn btn-xs btn-danger" onclick="return confirm(\'¿Está seguro?\')"');?>
    <?php }?>
     </td>
   </tr>

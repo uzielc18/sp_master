@@ -68,9 +68,9 @@
 <?php echo Form::hidden('salida.tesdocumentos_id')?>
 <?php echo Form::hidden('salida.testipocambios_id')?>
 <?php echo Form::hidden('salida.estadosalida','','TERMINADO')?>
-<?php if($salida->estadosalida=='Editable'){?><button type="submit" class="btn btn-primary">Finalizar</button> <?php echo Html::linkAction('agregardetalles','Editar','class="btn"')?><?Php }else{?><?php echo Html::linkAction('salidas','Listado','class="btn"')?><?php }?>
+<?php if($salida->estadosalida=='Editable'){?><button type="submit" class="btn btn-xs btn-primary">Finalizar</button> <?php echo Html::linkAction('agregardetalles','Editar','class="btn btn-xs"')?><?Php }else{?><?php echo Html::linkAction('salidas','Listado','class="btn btn-xs"')?><?php }?>
 <?php echo Form::close();?>
-<button onclick="myFunction()" class="btn btn-info"> IMPRIMIR </button>
+<button onclick="myFunction()" class="btn btn-xs btn-info"> IMPRIMIR </button>
 
 <script>
 function myFunction() {

@@ -150,7 +150,7 @@ $(document).ready(function()
     </div>
 	
 	<?php }elseif($l_f==0){?>
-    <strong><em>Nro. de Letras a Ingresar !<br /></em></strong><?php echo Form::text('letras');?> <a href="javascript:;" class="btn btn-primary" id="enviar_numero_de_letras">Enviar</a>
+    <strong><em>Nro. de Letras a Ingresar !<br /></em></strong><?php echo Form::text('letras');?> <a href="javascript:;" class="btn btn-xs btn-primary" id="enviar_numero_de_letras">Enviar</a>
     <script type="text/javascript">
 $(document).ready(function()
 {
@@ -175,8 +175,8 @@ $(document).ready(function()
 <?php echo Form::hidden('salida.totalconigv');?>
 <?php echo Form::hidden('salida.igv');?>
 <?php echo Form::hidden('salida.totalenletras');?>
-<?php if($salida->estadosalida=='Editable'){?><button type="submit" class="btn btn-primary">Finalizar Sin crear Letras</button> 
-<?php echo Html::linkAction('factura_adelanto/'.Session::get('SALIDA_ID'),'Editar','class="btn btn-success"');?><?Php }else{?><?php echo Html::linkAction('guias/'.Session::get('DOC_ID'),'Listado','class="btn"')?><?php }?>
+<?php if($salida->estadosalida=='Editable'){?><button type="submit" class="btn btn-xs btn-primary">Finalizar Sin crear Letras</button> 
+<?php echo Html::linkAction('factura_adelanto/'.Session::get('SALIDA_ID'),'Editar','class="btn btn-xs btn-success"');?><?Php }else{?><?php echo Html::linkAction('guias/'.Session::get('DOC_ID'),'Listado','class="btn btn-xs"')?><?php }?>
 <?php echo Form::close();?>
 	<div id="pago_con_letras">
     </div>
@@ -205,7 +205,7 @@ $factura_id=$let->factura_id;
     </tr>
 	<?php }?>
 </table>
-<button onclick="myFunction_l()" class="btn btn-info"> IMPRIMIR LETRAS </button>
+<button onclick="myFunction_l()" class="btn btn-xs btn-info"> IMPRIMIR LETRAS </button>
 <?php 
 echo $factura_id;
 $hrf_l='letras';?>
@@ -217,7 +217,7 @@ function myFunction_l() {
  </div>
 <?php 
 //echo $salida->estadosalida;
-if($salida->estadosalida=="Editable"){?><a href="javascript:;" id="editar_letras" class="btn btn-primary">Editar la Informacion de las letras</a><?php }?>
+if($salida->estadosalida=="Editable"){?><a href="javascript:;" id="editar_letras" class="btn btn-xs btn-primary">Editar la Informacion de las letras</a><?php }?>
 <?php }
 	}?>
 <?php 
@@ -234,8 +234,8 @@ if($l_f>0 || $salida->tescondicionespagos_id!=2){?>
 <?php echo Form::hidden('salida.totalconigv');?>
 <?php echo Form::hidden('salida.igv');?>
 <?php echo Form::hidden('salida.totalenletras');?>
-<?php if($salida->estadosalida=='Editable'){?><button type="submit" class="btn btn-primary">Finalizar</button> 
-<?php echo Html::linkAction('factura_adelanto/'.Session::get('SALIDA_ID'),'Editar','class="btn btn-primary"');?><?Php }else{?><?php echo Html::linkAction('guias/'.Session::get('DOC_ID'),'Listado','class="btn"')?> <?php echo Html::linkAction('versalida_f','Imprimir','class="btn"')?><?php //echo Html::linkAction('factura_adelanto/'.Session::get(),'Imprimir','class="btn"')?> <?php }?>
+<?php if($salida->estadosalida=='Editable'){?><button type="submit" class="btn btn-xs btn-primary">Finalizar</button> 
+<?php echo Html::linkAction('factura_adelanto/'.Session::get('SALIDA_ID'),'Editar','class="btn btn-xs btn-primary"');?><?Php }else{?><?php echo Html::linkAction('guias/'.Session::get('DOC_ID'),'Listado','class="btn btn-xs"')?> <?php echo Html::linkAction('versalida_f','Imprimir','class="btn btn-xs"')?><?php //echo Html::linkAction('factura_adelanto/'.Session::get(),'Imprimir','class="btn btn-xs"')?> <?php }?>
 <?php echo Form::close();
 }
 }else{
@@ -251,11 +251,11 @@ if($l_f>0 || $salida->tescondicionespagos_id!=2){?>
 <?php echo Form::hidden('salida.totalconigv');?>
 <?php echo Form::hidden('salida.igv');?>
 <?php echo Form::hidden('salida.totalenletras');?>
-<?php if($salida->estadosalida=='Editable'){?><button type="submit" class="btn btn-primary">Finalizar</button> 
-<?php echo Html::linkAction('factura_adelanto/'.Session::get('SALIDA_ID'),'Editar','class="btn btn-primary"');?><?Php }else{?><?php echo Html::linkAction('guias/'.Session::get('DOC_ID'),'Listado','class="btn"')?> <?php echo Html::linkAction('versalida_f','Imprimir','class="btn"')?><?php }?>
+<?php if($salida->estadosalida=='Editable'){?><button type="submit" class="btn btn-xs btn-primary">Finalizar</button> 
+<?php echo Html::linkAction('factura_adelanto/'.Session::get('SALIDA_ID'),'Editar','class="btn btn-xs btn-primary"');?><?Php }else{?><?php echo Html::linkAction('guias/'.Session::get('DOC_ID'),'Listado','class="btn btn-xs"')?> <?php echo Html::linkAction('versalida_f','Imprimir','class="btn btn-xs"')?><?php }?>
 <?php echo Form::close();?>
   	<?php }?>
-<button onclick="myFunction()" class="btn btn-info"> IMPRIMIR </button>
+<button onclick="myFunction()" class="btn btn-xs btn-info"> IMPRIMIR </button>
 <?php 
 $hrf='facturas';
 if(Session::get('DOC_ID')==15)$hrf='guias';?>

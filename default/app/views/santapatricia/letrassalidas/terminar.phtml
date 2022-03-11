@@ -29,7 +29,7 @@ switch ($vc->tesmonedas_id)
 ?>
 <div class="card">
 <h1><em>Vouchers! <span> Vista de Impresion de Vauchers</span></em></h1>
-    <?php echo Html::linkAction("", 'Volver al Inicio','class="btn btn-primary"') ?> <a href="#" class="print btn btn-primary" rel="content"> Imprimir ! </a>
+    <?php echo Html::linkAction("", 'Volver al Inicio','class="btn btn-xs btn-primary"') ?> <a href="#" class="print btn btn-primary" rel="content"> Imprimir ! </a>
 </div>
 
 <div class="card-body">
@@ -181,8 +181,8 @@ switch ($vc->tesmonedas_id)
 
 <?php if($vc->estadov=='Pendiente'){?>
 <div class="form-actions">
-    <?php echo Html::linkAction("grabardetalle/", 'Editar','class="btn btn-secondary"') ?>
-    <?php echo Html::linkAction("finalizar/", 'Terminar','class="btn btn-primary"') ?>
+    <?php echo Html::linkAction("grabardetalle/", 'Editar','class="btn btn-xs btn-secondary"') ?>
+    <?php echo Html::linkAction("finalizar/", 'Terminar','class="btn btn-xs btn-primary"') ?>
 </div>
 <?php }?>
 <?php echo Form::close()?>

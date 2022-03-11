@@ -5,7 +5,7 @@
     <?php View::content(); echo Session::get('DOC_CODIGO'); ?>
 </div>
 <div class="form-actions">
-<?Php echo Html::linkAction("",'Regresar' ,'class="btn btn-info"');?> <?php echo Html::linkAction("repar_letra_adelanto","Actualizar Montos",'class="btn btn-primary"');?>
+<?Php echo Html::linkAction("",'Regresar' ,'class="btn btn-xs btn-info"');?> <?php echo Html::linkAction("repar_letra_adelanto","Actualizar Montos",'class="btn btn-xs btn-primary"');?>
 </div>
 <div class="card-body">
 <div id="ver_resultado"></div>
@@ -74,6 +74,6 @@ switch ($item->getTesingresos()->tesmonedas_id)
 <?php }?>
 </table>
 <div class="form-actions">
-<?php //echo Html::linkAction("cargaringreso/0", 'Nueva '.Session::get('DOC_NOMBRE'),'class="btn btn-primary"') ?>&nbsp;<?php echo Html::linkAction("", 'Volver ','class="btn"') ?>
+<?php //echo Html::linkAction("cargaringreso/0", 'Nueva '.Session::get('DOC_NOMBRE'),'class="btn btn-xs btn-primary"') ?>&nbsp;<?php echo Html::linkAction("", 'Volver ','class="btn btn-xs"') ?>
 </div>
 </div>

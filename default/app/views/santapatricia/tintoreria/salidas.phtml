@@ -2,7 +2,7 @@
     <h1><?php echo $titulo?><span> Salida de Rollos <?php echo Session::get('DOC_NOMBRE')?></span></h1>
 </div>
 <div class="form-actions">
-<?php echo Menu::menuControl($action_name);?> <?php echo Html::linkAction($url."/", 'Nueva '.Session::get('DOC_NOMBRE'),'class="btn btn-primary"') ?>
+<?php echo Menu::menuControl($action_name);?> <?php echo Html::linkAction($url."/", 'Nueva '.Session::get('DOC_NOMBRE'),'class="btn btn-xs btn-primary"') ?>
 </div>
 <div class="menu">
 <ul><li><a>Año 
@@ -91,7 +91,7 @@ $number++;?>
 	<?php echo Html::linkAction('cargarsalida/'.$item->id.'/versalida',Html::img("figuras/ver.png",'Ver','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Ver e Imprimir Guia - 002 - Hilos"')?>
     <?php /*if(Auth::get('id')==3 || Auth::get('id')==12){*/echo Html::linkAction("cargarsalida/".$item->id."/crearprocesos",Html::img("figuras/procesos.png",'Procesos','style="width: 20px;margin-left:1px;margin-right:1px;"'), 'onclick="return confirm(\'¿Está seguro?\')" title="Procesos Editar"');/*}*/?>
     <?php //echo Html::linkAction("ver/$item->id/$page",Html::img("figuras/ver.png",'Eliminar','style="width: 20px;margin-left:1px;margin-right:1px;"'));?>
-	<?php if($item->estadosalida!='ANULADO')echo Html::linkAction("anularguias/$item->id/",'X','class="btn btn-danger" title="Anular" onclick="return confirm(\'¿Está seguro de anular esta Guia ?\')"'); else echo "Anulado";?>
+	<?php if($item->estadosalida!='ANULADO')echo Html::linkAction("anularguias/$item->id/",'X','class="btn btn-xs btn-danger" title="Anular" onclick="return confirm(\'¿Está seguro de anular esta Guia ?\')"'); else echo "Anulado";?>
     </td>
   </tr>
 <?php }?>

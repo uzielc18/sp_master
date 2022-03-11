@@ -204,7 +204,7 @@ if(Session::get('PRODUCCION_ID')!=0 && $estado!=0){?>
     <td width="21%">Colores trama:<?php echo Form::text('tescolores_id_trama','placeholder="Trama"')?></td>
     <td width="18%">Corte:<?php echo Form::select('corte',array("Sin corte"=>"Sin corte","Corte central"=>"Corte central","Otros"=>"Otros"),'',"Sin corte")?></td>
     <td width="18%">Observaciones:<?php echo Form::textArea('observaciones','placeholder="Observaciones"')?></td>
-    <td width="5%"><a href="javascript:;" class="btn btn-primary grabardetalle">AGREGAR</a></td>
+    <td width="5%"><a href="javascript:;" class="btn btn-xs btn-primary grabardetalle">AGREGAR</a></td>
 </tr>
 </table>
 </form>
@@ -258,15 +258,15 @@ foreach($detalles as $detalle){
 
 <div class="form-actions">
 <?php 
-echo Html::linkAction("finalizar/".Session::get("PRODUCCION_ID").'/PRODUCCION',"Enviar a Producción",'class="btn btn-primary"').'&nbsp;';
-echo Html::linkAction("listado/","Ir a Listado de Hojas",'class="btn btn-secondary"');?>
+echo Html::linkAction("finalizar/".Session::get("PRODUCCION_ID").'/PRODUCCION',"Enviar a Producción",'class="btn btn-xs btn-primary"').'&nbsp;';
+echo Html::linkAction("listado/","Ir a Listado de Hojas",'class="btn btn-xs btn-secondary"');?>
 </div>
 <?php 
 
 }else
 {?>
 <div class="form-actions">
-	<a href="javascript:;" id="hoja" class="btn btn-primary">GRABAR</a><?php echo Html::linkAction("eliminar/","Cancelar",'class="btn btn-secondary"');?>
+	<a href="javascript:;" id="hoja" class="btn btn-xs btn-primary">GRABAR</a><?php echo Html::linkAction("eliminar/","Cancelar",'class="btn btn-xs btn-secondary"');?>
 </div>
 <?php }?>
 <script>

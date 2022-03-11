@@ -2,13 +2,13 @@
 <h1>Hoja de Ruta<span><?php echo Session::get('MAQUINA_PREFIJO')?><?php echo Session::get('MAQUINA_NUMERO')?></span></h1>
 </div>
 <div class="form-actions">
-<?php echo Html::linkAction("", 'Escoger Maquina','class="btn btn-secondary"') ?>
+<?php echo Html::linkAction("", 'Escoger Maquina','class="btn btn-xs btn-secondary"') ?>
 <?php 
 echo '&nbsp;';
-echo Html::linkAction("listado/","Ir a Listado de Hojas",'class="btn btn-secondary"');
+echo Html::linkAction("listado/","Ir a Listado de Hojas",'class="btn btn-xs btn-secondary"');
 echo '&nbsp;';
-echo Html::link($module_name."/plegadores/seguimiento_plegadores","Ir a Seguimiento de plegadores",'class="btn btn-secondary"');
-//echo Html::linkAction("cambiarestado/".Session::get('PRODUCCION_ID')."/TERMINADO/listado","Terminar ",'class="btn btn-primary" id="verificar" onclick="return confirm(\'¿Está seguro? !!!! \')"');?>
+echo Html::link($module_name."/plegadores/seguimiento_plegadores","Ir a Seguimiento de plegadores",'class="btn btn-xs btn-secondary"');
+//echo Html::linkAction("cambiarestado/".Session::get('PRODUCCION_ID')."/TERMINADO/listado","Terminar ",'class="btn btn-xs btn-primary" id="verificar" onclick="return confirm(\'¿Está seguro? !!!! \')"');?>
 </div>
 <?php echo Sp::imprimir();?>
 <div class="card-body">

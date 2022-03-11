@@ -12,7 +12,8 @@
 
   <tr>
     <th width="13%" align="left">Codigo</th>
-    <th width="15%" align="left">Cantidad</th>
+    <th width="15%" align="left">Peso</th>
+    <th width="15%" align="left">Metros</th>
     <th width="11%" align="left">Unidad</th>
     <th width="61%" align="left">Descripcion</th>
   </tr>
@@ -24,6 +25,7 @@
   <tr id="<?php echo $item->id?>">
     <td><?php echo $n?>. <?php if(empty($item->getProrollos()->prorollos_id)){echo $item->getProrollos()->numero?>-M<?php echo $item->getProrollos()->maquina_numero;}else{echo $item->getProrollos()->codigo?>-<?php echo $item->getProrollos()->numeroventa; echo ' '.$item->getProrollos()->getNprocesos($item->prorollos_id);}?></td>
     <td><?php echo $item->pesoneto?></td>
+    <td><?php echo $item->cantidad?></td>
     <td><?Php echo $item->getTesunidadesmedidas()->simbolo?></td>
     <td><?php echo $item->getTesproductos()->detalle?> <?php echo $item->getTesproductos()->nombre?> <?Php echo $item->getTescolores()->nombre?></td>
   </tr>
@@ -53,10 +55,10 @@
 <?php echo Form::hidden('salida.tesdocumentos_id')?>
 <?php echo Form::hidden('salida.testipocambios_id')?>
 <?php echo Form::hidden('salida.estadosalida','','Enviado')?>
-<?php if($salida->estadosalida=='Editable'){?><button type="submit" class="btn btn-primary" title="Si Usted, cree que ya terminó, entonces Terminar, sino haga Clic en Editar, para verificar los datos ingresados">Terminar</button> 
-<?php echo Html::linkAction('agregardetalles','Editar','class="btn"')?><?Php }else{?><?php echo Html::linkAction('salidas','Listado','class="btn"')?> <?php //echo Html::linkAction('versalida_i','Imprimir','class="btn"')?><?php }?>
+<?php if($salida->estadosalida=='Editable'){?><button type="submit" class="btn btn-xs btn-primary" title="Si Usted, cree que ya terminó, entonces Terminar, sino haga Clic en Editar, para verificar los datos ingresados">Terminar</button> 
+<?php echo Html::linkAction('agregardetalles','Editar','class="btn btn-xs"')?><?Php }else{?><?php echo Html::linkAction('salidas','Listado','class="btn btn-xs"')?> <?php //echo Html::linkAction('versalida_i','Imprimir','class="btn btn-xs"')?><?php }?>
 <?php echo Form::close();?>
-<button onclick="myFunction()" class="btn btn-info"> IMPRIMIR </button>
+<button onclick="myFunction()" class="btn btn-xs btn-info"> IMPRIMIR </button>
 
 <script>
 function myFunction() {

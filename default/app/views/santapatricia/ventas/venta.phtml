@@ -18,7 +18,7 @@ switch ($monedas)
     <?php View::content() ?>
 </div>
 <div class="form-actions">
-<?php echo Html::linkAction("facturas/7", 'Regresar ','class="btn"') ?>
+<?php echo Html::linkAction("facturas/7", 'Regresar ','class="btn btn-xs"') ?>
 </div>
 <div class="card-body">
 <?php echo Form::open()?>
@@ -180,8 +180,8 @@ switch ($monedas)
 <?php echo Form::hidden('salida.totalenletras','',$texto);?>
 <?php //echo Form::textArea('salida.glosa','style="margin: 0px 0px 15px;height: 15px;width:35%;"');?>
 <div class="form-actions">
-<?php echo Html::link("$module_name/exportaciones/exportacion/$salida->id"," Generar EXPORTACION",'class="btn btn-success"')?>&nbsp;&nbsp;
-<?php echo Form::submit('Venta normal','class="btn btn-primary"')?>
+<?php echo Html::link("$module_name/exportaciones/exportacion/$salida->id"," Generar EXPORTACION",'class="btn btn-xs btn-success"')?>&nbsp;&nbsp;
+<?php echo Form::submit('Venta normal','class="btn btn-xs btn-primary"')?>
 </div>
 </div>
 <?php echo Form::close();?>

@@ -57,7 +57,7 @@ if($item->enalmacen==1)echo "En Almacen";if($item->enalmacen==0)echo "En producc
 Produccion <?php if(!empty($item->prodetalleproduccion_id))echo $item->getProdetalleproduccion()->getProproduccion()->titulo.', guia=> '.$item->getProdetalleproduccion()->getProproduccion()->guianumero;
 echo ' /estado del rollo=>'.$item->estadorollo;echo 'USUARIO: '.$item->userid.$item->getUsuarios()->nombres
 ?></td>
-    <td><?Php echo Html::linkAction('modificar_rollos/'.$item->id,'Editar','class="btn btn-info"');?></td>
+    <td><?Php echo Html::linkAction('modificar_rollos/'.$item->id,'Editar','class="btn btn-xs btn-info"');?></td>
   </tr>
   <?php }?>
 </tbody>

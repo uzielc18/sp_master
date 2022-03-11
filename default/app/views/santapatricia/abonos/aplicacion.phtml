@@ -66,7 +66,7 @@ $(document).ready(function()
 <?php echo Form::hidden('tesaplicacionletraingresos.id','',0);?>
 <?php echo Form::hidden('l');?>
 <?php echo Form::text('totalconigv','',number_format($total,2,'.',''))?>
-<?php echo Form::submit('GRABAR','class="btn btn-primary"');?>
+<?php echo Form::submit('GRABAR','class="btn btn-xs btn-primary"');?>
 <?php echo Form::close()?>
 
 <?php }else{ 
@@ -107,7 +107,7 @@ echo Html::link($module_name.'/letras/','Verifique si tiene letras para cambiar 
     <td width="15%"><?php echo Form::text('tesdetallevauchers.monto','',number_format($total,2,'.','')); ?></td>
   </tr>
 </table>
-<?php echo Form::submit('GRABAR','class="btn btn-primary"');?>
+<?php echo Form::submit('GRABAR','class="btn btn-xs btn-primary"');?>
 <?php echo Form::close()?>
 </div>
 <?php }?>

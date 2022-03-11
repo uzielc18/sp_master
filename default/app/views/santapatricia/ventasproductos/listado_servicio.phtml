@@ -14,8 +14,8 @@
 </div>
 
 <div class="form-actions">
-<?php ?><?php if(Session::get('DOC_ID')==7)echo Html::linkAction("", 'Volver ','class="btn"').' '.Html::linkAction("cargar_doc/7/factura_servicio", 'Crear Factura por Servicio ','class="btn btn-primary"').'-'.Html::linkAction("cargar_doc/15/listado_servicio", 'Guias por servicios','class="btn btn-primary"');
- if(Session::get('DOC_ID')==15)echo Html::linkAction("cargar_doc/7/listado_servicio", 'Volver ','class="btn"').' '.Html::linkAction("cargar_doc/15/guia_servicio", 'Crear Guia por Servicio ','class="btn btn-primary"') ?> 
+<?php ?><?php if(Session::get('DOC_ID')==7)echo Html::linkAction("", 'Volver ','class="btn btn-xs"').' '.Html::linkAction("cargar_doc/7/factura_servicio", 'Crear Factura por Servicio ','class="btn btn-xs btn-primary"').'-'.Html::linkAction("cargar_doc/15/listado_servicio", 'Guias por servicios','class="btn btn-xs btn-primary"');
+ if(Session::get('DOC_ID')==15)echo Html::linkAction("cargar_doc/7/listado_servicio", 'Volver ','class="btn btn-xs"').' '.Html::linkAction("cargar_doc/15/guia_servicio", 'Crear Guia por Servicio ','class="btn btn-xs btn-primary"') ?> 
 </div>
 <div class="card-body">
 <div id="ver_resultado"></div>
@@ -130,7 +130,7 @@ $number++;?>
 <?php }?>
 </table>
 <?php if($number!=0){?>
- <button type="submit" class="btn btn-primary">Emitir Factura!</button> 
+ <button type="submit" class="btn btn-xs btn-primary">Emitir Factura!</button> 
  <?php }?>
   </fieldset>
   <?php echo Form::hidden('facturas.ids');?>

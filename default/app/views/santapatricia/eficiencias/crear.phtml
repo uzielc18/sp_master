@@ -7,8 +7,8 @@ Tag::css('token-input');?>
 <h1> Ingresos para <?Php echo Session::get('MAQUINA_NOMBRE').' '.Session::get('MAQUINA_PREFIJO').'-'.Session::get('MAQUINA_NUMERO')?><span>Ingresar la produccion en valor numérico</span></h1>
 </div>
 <div class="form-actions">
-<?php echo Html::link('santapatricia/produccion','Volver Produccion','class="btn btn-info"')?>
-<?php echo Html::link('santapatricia/eficiencias/maquinas','Volver Eficacia por maquinas','class="btn"')?>
+<?php echo Html::link('santapatricia/produccion','Volver Produccion','class="btn btn-xs btn-info"')?>
+<?php echo Html::link('santapatricia/eficiencias/maquinas','Volver Eficacia por maquinas','class="btn btn-xs"')?>
 </div>
 <div id="guia" class="card-body">
 <?php echo Ajax::form('guia',$module_name."/eficiencias/grabar_eficiencia/",'form-inline','post')?>

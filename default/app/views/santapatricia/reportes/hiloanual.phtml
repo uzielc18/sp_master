@@ -33,10 +33,10 @@ margin-top: -20px
 {
 	$activo='';
 	if($tipo->id==$id)$activo=' btn-success';
-	echo Html::linkAction($action_name.'/'.$tipo->id.'/'.$personal_id.'/'.$anio,$tipo->nombre,'class="btn btn-mini'.$activo.'"').' ';
+	echo Html::linkAction($action_name.'/'.$tipo->id.'/'.$personal_id.'/'.$anio,$tipo->nombre,'class="btn btn-xs btn-mini'.$activo.'"').' ';
 }
-echo Html::linkAction($action_name.'/0/'.$personal_id.'/'.$anio,'Todos','class="btn btn-mini"').' ';
-//echo Html::linkAction($action_name.'/0','Todos los Hilos','class="btn btn-mini'.$activo.'"').' ';?>
+echo Html::linkAction($action_name.'/0/'.$personal_id.'/'.$anio,'Todos','class="btn btn-xs btn-mini"').' ';
+//echo Html::linkAction($action_name.'/0','Todos los Hilos','class="btn btn-xs btn-mini'.$activo.'"').' ';?>
 </div>
 <div style="display:inline-block !important; width:90%;">
 <div class="span3">

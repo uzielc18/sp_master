@@ -446,7 +446,7 @@ function EliminarDetalle(id)
 	  <?php echo Form::dbSelect('tipoproducto','nombre',array("testipoproductos",'find','conditions: activo=1 AND teslineaproductos_id='.$linea_id),'Cambiar de tipo de producto','',$tipos_id);?>
     </p>
    <div class="card">
-    <?php View::partial('paginators/classic', false, array('page' => $productos ,'url' => Router::get('controller_path').'/editar/'.$linea_id.'/'.$tipos_id)); ?><?php echo Html::linkAction("listado/".Session::get('FAMILIA_ID'),'REGRESAR','class="btn btn-primary"')?></div>
+    <?php View::partial('paginators/classic', false, array('page' => $productos ,'url' => Router::get('controller_path').'/editar/'.$linea_id.'/'.$tipos_id)); ?><?php echo Html::linkAction("listado/".Session::get('FAMILIA_ID'),'REGRESAR','class="btn btn-xs btn-primary"')?></div>
 	<table width="98%" id="items">
 		  <tr>
 		      <?php /*?><th width="7%">Nº</th><?php */?>

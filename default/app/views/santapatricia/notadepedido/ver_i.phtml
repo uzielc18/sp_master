@@ -189,10 +189,10 @@ $importe=$item->importe;
 <?php if(Session::get('DOC_CODIGO')=='09'){?>
 <label>Auto Salida* <?php echo Form::select('ingreso.autosalida',array(""=>"No","1"=>"Si"))?><small style="font-style:italic;">La guia no llega a nuestra Empresa</small></label>
 <?php }?>
-<?php echo Html::linkAction("ingreso_hilo/".$origen, 'Editar ','class="btn btn-secondary"') ?>&nbsp;<?php echo Form::submit('Terminar ','class="btn btn-primary"') ?>
+<?php echo Html::linkAction("ingreso_hilo/".$origen, 'Editar ','class="btn btn-xs btn-secondary"') ?>&nbsp;<?php echo Form::submit('Terminar ','class="btn btn-xs btn-primary"') ?>
 <?php echo Form::close();?>
 
-<?php }else{?><?php echo Html::linkAction("listado/".$origen, 'Listado','class="btn btn-secondary"') ?><?php }?>
+<?php }else{?><?php echo Html::linkAction("listado/".$origen, 'Listado','class="btn btn-xs btn-secondary"') ?><?php }?>
 </div>
 </div>
 <div id="loading" style="display:none;"><img src="/img/spin.gif" /></div>

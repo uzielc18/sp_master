@@ -40,7 +40,7 @@ Tag::css('token-input');?>
 	<?php echo Form::text('proprocesos.rendimiento')?>
     <label>Observacion:</label>
 	<?php echo Form::textArea('proprocesos.detalle','style="margin: 0px 0px 9px; height: 37px; width: 275px;"')?>
-	<button type="submit" class="btn btn-primary">Elegir Acabados</button>
+	<button type="submit" class="btn btn-xs btn-primary">Elegir Acabados</button>
   </fieldset>
 <?Php echo Form::close();?>
 </div>
@@ -70,17 +70,17 @@ Tag::css('token-input');?>
     <?Php 
 	endforeach;?>
     <?php //print_r($ACABADOS)?>
-    <button type="submit" class="btn btn-primary">Grabar Acabados</button> <?php echo Html::linkAction('borrar_seleccion/'.$proprocesos->id,'Borrar Seleccionados','class="btn"');?>
+    <button type="submit" class="btn btn-xs btn-primary">Grabar Acabados</button> <?php echo Html::linkAction('borrar_seleccion/'.$proprocesos->id,'Borrar Seleccionados','class="btn btn-xs"');?>
   </fieldset>
   <?php echo Form::text('prodetalleacabados.ids','readonly="readonly"','3');?>
 <?Php echo Form::close();?>
 
 <?php }?>
 <?php 
-if(!empty($ACABADOS))echo Html::linkAction("versalida/", 'Siguente<i class="icon-hand-right"></i>','class="btn btn-primary"') ?>&nbsp;<?php //echo Html::linkAction("salidas", 'Volver ','class="btn"') ?>
+if(!empty($ACABADOS))echo Html::linkAction("versalida/", 'Siguente<i class="icon-hand-right"></i>','class="btn btn-xs btn-primary"') ?>&nbsp;<?php //echo Html::linkAction("salidas", 'Volver ','class="btn btn-xs"') ?>
 </div>
 <div class="clear"></div>
-<?php echo Html::linkAction("salidas", 'Volver ','class="btn"') ?>
+<?php echo Html::linkAction("salidas", 'Volver ','class="btn btn-xs"') ?>
 <div id="ver_resultado"></div>
 
 <script type="text/javascript">

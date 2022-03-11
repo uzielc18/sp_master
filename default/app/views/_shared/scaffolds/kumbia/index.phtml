@@ -2,7 +2,7 @@
 <?php View::content()?>
 <h1><?= ucwords("$model"), ": <span>$action_name</span>" ?></h1>
 <div class="actions">
-    <?= Html::linkAction("crear/", 'Crear registro', 'class="btn btn-primary"')?>
+    <?= Html::linkAction("crear/", 'Crear registro', 'class="btn btn-xs btn-primary"')?>
 </div>
 <?php if (isset($data->items) && (count($data->items) > 0)) : ?>
 <table class="t">

@@ -17,7 +17,7 @@ Tag::css('token-input');?>
 
 <div class="card"><h1><?php echo $titulo//echo "id--->".Session::get('PROFORMA_ID')?><span>Crear lisatdo por <?php echo $origenorden;?></span></h1></div>
 <div class="form-actions">
-    <?php echo Html::linkAction("listado/".$origenorden.'/', 'Listado','class="btn btn-primary"') ?></div>
+    <?php echo Html::linkAction("listado/".$origenorden.'/', 'Listado','class="btn btn-xs btn-primary"') ?></div>
  <div id="loading" style="display:none;"><img src="/img/spin.gif" /></div>
  <div class="card-body">
 <?php echo Form::open('','post','id="proformas"');?>
@@ -230,7 +230,7 @@ Tag::css('token-input');?>
 	  <h5>Indicaciones Especiales</h5><?php echo Form::textArea('pre_descripcion','style="margin: 0px 0px 9px; height: 61px; width: 75%;"');?>
   </div>
         <div class="form-actions">
-    <?php echo Html::linkAction("listado/".$origenorden, 'Terminar ','class="btn btn-primary grabar_form"') ?>&nbsp;<?php echo Html::linkAction("listado/".$origenorden, 'Cancelar ','class="btn btn"') ?>
+    <?php echo Html::linkAction("listado/".$origenorden, 'Terminar ','class="btn btn-xs btn-primary grabar_form"') ?>&nbsp;<?php echo Html::linkAction("listado/".$origenorden, 'Cancelar ','class="btn btn-xs btn"') ?>
 </div>
 </div>
 

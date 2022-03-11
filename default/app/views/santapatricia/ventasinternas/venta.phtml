@@ -19,7 +19,7 @@ switch ($monedas)
 </div>
 
 <div class="form-actions">
-<?php echo Html::linkAction("guias/15", 'Regresar ','class="btn"') ?>
+<?php echo Html::linkAction("guias/15", 'Regresar ','class="btn btn-xs"') ?>
 </div>
 <?php if($salida->estadosalida=='ANULADO'){?><div class="texto"> ANULADO </div><?php }?>
 <div class="card-body">
@@ -153,7 +153,7 @@ switch ($monedas)
 <?php echo Form::hidden('salida.total','',$TOTAL);?>
 <div class="form-actions">
 <?php //echo Form::textArea('salida.glosa','style="margin: 0px 0px 9px;height: 60px;width:95%;"');?>
-<?php echo Form::submit('Siguente','class="btn btn-primary"')?> <?php echo Html::linkAction('agregardetalles','Editar','class="btn btn-secondary"')?></div>
+<?php echo Form::submit('Siguente','class="btn btn-xs btn-primary"')?> <?php echo Html::linkAction('agregardetalles','Editar','class="btn btn-xs btn-secondary"')?></div>
 <?php echo Form::close();?>
 <i>* para modificar el total</i>
 </div>

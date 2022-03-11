@@ -32,7 +32,7 @@ switch ($monedas)
 <div id="mensajes_flash" >        
     <?php View::content() ?>
 </div>
-<div class="form-actions"><?php echo Html::linkAction('guias/'.Session::get('DOC_ID'),'Listado','class="btn"')?> </div>
+<div class="form-actions"><?php echo Html::linkAction('guias/'.Session::get('DOC_ID'),'Listado','class="btn btn-xs"')?> </div>
 <div class="card-body">
 <div id="ver_resultado"></div>
 <table align="center" width="50%" border="0" cellspacing="0" cellpadding="0" class="table-bordered"> 
@@ -158,7 +158,7 @@ $(document).ready(function()
     </div>
 	
 	<?php }elseif($l_f==0){?>
-    <strong>Nro. de Letras a Ingresar !<br /></strong><?php echo Form::text('letras');?> <a href="javascript:;" class="btn btn-primary" id="enviar_numero_de_letras">Enviar</a>
+    <strong>Nro. de Letras a Ingresar !<br /></strong><?php echo Form::text('letras');?> <a href="javascript:;" class="btn btn-xs btn-primary" id="enviar_numero_de_letras">Enviar</a>
    
     <script type="text/javascript">
 $(document).ready(function()
@@ -190,8 +190,8 @@ $(document).ready(function()
 <?php echo Form::hidden('salida.estadosalida','','Pendiente')?>
 <?php echo Form::hidden('salida.total','',$TOTAL);?>
 <?php echo Form::hidden('salida.totalenletras','',$texto);?>
-<?php if($salida->estadosalida=='Editable'){?><button type="submit" class="btn btn-primary">Finalizar Sin crear Letras</button> 
-<?php echo Html::linkAction('agregardetalles','Editar','class="btn"')?><?Php }else{?><?php //echo Html::linkAction('versalida_i','Imprimir','class="btn"')?><?php }?>
+<?php if($salida->estadosalida=='Editable'){?><button type="submit" class="btn btn-xs btn-primary">Finalizar Sin crear Letras</button> 
+<?php echo Html::linkAction('agregardetalles','Editar','class="btn btn-xs"')?><?Php }else{?><?php //echo Html::linkAction('versalida_i','Imprimir','class="btn btn-xs"')?><?php }?>
 <?php echo Form::close();?>
 	<div id="pago_con_letras">
     </div>
@@ -222,7 +222,7 @@ $q=$let->id;
  </div>
 <?php 
 //echo $salida->estadosalida;
-if($salida->estadosalida=="Editable"){?><a href="javascript:;" id="editar_letras" class="btn btn-primary">Editar la Informacion de las letras</a><?php }?>
+if($salida->estadosalida=="Editable"){?><a href="javascript:;" id="editar_letras" class="btn btn-xs btn-primary">Editar la Informacion de las letras</a><?php }?>
 <?php }
 	}?>
 <?php 
@@ -239,12 +239,12 @@ if($l_f>0 || $salida->tescondicionespagos_id!=2)
 	<?php echo Form::hidden('salida.totalenletras','',$texto);?>
 	<?php 
 	if($salida->estadosalida=='Pendiente')echo Form::Select('salida.estadosalida',array('Pendiente'=>'Pendiente','PAGADO'=>'Pagado'),'','Pendiente');else echo Form::hidden('salida.estadosalida','','Pendiente');?>
-	<?php if($salida->estadosalida=='Editable'){?><button type="submit" class="btn btn-primary">Finalizar</button> 
-	<?php echo Html::linkAction('agregardetalles','Editar','class="btn"')?><?Php }else{?><?php //echo Html::linkAction('versalida_i','Imprimir','class="btn"')?><?php }?>
+	<?php if($salida->estadosalida=='Editable'){?><button type="submit" class="btn btn-xs btn-primary">Finalizar</button> 
+	<?php echo Html::linkAction('agregardetalles','Editar','class="btn btn-xs"')?><?Php }else{?><?php //echo Html::linkAction('versalida_i','Imprimir','class="btn btn-xs"')?><?php }?>
 <?php echo Form::close();
 }
 ?>
-<button onclick="myFunction()" class="btn btn-info"> IMPRIMIR </button>
+<button onclick="myFunction()" class="btn btn-xs btn-info"> IMPRIMIR </button>
 </div>
 <script>
 function myFunction() {

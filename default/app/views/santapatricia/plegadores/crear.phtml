@@ -50,7 +50,7 @@ echo Form::hidden('tesproductos.id')
     <th align="right" valign="top"><div align="left">Tipo: Plegador:</div></th>
     <td valign="top"><?php 
 	//array("VAMATEX SIMPLE 1900"=>"VAMATEX SIMPLE 1900","VAMATEX SIMPLE 2600"=>"VAMATEX SIMPLE 2600","VAMATEX DOBLE 3600"=>"VAMATEX DOBLE 3600","GALILEO"=>"GALILEO","SAURER"=>"SAURER","SULZER"=>"SULZER","CUADROS"=>"CUADROS VAMATEX","PLEGADOR/ES"=>"PLEGADOR/ES","SILLAS"=>"SILLAS","OTROS"=>"OTROS")
-	echo Form::dbSelect('proplegadores.protipoplegadores_id','nombre') ?><?php //echo Html::linkAction("crear/$page", 'Nuevo/TP','class="btn btn-primary"') ?></td>
+	echo Form::dbSelect('proplegadores.protipoplegadores_id','nombre') ?><?php //echo Html::linkAction("crear/$page", 'Nuevo/TP','class="btn btn-xs btn-primary"') ?></td>
     <th align="right" valign="top">&nbsp;</th>
     <td valign="top">&nbsp;</td>
   </tr>
@@ -116,7 +116,7 @@ echo Form::hidden('tesproductos.id')
   </tr>
 </table>
 <div class="form-actions">
-    <?php echo Form::submit('Guardar Datos', 'class="btn btn-primary"') ?>
-    <?php echo Html::linkAction('listado', 'Cancelar', 'class="btn"'); ?>
+    <?php echo Form::submit('Guardar Datos', 'class="btn btn-xs btn-primary"') ?>
+    <?php echo Html::linkAction('listado', 'Cancelar', 'class="btn btn-xs"'); ?>
     </div>
 </div>

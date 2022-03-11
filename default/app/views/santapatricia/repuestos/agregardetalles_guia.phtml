@@ -41,7 +41,7 @@ Tag::css('token-input');?><div class="card">
 	</div>   
   <div class="control-group">
     <div class="controls">
-       <button type="submit" class="btn btn-primary">Modificar</button> <?php echo Html::linkAction('salidas','Cancelar','class="btn"')?>
+       <button type="submit" class="btn btn-xs btn-primary">Modificar</button> <?php echo Html::linkAction('salidas','Cancelar','class="btn btn-xs"')?>
     </div>
   </div>
 <?php echo Form::close();?>
@@ -129,7 +129,7 @@ if(empty($salida->tescontratos_id)){?>
   <span class="add-on">Precio</span>
   <?php echo Form::text('detalles.preciounitario','size="5" class="qty"')?>
   </div>
-  <button type="submit" class="btn">Enviar</button>
+  <button type="submit" class="btn btn-xs">Enviar</button>
 <?php echo Form::close()?>
 </div>
 <?php }else{
@@ -163,7 +163,7 @@ echo $salida->getTescontratos()->observacion .' el contrato es por '.$salida->ge
 </div>
 <div class="form-actions">
 <?php 
-echo Html::linkAction("versalida_guia/", 'Siguente<i class="icon-hand-right"></i>','class="btn btn-primary"') ?>&nbsp;<?php //echo Html::linkAction("salidas", 'Volver ','class="btn"') ?>
+echo Html::linkAction("versalida_guia/", 'Siguente<i class="icon-hand-right"></i>','class="btn btn-xs btn-primary"') ?>&nbsp;<?php //echo Html::linkAction("salidas", 'Volver ','class="btn btn-xs"') ?>
 </div>
 <hr />
 </div>

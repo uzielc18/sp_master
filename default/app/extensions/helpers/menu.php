@@ -1,7 +1,5 @@
 <?php
 
-Load::models('aclmenus');
-
 class Menu
 {
 	/**
@@ -80,7 +78,7 @@ class Menu
 			} else {
 
 				$html .= "<li class='{$class} dropdown'>" .
-					'<a href="#"' . $a_class . '><p>' . '<i' . $span_clas . '></i>' . $objeto_menu->nombre . $caret . '</p></a>' . PHP_EOL;
+					'<a href="#"' . $a_class . '>' . '<i' . $span_clas . '></i><p>' . $objeto_menu->nombre . $caret . '</p></a>' . PHP_EOL;
 			}
 		} else {
 			$html = '';
@@ -116,14 +114,14 @@ class Menu
 		$code = "";
 		$class = '';
 		if ($estado == 'ing') $class = 'btn-success';
-		$code .= ' ' . Html::link('santapatricia/ordendecompra/lis_externo/ing', 'Gerencia General', 'class="btn ' . $class . '"');
+		$code .= ' ' . Html::link('santapatricia/ordendecompra/lis_externo/ing', 'Gerencia General', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
 		if ($estado == 'dis') $class = 'btn-success';
-		$code .= ' ' . Html::link('santapatricia/ordendecompra/lis_externo/dis', 'Diseño', 'class="btn ' . $class . '"');
+		$code .= ' ' . Html::link('santapatricia/ordendecompra/lis_externo/dis', 'Diseño', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
 		if ($estado == 'alm') $class = 'btn-success';
-		$code .= ' ' . Html::link('santapatricia/ordendecompra/lis_externo/alm', 'Almacen', 'class="btn ' . $class . '"');
-		$code .= ' ' . Html::link('santapatricia/ordendecompra/reportes', 'Buscar pedidos anteriores', 'class="btn ' . $class . '"');
+		$code .= ' ' . Html::link('santapatricia/ordendecompra/lis_externo/alm', 'Almacen', 'class="btn btn-xs ' . $class . '"');
+		$code .= ' ' . Html::link('santapatricia/ordendecompra/reportes', 'Buscar pedidos anteriores', 'class="btn btn-xs ' . $class . '"');
 
 
 		return $code;
@@ -138,19 +136,19 @@ class Menu
 		$code .= '<div id="active">';
 		$class = '';
 		if ($action == 'index') $class = 'btn-success';
-		$code .= Html::link('santapatricia/revisiones/', 'Rollos, cortados de Mq.', 'class="btn ' . $class . '"');
+		$code .= Html::link('santapatricia/revisiones/', 'Rollos, cortados de Mq.', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
 		if ($action == 'control') $class = 'btn-success';
-		$code .= Html::link('santapatricia/revisiones/control', 'Rollos en proceso de REVISION', 'class="btn ' . $class . '"');
+		$code .= Html::link('santapatricia/revisiones/control', 'Rollos en proceso de REVISION', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
 		if ($action == 'telacruda') $class = 'btn-success';
-		$code .= Html::link('santapatricia/revisiones/telacruda', 'Rollos, sin procesos', 'class="btn ' . $class . '"');
+		$code .= Html::link('santapatricia/revisiones/telacruda', 'Rollos, sin procesos', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
 		if ($action == 'Rollos') $class = 'btn-success';
-		$code .= Html::link('santapatricia/rollos/', 'Ingreso de Rollos (INVENTARIO)', 'class="btn ' . $class . '"');
+		$code .= Html::link('santapatricia/rollos/', 'Ingreso de Rollos (INVENTARIO)', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
 		if ($action == 'listado_articulo') $class = 'btn-success';
-		$code .= Html::link('santapatricia/revisiones/listado_articulo', 'Listado por Articulo', 'class="btn ' . $class . '"');
+		$code .= Html::link('santapatricia/revisiones/listado_articulo', 'Listado por Articulo', 'class="btn btn-xs ' . $class . '"');
 		$code .= '</div>';
 		return $code;
 	}
@@ -161,23 +159,23 @@ class Menu
 		//echo $action;
 		$code .= '';
 		if ($action == 'listado') $class = 'btn-success';
-		$code .= Html::link("santapatricia/rollos/listado", 'Ingresar Rollos', 'class="btn ' . $class . '"');
+		$code .= Html::link("santapatricia/rollos/listado", 'Ingresar Rollos', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
 		if ($action == 'salidas') $class = 'btn-success';
-		$code .= Html::link("santapatricia/tintoreria/salidas", 'Guias Generadas', 'class="btn ' . $class . '"');
+		$code .= Html::link("santapatricia/tintoreria/salidas", 'Guias Generadas', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
 
 		if ($action == 'control') $class = 'btn-success';
-		$code .= Html::link('santapatricia/tintoreria/control', 'Rollos C.C./V', 'class="btn ' . $class . '"');
+		$code .= Html::link('santapatricia/tintoreria/control', 'Rollos C.C./V', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
 		if ($action == 'rollos_tintoreria') $class = 'btn-success';
-		$code .= Html::link('santapatricia/tintoreria/rollos_tintoreria', 'Rollos en Tintoreria', 'class="btn ' . $class . '"');
+		$code .= Html::link('santapatricia/tintoreria/rollos_tintoreria', 'Rollos en Tintoreria', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
 		if ($action == 'rollos_reprocesos') $class = 'btn-success';
-		$code .= Html::link('santapatricia/tintoreria/rollos_reprocesos', 'Rollos en Reproceso', 'class="btn ' . $class . '"');
+		$code .= Html::link('santapatricia/tintoreria/rollos_reprocesos', 'Rollos en Reproceso', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
 		if ($action == 'rollos_venta') $class = 'btn-success';
-		$code .= Html::link('santapatricia/tintoreria/rollos_venta', 'Rollos P/V', 'class="btn ' . $class . '"');
+		$code .= Html::link('santapatricia/tintoreria/rollos_venta', 'Rollos P/V', 'class="btn btn-xs ' . $class . '"');
 		$code .= '';
 		return $code;
 	}
@@ -188,36 +186,36 @@ class Menu
 		//echo $action;
 		$code .= '';
 		if ($action == 'index') $class = 'btn-success';
-		$code .= Html::linkAction("", 'Emitidas', 'class="btn ' . $class . '"');
+		$code .= Html::linkAction("", 'Emitidas', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
 
 		if ($action == 'aceptadas') $class = 'btn-success';
-		$code .= Html::linkAction("aceptadas", 'Aceptadas', 'class="btn ' . $class . '"');
+		$code .= Html::linkAction("aceptadas", 'Aceptadas', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
 
 		if ($action == 'letrasbancos') $class = 'btn-success';
-		$code .= Html::linkAction('letrasbancos', 'Con Nro. Unico', 'class="btn ' . $class . '"');
+		$code .= Html::linkAction('letrasbancos', 'Con Nro. Unico', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
 		if ($action == 'letras_pro') $class = 'btn-success';
-		$code .= Html::linkAction('letras_pro', 'Vencidas', 'class="btn ' . $class . '"');
+		$code .= Html::linkAction('letras_pro', 'Vencidas', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
 		if ($action == 'letras_protestadas') $class = 'btn-success';
-		$code .= Html::linkAction('letras_protestadas', 'Protestadas', 'class="btn ' . $class . '"');
+		$code .= Html::linkAction('letras_protestadas', 'Protestadas', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
 		if ($action == 'letrasporfecha') $class = 'btn-success';
-		$code .= Html::linkAction('letrasporfecha', 'Pendientes', 'class="btn ' . $class . '"');
+		$code .= Html::linkAction('letrasporfecha', 'Pendientes', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
 		if ($action == 'letrasmes') $class = 'btn-success';
-		$code .= Html::linkAction('letrasmes/' . date('Y/m'), 'Vcto por Mes', 'class="btn ' . $class . '"');
+		$code .= Html::linkAction('letrasmes/' . date('Y/m'), 'Vcto por Mes', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
 		if ($action == 'crear') $class = 'btn-success';
-		$code .= Html::linkAction('crear/', 'Crear', 'class="btn ' . $class . '"');
+		$code .= Html::linkAction('crear/', 'Crear', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
 		if ($action == 'internas') $class = 'btn-success';
-		$code .= Html::linkAction('internas', 'Detalles', 'class="btn ' . $class . '"');
+		$code .= Html::linkAction('internas', 'Detalles', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
 		if ($action == 'letraspagadas') $class = 'btn-success';
-		$code .= Html::linkAction('letraspagadas/' . date('Y/m'), 'Pagado', 'class="btn ' . $class . '"');
+		$code .= Html::linkAction('letraspagadas/' . date('Y/m'), 'Pagado', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
 		$code .= Html::linkAction("", 'Volver ', 'class="btn"');
 		//$code.=Html::link('santapatricia/tintoreria/rollos_venta','Rollos para venta','class="btn"');
@@ -230,27 +228,30 @@ class Menu
 		$code .= '';
 		$class = '';
 		if ($action == 'index') $class = 'btn-success';
-		$code .= Html::linkAction("", 'Facturas Enitidas!', 'class="btn ' . $class . '"');
+		$code .= Html::linkAction("", 'Facturas Enitidas!', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
 		if ($action == 'selector' or $action == 'facturas' or $action == 'factura_adelanto' or $action == 'factura_adelanto_detalle' or $action == 'versalida_adelanto') $class = 'btn-success';
-		$code .= Html::linkAction("selector", 'Facturacion!', 'class="btn ' . $class . '"');
+		$code .= Html::linkAction("selector", 'Facturacion!', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
-		if ($action == 'listado_servicio') $class = 'btn-success';
-		$code .= Html::linkAction("cargar_doc/7/listado_servicio", 'Facturas de servicio', 'class="btn ' . $class . '" title="Crear Factura de Servicio"');
+		if ($action == 'listado_servicio' AND Session::get('DOC_ID')=='7') $class = 'btn-success';
+		$code .= Html::linkAction("cargar_doc/7/listado_servicio", 'Facturas de servicio', 'class="btn btn-xs ' . $class . '" title="Crear Factura de Servicio"');
+		$class = '';
+		if($action == 'listado_servicio' AND Session::get('DOC_ID')=='15') $class = 'btn-success';
+		$code .=Html::linkAction("cargar_doc/15/listado_servicio", 'Guias por servicios','class="btn btn-xs ' . $class . '"');
 		$class = '';
 		if ($action == 'guias_mes') $class = 'btn-success';
-		$code .= Html::linkAction("guias_mes", "Guias Emitidas", "class='btn " . $class . "'");
+		$code .= Html::linkAction("guias_mes", "Guias Emitidas", "class='btn btn-xs " . $class . "'");
 		$class = '';
 		if ($action == 'guias') $class = 'btn-success';
-		$code .= Html::linkAction("guias/15", 'Guias de Remisiòn!', 'class="btn ' . $class . '"');
+		$code .= Html::linkAction("guias/15", 'Guias de Remisiòn!', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
 
 		if ($action == 'nota_creditos') $class = 'btn-success';
-		$code .= Html::linkAction("cargar_doc/13/nota_creditos", 'Nota de Credito', 'class="btn ' . $class . '"');
+		$code .= Html::linkAction("cargar_doc/13/nota_creditos", 'Nota de Credito', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
 		if ($action == 'nota_debitos') $class = 'btn-success';
-		$code .= Html::linkAction("cargar_doc/14/nota_debitos", 'Nota de Debito', 'class="btn ' . $class . '"');
-		if ($action != 'index') $code .= Html::linkAction("", 'Volver ', 'class="btn"');
+		$code .= Html::linkAction("cargar_doc/14/nota_debitos", 'Nota de Debito', 'class="btn btn-xs ' . $class . '"');
+		if ($action != 'index') $code .= Html::linkAction("", 'Volver ', 'class="btn btn-xs"');
 		$code .= '';
 		return $code;
 	}
@@ -260,24 +261,24 @@ class Menu
 		$code .= '';
 		$class = '';
 		if ($action == 'index') $class = 'btn-success';
-		$code .= Html::linkAction("", 'Facturas Emitidas!', 'class="btn ' . $class . '"');
+		$code .= Html::linkAction("", 'Facturas Emitidas!', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
 		if ($action == 'guias') $class = 'btn-success';
-		$code .= Html::linkAction("salidas/15", 'Guias de Remisiòn!', 'class="btn ' . $class . '"');
+		$code .= Html::linkAction("salidas/15", 'Guias de Remisiòn!', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
 		if ($action == 'f_salidas') $class = 'btn-success';
-		$code .= Html::linkAction("f_salidas/7", 'Facturacion!', 'class="btn ' . $class . '"');
+		$code .= Html::linkAction("f_salidas/7", 'Facturacion!', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
 		if ($action == 'salidas_internas') $class = 'btn-success';
 		/*if(Auth::get('id')==3 || Auth::get('id')==12)*/
-		$code .= Html::linkAction("salidas_internas/", 'Salidas Internas!', 'class="btn ' . $class . '"');
+		$code .= Html::linkAction("salidas_internas/", 'Salidas Internas!', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
 		/*if(Session::get('EMPRESAS_ID')==2){
 		if($action=='nota_creditos')$class='btn-success';
-		 $code.=Html::linkAction("cargar_doc/13/nota_creditos", 'Notas de Credito','class="btn '.$class.'"');
+		 $code.=Html::linkAction("cargar_doc/13/nota_creditos", 'Notas de Credito','class="btn btn-xs '.$class.'"');
 		 $class='';
 		if($action=='nota_debitos')$class='btn-success';
-		 $code.=Html::linkAction("cargar_doc/14/nota_debitos", 'Notas de Debito','class="btn '.$class.'"');
+		 $code.=Html::linkAction("cargar_doc/14/nota_debitos", 'Notas de Debito','class="btn btn-xs '.$class.'"');
 		}*/
 		if ($action != 'index') $code .= Html::linkAction("", 'Volver ', 'class="btn"');
 		$code .= '';
@@ -388,19 +389,19 @@ $("select#repor").change(function(){
 		$code .= '';
 		$class = '';
 		if ($action == 'index') $class = 'btn-success';
-		$code .= Html::linkAction("", 'Por tejedor!', 'class="btn ' . $class . '"');
+		$code .= Html::linkAction("", 'Por tejedor!', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
 		if ($action == 'maquinas') $class = 'btn-success';
-		$code .= Html::linkAction("maquinas", 'Por maquinas!', 'class="btn ' . $class . '"');
+		$code .= Html::linkAction("maquinas", 'Por maquinas!', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
 		if ($action == 'turnos') $class = 'btn-success';
-		$code .= Html::linkAction("turnos", 'Por turnos!', 'class="btn ' . $class . '"');
+		$code .= Html::linkAction("turnos", 'Por turnos!', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
 		if ($action == 'produccion') $class = 'btn-success';
-		$code .= Html::linkAction("produccion", 'Produccion!', 'class="btn ' . $class . '"');
+		$code .= Html::linkAction("produccion", 'Produccion!', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
 		if ($action == 'eficiencia') $class = 'btn-success';
-		$code .= Html::linkAction("eficiencia", 'Eficiencia', 'class="btn ' . $class . '"');
+		$code .= Html::linkAction("eficiencia", 'Eficiencia', 'class="btn btn-xs ' . $class . '"');
 		$class = '';
 		if ($action != 'index') {
 			$code .= Html::linkAction("", 'Volver ', 'class="btn"');

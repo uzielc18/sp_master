@@ -32,7 +32,7 @@ switch ($monedas)
 <div id="mensajes_flash" >        
     <?php View::content() ?>
 </div>
-<div class="form-actions"><?php echo Html::linkAction('nota_debitos/','Listado','class="btn"')?> </div>
+<div class="form-actions"><?php echo Html::linkAction('nota_debitos/','Listado','class="btn btn-xs"')?> </div>
 <div class="card-body">
 <div id="ver_resultado"></div>
 <table align="center" width="50%" border="0" cellspacing="0" cellpadding="0" class="table-bordered"> 
@@ -133,13 +133,13 @@ if($salida->tescondicionespagos_id!=2)
 	<?php echo Form::hidden('salida.totalenletras','',$texto);?>
 	<?php 
 	if($salida->estadosalida=='Pendiente')echo Form::Select('salida.estadosalida',array('Pendiente'=>'Pendiente','PAGADO'=>'Pagado'),'','Pendiente');else echo Form::hidden('salida.estadosalida','','Pendiente');?>
-	<?php if($salida->estadosalida=='Editable'){?><button type="submit" class="btn btn-primary">Finalizar</button> 
-	<?php echo Html::linkAction('agregardetalles','Editar','class="btn"')?><?Php }?>
-    <?php if($salida->estadosalida=='Pendiente'){?><button type="submit" class="btn btn-primary">PAGAR</button><?Php }?>
+	<?php if($salida->estadosalida=='Editable'){?><button type="submit" class="btn btn-xs btn-primary">Finalizar</button> 
+	<?php echo Html::linkAction('agregardetalles','Editar','class="btn btn-xs"')?><?Php }?>
+    <?php if($salida->estadosalida=='Pendiente'){?><button type="submit" class="btn btn-xs btn-primary">PAGAR</button><?Php }?>
 <?php echo Form::close();
 }
 ?>
-<button onclick="myFunction()" class="btn btn-info"> IMPRIMIR </button>
+<button onclick="myFunction()" class="btn btn-xs btn-info"> IMPRIMIR </button>
 </div>
 <script>
 function myFunction() {

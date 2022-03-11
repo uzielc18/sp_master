@@ -130,7 +130,7 @@ echo Form::hidden('expo.tessalidas_id','',$salida->id);
 {?>
 	Termino :<?php echo Form::text('expo.nombre','');?>
 <?php }?></label> <label> Monto<?php echo Form::text('expo.valor');?></label>
-<button type="submit" class="btn btn-primary">Enviar</button>
+<button type="submit" class="btn btn-xs btn-primary">Enviar</button>
 
 <?php echo Form::close();?></td>
     </tr>
@@ -166,7 +166,7 @@ echo Form::hidden('expo.tessalidas_id','',$salida->id);
 <?php echo Form::hidden('salida.totalconigv','',$total);?>
 <?php echo Form::hidden('salida.igv','',0);?>
 <?php echo Form::hidden('salida.totalenletras');?>
-<button type="submit" class="btn btn-primary">Finalizar</button>
+<button type="submit" class="btn btn-xs btn-primary">Finalizar</button>
 <?php echo Form::close();?>
 
 

@@ -25,7 +25,7 @@ if($estado==$e->estadonota)$selec=' selected="selected"';
 <option value="<?php echo $e->estadonota?>"<?php echo $selec?>><?php echo $e->estadonota?></option>
 <?php endforeach;?>
 </select>
-<?php echo Html::linkAction("cargarnota/0/crear/".$origen, 'Crear Nota','class="btn btn-primary"');?>
+<?php echo Html::linkAction("cargarnota/0/crear/".$origen, 'Crear Nota','class="btn btn-xs btn-primary"');?>
 </div>
 
 <?php //echo Sp::imprimir('Pedidos de Produccion- ','P');?> 
@@ -67,7 +67,7 @@ endforeach;?>
 <?php if($estado=='Pendiente'){
 echo Form::open($module_name.'/notadepedido/imprimir/Produccion');
 echo Form::hidden('ids');
-echo Form::submit('IMPRIMIR','class="btn btn-info"');echo "<em class='text-info'>*Puede imprimir todo o seleccionar los que desea imprimir</em>";
+echo Form::submit('IMPRIMIR','class="btn btn-xs btn-info"');echo "<em class='text-info'>*Puede imprimir todo o seleccionar los que desea imprimir</em>";
 echo Form::close();
 }?>
 <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="exportar_excel">
@@ -125,7 +125,7 @@ foreach($notas as $item){
 	
 	echo Html::linkAction("cargarnota/$item->id/ver/".$origen,Html::img("figuras/ver.png",'Ver','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Visualizar el Pedido!"');
 	
-	if($item->imprimir=='1' && $item->estadonota!='Entregado'){ echo Html::linkAction("terminar/".$item->id."/Entregado/".$origen.'/'.$estado,'Terminar <i class="icon-ok"></i>','title="Visualizar el Pedido!" class="btn btn-info"'); }
+	if($item->imprimir=='1' && $item->estadonota!='Entregado'){ echo Html::linkAction("terminar/".$item->id."/Entregado/".$origen.'/'.$estado,'Terminar <i class="icon-ok"></i>','title="Visualizar el Pedido!" class="btn btn-xs btn-info"'); }
 	?>
    </td>
   </tr>
@@ -139,15 +139,15 @@ foreach($notas as $item){
 		echo 'Estas notas se crean desde la Hoja de ruta.';
 	}elseif($origen=='Muestra')
 	{
-		echo Html::linkAction("cargarnota/0/crearm/".$origen, 'Crear Nota','class="btn btn-primary"');
+		echo Html::linkAction("cargarnota/0/crearm/".$origen, 'Crear Nota','class="btn btn-xs btn-primary"');
 	}elseif($origen=='Chenille' && Session::get('tipo_nota')=='salida')
 	{
-		echo Html::linkAction("cargaringreso/0/crear_s_ch/".$origen, 'Crear Nota','class="btn btn-primary"');
+		echo Html::linkAction("cargaringreso/0/crear_s_ch/".$origen, 'Crear Nota','class="btn btn-xs btn-primary"');
 	}elseif($origen=='Chenille' && Session::get('tipo_nota')=='ingreso')
 	{
-		echo Html::linkAction("cargaringreso/0/ingreso_hilo/".$origen, 'Crear Nota','class="btn btn-primary"');
+		echo Html::linkAction("cargaringreso/0/ingreso_hilo/".$origen, 'Crear Nota','class="btn btn-xs btn-primary"');
 	}else{
-		echo Html::linkAction("cargarnota/0/crear/".$origen, 'Crear Nota','class="btn btn-primary"');
+		echo Html::linkAction("cargarnota/0/crear/".$origen, 'Crear Nota','class="btn btn-xs btn-primary"');
 				}?>
 </div>
 

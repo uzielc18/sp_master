@@ -11,10 +11,10 @@
         <div class="card-tools">
             <ul class="nav nav-pills ml-auto">
                 <li class="nav-item">
-                    <?php echo Html::linkAction('', 'Volver', 'class="btn pull-right"') ?>
+                    <?php echo Html::linkAction('', 'Volver', 'class="btn btn-xs pull-right"') ?>
                 </li>
                 <li class="nav-item">
-                    <?php echo Html::linkAction('crear', 'Crear Recurso', 'class="btn btn-primary"') ?>
+                    <?php echo Html::linkAction('crear', 'Crear Recurso', 'class="btn btn-xs btn-primary"') ?>
                 </li>
             </ul>
         </div>
@@ -25,7 +25,7 @@
             <input type="search" id="txtBuscar" autofocus="" placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
         </div>
         <?php echo Form::open() ?>
-        <?php echo Form::submit('Guardar Nuevos Recursos', 'name="guardar" class="btn btn-primary"') ?>
+        <?php echo Form::submit('Guardar Nuevos Recursos', 'name="guardar" class="btn btn-xs btn-primary"') ?>
         <?php //print_r($recursos)
         ?>
         <?php View::content() ?>

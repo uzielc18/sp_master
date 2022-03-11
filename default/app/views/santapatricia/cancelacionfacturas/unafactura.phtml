@@ -34,7 +34,7 @@ $letra->getTessalidas()->getTesdatos()->diascredito;
     <td><?php echo Calendar::selector('salida-'.$q.'.fvencimiento','',$letra->getTessalidas()->fvencimiento);?></td>
     <td> 
      <?php echo Form::text('salida-'.$q.'.totalconigv','',$letra->getTessalidas()->totalconigv)?>
-<?php if($ajax)echo Form::submit('GRABAR','class="btn btn-primary"');?>
+<?php if($ajax)echo Form::submit('GRABAR','class="btn btn-xs btn-primary"');?>
      </td>
     </tr>
 </table>
@@ -49,4 +49,4 @@ $pos = strpos($npedido,'PA');
 $accion='versalida_adelanto';
 if($pos===FALSE){$accion='versalida';}
 //echo $accion;
-echo Html::Link($module_name.'/ventas/'.$accion,'Finalizar','class="btn btn-primary"');?>
+echo Html::Link($module_name.'/ventas/'.$accion,'Finalizar','class="btn btn-xs btn-primary"');?>

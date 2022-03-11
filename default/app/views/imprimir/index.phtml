@@ -10,7 +10,7 @@ switch ($monedas)
 	case 0: $simbolo='S/ ';$moneda_letras='SOLES';  break;
 }
 echo Session::get('EMPRESAS_ID');
-?><?php echo Html::link('guias/'.Session::get('DOC_ID'),'Regresar <i class="icon-hand-left"></i>','class="btn"')?>
+?><?php echo Html::link('guias/'.Session::get('DOC_ID'),'Regresar <i class="icon-hand-left"></i>','class="btn btn-xs"')?>
 
 $codigo=<?Php if(!empty($salida->getTesdatos()->codigo_ant)) $codigo=$salida->getTesdatos()->codigo_ant; else $codigo= $salida->getTesdatos()->codigo.'-'.$salida->getTesdatos()->sufijo;
 echo $codigo;?><br />

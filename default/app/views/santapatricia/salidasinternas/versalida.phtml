@@ -69,7 +69,7 @@
 <?php echo Form::hidden('salida.testipocambios_id')?>
 <?php echo Form::hidden('salida.estadosalida','','TERMINADO')?>
 <div class="form-actions">
-<?php if($salida->estadosalida=='Editable'){?><button type="submit" class="btn btn-primary">Finalizar</button> <?php echo Html::linkAction('agregardetalles','Editar','class="btn"')?><?Php }else{?><?php echo Html::linkAction('salidas','Listado','class="btn"')?> <?php echo Html::linkAction('versalida_i','Imprimir','class="btn"')?><?php }?>
+<?php if($salida->estadosalida=='Editable'){?><button type="submit" class="btn btn-xs btn-primary">Finalizar</button> <?php echo Html::linkAction('agregardetalles','Editar','class="btn btn-xs"')?><?Php }else{?><?php echo Html::linkAction('salidas','Listado','class="btn btn-xs"')?> <?php echo Html::linkAction('versalida_i','Imprimir','class="btn btn-xs"')?><?php }?>
 </div>
 <?php echo Form::close();?>
 </div>

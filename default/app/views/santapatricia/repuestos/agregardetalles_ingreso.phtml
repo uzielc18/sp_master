@@ -69,7 +69,7 @@ Tag::css('token-input');?><div class="card">
   </div>
   </th>
   <th width="14%" align="left">
-  <button type="submit" class="btn" title="Ingresar">Grabar</button>
+  <button type="submit" class="btn btn-xs" title="Ingresar">Grabar</button>
   </th>
   </tr>
   </table>
@@ -153,10 +153,10 @@ $(document).ready(function()
 	<div class="caja3">
     <div>
       <?php 
-//echo Html::linkAction("veringreso/", 'Siguente <i class="icon-hand-right"></i>','class="btn btn-primary" onclick="return validar()"') ?>
+//echo Html::linkAction("veringreso/", 'Siguente <i class="icon-hand-right"></i>','class="btn btn-xs btn-primary" onclick="return validar()"') ?>
     <?php
-	if($ingreso->estadoingreso!='Pendiente')echo Html::linkAction("veringreso/".$ingreso->id, 'Siguiente<i class="icon-ok-sign"></i>','class="btn btn-primary"')?>
-&nbsp;<?php echo Html::linkAction("ingresos", 'Volver ','class="btn"') ?>
+	if($ingreso->estadoingreso!='Pendiente')echo Html::linkAction("veringreso/".$ingreso->id, 'Siguiente<i class="icon-ok-sign"></i>','class="btn btn-xs btn-primary"')?>
+&nbsp;<?php echo Html::linkAction("ingresos", 'Volver ','class="btn btn-xs"') ?>
 	</div>
   </div>
   </div>

@@ -107,7 +107,7 @@ window.onload=hora
 	{*/
 		if($n==1)
 			{
-				echo Form::hidden('id','',$detalle->id).Form::text('fechadecorte').'<br /># Rollos:'.Form::select('numero',array("1"=>"1","2"=>"2"),'','rollos','Seleccione').' '.Form::Submit('Cortar','class="btn"');
+				echo Form::hidden('id','',$detalle->id).Form::text('fechadecorte').'<br /># Rollos:'.Form::select('numero',array("1"=>"1","2"=>"2"),'','rollos','Seleccione').' '.Form::Submit('Cortar','class="btn btn-xs"');
 			}else
 			{
 				echo $detalle->fechadecorte;
@@ -141,15 +141,15 @@ window.onload=hora
 </table>
 <?php echo Form::close()?>
 <div class="form-actions">
-<?php echo Html::linkAction("", 'Escoger Maquina','class="btn btn-secondary"') ?>
+<?php echo Html::linkAction("", 'Escoger Maquina','class="btn btn-xs btn-secondary"') ?>
 <?php 
 echo '&nbsp;';
-echo Html::linkAction("listado/","Ir a Listado de Hojas",'class="btn btn-secondary"');?>
+echo Html::linkAction("listado/","Ir a Listado de Hojas",'class="btn btn-xs btn-secondary"');?>
 <?php 
 echo '&nbsp;';
-echo Html::linkAction("terminarproduccion/".Session::get('PRODUCCION_ID'),"Detener produccion y descargar plegador",'class="btn btn-warning"');?>
+echo Html::linkAction("terminarproduccion/".Session::get('PRODUCCION_ID'),"Detener produccion y descargar plegador",'class="btn btn-xs btn-warning"');?>
 <?php 
 if($n==0){
 echo '&nbsp;';
-echo Html::linkAction("cambiarestado/".Session::get('PRODUCCION_ID')."/TERMINADO/listado","Terminar ",'class="btn btn-primary" id="verificar" onclick="return confirm(\'¿Está seguro? aun tienes '.($metros-$programados).' metrso en el plegador!!!! \')"');}?>
+echo Html::linkAction("cambiarestado/".Session::get('PRODUCCION_ID')."/TERMINADO/listado","Terminar ",'class="btn btn-xs btn-primary" id="verificar" onclick="return confirm(\'¿Está seguro? aun tienes '.($metros-$programados).' metrso en el plegador!!!! \')"');}?>
 </div>

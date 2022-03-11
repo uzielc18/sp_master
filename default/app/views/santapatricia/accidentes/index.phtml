@@ -2,7 +2,7 @@
     <h1>Libro de Accidentes <span>Del Mes de <?php echo $meses[date("m")];?></span></h1>
 </div>
 <?php View::content() ?>       
-<div class="form-actions"><?php echo Html::linkAction("crear", 'Registrar Accidente Para Hoy', 'class="btn btn-primary"') ?><?php echo Html::linkAction("reportes/".date('Y').'/'.date('m'), 'Reportes', 'class="btn btn-primary"') ?>
+<div class="form-actions"><?php echo Html::linkAction("crear", 'Registrar Accidente Para Hoy', 'class="btn btn-xs btn-primary"') ?><?php echo Html::linkAction("reportes/".date('Y').'/'.date('m'), 'Reportes', 'class="btn btn-xs btn-primary"') ?>
  </div>
 <div class="card-body">
 <table width="95%" border="0" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">

@@ -3,7 +3,7 @@
 <h1>Ingresar el detalle de las cajas para<span><?php echo $detalle->id?> <?php echo $detalle->getTesproductos()->nombre?> <?Php echo $detalle->getTesproductos()->detalle?></span></h1>
 </div>
 <?Php View::content();?>
-<div class="form-actions"><a href="javascript:;" id="<?php echo $id_detalle?>" class="btn btn-primary agregaruno">Agregar</a></div>
+<div class="form-actions"><a href="javascript:;" id="<?php echo $id_detalle?>" class="btn btn-xs btn-primary agregaruno">Agregar</a></div>
 <div class="card-body">
 <div class="span1"></div>
 <div class="span10">
@@ -37,10 +37,10 @@
 <span>
 <?php if(empty($caja->tipodecaja))
 {?>
-<a id="<?php echo $caja->id?>" class="btn borrar" href="javascript:;">Eliminar</a>
+<a id="<?php echo $caja->id?>" class="btn btn-xs borrar" href="javascript:;">Eliminar</a>
 <?php }?>
 </span>
-<a id="<?php echo $caja->id?>" class="btn borrar" href="javascript:;">[X]</a>
+<a id="<?php echo $caja->id?>" class="btn btn-xs borrar" href="javascript:;">[X]</a>
 </div></li>
 <?Php }?>
 </ul>
@@ -57,7 +57,7 @@
 <?php echo Form::hidden('detalle.empaque')?>
 <?php echo Form::hidden('detalle.bobinas')?>
 <?php echo Form::hidden('detalle.pesoneto')?>
-<?Php echo Form::submit('TERMINAR','class="btn btn-primary"')?>
+<?Php echo Form::submit('TERMINAR','class="btn btn-xs btn-primary"')?>
 <?Php echo Form::close();?>
 </div>
 <div style="clear:both;"></div>

@@ -26,7 +26,7 @@ $(document).ready(function() {
 </style>
 <hr />
 <span class="<?php echo $clp?> btn btn-primary"> Print </span> 
-<a href="javascript:;" class="btn">Enviar a Excel<img src="/img/export_to_excel.gif" class="botonExcel" /></a><form action="/utiles/excel" method="post" target="_blank" id="FormularioExportacion" class="form-inline">
+<a href="javascript:;" class="btn btn-xs">Enviar a Excel<img src="/img/export_to_excel.gif" class="botonExcel" /></a><form action="/utiles/excel" method="post" target="_blank" id="FormularioExportacion" class="form-inline">
 <input type="hidden" id="datos_a_enviar-<?php echo $cld?>" name="datos_a_enviar"/>
 <input type="hidden" id="nombre" name="nombre" value="Kardex-<?Php echo $producto?>"/>
 </form>

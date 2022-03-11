@@ -5,7 +5,7 @@
     <?php View::content() ?>
 </div>
 <div class="form-actions">
-<?php echo Html::linkAction("f_salidas/7", 'Regresar ','class="btn"') ?>
+<?php echo Html::linkAction("f_salidas/7", 'Regresar ','class="btn btn-xs"') ?>
 </div>
 <div class="card-body">
 <div id="ver_resultado"></div>
@@ -133,10 +133,10 @@
 <?php echo Form::hidden('salida.totalconigv','',$total)?>
 <?php echo Form::hidden('salida.totalenletras','',$totalenletras)?>
 <?php echo Form::hidden('salida.estadosalida','','Pendiente')?>
-<?php if($salida->estadosalida=='Editable'){?><button type="submit" class="btn btn-primary">Finalizar</button> <?php echo Html::linkAction('agregardetalles','Editar','class="btn"')?><?Php }else{?><?php }?>
+<?php if($salida->estadosalida=='Editable'){?><button type="submit" class="btn btn-xs btn-primary">Finalizar</button> <?php echo Html::linkAction('agregardetalles','Editar','class="btn btn-xs"')?><?Php }else{?><?php }?>
 <?php echo Form::close();?>
 <div class="form-actions">
-<button onclick="myFunction()" class="btn btn-info"> IMPRIMIR </button>
+<button onclick="myFunction()" class="btn btn-xs btn-info"> IMPRIMIR </button>
 </div>
 <?php 
 $hrf='facturas';

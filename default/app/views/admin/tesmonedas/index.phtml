@@ -38,5 +38,5 @@ foreach($tesmonedas->items as $item){ $n++;?>
 </table>
 <?php View::partial('paginators/extended', false, array('page' => $tesmonedas ,'url' => Router::get('controller_path').'/index')); ?>
 <div class="form-actions">
-    <?php echo Html::linkAction("crear", 'Crear Moneda','class="btn btn-primary"') ?>
+    <?php echo Html::linkAction("crear", 'Crear Moneda','class="btn btn-xs btn-primary"') ?>
 </div>

@@ -39,7 +39,7 @@ if($n!=0){
     <td><?php echo Form::text('prorollos'.$n.'.estadorollo','',$rollo->estadorollo);?></td>
   </tr>
   <tr>
-    <td colspan="2"><?php echo Form::submit('Grabar','id="'.$n.'" class="btn btn-primary"')?></td>
+    <td colspan="2"><?php echo Form::submit('Grabar','id="'.$n.'" class="btn btn-xs btn-primary"')?></td>
   </tr>
 </table>
 <?php echo Form::close();
@@ -47,7 +47,7 @@ if($n!=0){
 echo $ok;?>
 <div class="form-actions">
 <?php
-echo Html::linkAction('rollos/'.$id,'Si','class="btn"');
+echo Html::linkAction('rollos/'.$id,'Si','class="btn btn-xs"');
 ?>
 </div>
 <?php }?>

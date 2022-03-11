@@ -2,7 +2,7 @@
     <h1><em>Ubicaciones por maquina</em></h1>
 </div>
 <div class="form-actions">
-<?php echo Html::linkAction("",'Volver','class="btn"') ?>     
+<?php echo Html::linkAction("",'Volver','class="btn btn-xs"') ?>     
 </div> 
 <?php View::content() ?>  
 <div class="card-body">
@@ -25,7 +25,7 @@
     <td><?php echo Form::textArea('ubicacion.descripcion','cols="40" rows="5"')?></td>
   </tr>
   <tr>
-    <td colspan="2" align="center"><?php echo Form::submit('Enviar','class="btn btn-primary"')?></td>
+    <td colspan="2" align="center"><?php echo Form::submit('Enviar','class="btn btn-xs btn-primary"')?></td>
     </tr>
 </table>
 <?php Form::close()?>

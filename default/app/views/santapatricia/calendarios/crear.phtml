@@ -3,8 +3,8 @@
     <h1><?php echo $titulo?> <?Php echo Session::get('tipo_nombre')?><span><?Php echo Session::get('tipo_nombre')?></span></h1>
 </div>
 <div class="form-actions">
-<?php echo Html::linkAction('','Volver','class="btn"')?>
-<?php echo Html::linkAction('listado','Ver todos los eventos','class="btn btn-primary"')?>
+<?php echo Html::linkAction('','Volver','class="btn btn-xs"')?>
+<?php echo Html::linkAction('listado','Ver todos los eventos','class="btn btn-xs btn-primary"')?>
 </div>
 <div class="card-body">
 <?php echo Form::open(NULL, 'post', 'class="form-horizontal"') ?>
@@ -89,8 +89,8 @@
 <?php }?>
 
 <div class="form-actions">
-    <?php echo Form::submit('Guardar Datos', 'class="btn btn-primary"') ?>
-    <?php echo Html::linkAction('listado', 'Cancelar', 'class="btn"') ?>
+    <?php echo Form::submit('Guardar Datos', 'class="btn btn-xs btn-primary"') ?>
+    <?php echo Html::linkAction('listado', 'Cancelar', 'class="btn btn-xs"') ?>
     </div>
    </fieldset>
 <?php echo Form::close() ?>

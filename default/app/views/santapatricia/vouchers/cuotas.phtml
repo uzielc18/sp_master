@@ -14,7 +14,7 @@ $(document).ready(function()
 });
 </script>
 <?php if($tessalidas_id==0){?>
-<div id="n_let">Ingrese el numero de documentos a ingresar<?php echo Form::text('coutas');?> <?php echo Form::dbSelect('documentos_id','nombre',array('tesdocumentos','find','conditions: id>36'));?> <a href="javascript:;" class="btn btn-primary" id="enviar_numero_de_letras">Enviar</a></div>
+<div id="n_let">Ingrese el numero de documentos a ingresar<?php echo Form::text('coutas');?> <?php echo Form::dbSelect('documentos_id','nombre',array('tesdocumentos','find','conditions: id>36'));?> <a href="javascript:;" class="btn btn-xs btn-primary" id="enviar_numero_de_letras">Enviar</a></div>
 <div>
 <?php
 //echo $numerofactura;
@@ -60,7 +60,7 @@ $(document).ready(function()
      <?php //echo $total.' * - * ';
 	 //echo $nletras;?>
 	 <?php echo Form::text('ingresos-'.$q.'.totalconigv','',number_format(($total/$nletras),2,'.',''))?>
-<?php echo Form::submit('GRABAR','class="btn btn-primary"');?>
+<?php echo Form::submit('GRABAR','class="btn btn-xs btn-primary"');?>
      </td>
     </tr>
 </table>
@@ -105,7 +105,7 @@ foreach($tesdetallevauchers as $detalle){
     <td width="30%"><?php echo $detalle->getTesingresos()->getTesdatos()->razonsocial;?></td>
     <td width="16%">-</td>
     <td width="15%"><?php echo Form::text('tesdetallevauchers-'.$q.'.monto','',$detalle->monto); ?>
-<?php echo Form::submit('GRABAR','class="btn btn-primary"');?></td>
+<?php echo Form::submit('GRABAR','class="btn btn-xs btn-primary"');?></td>
   </tr>
 </table>
 <?php echo Form::close()?>
@@ -116,7 +116,7 @@ foreach($tesdetallevauchers as $detalle){
 <?php //echo Ajax::form('pago_con_letras',$module_name.'/vouchers/ingresoletras/')?>
 <?php echo Form::open($module_name.'/vouchers/ingresoletras/'.$q)?>
 <?php echo Form::hidden('terminar.id','',$detalle->id);?>
-<?php echo Form::submit('Terminar','class="btn btn-primary"');?>
+<?php echo Form::submit('Terminar','class="btn btn-xs btn-primary"');?>
 <?php echo Form::close()?>
 <?php
 }?>

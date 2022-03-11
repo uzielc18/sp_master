@@ -111,7 +111,7 @@ $archivo_nombre=$pre_fijo."LTR-".$dato->ruc.".rtf";
 file_put_contents("./letras/".$archivo_nombre,$rtf);
 $ruta=base64_encode("./letras/".$archivo_nombre);
 //chmod("./facturas/".$archivo_nombre, 0444);
-echo Html::linkAction('descargar/'.$ruta,'descargar','class="btn btn-warning"');
+echo Html::linkAction('descargar/'.$ruta,'descargar','class="btn btn-xs btn-warning"');
 
 //chmod("./facturas/".$archivo_nombre, 0444); echo "<a href=\"/letras/".$archivo_nombre."\" class='btn btn-info'>descargar</a>";
 ?>

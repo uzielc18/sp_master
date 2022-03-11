@@ -11,13 +11,13 @@ Tag::css('token-input');?>
    <label>Cliente</label>
     <input id="CL" />
       <?php echo Form::hidden('tesdatos_id');?>
-     <a href="javascript:;" id="ver_d" class="btn"> Ver >></a>
+     <a href="javascript:;" id="ver_d" class="btn btn-xs"> Ver >></a>
     </div>
     <div style="margin:5px; width:40%; display:inline-block;">
     <label>Telas</label>
    	<input id="TL" />
       <?php echo Form::hidden('tesproductos_id');?>
-      <a href="javascript:;" id="ver_p" class="btn"> Ver >></a>
+      <a href="javascript:;" id="ver_p" class="btn btn-xs"> Ver >></a>
 	</div>
 <div class="clear"></div>
 </div>
@@ -49,7 +49,7 @@ for($i=2011;$i<=2020;$i++)
 <div class="clear"></div>
 <hr />
 <div id="ver">
-<div class="form-actions"><?php echo Html::linkAction('cantidades','Ver Reporte de cantidades','class="btn btn-primary"')?></div>
+<div class="form-actions"><?php echo Html::linkAction('cantidades','Ver Reporte de cantidades','class="btn btn-xs btn-primary"')?></div>
 </div>
 <script type="text/javascript">
 $(document).ready(function()

@@ -12,20 +12,21 @@
 </div>
 <div class="card">
 <div class="card-header">
-    <h3 class="card-title">Facturacion! <?php echo $titulo?> <?php echo Session::get('DOC_NOMBRE')?></h3>
+    <h3 class="card-title"><?php echo $titulo?></h3>
     <div class="card-tools">
       <?php echo Menu::menuVentas($action_name); ?>
     </div>
 </div>
-
-<div class="form-actions">
-<?php ?><?php if(Session::get('DOC_ID')==7)echo Html::linkAction("", 'Volver ','class="btn"').' '.Html::linkAction("cargar_doc/7/factura_servicio", 'Crear Factura por Servicio ','class="btn btn-primary"').'-'.Html::linkAction("cargar_doc/15/listado_servicio", 'Guias por servicios','class="btn btn-primary"');
- if(Session::get('DOC_ID')==15)echo Html::linkAction("cargar_doc/7/listado_servicio", 'Volver ','class="btn"').' '.Html::linkAction("cargar_doc/15/guia_servicio", 'Crear Guia por Servicio ','class="btn btn-primary"') ?> 
-</div>
 <div class="card-body">
+	
+<?php echo Calendar::getMeses($anio, $meses, $mes_activo) ?>
 <div id="ver_resultado"></div>
 <table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
-<caption><?php $titulos="Facturas Emitidas";if(Session::get('DOC_ID')==15)$titulos="Guias Emitidas"; echo $titulos?>
+<caption>
+	<?php $titulos="Facturas Emitidas";if(Session::get('DOC_ID')==15)$titulos="Guias Emitidas"; echo $titulos?>
+	<?php 
+ if(Session::get('DOC_ID')==15) echo Html::linkAction("cargar_doc/7/listado_servicio", 'Volver ','class="btn btn-xs"').' '.Html::linkAction("cargar_doc/15/guia_servicio", 'Crear Guia por Servicio ','class="btn btn-xs btn-primary float-right"') ?> 
+
 </caption>
   <tr>
   	<th width="21">Nº</th>
@@ -90,7 +91,7 @@ $number++;?>
 	$pos=strpos($item->npedido,'PA');
 	if($pos===FALSE){
 	echo Html::linkAction('cargarsalida/'.$item->id.'/versalida_servicio',Html::img("figuras/ver.png",'Ver','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Ver e Imprimir Factura!"');}else{echo Html::linkAction('cargarsalida/'.$item->id.'/versalida',Html::img("figuras/ver.png",'Ver','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Ver e Imprimir Factura!"');}?>
-    <?php //if($item->estadosalida!='ANULADO')echo Html::linkAction("anularfacturas/$item->id/",' X ','class="btn btn-danger" title="Anular" onclick="return confirm(\'¿Está seguro de anular esta factura ?\')"'); else echo "Anulado";?>
+    <?php //if($item->estadosalida!='ANULADO')echo Html::linkAction("anularfacturas/$item->id/",' X ','class="btn btn-xs btn-danger" title="Anular" onclick="return confirm(\'¿Está seguro de anular esta factura ?\')"'); else echo "Anulado";?>
 	</td>
   </tr>
 <?php }?>
@@ -140,7 +141,7 @@ $number++;?>
   </tr>
 <?php }?>
 </table>
- <?php if($number!=0){?><button type="submit" class="btn btn-primary">Emitir Factura!</button> <?Php }?>
+ <?php if($number!=0){?><button type="submit" class="btn btn-xs btn-primary">Emitir Factura!</button> <?Php }?>
   </fieldset>
   <?php echo Form::hidden('facturas.ids');?>
 <?Php echo Form::close();?>
@@ -161,6 +162,20 @@ $(document).ready(function(){
 });
 </script>
 <?php }?>
+
+<script type="text/javascript">
+		$(document).ready(function() {
+			$("#anio").change(function(event) {
+				var id = $("#anio").find(':selected').val();
+				location.href = '/<?php echo $module_name ?>/<?php echo $controller_name ?>/<?php echo $action_name ?>/' + id;
+			});
+			$(".enviar").click(function() {
+				var fecha = $(this).attr('data-id');
+				var F = fecha.split('-');
+				location.href = '/<?php echo $module_name ?>/<?php echo $controller_name ?>/<?php echo $action_name ?>/' + F[0] + '/' + F[1];
+			});
+		});
+	</script>
 </div>
 
 	

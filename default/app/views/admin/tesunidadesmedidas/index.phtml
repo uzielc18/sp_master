@@ -1,6 +1,6 @@
 
 <div class="card-header"></div>
-<?php echo Html::linkAction("crear", 'Crear Unidad Medida','class="btn btn-primary"') ?>
+<?php echo Html::linkAction("crear", 'Crear Unidad Medida','class="btn btn-xs btn-primary"') ?>
     <h1>Listado Unidades Medidas Santa Carmela</h1>
 
 <div id="mensajes_flash" >        
@@ -38,7 +38,7 @@ foreach($tesunidadesmedidasC->items as $item){ $n++;?>
 </table>
 <?php View::partial('paginators/extended', false, array('page' => $tesunidadesmedidasC ,'url' => Router::get('controller_path').'/index')); ?>
 <div class="form-actions">
-    <?php //echo Html::linkAction("crear", 'Crear Unidad Medida','class="btn btn-primary"') ?>
+    <?php //echo Html::linkAction("crear", 'Crear Unidad Medida','class="btn btn-xs btn-primary"') ?>
 </div>
 <h1>Listado Unidades Medidas Santa Patricia</h1>
 

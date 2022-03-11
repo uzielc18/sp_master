@@ -6,8 +6,8 @@
 </div>
 <div class="form-actions">
 <?Php foreach($empresas as $e):?>
-<?Php echo Html::linkAction('modificar_codigos_datos/1/'.$e->id,$e->abr.' Proveedor','class="btn"'); ?>
-<?Php echo Html::linkAction('modificar_codigos_datos/2/'.$e->id,$e->abr.' Cliente','class="btn"'); ?>
+<?Php echo Html::linkAction('modificar_codigos_datos/1/'.$e->id,$e->abr.' Proveedor','class="btn btn-xs"'); ?>
+<?Php echo Html::linkAction('modificar_codigos_datos/2/'.$e->id,$e->abr.' Cliente','class="btn btn-xs"'); ?>
 <?php endforeach;?>
 </div>
 <div class="card-body">

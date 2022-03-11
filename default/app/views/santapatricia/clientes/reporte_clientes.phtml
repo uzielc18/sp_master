@@ -2,8 +2,8 @@
     <h1>Proveedores de la Empresa <span><?Php echo Session::get('EMPRESAS_NOMBRE')?></span></h1>
 </div>
 <div class="form-actions">
-    <?php echo Html::linkAction('crear/'.$campo.'/'.$direccion.'/', 'Nuevo Cliente','class="btn btn-primary"') ?>			    <?php echo Html::linkAction('listado/'.$campo.'/'.$direccion.'/', 'Volver','class="btn btn-info"') ?>
-    <?php echo Html::linkAction('reporte_clientes_imprimir/'.$campo.'/'.$direccion.'/','Ver Para Imprimir','class="btn btn-info"');?>
+    <?php echo Html::linkAction('crear/'.$campo.'/'.$direccion.'/', 'Nuevo Cliente','class="btn btn-xs btn-primary"') ?>			    <?php echo Html::linkAction('listado/'.$campo.'/'.$direccion.'/', 'Volver','class="btn btn-xs btn-info"') ?>
+    <?php echo Html::linkAction('reporte_clientes_imprimir/'.$campo.'/'.$direccion.'/','Ver Para Imprimir','class="btn btn-xs btn-info"');?>
     </div>
     
 <div class="card-body">
@@ -40,6 +40,6 @@ foreach($datos as $item){ $n++;?>
 </table>
 <?php //View::partial('paginators/classic', false, array('page' => $datos ,'url' => Router::get('controller_path').'/listado/'.$campo.'/'.$direccion.'')); ?>
 <div class="form-actions">
-    <?php //echo Html::linkAction('crear/'.$campo.'/'.$direccion.'/'.$page, 'Crear Clientes','class="btn btn-primary"') ?>
+    <?php //echo Html::linkAction('crear/'.$campo.'/'.$direccion.'/'.$page, 'Crear Clientes','class="btn btn-xs btn-primary"') ?>
 </div>
 </div>

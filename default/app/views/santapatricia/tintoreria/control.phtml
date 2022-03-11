@@ -34,8 +34,8 @@
     <td><?php if(!empty($item->ancho))echo number_format($item->ancho,2,'.',' ')?></td>
     <td><?php if(!empty($item->anchoutil))echo number_format($item->anchoutil,2,'.',' ')?></td>
     <td>
-    <?php if(empty($item->prorollos_id)){$id_rollo=$item->id;$rollosecundario=0;}else{ $id_rollo=$item->prorollos_id;$rollosecundario=$item->id;}?>        <?php echo Html::linkAction('rollos_listados/'.$item->id,'Ingresar! Si es 1 rollo!','class="btn"')?>/Nro. de Rollos?  <?php echo Form::hidden('rollosecundario-'.$id_rollo,'size="5" placeholder="rollos"',$rollosecundario)?>
-	<?php echo Form::text('numero-'.$id_rollo,'size="5" placeholder="rollos" ')?> <a id="<?php echo $id_rollo?>" class="btn btn-primary enviar"> Generar Rollos!</a></td>
+    <?php if(empty($item->prorollos_id)){$id_rollo=$item->id;$rollosecundario=0;}else{ $id_rollo=$item->prorollos_id;$rollosecundario=$item->id;}?>        <?php echo Html::linkAction('rollos_listados/'.$item->id,'Ingresar! Si es 1 rollo!','class="btn btn-xs"')?>/Nro. de Rollos?  <?php echo Form::hidden('rollosecundario-'.$id_rollo,'size="5" placeholder="rollos"',$rollosecundario)?>
+	<?php echo Form::text('numero-'.$id_rollo,'size="5" placeholder="rollos" ')?> <a id="<?php echo $id_rollo?>" class="btn btn-xs btn-primary enviar"> Generar Rollos!</a></td>
   </tr>
   <?php }?>
 </tbody>

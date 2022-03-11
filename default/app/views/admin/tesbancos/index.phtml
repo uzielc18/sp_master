@@ -1,6 +1,6 @@
 
 <div class="card-header">
-<?php echo Html::linkAction("crear", 'Crear Banco','class="btn btn-primary"') ?>
+<?php echo Html::linkAction("crear", 'Crear Banco','class="btn btn-xs btn-primary"') ?>
     <h1>Listado de Bancos</h1>
 </div>
 <div id="mensajes_flash" >        
@@ -37,7 +37,7 @@ foreach($tesbancosC->items as $item){ $n++;?>
 </table>
 <?php View::partial('paginators/extended', false, array('page' => $tesbancosC ,'url' => Router::get('controller_path').'/index')); ?>
 <div class="form-actions">
-    <?php //echo Html::linkAction("crear", 'Crear Banco','class="btn btn-primary"') ?>
+    <?php //echo Html::linkAction("crear", 'Crear Banco','class="btn btn-xs btn-primary"') ?>
 </div>
 
 

@@ -299,7 +299,7 @@ $number++;?>
 <?php */?>
 <div style="float:right">
 <?php echo Form::open($module_name.'/tintoreria/generaringreso_tintoreria_mas','POST')?>
- <button type="submit" class="btn btn-primary">Registrar Ingreso!</button> 
+ <button type="submit" class="btn btn-xs btn-primary">Registrar Ingreso!</button> 
   </fieldset>
   <?php echo Form::hidden('guias.ids');?>
 <?Php echo Form::close();?>
@@ -323,9 +323,9 @@ $(document).ready(function(){
 <div class="form-actions">
 <?php
 if($action_name=='ingresos_i'){
-echo Html::linkAction('ingresos/','ingresar Guias','class="btn btn-info"');
+echo Html::linkAction('ingresos/','ingresar Guias','class="btn btn-xs btn-info"');
 }else{
-echo Html::linkAction('ingresos_i/','Ingresar Guia internas','class="btn btn-info"');
+echo Html::linkAction('ingresos_i/','Ingresar Guia internas','class="btn btn-xs btn-info"');
 }?> 
 </div>
 </div>

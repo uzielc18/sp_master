@@ -131,12 +131,12 @@ echo $totalenletras=strtoupper(NumerosLetras::NL($total,$salida->getTesmonedas()
 <?php echo Form::hidden('salida.totalconigv','',$total)?>
 <?php echo Form::hidden('salida.totalenletras','',$totalenletras)?>
 <?php echo Form::hidden('salida.estadosalida','','Pendiente')?>
-<?php if($salida->estadosalida=='Editable'){?><button type="submit" class="btn btn-primary">Finalizar</button> <?php echo Html::linkAction('agregardetalles_guia','Editar','class="btn"')?><?Php }else
+<?php if($salida->estadosalida=='Editable'){?><button type="submit" class="btn btn-xs btn-primary">Finalizar</button> <?php echo Html::linkAction('agregardetalles_guia','Editar','class="btn btn-xs"')?><?Php }else
 {?>
-<?php echo Html::linkAction('listado_guias','Listado','class="btn"')?> <?php //echo Html::linkAction('versalida_i','Imprimir','class="btn"')?>
+<?php echo Html::linkAction('listado_guias','Listado','class="btn btn-xs"')?> <?php //echo Html::linkAction('versalida_i','Imprimir','class="btn btn-xs"')?>
 <?php }?>
 <?php echo Form::close();?>
-<button onclick="myFunction()" class="btn btn-info"> IMPRIMIR </button> 
+<button onclick="myFunction()" class="btn btn-xs btn-info"> IMPRIMIR </button> 
 <?php 
 $hrf='facturas';
 if(Session::get('DOC_ID')==15)$hrf='guias';

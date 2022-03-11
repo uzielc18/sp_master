@@ -22,7 +22,7 @@ ul.token-input-list{ width:200px !important;}
 	<h1><?php echo Session::get('NOMBRE_INVENTARIO')?> x Colores </h1>
 </div>
 <div class="form-actions" title="Regresar!">
-    <?php echo Html::linkAction("listado/".Session::get('FAMILIA_ID'),'Regresar ','class="btn btn"') ?>
+    <?php echo Html::linkAction("listado/".Session::get('FAMILIA_ID'),'Regresar ','class="btn btn-xs btn"') ?>
 </div>
 <?php echo Sp::imprimir('INVENTARIO - ','P',array('P'=>"P"));?> 
 <div style="clear:both"></div>

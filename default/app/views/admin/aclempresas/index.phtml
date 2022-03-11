@@ -6,7 +6,7 @@
     <?php View::content() ?>
 </div> 
 <div class="form-actions">
-    <?php echo Html::linkAction("crear", 'Crear Empresa','class="btn btn-primary"') ?>
+    <?php echo Html::linkAction("crear", 'Crear Empresa','class="btn btn-xs btn-primary"') ?>
 </div>
 <?php
 Table::headers('id', 'Nombre', 'Razon Social', 'Ruc', 'Direccion');
@@ -18,5 +18,5 @@ Table::imgLinkConfirm('figuras/eliminar.png', 'admin/aclempresas/eliminar', '', 
 echo Table::create($aclempresas, 'class="table table-bordered table-striped"');
 ?>
 <div class="form-actions">
-    <?php //echo Html::linkAction("crear", 'Crear Empresa','class="btn btn-primary"') ?>
+    <?php //echo Html::linkAction("crear", 'Crear Empresa','class="btn btn-xs btn-primary"') ?>
 </div>

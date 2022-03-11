@@ -7,7 +7,7 @@
 
 <div class="form-actions" id="active"><?php echo Menu::menuCheques();?>
 <?php /*?><span class="print btn btn-primary"> Print </span> 
-<a href="javascript:;" class="btn botonExcel">Enviar a Excel<img src="/img/export_to_excel.gif" class="" /></a>
+<a href="javascript:;" class="btn btn-xs botonExcel">Enviar a Excel<img src="/img/export_to_excel.gif" class="" /></a>
 <form action="/utiles/excel" method="post" target="_blank" id="FormularioExportacion" class="form-inline">
 <input type="hidden" id="datos_a_enviar" name="datos_a_enviar"/>
 <input type="hidden" id="nombre" name="nombre" value="Cheques<?php echo date("Y-m")?>"/>
@@ -50,7 +50,7 @@ $number++;?>
     <td><?php echo Sp::formatFecha('%d / %m / %Y',$item->fecha_cobro)?></td>
     <td><?php echo $item->numerocheque?> (<?php if(!empty($item->estadocheque))echo $item->estadocheque;else echo "Sin registrar";?>)</td>
     <td align="right" valign="top"><?php if($item->monto!='NaN.00' && !empty($item->monto))echo $simbolo.number_format($item->monto,2,'.','');else echo('S/ 00.00')?></td>
-    <td><?php echo Html::linkAction('registrar/'.$item->id,'Ingresar Fecha. Cobro','class="btn"');?></td>
+    <td><?php echo Html::linkAction('registrar/'.$item->id,'Ingresar Fecha. Cobro','class="btn btn-xs"');?></td>
   </tr>
 <?php }?>
 </table>

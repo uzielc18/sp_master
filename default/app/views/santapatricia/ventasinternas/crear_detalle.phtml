@@ -19,7 +19,7 @@ switch ($monedas)
 </div>
 
 <div class="form-actions">
-<?php //echo Html::linkAction("facturas/7", 'Regresar ','class="btn"') ?>
+<?php //echo Html::linkAction("facturas/7", 'Regresar ','class="btn btn-xs"') ?>
 </div>
 <div class="card-body">
 <table width="75%" border="0" align="center" cellpadding="0" cellspacing="1">
@@ -173,7 +173,7 @@ switch ($monedas)
 <?php echo Form::hidden('salida.total','',$TOTAL);?>
 <?php //echo Form::hidden('salida.igv','',$igv);?>
 <?php echo Form::hidden('salida.totalenletras','',$texto);?> - 
-<?php echo Form::submit('Siguente','class="btn btn-primary"')?><?php echo Html::linkAction('guias/15/',' Volver','class="btn btn-secondary"')?><?php echo Html::linkAction('crear/'.Session::get('SALIDA_ID_I'),' Editar esta factura','class="btn btn-primary"')?>
+<?php echo Form::submit('Siguente','class="btn btn-xs btn-primary"')?><?php echo Html::linkAction('guias/15/',' Volver','class="btn btn-xs btn-secondary"')?><?php echo Html::linkAction('crear/'.Session::get('SALIDA_ID_I'),' Editar esta factura','class="btn btn-xs btn-primary"')?>
 <?php echo Form::close();?>
 </div>
 <?php

@@ -32,7 +32,7 @@ $q=$letra->id;
     <td><?php echo Calendar::selector('salida-'.$q.'.fvencimiento','',$letra->getTessalidas()->fvencimiento);?></td>
     <td> 
      <?php echo Form::text('salida-'.$q.'.totalconigv','',$letra->getTessalidas()->totalconigv)?>
-<?php echo Form::submit('GRABAR','class="btn btn-primary"');?>
+<?php echo Form::submit('GRABAR','class="btn btn-xs btn-primary"');?>
      </td>
     </tr>
 </table>

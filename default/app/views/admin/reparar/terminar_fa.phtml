@@ -32,7 +32,7 @@ $("#tesaplicacionfacturasadelantos_tesfacturasadelantos_id").tokenInput("<?php e
     <?php View::content() ?>
 </div>
 <div class="form-actions">
-	<?php echo Html::linkAction("",'Volver','class="btn btn-secondary"')?>
+	<?php echo Html::linkAction("",'Volver','class="btn btn-xs btn-secondary"')?>
 </div>
 <div class="card-body">
 <h2>1.- Para Simular una entrega de pedidos</h2>
@@ -88,7 +88,7 @@ $("#tesaplicacionfacturasadelantos_tesfacturasadelantos_id").tokenInput("<?php e
     <td>
     <?php 
 	$resta=number_format($fa->montototal,2,'.','')-number_format($fa->suma,2,'.','');
-	if($resta<1.00)echo Html::linkAction('cambiar_estado_fa/'.$fa->id,'Terminar' ,'class="btn-info"'); else echo $resta?>
+	if($resta<1.00)echo Html::linkAction('cambiar_estado_fa/'.$fa->id,'Terminar' ,'class="btn btn-xs-info"'); else echo $resta?>
     </td>
   </tr>
   <?php endforeach;?>

@@ -45,6 +45,6 @@ foreach($testipoproductos->items as $item){ $n++;?>
 </table>
 <?php View::partial('paginators/extended', false, array('page' => $testipoproductos ,'url' => Router::get('controller_path').'/index/'.$lineaproducto->id)); ?>
         <div class="form-actions">        
-    <?php echo Html::linkAction("crear/".$lineaproducto->id, 'Crear Tipo Productos', 'class="btn btn-primary"') ?>
+    <?php echo Html::linkAction("crear/".$lineaproducto->id, 'Crear Tipo Productos', 'class="btn btn-xs btn-primary"') ?>
 		</div>
  

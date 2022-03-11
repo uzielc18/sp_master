@@ -32,7 +32,7 @@ if($vc->voucherformadepagos_id==10)$simbolo='S/. ';
 <div class="card">
 <h1>Vouchers !<span> Vista de Impresion de Vauchers</span></h1>
 </div>
-<div class="form-actions"><?php echo Html::linkAction("", 'Volver al Inicio','class="btn btn-primary"') ?></div>
+<div class="form-actions"><?php echo Html::linkAction("", 'Volver al Inicio','class="btn btn-xs btn-primary"') ?></div>
 <?php echo Sp::imprimir('','P',array("P"=>"P"));?> 
 <div class="card-body">
 <?php if($vc->estadov=='ANULADO'){?><div class="texto"> ANULADO </div><?php }?>
@@ -212,8 +212,8 @@ if($vc->voucherformadepagos_id==10)$simbolo='S/. ';
   </table>
 <?php if($vc->estadov!='Terminado'){?>
 <div class="form-actions">
-    <?php echo Html::linkAction("grabardetalle/", 'Editar','class="btn btn-secondary"') ?>
-    <?php echo Html::linkAction("finalizar/1", 'Terminar','class="btn btn-primary"') ?>
+    <?php echo Html::linkAction("grabardetalle/", 'Editar','class="btn btn-xs btn-secondary"') ?>
+    <?php echo Html::linkAction("finalizar/1", 'Terminar','class="btn btn-xs btn-primary"') ?>
 </div>
 <?php }?>
 <?php echo Form::close()?>

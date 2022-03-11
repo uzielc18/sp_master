@@ -6,7 +6,7 @@
 <div id="mensajes_flash" >        
     <?php View::content() ?>
 </div> 
-<?php echo Html::linkAction("crear/$SC", 'Crear Memo S Carmela','class="btn btn-primary"') ?>
+<?php echo Html::linkAction("crear/$SC", 'Crear Memo S Carmela','class="btn btn-xs btn-primary"') ?>
 <table class="table table-bordered table-striped">
   <tr>
   	<td width="17">Nº</td>
@@ -43,14 +43,14 @@ foreach($memosC->items as $item){ $n++;?>
 </table>
 <?php View::partial('paginators/extended', false, array('page' => $memosC ,'url' => Router::get('controller_path').'/index')); ?>
 <div class="form-actions">
-    <?php //echo Html::linkAction("crear", 'Crear Area','class="btn btn-primary"') ?>
+    <?php //echo Html::linkAction("crear", 'Crear Area','class="btn btn-xs btn-primary"') ?>
 </div>
 
     <h1>Listado de Memos Santa Patricia</h1>
 <div id="mensajes_flash" >        
     <?php View::content() ?>
 </div> 
-<?php echo Html::linkAction("crear/$SP", 'Crear Memo S Patricia','class="btn btn-primary"') ?>
+<?php echo Html::linkAction("crear/$SP", 'Crear Memo S Patricia','class="btn btn-xs btn-primary"') ?>
 <table class="table table-bordered table-striped">
   <tr>
   	<td width="17">Nº</td>

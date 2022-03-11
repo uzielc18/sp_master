@@ -2,13 +2,13 @@
 <h1>CAJAS DE HILO<span>CAJAS DE HILO EN ALMACEN</span></h1>
 </div>
 <div class="form-actions" title="Regresar!">
- <?php echo Html::linkAction("",'Regresar ','class="btn btn"') ?> 
- <?php echo html::linkAction('inventario_tipo_ingreso/3/1/ALMACEN SP','ALMACEN SP','class="btn btn-secondary"')?>
- <?php echo html::linkAction('inventario_tipo_ingreso/3/2/URDIDO','URDIDO','class="btn btn-secondary"')?>
- <?php echo html::linkAction('inventario_tipo_ingreso/3/3/CHENILLE','CHENILLE','class="btn btn-secondary"')?>
- <?php echo html::linkAction('inventario_tipo_ingreso/3/4/DEVOLUCION','DEVOLUCION','class="btn btn-secondary"')?>
- <?php echo html::linkAction('inventario_tipo_ingreso/3/5/OTROS','OTROS','class="btn btn-secondary"')?>
-  <span class="btn btn-info print">Imprimir</span>
+ <?php echo Html::linkAction("",'Regresar ','class="btn btn-xs btn"') ?> 
+ <?php echo html::linkAction('inventario_tipo_ingreso/3/1/ALMACEN SP','ALMACEN SP','class="btn btn-xs btn-secondary"')?>
+ <?php echo html::linkAction('inventario_tipo_ingreso/3/2/URDIDO','URDIDO','class="btn btn-xs btn-secondary"')?>
+ <?php echo html::linkAction('inventario_tipo_ingreso/3/3/CHENILLE','CHENILLE','class="btn btn-xs btn-secondary"')?>
+ <?php echo html::linkAction('inventario_tipo_ingreso/3/4/DEVOLUCION','DEVOLUCION','class="btn btn-xs btn-secondary"')?>
+ <?php echo html::linkAction('inventario_tipo_ingreso/3/5/OTROS','OTROS','class="btn btn-xs btn-secondary"')?>
+  <span class="btn btn-xs btn-info print">Imprimir</span>
 
 </div>
 <div>
@@ -17,7 +17,7 @@
 {
 	$activo='';
 	if($tipo->id==$id)$activo=' btn-success';
-	echo Html::linkAction('reporte_cajas/'.$tipo->id,$tipo->nombre,'class="btn btn-mini'.$activo.'"').' ';
+	echo Html::linkAction('reporte_cajas/'.$tipo->id,$tipo->nombre,'class="btn btn-xs btn-mini'.$activo.'"').' ';
 }?>
 </div>
 <br />

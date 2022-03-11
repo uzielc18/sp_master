@@ -4,7 +4,7 @@
 <div class="card">
 	<div class="card-header">
 
-		<h3 class="card-title">Guias para Facturar!<span><?php echo $titulo ?> <?php echo Session::get('DOC_NOMBRE') ?></span></h3>
+		<h3 class="card-title"><?php echo $titulo ?></h3>
 		<div class="card-tools">
 			<?php echo Menu::menuVentas($action_name); ?>
 		</div>
@@ -17,7 +17,7 @@
 	<div class="card-body">
 		<div id="ver_resultado"></div>
 		<table id="exportar_excel" width="99%" class="table-bordered table-striped">
-			<caption>Guias Generadas para Facturar! (Telas) <?php echo Html::linkAction($url . "/", '<i class="fa fa-plus"></i>', 'class="btn btn-primary float-right"') ?></caption>
+			<caption>Guias Generadas para Facturar! (Telas) <?php echo Html::linkAction($url . "/", '<i class="fa fa-plus"></i>', 'class="btn btn-xs btn-primary float-right"') ?></caption>
 			<thead>
 				<tr>
 					<th width="17">Nº</th>

@@ -10,7 +10,7 @@
     <h1>Salida de Hilos<?php echo Session::get('DOC_NOMBRE')?></span></em></h1>
 </div>
 <div class="form-actions">
-<?php echo Html::linkAction("crearsalidas/", 'Nueva '.Session::get('DOC_NOMBRE'),'class="btn btn-primary"') ?>&nbsp;<?php //echo Html::linkAction("salidas", 'Volver ','class="btn"') ?>
+<?php echo Html::linkAction("crearsalidas/", 'Nueva '.Session::get('DOC_NOMBRE'),'class="btn btn-xs btn-primary"') ?>&nbsp;<?php //echo Html::linkAction("salidas", 'Volver ','class="btn btn-xs"') ?>
 </div>
 <div id="mensajes_flash" >        
     <?php View::content() ?>

@@ -16,7 +16,7 @@ $CLASES=array(
 <div id="mensajes_flash" >        
     <?php View::content() ?>
 </div>
-<div class="form-actions"><?php echo Html::linkAction("", 'Cuentas Principales','class="btn btn-primary"') ?> - <?php echo Html::link("admin/subcuentas/", 'Sub Cuentas','class="btn btn-primary"') ?>
+<div class="form-actions"><?php echo Html::linkAction("", 'Cuentas Principales','class="btn btn-xs btn-primary"') ?> - <?php echo Html::link("admin/subcuentas/", 'Sub Cuentas','class="btn btn-xs btn-primary"') ?>
 </div>
 <table class="table table-bordered table-striped">
 <?php
@@ -62,7 +62,7 @@ foreach($SUB->obtenerSubcuentas($item->id,NULL) as $item1){
     <td><?php echo $item1->descripcion?></td>
    	<td><?php echo Html::link('admin/subcuentas/editar/'.$item1->id,Html::img("figuras/editar.png",'Editar','style="width: 15px;margin-left:2px;margin-right:2px;"'),'')?>
     <?php if($borrar1==1)echo Html::linkAction("eliminar/$item1->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 15px;margin-left:2px;margin-right:2px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
-	 <?php echo Ajax::link("admin/subcuentas/crear/$item->id/$item1->id" ,'Crear Sub cuentas','class="btn btn-primary"',$item->id."-".$item1->id) ?>
+	 <?php echo Ajax::link("admin/subcuentas/crear/$item->id/$item1->id" ,'Crear Sub cuentas','class="btn btn-xs btn-primary"',$item->id."-".$item1->id) ?>
   	</td>
   </tr>
   <?php /*Inicio del Tercer nivel es decir de las sub-subcuentas*/

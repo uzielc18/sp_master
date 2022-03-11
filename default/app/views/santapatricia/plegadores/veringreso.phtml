@@ -168,7 +168,7 @@ margin:0 !important;
     	</h4>
     <td width="16%"><h4>Cantidad<?php echo Form::text('detallemov.cantidad','class="qty" size=5');?>
     	</h4></td>
-	<td width="4%"><h4><?php echo Form::submit("INGRESAR",'class="btn"')?>
+	<td width="4%"><h4><?php echo Form::submit("INGRESAR",'class="btn btn-xs"')?>
 		</th>
 	</h4>
 	</tr>
@@ -200,7 +200,7 @@ margin:0 !important;
   
   
   <div class="form-actions">
-    <?php //echo Html::linkAction("terminar/".Session::get('INGRESO_ID').'/ingresos','TERMINAR','class="btn btn-primary grabar_form"') ?> <?php echo Html::linkAction("ingresos/",'CANCELAR','class="btn btn-secondary"') ?> 
+    <?php //echo Html::linkAction("terminar/".Session::get('INGRESO_ID').'/ingresos','TERMINAR','class="btn btn-xs btn-primary grabar_form"') ?> <?php echo Html::linkAction("ingresos/",'CANCELAR','class="btn btn-xs btn-secondary"') ?> 
 </div><div id="loading" style="display:none;"><img src="/img/spin.gif" /></div>
      <div style="clear:both"></div>
 </div>

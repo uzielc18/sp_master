@@ -317,11 +317,11 @@ $(".producto").click(function(){
 	<div class="card"><h1><?php echo $titulo//echo "id--->".Session::get('PROFORMA_ID')?></h1></div>
     
     <div class="form-actions">
-    <?php echo Html::linkAction("listado/", 'Listado','class="btn btn-primary"') ?>
+    <?php echo Html::linkAction("listado/", 'Listado','class="btn btn-xs btn-primary"') ?>
     <?php
 	$estado='Pendiente'; 
 	if(Session::get('tipo_nota')=='ingreso')$estado='Ingresado';
-	echo Html::linkAction("terminar/".Session::get('NOTA_ID')."/".$estado, 'Terminar ','class="btn btn-primary grabar_form"') ?>&nbsp;<?php echo Html::linkAction("listado/", 'Cancelar ','class="btn btn"') ?>
+	echo Html::linkAction("terminar/".Session::get('NOTA_ID')."/".$estado, 'Terminar ','class="btn btn-xs btn-primary grabar_form"') ?>&nbsp;<?php echo Html::linkAction("listado/", 'Cancelar ','class="btn btn-xs btn"') ?>
 </div>
 <div id="page">
 <?php 
@@ -528,6 +528,6 @@ if($origen=='Produccion'){?>
     <?php
 	$estado='Pendiente'; 
 	if(Session::get('tipo_nota')=='ingreso')$estado='Ingresado';
-	echo Html::linkAction("terminar/".Session::get('NOTA_ID')."/".$estado, 'Terminar ','class="btn btn-primary grabar_form"') ?>&nbsp;<?php echo Html::linkAction("listado/", 'Cancelar ','class="btn btn"') ?>
+	echo Html::linkAction("terminar/".Session::get('NOTA_ID')."/".$estado, 'Terminar ','class="btn btn-xs btn-primary grabar_form"') ?>&nbsp;<?php echo Html::linkAction("listado/", 'Cancelar ','class="btn btn-xs btn"') ?>
 </div>
 </div>

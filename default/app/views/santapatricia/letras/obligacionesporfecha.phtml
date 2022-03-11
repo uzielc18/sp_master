@@ -16,8 +16,8 @@
     <?php View::content() ?>
 </div>
 <div class="form-actions">
-<?Php echo Html::linkAction('obligacionespendientes','Imprimir pendientes','class="btn btn-info"');?> 
-<?Php echo Html::linkAction('obligacionesporfecha/'.$todo,'Imprimir Todos los pendientes','class="btn btn-info"');?></div>
+<?Php echo Html::linkAction('obligacionespendientes','Imprimir pendientes','class="btn btn-xs btn-info"');?> 
+<?Php echo Html::linkAction('obligacionesporfecha/'.$todo,'Imprimir Todos los pendientes','class="btn btn-xs btn-info"');?></div>
 <?php echo Sp::imprimir('Letras pendientes por semana  - ','P');?>
 <div class="card-body">
 <div id="ver_resultado"></div>
@@ -130,6 +130,6 @@ switch ($item->tesmonedas_id)
 	}?>
 </table>
 <div class="form-actions">
-<?php //echo Html::linkAction("cargaringreso/0", 'Nueva '.Session::get('DOC_NOMBRE'),'class="btn btn-primary"') ?>&nbsp;<?php echo Html::linkAction("", 'Volver ','class="btn"') ?>
+<?php //echo Html::linkAction("cargaringreso/0", 'Nueva '.Session::get('DOC_NOMBRE'),'class="btn btn-xs btn-primary"') ?>&nbsp;<?php echo Html::linkAction("", 'Volver ','class="btn btn-xs"') ?>
 </div>
 </div>

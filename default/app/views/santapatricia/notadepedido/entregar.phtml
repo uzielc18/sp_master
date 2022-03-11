@@ -94,7 +94,7 @@ $('.entregar').live('click',function()
     Solo se pude entregar de un lote en especifico!!!! <?php echo $pedido->id;?>
 	</div>
     <div class="form-actions">
-    <?php echo Html::linkAction("listado/".$origen, 'Listado','class="btn btn-primary"') ?>
+    <?php echo Html::linkAction("listado/".$origen, 'Listado','class="btn btn-xs btn-primary"') ?>
 	</div>
     <div style="clear:both"></div>
   <div id="loading" style="display:none;"><img src="/img/spin.gif" /></div>
@@ -257,7 +257,7 @@ foreach($detalles as $item)
 	endforeach;?>
     <?php
 	//echo Form::hidden('tescajas_id-'.$item->id,'',1);
-	//echo Html::linkAction('procajastrama_entregar/'.$item->id.'/'.$item->tesproductos_id.'/'.$item->tescolores_id,'Ver cajas','class="btn btn-info"');?>
+	//echo Html::linkAction('procajastrama_entregar/'.$item->id.'/'.$item->tesproductos_id.'/'.$item->tescolores_id,'Ver cajas','class="btn btn-xs btn-info"');?>
     </td>
     <?php }?>
     <td class="description">
@@ -266,7 +266,7 @@ foreach($detalles as $item)
     <td>
     <?php
 	echo Form::hidden('tescajas_id-'.$item->id,'',1);
-	echo Html::linkAction('procajastrama_entregar/'.$item->id.'/'.$item->tesproductos_id.'/'.$item->tescolores_id,'Ver cajas','class="btn btn-info"');?>
+	echo Html::linkAction('procajastrama_entregar/'.$item->id.'/'.$item->tesproductos_id.'/'.$item->tescolores_id,'Ver cajas','class="btn btn-xs btn-info"');?>
     </td>
     </tr>
     <?php
@@ -324,7 +324,7 @@ foreach($detalles as $item)
     <td id="c<?php echo $item->id?>">
 	<?php
 	$numero='';
-	//echo Html::linkAction('procajastrama_entregar/'.$item->id.'/'.$item->tesproductos_id.'/'.$item->tescolores_id,'Entregar cajas','class="btn btn-info"');?>
+	//echo Html::linkAction('procajastrama_entregar/'.$item->id.'/'.$item->tesproductos_id.'/'.$item->tescolores_id,'Entregar cajas','class="btn btn-xs btn-info"');?>
     </td>
     <?php }?>
     <td id="d<?php echo $item->id?>" class="description">
@@ -335,7 +335,7 @@ foreach($detalles as $item)
 		if($item->cantidad<=$s)
 		{ ?><?php
 	$numero='';
-	echo Html::linkAction('procajastrama_entregar/'.$item->id.'/'.$item->tesproductos_id.'/'.$item->tescolores_id,'Entregar cajas','class="btn btn-info"');?>
+	echo Html::linkAction('procajastrama_entregar/'.$item->id.'/'.$item->tesproductos_id.'/'.$item->tescolores_id,'Entregar cajas','class="btn btn-xs btn-info"');?>
   <?php }else{
 	    echo '<span style="color: red;">No hay Stock</span>';
 	    }?>
@@ -351,6 +351,6 @@ foreach($detalles as $item)
         <span id="total-entregar" style="display:none;"><?php echo $c_p?></span>
         <span id="total-entregado" style="display:none;"><?php echo $c_e?></span>    
 	<?php $va='';
-	echo Html::linkAction("terminar/".Session::get('NOTA_ID')."/Entregado/".$origen, 'Terminar ','id="entregar" class="btn btn-primary grabar_form"'.$va) ?>&nbsp;<?php echo Html::linkAction("listado/".$origen, 'Cancelar ','class="btn btn"') ?>
+	echo Html::linkAction("terminar/".Session::get('NOTA_ID')."/Entregado/".$origen, 'Terminar ','id="entregar" class="btn btn-xs btn-primary grabar_form"'.$va) ?>&nbsp;<?php echo Html::linkAction("listado/".$origen, 'Cancelar ','class="btn btn-xs btn"') ?>
 	</div>
 </div>
