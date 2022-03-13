@@ -28,4 +28,3 @@ default/public/temp
 sonar-project.properties
 composer.lock
 default/app/config/databases.php
-default/app/config/databases.php
