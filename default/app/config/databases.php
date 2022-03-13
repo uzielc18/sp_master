@@ -8,7 +8,8 @@ return [
         /**
          * host: ip o nombre del host de la base de datos
          */
-        'host'     => '192.168.1.107',
+        //'host'     => '192.168.1.107',
+        'host'     => 'localhost',
         /**
          * username: usuario con permisos en la base de datos
          */
@@ -16,13 +17,13 @@ return [
         /**
          * password: clave del usuario de la base de datos
          */
-        //'password' => '',
+        //'password' => 'p3p3r0n12020',
         'password' => 'p3p3r0n1',
         /**
          * test: nombre de la base de datos
          */
-        //'name'     => 'old_sp',
-        'name'     => 'spatricia',
+        'name'     => 'old_sp',
+        //'name'     => 'spatricia',
         /**
          * type: tipo de motor de base de datos (mysql, pgsql, oracle o sqlite)
          */
