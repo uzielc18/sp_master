@@ -1,7 +1,7 @@
 <?php 
 View::template('spatricia/default');
 Load::models('tesproductos','prorollos','tesdetalleingresos','aclempresas','pronotapedidos','prodetallepedidos','tesdetallesalidas','tesdetalleingresos','proprocesos','prodetalleprocesos','testipocambios','tessalidasinternas','tesletrassalidasinternas','tesdetallesalidasinternas');
-class RollosController extends AppController
+class RollosController extends AdminController
 {
 protected function before_filter() 
 {

@@ -1,7 +1,5 @@
 <?php
-/*LETRAS INGRESOS*/ 
-View::template('spatricia/default');
-Load::models('tesvauchers','tesdetallevauchers','tesingresos','tesmonedas','voucherformadepagos','aclempresas','tesdatos','tessalidas','tesletrasingresos','tesdetracciones','tesaplicacionletraingresos','tesdocumentos','tesbancos');
+/*LETRAS INGRESOS*/
 
 class LetrasController extends AdminController
 {

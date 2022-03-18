@@ -1,6 +1,5 @@
 <?php 
-View::template('spatricia/default');
-Load::models('tessalidas','tesdetallesalidas','tesexportaciones','prodetalletransportes');
+
 class ExportacionesController extends AdminController
 {
 	public function exportacion($id)

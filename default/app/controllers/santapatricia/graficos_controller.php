@@ -1,6 +1,5 @@
 <?php 
-View::template('spatricia/default');
-Load::models('aclempresas','tesdatos','tessalidasinternas','tesletrassalidasinternas','tessalidas','tesletrassalidas','tesdocumentos','tesingresos','tesdetalleingresos','prorollos','tesdetracciones','proeficiencias','tesabonos');
+
 
 class GraficosController extends AdminController
 {

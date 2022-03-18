@@ -1,6 +1,5 @@
 <?php
-View::template('spatricia/default');
-Load::models('tescontactos','tesdatos');
+
 class ContactosController extends AdminController {
 	public $per_page=10;
 	public $proveedor=2;

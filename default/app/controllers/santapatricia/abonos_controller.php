@@ -1,6 +1,5 @@
 <?php 
-View::template('spatricia/default');
-Load::models('tesabonos','tesabonosdetalles','tesingresos','tesmonedas','tesformadepagosabonos','aclempresas','tesdatos','teschequesingresos','tessalidas','tesletrassalidas','tesletrassalidasinternas','tessalidasinternas','tesletrasingresos','tesordendecompras');
+
 class AbonosController extends AdminController
 {
 	protected function before_filter() {

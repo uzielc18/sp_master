@@ -1,6 +1,5 @@
 <?php
-View::template('spatricia/default');
-Load::models('tesingresos','tesdetalleingresos','tesproductos','testipoproductos','aclempresas','tesdatos','tesunidadesmedidas','testipocambios','testipoproductos','teslineaproductos','tescolores','testipoalmacenes','tescajas');
+
 class InventariosController extends AdminController
 {
 	public $documento=27;

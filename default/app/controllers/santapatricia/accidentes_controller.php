@@ -1,8 +1,7 @@
 
 <?php
-View::template('spatricia/default');
-Load::models('peraccidentes','acldatos');
-class AccidentesController extends AppController {
+
+class AccidentesController extends AdminController {
 	protected function before_filter() {
         if ( Input::isAjax() ){
 			View::template(null);

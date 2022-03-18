@@ -1,7 +1,6 @@
 <?php 
-View::template('spatricia/default');
-Load::models('tesproductos','testipoproductos','teslineaproductos','tesdocumentos','tessalidas','prodetalletransportes','tesdetallesalidas','prorollos','aclempresas','tesingresos','tesdetalleingresos','proprocesos','proacabados','prodetalleprocesos','prodetalleacabados');
-class ConfeccionesController extends AppController
+
+class ConfeccionesController extends AdminController
 {
 protected function before_filter() 
 {

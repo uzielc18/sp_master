@@ -1,7 +1,7 @@
 <?php
 Load::models('estadoplegador');
 View::template('backend/backend');
-class EstadoplegadorController extends AppController {
+class EstadoplegadorController extends AdminController {
  	public function index($pag= 1) {
         try {
             $estadoplegador = new Estadoplegador();

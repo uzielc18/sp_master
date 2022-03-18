@@ -1,7 +1,6 @@
 <?php 
-View::template('spatricia/default');
-Load::models('tesdocumentos','tessalidas','tesdetallesalidas','tesproductos','aclempresas','tesdatos','subcuentas','teschequessalidas','tescuentascorrientes');
-class ChequesalidasController extends AppController
+
+class ChequesalidasController extends AdminController
 {
 	protected function before_filter()
 	{

@@ -1,6 +1,5 @@
 <?php 
-View::template('spatricia/default');
-Load::models('eventos','tesingresos','tessalidas','eventostipo');
+
 class CalendariosController extends AdminController
 {
 	protected function before_filter() {

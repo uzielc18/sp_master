@@ -1,6 +1,5 @@
 <?php 
-View::template('spatricia/default');
-Load::models('promaquinas','acldatos','proeficiencias','tesproductos','proturnos');
+
 class EficienciasController extends AdminController
 {
 

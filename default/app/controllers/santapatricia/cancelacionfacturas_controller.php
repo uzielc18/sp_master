@@ -1,7 +1,5 @@
 <?php 
-View::template('spatricia/default');
 
-Load::models('tesdatos','tesdocumentos','tessalidas','tesdetallesalidas','aclempresas','tesletrassalidas','prodetalletransportes','tessalidasinternas','tesletrassalidasinternas','tesaplicacionfacturasadelantos','tesfacturasadelantos');
 class CancelacionfacturasController extends AdminController
 {
 protected function before_filter() 

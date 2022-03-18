@@ -1,7 +1,7 @@
 <?php
 Load::models('tesunidadesmedidas');
 View::template('backend/backend');
-class TesunidadesmedidasController extends AppController {
+class TesunidadesmedidasController extends AdminController {
 	public function index($pag= 1) {
         try {
             $um = new Tesunidadesmedidas();

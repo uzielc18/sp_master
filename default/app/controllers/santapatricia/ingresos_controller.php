@@ -1,7 +1,6 @@
 <?php
-View::template('spatricia/default');
-Load::models('tesdocumentos','tesingresos','tesdetalleingresos','tesproductos','aclempresas','tesdatos','tesunidadesmedidas','testipocambios','testipoproductos','teslineaproductos','subcuentas','tescolores','promovimientos','proplegadores','tesletrasingresos','teschequesingresos','tescajas');
-class IngresosController extends AppController
+
+class IngresosController extends AdminController
 {
 	public $documento=27;
 	protected function before_filter() {

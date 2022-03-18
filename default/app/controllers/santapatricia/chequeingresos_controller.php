@@ -1,8 +1,7 @@
 <?php 
 /* CHEQUES id 35*/
-View::template('spatricia/default');
-Load::models('tesdocumentos','tesingresos','tesdetalleingresos','tesproductos','aclempresas','tesdatos','subcuentas','teschequesingresos','tessalidas');
-class ChequeingresosController extends AppController
+
+class ChequeingresosController extends AdminController
 {
 	protected function before_filter()
 	{

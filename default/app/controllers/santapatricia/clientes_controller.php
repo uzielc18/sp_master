@@ -1,6 +1,5 @@
 <?php
-View::template('spatricia/default');
-Load::models('tesdatos','aclempresas','tescontactos','ubigeo','tesdatosdirecciones');
+
 class ClientesController extends AdminController {
 	public $per_page=100;
 	public $proveedor=2;

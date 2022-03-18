@@ -1,7 +1,7 @@
 <?php
 Load::models('memos','aclempresas','acldatos');
 View::template('backend/backend');
-class MemosController extends AppController {
+class MemosController extends AdminController {
 	public $SP=1;
 	public $SC=2;
 	public function index($pag= 1) {

@@ -1,9 +1,9 @@
 <?php 
-Load::models('tesdocumentos','tessalidas','prodetalletransportes','tesdetallesalidas','aclempresas','tesingresos','tesletrassalidas','tesfacturasadelantos','tesordendecompras','tesaplicacionfacturasadelantos','tesdatos','prodetalleacabados','prodetalleprocesos','proprocesos','sc_urdidos','tesdetallesalidasinternas','tessalidasinternas','tesletrassalidasinternas','tesexportaciones');
+
 class ImprimirController extends AppController {
     protected function before_filter() {
         if (Input::isAjax() ){
-			View::response('view');
+			View::template(null);
             //View::select(NULL, NULL);
         }
     }
@@ -232,7 +232,7 @@ public function letra($factura_id=0,$dato_id,$letra_id=0){
 }
 public function descargar($ruta) 
 {
-	View::response('view');
+	View::template(null);
 	$this->ruta=$ruta;	
 }
 

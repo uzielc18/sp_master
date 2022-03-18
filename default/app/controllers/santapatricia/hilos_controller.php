@@ -1,7 +1,6 @@
 <?php 
-View::template('spatricia/default');
-Load::models('tesproductos','testipoproductos','teslineaproductos','tesdocumentos','tessalidas','prodetalletransportes','tescajas','tesdetallesalidas','tesdetalleingresos');
-class HilosController extends AppController
+
+class HilosController extends AdminController
 {
 	public $per_page=30;
 	protected function before_filter() {

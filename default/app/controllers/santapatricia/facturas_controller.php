@@ -1,7 +1,7 @@
 <?php
-View::template('spatricia/default');
-Load::models('tesingresos','tesdetalleingresos','tesproductos','aclempresas','tesdatos','tesunidadesmedidas','testipocambios','tesproductos');
-class ProformasController extends AppController
+
+
+class ProformasController extends AdminController
 {
 	protected function before_filter() {
         if ( Input::isAjax() ){

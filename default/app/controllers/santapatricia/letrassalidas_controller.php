@@ -1,7 +1,5 @@
 <?php 
 /*LETRAS SALIDAS*/
-View::template('spatricia/default');
-Load::models('tesmonedas','aclempresas','tesdatos','tessalidasinternas','tesletrassalidasinternas','tessalidas','tesletrassalidas','tesdocumentos','tesbancos');
 
 class LetrassalidasController extends AdminController
 {

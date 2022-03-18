@@ -1,7 +1,7 @@
 <?php 
 View::template('spatricia/default');
 Load::models('aclempresas','tesproductos','testipoproductos','teslineaproductos','tesdocumentos','tessalidas','prodetalletransportes','tesdetallesalidas','tessalidasinternas','tesdetallesalidasinternas','tesfacturasadelantos','tesaplicacionfacturasadelantos','tesletrassalidasinternas','tesaplicacionletrainterna','testipocambios');
-class VentasproductosController extends AppController
+class VentasproductosController extends AdminController
 {
 	public $per_page=30;
 	protected function before_filter() {

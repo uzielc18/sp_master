@@ -26,7 +26,7 @@
  * Muestra un enlace que al hacer click irá a dominio.com/pages/aviso
  *
  */
-class PagesController extends AppController
+class PagesController extends AdminController
 {
     protected function before_filter()
     {

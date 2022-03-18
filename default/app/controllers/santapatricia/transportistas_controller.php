@@ -1,7 +1,7 @@
 <?php
 View::template('spatricia/default');
 Load::models('acldatos','plareas','aclempresas','protransportistas','prodetalletransportes');
-class TransportistasController extends AppController {
+class TransportistasController extends AdminController {
 	public $per_page=15;
 	//public $empresa=Session::get('EMPRESAS_ID');
     protected function before_filter() {

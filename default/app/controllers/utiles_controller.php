@@ -1,12 +1,13 @@
 <?php 
 Load::models('ubigeo');
 
-class UtilesController extends AppController {
+class UtilesController extends AdminController {
 
 protected function before_filter() {
         		
 		if (Input::isAjax() ){
-			View::response('view');
+			View::template(null);
+			//View::template(null);
         }
     }
 	/*
@@ -14,7 +15,7 @@ protected function before_filter() {
 	*/
 	public function index()
 	{
-		View::template('backend/default');
+		
 	}
     public function resultados() 
 	{
@@ -44,7 +45,7 @@ protected function before_filter() {
 	public function imprimir(){}
 	public function excel()
 	{
-		View::response('view');
+		View::template(null);
 		$this->p=$_POST['datos_a_enviar'];$this->nombre=$_POST['nombre'];
 	}
 	public function txt_factura()
@@ -57,7 +58,7 @@ protected function before_filter() {
 	}
 	public function descargas($file,$ruta)
 	{
-		View::response('view');
+		View::template(null);
 		$this->f=$file;
 		$this->ruta=$ruta;
 	}

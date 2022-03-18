@@ -1,7 +1,6 @@
 <?php 
-View::template('spatricia/default');
-Load::models('tescajas','tesdetalleingresos','tesdetallesalidas','tessalidas','pronotapedidos','tesproductos','prodetallepedidos','tesdetallesalidasinternas');
-class CajasController extends AppController
+
+class CajasController extends AdminController
 {
 	protected function before_filter() {
         if ( Input::isAjax() ){

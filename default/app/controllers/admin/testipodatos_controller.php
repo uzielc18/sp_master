@@ -1,7 +1,7 @@
 <?php
 Load::models('testipodatos');
 View::template('backend/backend');
-class TestipodatosController extends AppController {
+class TestipodatosController extends AdminController {
 	public function index($pag= 1) {
         try {
             $testipodatos = new Testipodatos();

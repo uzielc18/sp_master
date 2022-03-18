@@ -9,10 +9,9 @@ class IndexController extends AdminController {
     }
     public function index()
 	{
-		//Validate::timeSession();
+		
 	}
-	//public function bienvenida()
-	//{}
+	
     public function bienvenida()
 	{
 		$paneles= new Proproduccion();

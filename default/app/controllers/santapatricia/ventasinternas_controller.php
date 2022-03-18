@@ -2,7 +2,7 @@
 View::template('spatricia/default');
 //,'tessalidasinternas','tesletrassalidasinternas'
 Load::models('tesproductos','testipoproductos','teslineaproductos','tesdocumentos','tessalidasinternas','prodetalletransportes','tesdetallesalidasinternas','prorollos','aclempresas','tesingresos','tesletrassalidasinternas','tesaplicacionletrainterna','testipocambios');
-class VentasinternasController extends AppController
+class VentasinternasController extends AdminController
 {
 	protected function before_filter() 
 	{

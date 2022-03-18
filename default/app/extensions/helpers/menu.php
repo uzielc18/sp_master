@@ -236,7 +236,7 @@ class Menu
 		if ($action == 'listado_servicio' AND Session::get('DOC_ID')=='7') $class = 'btn-success';
 		$code .= Html::linkAction("cargar_doc/7/listado_servicio", 'Facturas de servicio', 'class="btn btn-xs ' . $class . '" title="Crear Factura de Servicio"');
 		$class = '';
-		if($action == 'listado_servicio' AND Session::get('DOC_ID')=='15') $class = 'btn-success';
+		if(($action == 'listado_servicio' AND Session::get('DOC_ID')=='15' ) or $action=='guia_servicio' or $action=='factura_servicio_detalle' ) $class = 'btn-success';
 		$code .=Html::linkAction("cargar_doc/15/listado_servicio", 'Guias por servicios','class="btn btn-xs ' . $class . '"');
 		$class = '';
 		if ($action == 'guias_mes') $class = 'btn-success';

@@ -850,18 +850,25 @@ class VentasController extends AdminController
 	salida de de rollos para venta
 	*/
 		$salidas = new Tessalidas();
-		$this->salidas = $salidas->find('conditions: (serie="F001" OR serie="001" OR serie = "F002") AND estadosalida!="TERMINADO" AND npedido like "SV%" AND estado=1 AND tesdocumentos_id=' . Session::get('DOC_ID') . ' AND aclempresas_id=' . Session::get("EMPRESAS_ID"). ' AND DATE_FORMAT(femision, "%Y-%m")="' . $anio . '-' . $mes_activo . '"', 'order: fecha_at DESC');
+		$this->salidas = $salidas->find('conditions: (serie="F001" OR serie="001" OR serie = "F002") AND estadosalida!="TERMINADO" AND (npedido like "SV%" OR npedido like "SR%") AND estado=1 AND tesdocumentos_id=' . Session::get('DOC_ID') . ' AND aclempresas_id=' . Session::get("EMPRESAS_ID"). ' AND DATE_FORMAT(femision, "%Y-%m")="' . $anio . '-' . $mes_activo . '"', 'order: fecha_at DESC');
 		Session::delete("SALIDA_ID");
-		$this->guias = $salidas->find('conditions: (serie="F001" OR serie="001" OR serie = "F002") AND estadosalida="Pendiente" AND npedido like "SV%" AND estado=1 AND tesdocumentos_id=15 AND aclempresas_id=' . Session::get("EMPRESAS_ID"), 'order: fecha_at DESC');
+		$this->guias = $salidas->find('conditions: (serie="F001" OR serie="001" OR serie = "F002") AND estadosalida="Pendiente" AND (npedido like "SV%" OR npedido like "SR%" ) AND estado=1 AND tesdocumentos_id=15 AND aclempresas_id=' . Session::get("EMPRESAS_ID"), 'order: fecha_at DESC');
 	}
 	public function guia_servicio($id = 0)
 	{
 		$SALD = new Tessalidas();
 		$CAMB = new Testipocambios();
-		$this->salida['serie'] = '001';
-		$this->salida['numero'] = $SALD->generarNumero(Session::get('DOC_ID'), '001');
-		$this->salida['npedido'] = $SALD->getNumeropedido('SR', '001');
-		$this->salida['numerofactura'] = $SALD->generarNumeroFactura('F002');
+		
+		if ($id == 0) {
+			$this->salida['serie'] = '001';
+			$this->salida['numero'] = $SALD->generarNumero(Session::get('DOC_ID'), '001');
+			$this->salida['npedido'] = $SALD->getNumeropedido('SR', '001');
+			$this->salida['numerofactura'] = $SALD->generarNumeroFactura('F002');
+		} else {
+			$this->salida = $SALD->find_first($id);
+			$DETALLES = new Tesdetallesalidas();
+			$this->detalle = $DETALLES->find_first('conditions: tessalidas_id=' . (int)$id);
+		}
 		if (Input::hasPost('salida')) {
 			$salidas = new Tessalidas(Input::post('salida'));
 			$salidas->tesdocumentos_id = Session::get('DOC_ID');

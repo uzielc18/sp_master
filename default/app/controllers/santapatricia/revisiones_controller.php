@@ -1,7 +1,7 @@
 <?php
 View::template('spatricia/default');
 Load::models('prorollos','aclempresas','prodetalleproduccion','tesproductos'); 
-class RevisionesController extends AppController
+class RevisionesController extends AdminController
 {
 	protected function before_filter() 
 {

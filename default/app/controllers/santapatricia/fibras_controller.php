@@ -1,4 +1,5 @@
-<?php View::template('spatricia/default');
+<?php 
+
 class FibrasController extends ScaffoldController
 {
 	public $model='hilofibras';
