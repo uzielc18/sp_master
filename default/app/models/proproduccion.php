@@ -62,7 +62,7 @@ IFNULL((Select m.metros FROM promerma as m WHERE p.id=m.proproduccion_id),0)as m
 		INNER JOIN tescolores as c ON c.id=d.tescolores_id 
 		WHERE ISNULL(d.fechadecorte) 
 		GROUP BY m.id,pr.id,m.prefijo,m.numero,pr.nombre ,d.metroprogramados, c.nombre ,d.corte,d.observaciones,d.fecha_at 
-		order by d.fecha_at DESC");
+		order by d.fecha_at DESC limit 0,10");
 	}
 	public function panel_ventas()
 	{
@@ -76,7 +76,7 @@ limit 0,20");
 	{
 		return $this->find_all_by_sql("SELECT s.id, d.razonsocial as empresa, s.numero as numero,s.npedido as pedido,s.totalconigv as total, s.estadosalida as estado,s.femision as fecha
 FROM tessalidas as s INNER JOIN tesdatos as d ON d.id=s.tesdatos_id 
-WHERE s.estadosalida!='ANULADO' AND s.tesdocumentos_id=".$documento_id." AND s.aclempresas_id=".Session::get('EMPRESAS_ID')." AND s.femision='".$fecha."' ORDER BY s.femision DESC");
+WHERE s.estadosalida!='ANULADO' AND s.tesdocumentos_id=".$documento_id." AND s.aclempresas_id=".Session::get('EMPRESAS_ID')." ORDER BY s.femision DESC limit 0,10");
 	}
 	public function panel_rollos()
 	{
@@ -87,13 +87,13 @@ WHERE s.estadosalida!='ANULADO' AND s.tesdocumentos_id=".$documento_id." AND s.a
 		WHERE r.estadorollo =  'VENTA'
 		GROUP BY p.id, c.id, p.nombre, c.nombre,r.metros, r.fecha_in
 		ORDER BY r.fecha_in DESC 
-		LIMIT 0 , 20");
+		LIMIT 0 , 10");
 	}
 	public function panel_orden()
 	{
 		return $this->find_all_by_sql("SELECT d.razonsocial as nombre, o.totalconigv as total ,o.observacion as obs, o.ubicacion as ubicacion, o.fecha as fecha FROM tesordendecompras as o INNER JOIN tesdatos as d ON d.id=o.tesdatos_id
 WHERE o.origenorden='externo' AND o.ubicacion!='TERMINADO' AND o.aclempresas_id=".Session::get('EMPRESAS_ID')."
-order by o.fecha DESC");
+order by o.fecha DESC limit 0,10");
 	}
 	public function panel_ingresos()
 	{
@@ -105,7 +105,7 @@ AND i.estadoingreso !=  'ANULADO'
 AND i.estadoingreso !=  'Con Factura'
 AND c.id = i.tesdocumentos_id
 ORDER BY i.id DESC 
-LIMIT 0 , 20");
+LIMIT 0 , 10");
 	}
 	public function panel_calendario()
 	{

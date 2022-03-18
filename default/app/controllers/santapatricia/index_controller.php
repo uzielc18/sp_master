@@ -17,8 +17,8 @@ class IndexController extends AdminController {
 		$paneles= new Proproduccion();
 		$enventos= new Eventos();
 		$this->producciones=$paneles->panel_produccion();
-		$this->ventas=$paneles->panel_ventas();
-		$this->ventasf=$paneles->panel_semanal(date("Y-m-d"),7);
+		//$this->ventas=$paneles->panel_ventas();
+		$this->ventas=$paneles->panel_semanal(date("Y-m-d"),7);
 		$this->ventasg=$paneles->panel_semanal(date("Y-m-d"),15);
 		$this->rollos=$paneles->panel_rollos();
 		$this->ordenes=$paneles->panel_orden();
