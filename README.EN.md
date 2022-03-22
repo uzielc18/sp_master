@@ -43,3 +43,25 @@ CREATE TABLE `inventarios` (
   `estado` char(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8
+
+
+#### consulta 
+
+select p.id,p.detalle,p.nombrecorto,p.nombre,d.tescolores_id,d.lote, sum(d.cantidad),s.femision ,'salida' as tipo
+from tesproductos as p
+INNER JOIN tesdetallesalidas as d ON d.tesproductos_id=p.id
+INNER JOIN tessalidas as s ON s.id=d.tessalidas_id 
+AND (s.estadosalida="Pendiente" or s.estadosalida="TERMINADO" or s.estadosalida="PAGADO" or s.estadosalida="Pagado" or s.estadosalida="Enviado") 
+AND s.tesdocumentos_id=15 AND s.aclempresas_id=1
+WHERE ISNULL(d.prorollos_id)
+group by p.id,d.tescolores_id,d.lote,s.femision
+union
+select p.id,p.detalle,p.nombrecorto,p.nombre,d.tescolores_id,d.lote, sum(d.cantidad),i.femision ,'ingreso' as tipo
+from tesproductos as p
+INNER JOIN tesdetalleingresos as d ON d.tesproductos_id=p.id
+INNER JOIN tesingresos as i ON i.id = d.tesingresos_id 
+AND (i.estadoingreso="PAGADO" OR i.estadoingreso="Pendiente" OR i.estadoingreso="INGRESO-CH") AND i.aclempresas_id=1 AND (i.tesdocumentos_id=15 OR i.tesdocumentos_id=27)
+WHERE !ISNULL(d.cantidad) AND d.cantidad >0 AND (ISNULL(d.prorollos_id) OR d.prorollos_id=0)
+group by p.id,d.tescolores_id,d.lote,i.femision
+order by id,tescolores_id,femision,lote
+;
