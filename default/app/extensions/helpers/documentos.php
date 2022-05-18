@@ -16,7 +16,7 @@
 class Documentos
 {
 	
-	public static function tr($tipo=01,$simbolo)
+	public static function tr($tipo='01',$simbolo)
 	{
 		switch($tipo)
 		{
@@ -157,7 +157,7 @@ case '14':
 				$code.='<td><span class="simbolo"><?php echo $simbolo;?></span><span id="total-\'+IDnew+\'" class="price">0.00</span></td>';
 				$code.='</tr>';
 			;break;
-			default:
+		default:
 			$code='<tr id="\'+IDnew+\'" class="item-row">';
 				$code.='<td><div class="delete-wpr"><input id="codigo-\'+IDnew+\'" name="codigo-\'+IDnew+\'" type="text" readonly="readonly" size="10"><a id="del-\'+IDnew+\'" class="delete" href="javascript:;" title="Elimar registro" data-id="0" style="">X</a></div></td>';
 				$code.='<td class="item-name"><input id="productos_id-\'+IDnew+\'" name="productos_id-\'+IDnew+\'" type="hidden" class="productos_id" readonly="readonly"><span id="ver-name\'+IDnew+\'" style="display:none;"><input id="productoname-\'+IDnew+\'" name="productoname-\'+IDnew+\'" type="text" value="" readonly="readonly"></span><span id="ver\'+IDnew+\'" class="ver"><input id="producto\'+IDnew+\'" name="producto\'+IDnew+\'" type="text" class="producto" placeholder="Producto" size="30" readonly="readonly"></span></td>';

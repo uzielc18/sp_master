@@ -70,7 +70,7 @@ abstract class AdminController extends Controller
         } elseif (Input::hasPost('login') && Input::hasPost('clave')) {
             if(MyAuth::autenticar(Input::post('login'), Input::post('clave'))) {
                 Flash::info('Bienvenido al Sistema <b>' . Auth::get('nombres') . '</b>');
-				return Router::to([]);
+				return Redirect::to();
             } else {
                 Flash::warning('Datos de Acceso Invalidos');
                 View::select(NULL, 'logueo');

@@ -1,53 +1,304 @@
-<?php View::content();?>
-<br />
-<br />
+<div class="card">
+    <div class="card-header">
+        <h2>Resumen de los ultimos movimientos en el sisitema</h2>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Últimas Ventas</h3>
+                    </div>
+                    <div class="card-body">
+                            <table class="table table-sm table-striped">
+                                <caption><i class="fa fa-money">Pagado</i>
+                                    <i class="fa fa-credit-card">Pendiente</i>
+                                    <i class="fa fa-edit">Creando</i>
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th>Empresa</th>
+                                        <th>Doc</th>
+                                        <th>Fecha</th>
+                                        <th>estado</th>
+                                        <th>Total</th>
+                                    </tr>
 
-<div class="hoja">
-	<div class="caja3">
-<div align="center">
-<img id="image" src="/img/logoSP.png" alt="logo">
-</div>
-<br />
-<h4 align="center">VISION</h4>
- <div align="left">
+                                </thead>
+                                <tbody>
+                                    <?Php foreach ($ventas as $venta) {
+                                    ?>
+                                        <tr class="<?php echo strtoupper($venta->estado) ?>">
+                                            <td><?php echo $venta->empresa ?></td>
+                                            <td><?php echo intval($venta->numero) ?></td>
+                                            <td><?php echo Sp::formatFecha("%d/%m/%y", $venta->fecha) ?></td>
+                                            <td><?php echo $venta->estado ?></td>
+                                            <td><?php if (!empty($venta->total)) echo number_format($venta->total, 2, '.', '') ?></td>
+                                        </tr>
+                                    <?Php } ?>
+                                </tbody>
 
+                            </table>
+                            <p><?php echo Html::link('santapatricia/ventas', 'Ver mas', 'class="btn btn-xs btn-primary"') ?></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
 
-Ser una empresa líder, 
-proveedora de soluciones de calidad en todos los sectores, 
-con los que nos encontramos comprometidos, 
-dando o proporcionando asesoría con personal motivado y calificado.
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Últimas guias</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-sm table-striped">
+                            <caption><i class="fa fa-money">Pagado</i>
+                                <i class="fa fa-credit-card">Pendiente</i>
+                                <i class="fa fa-edit">Creando</i>
+                            </caption>
+                            <thead>
+                                <tr>
+                                    <th>Empresa</th>
+                                    <th>Doc</th>
+                                    <th>Fecha</th>
+                                    <th>estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?Php foreach ($ventasg as $venta) {
+                                ?>
+                                    <tr class="<?php echo strtoupper($venta->estado) ?>">
+                                        <td><?php echo $venta->empresa ?></td>
+                                        <td><?php echo intval($venta->numero) ?></td>
+                                        <td><?php echo Sp::formatFecha("%d/%m/%y", $venta->fecha) ?></td>
+                                        <td><?php echo $venta->estado ?></td>
+                                    </tr>
+                                <?Php } ?>
+                            </tbody>
+                        </table>
+                    </div>
 
-</div>
-<br />
-<h4 align="center">MISION</h4>
-<div align="left">
+                    <p><?php echo Html::link('santapatricia/ventas', 'Ver mas', 'class="btn btn-xs btn-primary"') ?></p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
 
-Proveer y facilitar a nuestros clientes productos textiles de calidad, 
-acorde con la tendencia y  necesidades de los mercados que ofertamos 
-(HOTELES, OFICINAS, CUEROS, DEPORTES, RESTAURANTES) 
-generando valor a nuestros clientes y para nuestra empresa.
-</div>
-<br />
-<h4 align="center">VALORES</h4>
-<div align="center">
-<div align="left">
+                    <div class="card-header">
+                        <h3 class="card-title">Telas programadas en maquinas</h3>
+                    </div>
+                    <div class="card-body">
+                        <?php echo Ajax::linkAction('produccion', 'Actualizar', 'produccion') ?>
+                        <table class="table table-sm table-striped">
+                            <caption><i class="fa fa-money">Pagado</i>
+                                <i class="fa fa-credit-card">Pendiente</i>
+                                <i class="fa fa-edit">Creando</i>
+                            </caption>
+                            <thead>
+                                <tr>
+                                    <th width="4%">Maquina</th>
+                                    <th width="74%">Producto</th>
+                                    <th width="22%">Metros</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?Php foreach ($producciones as $prod) { ?>
+                                    <tr>
+                                        <td><?php echo $prod->maquina ?></td>
+                                        <td><?php echo $prod->tela ?></td>
+                                        <td><?php echo $prod->metros ?></td>
+                                    </tr>
+                                <?Php } ?>
+                            </tbody>
+                        </table>
+                        <p><?php echo Html::link('santapatricia/produccion', 'Ver mas', 'class="btn btn-xs btn-primary"') ?></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Rollos para venta </h3>
+                    </div>
+                    <div class="card-body">
+                        <table width="100%" cellpadding="0" cellspacing="0" class="table table-sm table-striped">
+                            <caption><i class="fa fa-money">Pagado</i>
+                                <i class="fa fa-credit-card">Pendiente</i>
+                                <i class="fa fa-edit">Creando</i>
+                            </caption>
+                            <thead>
+                                <tr>
+                                    <th width="52%">Tela</th>
+                                    <th width="46%">Color</th>
+                                    <th width="2%">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?Php foreach ($rollos as $rollo) { ?>
+                                    <tr>
+                                        <td><?php echo $rollo->tela ?></td>
+                                        <td><?php echo $rollo->color ?></td>
+                                        <td align="right"><?php echo number_format($rollo->metros, 2, '.', '') ?></td>
+                                    </tr>
+                                <?Php } ?>
+                            </tbody>
+                        </table>
+                        <p><?php echo Html::link('santapatricia/tintoreria/rollos_venta', 'Ver mas', 'class="btn btn-xs btn-primary"') ?></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
 
--	Satisfacción plena de nuestros productos y clientes, 
-proporcionando garantía a nuestros productos con entrega a tiempo, 
-soluciones inteligentes acorde a las necesidades así como servicios de calidad.
-</div>
-<br />
-<div align="left">
--	Constante superación: 
-Búsqueda de soluciones en cuanto  a productos y servicios 
-a fin de cubrir las necesidades del cliente y el desarrollo de la empresa.
-</div>
-<br />
-<div align="left">
--	Medio Ambiente: Cuidado del medio ambiente como constante, 
-tanto en reciclado de mermas y desperdicios generales en la actividad productiva; 
-así como de los productos y servicios textiles ofrecidos a nuestros clientes.
-</div>
-</div>
-</div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Ordenes de compra</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-sm table-striped">
+                            <caption><i class="fa fa-money">Pagado</i>
+                                <i class="fa fa-credit-card">Pendiente</i>
+                                <i class="fa fa-edit">Creando</i>
+                            </caption>
+                            <thead>
+                                <tr>
+                                    <th width="52%">Empresa</th>
+                                    <th width="46%">Ubicacion</th>
+                                    <th width="2%">Total</th>
+                                    <th width="2%">Fecha</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?Php foreach ($ordenes as $orden) { ?>
+                                    <tr>
+                                        <td><?php echo $orden->nombre ?></td>
+                                        <td><?php echo $orden->ubicacion ?></td>
+                                        <td align="right"><?php echo number_format($orden->total, 2, '.', '') ?></td>
+                                        <td><?php echo Sp::formatFecha("%d/%m/%y", $orden->fecha) ?></td>
+                                    </tr>
+                                <?Php } ?>
+                            </tbody>
+                        </table>
+                        <p><a href="#" class="btn btn-xs btn-primary">Ingresar</a></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Compras o documentos de ingresos</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-sm table-striped">
+                            <caption><i class="fa fa-money">Pagado</i>
+                                <i class="fa fa-credit-card">Pendiente</i>
+                                <i class="fa fa-edit">Creando</i>
+                            </caption>
+                            <thead>
+                                <tr>
+                                    <th width="74%">Empresa</th>
+                                    <th width="21%">Doc</th>
+                                    <th width="3%">Numero</th>
+                                    <th width="2%">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?Php foreach ($compras as $compra) {
+                                ?>
+                                    <tr class="<?php echo strtoupper($compra->estado) ?>">
+                                        <td><?php echo $compra->nombre ?></td>
+                                        <td><?php echo $compra->doc ?></td>
+                                        <td><?php echo intval($compra->numero) ?></td>
+                                        <td align="right"><?php if (!empty($compra->total)) if (is_numeric($compra->total)) echo number_format($compra->total, 2, '.', '') ?></td>
+                                    </tr>
+                                <?Php } ?>
+                            </tbody>
+                        </table>
+                        <p><?php echo Html::link('santapatricia/ingresos', 'Ver mas', 'class="btn btn-xs btn-primary"') ?></p>
+                    </div>
+                </div>
+            </div>
+            <!--<div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Calendario</h3>
+                </div>
+                <div class="card-body">
+                    <table width="100%" cellpadding="0" cellspacing="0" class="table table-sm table-striped">
+                        <caption><i class="fa fa-money">Pagado</i>
+                            <i class="fa fa-credit-card">Pendiente</i>
+                            <i class="fa fa-edit">Creando</i>
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Titulo</th>
+                                <th scope="col">F/inicio</th>
+                                <th scope="col">F/Fin</th>
+                            </tr>
+                        </thead>
+                        <?php
+                        $cumples_ar = array();
+                        $a = 0;
+                        foreach ($cumples as $cumple) {
+                            $cumples_ar[$a]['title'] = $cumple->title;
+                            $cumples_ar[$a]['fecha_i'] = Sp::formatFecha($cumple->fecha_inicio, '%d-%m-%Y');
+                            $cumples_ar[$a]['fecha_f'] = Sp::formatFecha($cumple->fecha_inicio, '%d-%m-%Y');
+                            $a++;
+                        }
+                        function orden($a, $b)
+                        {
+                            return strtotime($a['fecha_i']) - strtotime($b['fecha_i']);
+                        }
+                        usort($cumples_ar, 'orden');
+                        foreach ($cumples_ar as $val) {
+
+                        ?>
+                            <tr style="color:#F60;">
+                                <td><i class="icon-gift"></i> <?php echo $val['title'] ?></td>
+                                <td><?Php echo Sp::formatFecha('%B %A', $val['fecha_i']) ?></td>
+                                <td><?Php echo $val['fecha_f'] ?></td>
+                            </tr>
+                        <?php } ?>
+                        <?php foreach ($diarios as $dia) { ?>
+                            <tr style="color:#900;">
+                                <td><i class="icon-tags"></i><?php echo $dia->title ?></td>
+                                <td><?Php echo $dia->fecha_inicio ?></td>
+                                <td><?Php echo $dia->fecha_fin ?></td>
+                            </tr>
+                        <?php } ?>
+                        <?php foreach ($semanales as $semanal) { ?>
+                            <tr style="color:#F60;">
+                                <td><i class="icon-tag"></i><?php echo $semanal->title ?></td>
+                                <td><?Php echo $semanal->fecha_inicio ?></td>
+                                <td><?Php echo $semanal->fecha_fin ?></td>
+                            </tr>
+                        <?php } ?>
+                        <?php foreach ($mensuales as $mensual) { ?>
+                            <tr style="color:#060;">
+                                <td><i class="icon-tags"></i><?php echo $mensual->title ?></td>
+                                <td><?Php echo $mensual->fecha_inicio ?></td>
+                                <td><?Php echo $mensual->fecha_fin ?></td>
+                            </tr style="background-color:#FC3;">
+                        <?php } ?>
+                        <?php foreach ($anuales as $anual) { ?>
+                            <tr style="color:#333;">
+                                <td><i class="icon-tags"></i><?php echo $anual->title ?></td>
+                                <td><?Php echo $anual->fecha_inicio ?></td>
+                                <td><?Php echo $anual->fecha_fin ?></td>
+                            </tr>
+                        <?php } ?>
+                        <?php foreach ($eventos as $evento) { ?>
+                            <tr style="color:#00F;">
+                                <td><i class="icon-tag"></i><?php echo $evento->title ?></td>
+                                <td><?Php echo $evento->fecha_inicio ?></td>
+                                <td><?Php echo $evento->fecha_fin ?></td>
+                            </tr>
+                        <?php } ?>
+                    </table>
+                </div>
+                <p><?php echo Html::link('santapatricia/calendarios', 'Ver mas', 'class="btn btn-xs btn-info"') ?></p>
+            </div>
+        </div>-->
+        </div>
+
+    </div>
+
 </div>

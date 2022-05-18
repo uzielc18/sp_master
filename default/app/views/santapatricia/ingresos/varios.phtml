@@ -1,876 +1,872 @@
 <?php
-$simbolo="S/. ";
+$simbolo = "S/. ";
 
-switch ($monedas)
-{
-	case 1: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES'; break;
-	case 2: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
-	case 4: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
-	case 5: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
-	case 0: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
+switch ($monedas) {
+   case 1:
+      $simbolo = 'S/. ';
+      $moneda_letras = 'NUEVOS SOLES';
+      break;
+   case 2:
+      $simbolo = '$. ';
+      $moneda_letras = 'DOLARES AMERICANOS';
+      break;
+   case 4:
+      $simbolo = 'S/. ';
+      $moneda_letras = 'NUEVOS SOLES';
+      break;
+   case 5:
+      $simbolo = '$. ';
+      $moneda_letras = 'DOLARES AMERICANOS';
+      break;
+   case 0:
+      $simbolo = 'S/. ';
+      $moneda_letras = 'NUEVOS SOLES';
+      break;
 }
 
 
 View::content();
 echo Tag::js('jquery/jquery.tokeninput');
-Tag::css('token-input');?>
-<script type="text/javascript">	
-	
-/*
+Tag::css('token-input'); ?>
+<script type="text/javascript">
+   /*
 CONVERTIR NUMERO SEN LETRAS
 */
-// Función modulo, regresa el residuo de una división 
-function mod(dividendo , divisor) 
-{ 
-  resDiv = dividendo / divisor ;  
-  parteEnt = Math.floor(resDiv);            // Obtiene la parte Entera de resDiv 
-  parteFrac = resDiv - parteEnt ;      // Obtiene la parte Fraccionaria de la división
-  modulo = Math.round(parteFrac * divisor);  // Regresa la parte fraccionaria * la división (modulo) 
-  return modulo; 
-} // Fin de función mod
+   // Función modulo, regresa el residuo de una división 
+   function mod(dividendo, divisor) {
+      resDiv = dividendo / divisor;
+      parteEnt = Math.floor(resDiv); // Obtiene la parte Entera de resDiv 
+      parteFrac = resDiv - parteEnt; // Obtiene la parte Fraccionaria de la división
+      modulo = Math.round(parteFrac * divisor); // Regresa la parte fraccionaria * la división (modulo) 
+      return modulo;
+   } // Fin de función mod
 
-// Función ObtenerParteEntDiv, regresa la parte entera de una división
-function ObtenerParteEntDiv(dividendo , divisor) 
-{ 
-  resDiv = dividendo / divisor ;  
-  parteEntDiv = Math.floor(resDiv); 
-  return parteEntDiv; 
-} // Fin de función ObtenerParteEntDiv
+   // Función ObtenerParteEntDiv, regresa la parte entera de una división
+   function ObtenerParteEntDiv(dividendo, divisor) {
+      resDiv = dividendo / divisor;
+      parteEntDiv = Math.floor(resDiv);
+      return parteEntDiv;
+   } // Fin de función ObtenerParteEntDiv
 
-// function fraction_part, regresa la parte Fraccionaria de una cantidad
-function fraction_part(dividendo , divisor) 
-{ 
-  resDiv = dividendo / divisor ;  
-  f_part = Math.floor(resDiv); 
-  return f_part; 
-} // Fin de función fraction_part
+   // function fraction_part, regresa la parte Fraccionaria de una cantidad
+   function fraction_part(dividendo, divisor) {
+      resDiv = dividendo / divisor;
+      f_part = Math.floor(resDiv);
+      return f_part;
+   } // Fin de función fraction_part
 
 
-// function string_literal conversion is the core of this program 
-// converts numbers to spanish strings, handling the general special 
-// cases in spanish language. 
-function string_literal_conversion(number) 
-{   
-   // first, divide your number in hundreds, tens and units, cascadig 
-   // trough subsequent divisions, using the modulus of each division 
-   // for the next. 
+   // function string_literal conversion is the core of this program 
+   // converts numbers to spanish strings, handling the general special 
+   // cases in spanish language. 
+   function string_literal_conversion(number) {
+      // first, divide your number in hundreds, tens and units, cascadig 
+      // trough subsequent divisions, using the modulus of each division 
+      // for the next. 
 
-   centenas = ObtenerParteEntDiv(number, 100); 
-   
-   number = mod(number, 100); 
+      centenas = ObtenerParteEntDiv(number, 100);
 
-   decenas = ObtenerParteEntDiv(number, 10); 
-   number = mod(number, 10); 
+      number = mod(number, 100);
 
-   unidades = ObtenerParteEntDiv(number, 1); 
-   number = mod(number, 1);  
-   string_hundreds="";
-   string_tens="";
-   string_units="";
-   // cascade trough hundreds. This will convert the hundreds part to 
-   // their corresponding string in spanish.
-   if(centenas == 1){
-      string_hundreds = "ciento ";
-   } 
-   
-   
-   if(centenas == 2){
-      string_hundreds = "doscientos ";
-   }
-    
-   if(centenas == 3){
-      string_hundreds = "trescientos ";
-   } 
-   
-   if(centenas == 4){
-      string_hundreds = "cuatrocientos ";
-   } 
-   
-   if(centenas == 5){
-      string_hundreds = "quinientos ";
-   } 
-   
-   if(centenas == 6){
-      string_hundreds = "seiscientos ";
-   } 
-   
-   if(centenas == 7){
-      string_hundreds = "setecientos ";
-   } 
-   
-   if(centenas == 8){
-      string_hundreds = "ochocientos ";
-   } 
-   
-   if(centenas == 9){
-      string_hundreds = "novecientos ";
-   } 
-   
- // end switch hundreds 
+      decenas = ObtenerParteEntDiv(number, 10);
+      number = mod(number, 10);
 
-   // casgade trough tens. This will convert the tens part to corresponding 
-   // strings in spanish. Note, however that the strings between 11 and 19 
-   // are all special cases. Also 21-29 is a special case in spanish. 
-   if(decenas == 1){
-      //Special case, depends on units for each conversion
-      if(unidades == 1){
-         string_tens = "once";
+      unidades = ObtenerParteEntDiv(number, 1);
+      number = mod(number, 1);
+      string_hundreds = "";
+      string_tens = "";
+      string_units = "";
+      // cascade trough hundreds. This will convert the hundreds part to 
+      // their corresponding string in spanish.
+      if (centenas == 1) {
+         string_hundreds = "ciento ";
       }
-      
-      if(unidades == 2){
-         string_tens = "doce";
-      }
-      
-      if(unidades == 3){
-         string_tens = "trece";
-      }
-      
-      if(unidades == 4){
-         string_tens = "catorce";
-      }
-      
-      if(unidades == 5){
-         string_tens = "quince";
-      }
-      
-      if(unidades == 6){
-         string_tens = "dieciseis";
-      }
-      
-      if(unidades == 7){
-         string_tens = "diecisiete";
-      }
-      
-      if(unidades == 8){
-         string_tens = "dieciocho";
-      }
-      
-      if(unidades == 9){
-         string_tens = "diecinueve";
-      }
-   } 
-   //alert("STRING_TENS ="+string_tens);
-   
-   if(decenas == 2){
-      string_tens = "veinti";
-   }
-   if(decenas == 3){
-      string_tens = "treinta";
-   }
-   if(decenas == 4){
-      string_tens = "cuarenta";
-   }
-   if(decenas == 5){
-      string_tens = "cincuenta";
-   }
-   if(decenas == 6){
-      string_tens = "sesenta";
-   }
-   if(decenas == 7){
-      string_tens = "setenta";
-   }
-   if(decenas == 8){
-      string_tens = "ochenta";
-   }
-   if(decenas == 9){
-      string_tens = "noventa";
-   }
-   
-    // Fin de swicth decenas
 
 
-   // cascades trough units, This will convert the units part to corresponding 
-   // strings in spanish. Note however that a check is being made to see wether 
-   // the special cases 11-19 were used. In that case, the whole conversion of 
-   // individual units is ignored since it was already made in the tens cascade. 
-
-   if (decenas == 1) 
-   { 
-      string_units="";  // empties the units check, since it has alredy been handled on the tens switch 
-   } 
-   else 
-   { 
-      if(unidades == 1){
-         string_units = "un";
+      if (centenas == 2) {
+         string_hundreds = "doscientos ";
       }
-      if(unidades == 2){
-         string_units = "dos";
+
+      if (centenas == 3) {
+         string_hundreds = "trescientos ";
       }
-      if(unidades == 3){
-         string_units = "tres";
+
+      if (centenas == 4) {
+         string_hundreds = "cuatrocientos ";
       }
-      if(unidades == 4){
-         string_units = "cuatro";
+
+      if (centenas == 5) {
+         string_hundreds = "quinientos ";
       }
-      if(unidades == 5){
-         string_units = "cinco";
+
+      if (centenas == 6) {
+         string_hundreds = "seiscientos ";
       }
-      if(unidades == 6){
-         string_units = "seis";
+
+      if (centenas == 7) {
+         string_hundreds = "setecientos ";
       }
-      if(unidades == 7){
-         string_units = "siete";
+
+      if (centenas == 8) {
+         string_hundreds = "ochocientos ";
       }
-      if(unidades == 8){
-         string_units = "ocho";
+
+      if (centenas == 9) {
+         string_hundreds = "novecientos ";
       }
-      if(unidades == 9){
-         string_units = "nueve";
+
+      // end switch hundreds 
+
+      // casgade trough tens. This will convert the tens part to corresponding 
+      // strings in spanish. Note, however that the strings between 11 and 19 
+      // are all special cases. Also 21-29 is a special case in spanish. 
+      if (decenas == 1) {
+         //Special case, depends on units for each conversion
+         if (unidades == 1) {
+            string_tens = "once";
+         }
+
+         if (unidades == 2) {
+            string_tens = "doce";
+         }
+
+         if (unidades == 3) {
+            string_tens = "trece";
+         }
+
+         if (unidades == 4) {
+            string_tens = "catorce";
+         }
+
+         if (unidades == 5) {
+            string_tens = "quince";
+         }
+
+         if (unidades == 6) {
+            string_tens = "dieciseis";
+         }
+
+         if (unidades == 7) {
+            string_tens = "diecisiete";
+         }
+
+         if (unidades == 8) {
+            string_tens = "dieciocho";
+         }
+
+         if (unidades == 9) {
+            string_tens = "diecinueve";
+         }
       }
-       // end switch units 
-   } // end if-then-else 
-   
+      //alert("STRING_TENS ="+string_tens);
 
-//final special cases. This conditions will handle the special cases which 
-//are not as general as the ones in the cascades. Basically four: 
+      if (decenas == 2) {
+         string_tens = "veinti";
+      }
+      if (decenas == 3) {
+         string_tens = "treinta";
+      }
+      if (decenas == 4) {
+         string_tens = "cuarenta";
+      }
+      if (decenas == 5) {
+         string_tens = "cincuenta";
+      }
+      if (decenas == 6) {
+         string_tens = "sesenta";
+      }
+      if (decenas == 7) {
+         string_tens = "setenta";
+      }
+      if (decenas == 8) {
+         string_tens = "ochenta";
+      }
+      if (decenas == 9) {
+         string_tens = "noventa";
+      }
 
-// when you've got 100, you dont' say 'ciento' you say 'cien' 
-// 'ciento' is used only for [101 >= number > 199] 
-if (centenas == 1 && decenas == 0 && unidades == 0) 
-{ 
-   string_hundreds = "cien " ; 
-}  
-
-// when you've got 10, you don't say any of the 11-19 special 
-// cases.. just say 'diez' 
-if (decenas == 1 && unidades ==0) 
-{ 
-   string_tens = "diez " ; 
-} 
-
-// when you've got 20, you don't say 'veinti', which is used 
-// only for [21 >= number > 29] 
-if (decenas == 2 && unidades ==0) 
-{ 
-  string_tens = "veinte " ; 
-} 
-
-// for numbers >= 30, you don't use a single word such as veintiuno 
-// (twenty one), you must add 'y' (and), and use two words. v.gr 31 
-// 'treinta y uno' (thirty and one) 
-if (decenas >=3 && unidades >=1) 
-{ 
-   string_tens = string_tens+" y "; 
-} 
-
-// this line gathers all the hundreds, tens and units into the final string 
-// and returns it as the function value.
-final_string = string_hundreds+string_tens+string_units;
+      // Fin de swicth decenas
 
 
-return final_string ; 
+      // cascades trough units, This will convert the units part to corresponding 
+      // strings in spanish. Note however that a check is being made to see wether 
+      // the special cases 11-19 were used. In that case, the whole conversion of 
+      // individual units is ignored since it was already made in the tens cascade. 
 
-} //end of function string_literal_conversion()================================ 
+      if (decenas == 1) {
+         string_units = ""; // empties the units check, since it has alredy been handled on the tens switch 
+      } else {
+         if (unidades == 1) {
+            string_units = "un";
+         }
+         if (unidades == 2) {
+            string_units = "dos";
+         }
+         if (unidades == 3) {
+            string_units = "tres";
+         }
+         if (unidades == 4) {
+            string_units = "cuatro";
+         }
+         if (unidades == 5) {
+            string_units = "cinco";
+         }
+         if (unidades == 6) {
+            string_units = "seis";
+         }
+         if (unidades == 7) {
+            string_units = "siete";
+         }
+         if (unidades == 8) {
+            string_units = "ocho";
+         }
+         if (unidades == 9) {
+            string_units = "nueve";
+         }
+         // end switch units 
+      } // end if-then-else 
 
-// handle some external special cases. Specially the millions, thousands 
-// and hundreds descriptors. Since the same rules apply to all number triads 
-// descriptions are handled outside the string conversion function, so it can 
-// be re used for each triad. 
+
+      //final special cases. This conditions will handle the special cases which 
+      //are not as general as the ones in the cascades. Basically four: 
+
+      // when you've got 100, you dont' say 'ciento' you say 'cien' 
+      // 'ciento' is used only for [101 >= number > 199] 
+      if (centenas == 1 && decenas == 0 && unidades == 0) {
+         string_hundreds = "cien ";
+      }
+
+      // when you've got 10, you don't say any of the 11-19 special 
+      // cases.. just say 'diez' 
+      if (decenas == 1 && unidades == 0) {
+         string_tens = "diez ";
+      }
+
+      // when you've got 20, you don't say 'veinti', which is used 
+      // only for [21 >= number > 29] 
+      if (decenas == 2 && unidades == 0) {
+         string_tens = "veinte ";
+      }
+
+      // for numbers >= 30, you don't use a single word such as veintiuno 
+      // (twenty one), you must add 'y' (and), and use two words. v.gr 31 
+      // 'treinta y uno' (thirty and one) 
+      if (decenas >= 3 && unidades >= 1) {
+         string_tens = string_tens + " y ";
+      }
+
+      // this line gathers all the hundreds, tens and units into the final string 
+      // and returns it as the function value.
+      final_string = string_hundreds + string_tens + string_units;
 
 
-function covertirNumLetras(number)
-{
-   
-  var millions_final_string='';
-  var thousands_final_string='';
-  //number = number_format (number, 2);
-   //alert(number)
-   number1=number.toString(); 
-   //settype (number, "integer");
-   cent = number1.split(".");   
-   centavos = cent[1];
-   
-   
-   if (centavos == 0 || centavos == undefined){
-   centavos = "00";}
+      return final_string;
 
-   if (number == 0 || number == "") 
-   { // if amount = 0, then forget all about conversions, 
-      centenas_final_string=" cero "; // amount is zero (cero). handle it externally, to 
-      // function breakdown 
-  } 
-   else 
-   { 
-   
-     millions  = ObtenerParteEntDiv(number, 1000000); // first, send the millions to the string 
-      number = mod(number, 1000000);           // conversion function 
-      
-     if (millions != 0)
-      {                      
-      // This condition handles the plural case 
-         if (millions == 1) 
-         {              // if only 1, use 'millon' (million). if 
-            descriptor= " millon ";  // > than 1, use 'millones' (millions) as 
-            } 
-         else 
-         {                           // a descriptor for this triad. 
-              descriptor = " millones "; 
-            } 
-      } 
-      else 
-      {    
-         descriptor = " ";                 // if 0 million then use no descriptor. 
-      } 
-      millions_final_string = string_literal_conversion(millions)+descriptor; 
-          
-      
-      thousands = ObtenerParteEntDiv(number, 1000);  // now, send the thousands to the string 
-        number = mod(number, 1000);            // conversion function. 
-      //print "Th:".thousands;
-     if (thousands != 1) 
-      {                   // This condition eliminates the descriptor 
-         thousands_final_string =string_literal_conversion(thousands) + " mil "; 
-       //  descriptor = " mil ";          // if there are no thousands on the amount 
-      } 
-      if (thousands == 1)
+   } //end of function string_literal_conversion()================================ 
+
+   // handle some external special cases. Specially the millions, thousands 
+   // and hundreds descriptors. Since the same rules apply to all number triads 
+   // descriptions are handled outside the string conversion function, so it can 
+   // be re used for each triad. 
+
+
+   function covertirNumLetras(number) {
+
+      var millions_final_string = '';
+      var thousands_final_string = '';
+      //number = number_format (number, 2);
+      //alert(number)
+      number1 = number.toString();
+      //settype (number, "integer");
+      cent = number1.split(".");
+      centavos = cent[1];
+
+
+      if (centavos == 0 || centavos == undefined) {
+         centavos = "00";
+      }
+
+      if (number == 0 || number == "") { // if amount = 0, then forget all about conversions, 
+         centenas_final_string = " cero "; // amount is zero (cero). handle it externally, to 
+         // function breakdown 
+      } else {
+
+         millions = ObtenerParteEntDiv(number, 1000000); // first, send the millions to the string 
+         number = mod(number, 1000000); // conversion function 
+
+         if (millions != 0) {
+            // This condition handles the plural case 
+            if (millions == 1) { // if only 1, use 'millon' (million). if 
+               descriptor = " millon "; // > than 1, use 'millones' (millions) as 
+            } else { // a descriptor for this triad. 
+               descriptor = " millones ";
+            }
+         } else {
+            descriptor = " "; // if 0 million then use no descriptor. 
+         }
+         millions_final_string = string_literal_conversion(millions) + descriptor;
+
+
+         thousands = ObtenerParteEntDiv(number, 1000); // now, send the thousands to the string 
+         number = mod(number, 1000); // conversion function. 
+         //print "Th:".thousands;
+         if (thousands != 1) { // This condition eliminates the descriptor 
+            thousands_final_string = string_literal_conversion(thousands) + " mil ";
+            //  descriptor = " mil ";          // if there are no thousands on the amount 
+         }
+         if (thousands == 1) {
+            thousands_final_string = " mil ";
+         }
+         if (thousands < 1) {
+            thousands_final_string = " ";
+         }
+
+         // this will handle numbers between 1 and 999 which 
+         // need no descriptor whatsoever. 
+
+         centenas = number;
+         centenas_final_string = string_literal_conversion(centenas);
+
+      } //end if (number ==0) 
+
+      /*if (ereg("un",centenas_final_string))
       {
-         thousands_final_string = " mil "; 
-     }
-      if (thousands < 1) 
-      { 
-         thousands_final_string = " "; 
-      } 
-  
-      // this will handle numbers between 1 and 999 which 
-      // need no descriptor whatsoever. 
+        centenas_final_string = ereg_replace("","o",centenas_final_string); 
+      }*/
+      //finally, print the output. 
 
-     centenas  = number;                     
-      centenas_final_string = string_literal_conversion(centenas) ; 
-      
-   } //end if (number ==0) 
+      /* Concatena los millones, miles y cientos*/
+      cad = millions_final_string + thousands_final_string + centenas_final_string;
 
-   /*if (ereg("un",centenas_final_string))
-   {
-     centenas_final_string = ereg_replace("","o",centenas_final_string); 
-   }*/
-   //finally, print the output. 
+      /* Convierte la cadena a Mayúsculas*/
+      cad = cad.toUpperCase();
 
-   /* Concatena los millones, miles y cientos*/
-   cad = millions_final_string+thousands_final_string+centenas_final_string; 
-   
-   /* Convierte la cadena a Mayúsculas*/
-   cad = cad.toUpperCase();       
+      if (centavos.length > 2) {
+         if (centavos.substring(2, 3) >= 5) {
+            centavos = centavos.substring(0, 1) + (parseInt(centavos.substring(1, 2)) + 1).toString();
+         } else {
+            centavos = centavos.substring(0, 2);
+         }
+      }
 
-   if (centavos.length>2)
-   {   
-      if(centavos.substring(2,3)>= 5){
-         centavos = centavos.substring(0,1)+(parseInt(centavos.substring(1,2))+1).toString();
-      }   else{
-        centavos = centavos.substring(0,2);
-       }
+      /* Concatena a los centavos la cadena "/100" */
+      if (centavos.length == 1) {
+         centavos = centavos + "0";
+      }
+      centavos = centavos + "/100";
+
+
+      /* Asigna el tipo de moneda, para 1 = PESO, para distinto de 1 = PESOS*/
+      if (number == 1) {
+         moneda = "  ";
+      } else {
+         moneda = "   ";
+      }
+      /* Regresa el número en cadena entre paréntesis y con tipo de moneda y la fase M.N.*/
+      return ('SON: ' + cad + ' Y ' + centavos + " centimos " + moneda);
    }
+   /*INICIO */
+   $(document).ready(function() {
+      bind();
+      $("#paid").blur(function() {
+         update_balance();
+      });
+      $("#paid_total").blur(function() {
+         update_balance();
+      });
+      $("#addrow").click(function() {
+         var ID = $(".item-row:last").attr("id");
+         //alert(ID);
+         grabarDetalle(ID);
+         var IDnew = Number(ID) + Number(1);
+         var tr = '<tr id="' + IDnew + '" class="item-row"><td><div class="delete-wpr"><textarea id="concepto' + IDnew + '" name="concepto' + IDnew + '" rows="5" cols="100"><a id="del-' + IDnew + '" class="delete" href="javascript:;" title="Elimar registro" data-id="0" style="">X</a></div></td><td><span class="simbolo">S/. </span><input id="precio-' + IDnew + '" type="text"  size="10" class="cost"/></td></tr>';
+         $(".item-row:last").after(tr);
+         if ($(".delete").length > 1) $(".delete").show();
+         else $(".delete").hide();
+         bind();
+      });
+      $(".delete").on("click", function() {
+         var row = $(this).parents(".item-row")
+         var id = row.find('.delete').attr('data-id');
+         EliminarDetalle(id);
+         $(this).parents('.item-row').remove();
+         update_total();
+         if ($(".delete").length < 2) $(".delete").hide();
+      });
+      $("#paid").blur(function() {
+         $("#descuento").val($(this).val());
+         GRABAR();
+      });
+      $("#glosa").change(function() {
+         GRABAR();
+      });
+      $("#femision").change(function() {
+         GRABAR();
+      });
+      $("#numero").blur(function() {
+         GRABAR();
+      });
+      $(".grabar_form").blur(function() {
+         GRABAR();
+      });
+      $("#monedas").change(function() {
+         GRABAR();
+         var op = $("#monedas option:selected").val();
+         if (op == 1) {
+            $(".simbolo").html("S/. ");
+         }
+         if (op == 2) {
+            $(".simbolo").html("$. ");
+         }
+      });
+      $("#CL").tokenInput("/<?php echo $module_name ?>/ingresos/buscarcliente", {
+         tokenLimit: 1,
+            <?php if ($cliente_id != 0) { ?>
+               prePopulate: [{
+                  id: <?php echo $cliente_id ?>,
+                  name: "<?php echo $nombre; ?>"
+               }, ],
+            <?php } ?>
+         minChars: 2,
+         onAdd: function(item) {
+            var VAL = item.id;
+            $("#cliente_id").val(VAL);
+            $("#customer-title").val(item.name);
+            //$("#BC").hide();
+            //GrabarCliente();
+         },
+         onDelete: function(item) {}
+      });
+      /*Busqueda del Cuentas de Gastos*/
+      $("#cuantagastos").tokenInput("/<?php echo $module_name ?>/ingresos/cuentasG", {
+         tokenLimit: 1,
+         minChars: 2,
+         <?php if (!empty($cuantagastos)) { ?>
+            prePopulate: [{
+               id: <?php echo $cuantagastos ?>,
+               name: "<?php echo $cuantagastos_name ?>"
+            }, ],
+         <?php } ?>
+         onAdd: function(item) {
+            var VAL = item.id;
+            $("#customer-title").val(item.name);
+            //$("#BC").hide();
+            //GrabarCliente();
+         },
+         onDelete: function(item) {}
+      });
+      /*Busqueda del Cuentas Po pagar*/
+      $("#cuentaporpagar").tokenInput("/<?php echo $module_name ?>/ingresos/cuentasP", {
+         tokenLimit: 1,
+         minChars: 2,
+         <?php if (!empty($cuentaporpagar)) {/*cuantagastos*/ ?>
+            prePopulate: [{
+               id: <?php echo $cuentaporpagar; ?>,
+               name: "<?php echo $cuentaporpagar_name ?>"
+            }, ],
+         <?php } ?>
+         onAdd: function(item) {
+            var VAL = item.id;
+            $("#customer-title").val(item.name);
+            //$("#BC").hide();
+            //GrabarCliente();
+         },
+         onDelete: function(item) {}
+      });
+      $("#XC").click(function() {
+         $("#BC").show();
+         $("#cliente_id").val('');
+         $("#customer-title").val('');
+         //BorrarCliente()
+      });
+   });
 
-   /* Concatena a los centavos la cadena "/100" */
-   if (centavos.length==1)
-   {
-      centavos = centavos+"0";
-   }
-   centavos = centavos+ "/100"; 
-
-
-   /* Asigna el tipo de moneda, para 1 = PESO, para distinto de 1 = PESOS*/
-   if (number == 1)
-   {
-      moneda = "  ";  
-   }
-   else
-   {
-      moneda = "   ";  
-   }
-   /* Regresa el número en cadena entre paréntesis y con tipo de moneda y la fase M.N.*/
-  return ('SON: '+cad+' Y '+centavos+" centimos "+moneda);
-}
-/*INICIO */
-$(document).ready(function()
-{	
-	bind();  
-	$("#paid").blur(function(){update_balance();});
-	$("#paid_total").blur(function(){update_balance();});
-	$("#addrow").click(function()
-		{
-			var ID = $(".item-row:last").attr("id");
-			//alert(ID);
-			grabarDetalle(ID);
-			var IDnew=Number(ID)+Number(1);
-			var tr='<tr id="'+IDnew+'" class="item-row"><td><div class="delete-wpr"><textarea id="concepto'+IDnew+'" name="concepto'+IDnew+'" rows="5" cols="100"><a id="del-'+IDnew+'" class="delete" href="javascript:;" title="Elimar registro" data-id="0" style="">X</a></div></td><td><span class="simbolo">S/. </span><input id="precio-'+IDnew+'" type="text"  size="10" class="cost"/></td></tr>';
-    		$(".item-row:last").after(tr);
-    		if ($(".delete").length > 1) $(".delete").show();else $(".delete").hide();
-			bind();
-  		});
-	$(".delete").live("click",function()
-		{
-		  var row =$(this).parents(".item-row")
-		  var id=row.find('.delete').attr('data-id');
-		  EliminarDetalle(id);
-			$(this).parents('.item-row').remove();
-		  	update_total();
-			if ($(".delete").length < 2) $(".delete").hide();
-	    });
-	$("#paid").blur(function(){$("#descuento").val($(this).val());GRABAR();});
-	$("#glosa").change(function(){GRABAR();});
-	$("#femision").change(function(){GRABAR();});
-	$("#numero").blur(function(){GRABAR();});
-	$(".grabar_form").blur(function(){GRABAR();});
-	$("#monedas").change(function()
-		{
-			GRABAR();
-			var op = $("#monedas option:selected").val();
-			if(op==1)
-			{
-			$(".simbolo").html("S/. ");
-			}
-			if(op==2)
-			{
-			$(".simbolo").html("$. ");
-			}
-		});
-		$("#CL").tokenInput("/<?php echo $module_name?>/ingresos/buscarcliente", 
-		{
-			tokenLimit: 1,
-			<?php if($cliente_id!=0){?>
-			prePopulate: [ 
-						 {id: <?php echo $cliente_id?>, name: "<?php echo $nombre; ?>"},
-						 ],
-			<?php }?>
-			minChars: 2,onAdd: function (item){
-			   var VAL=item.id;
-			   $("#cliente_id").val(VAL);
-			   $("#customer-title").val(item.name);
-			   //$("#BC").hide();
-			   //GrabarCliente();
-			},
-			onDelete: function (item) {
-			}
-		});
-		/*Busqueda del Cuentas de Gastos*/
-	$("#cuantagastos").tokenInput("/<?php echo $module_name?>/ingresos/cuentasG", 
-		{
-		tokenLimit: 1,
-		minChars: 2,
-<?php if(!empty($cuantagastos)){?>
-	prePopulate: [ 
-		             {id: <?php echo $cuantagastos?>, name: "<?php echo $cuantagastos_name?>"},
-					 ],
-		<?php }?>
-	onAdd: function (item) {
-		   var VAL=item.id;
-		   $("#customer-title").val(item.name);
-		   //$("#BC").hide();
-		   //GrabarCliente();
-		},
-		onDelete: function (item) {
-		}
-		});	
-/*Busqueda del Cuentas Po pagar*/
-$("#cuentaporpagar").tokenInput("/<?php echo $module_name?>/ingresos/cuentasP", 
-		{
-		tokenLimit: 1,
-		minChars: 2,
-		<?php if(!empty($cuentaporpagar)){/*cuantagastos*/?>
-			prePopulate: [ 
-							 {id: <?php echo $cuentaporpagar;?>, name: "<?php echo $cuentaporpagar_name?>"},
-							 ],
-		<?php }?>
-		onAdd: function (item) {
-		   var VAL=item.id;
-		   $("#customer-title").val(item.name);
-		   //$("#BC").hide();
-		   //GrabarCliente();
-		},
-		onDelete: function (item) {
-		}
-		});
-		$("#XC").click(function(){
-		$("#BC").show();
-		$("#cliente_id").val('');
-		$("#customer-title").val('');
-		//BorrarCliente()
-		});
-	});
-function roundNumber(number,decimals)
-		{
-  			var newString;// The new rounded number
-  			decimals = Number(decimals);
-  			if (decimals < 1) 
-			{
-    			newString = (Math.round(number)).toString();
-  			}else
-			{
-    			var numString = number.toString();
-    			if (numString.lastIndexOf(".") == -1)
-				{// If there is no decimal point
-      				numString += ".";// give it one at the end
-    			}
-    			var cutoff = numString.lastIndexOf(".") + decimals;// The point at which to truncate the number
-    			var d1 = Number(numString.substring(cutoff,cutoff+1));// The value of the last decimal place that we'll end up with
-    			var d2 = Number(numString.substring(cutoff+1,cutoff+2));// The next decimal, after the last one we want
-    			if (d2 >= 5)
-				{// Do we need to round up at all? If not, the string will just be truncated
-      				if (d1 == 9 && cutoff > 0)
-					{// If the last digit is 9, find a new cutoff point
-        				while (cutoff > 0 && (d1 == 9 || isNaN(d1))) {
-          				if (d1 != ".")
-						{
-            				cutoff -= 1;
-            				d1 = Number(numString.substring(cutoff,cutoff+1));
-         				} else {
-            				cutoff -= 1;
-          				}
-        			}
-      			}
-      			d1 += 1;
-    		} 
-    		if (d1 == 10)
-			{
-      			numString = numString.substring(0, numString.lastIndexOf("."));
-      			var roundedNum = Number(numString) + 1;
-      			newString = roundedNum.toString() + '.';
-    		}else
-			{
-				newString = numString.substring(0,cutoff) + d1.toString();
-		    }
-  		}
-  		if (newString.lastIndexOf(".") == -1) 
-		{// Do this again, to the new string
-    		newString += ".";
-  		}
-  		var decs = (newString.substring(newString.lastIndexOf(".")+1)).length;
-  		for(var i=0;i<decimals-decs;i++) newString += "0";
-  		//var newNumber = Number(newString);// make it a number if you like
-		return newString; // Output the result to the form field (change for your purposes)
-		}function update_total()
-		{
-  			//alert("UPDATE TOTAL");
-			var total = 0.00;
-  			$('.cost').each(function(i)
-  			{
-    			price = $(this).val();
-    			///alert ('precio: '+price+' ->>>>'+i);
-				if(!isNaN(price)) total =parseFloat(total)+parseFloat(price);
-  				 ///alert ('el total es : '+total+' ->>>>');
-   			});
-			total = roundNumber(total,2);
-			//alert ('el total es : '+total+' ->>>>');
-			if(total>1500){
-			var igv= total*0.10;
-			//alert("es mayor");
-			}else{
-				var igv= 0;
-				
-			//alert("es menor");
-				}
-			var totalconigv=(parseFloat(total)-parseFloat(igv));
-			//alert('el igv es: '+igv);
-			$("#paid").val(igv.toFixed(2));
-			$("#igv").val(igv.toFixed(2));
-			$("#totalconigv").val(totalconigv);
-			$('#subtotal').html(total);
-			$('#paid_total').val(total);
-			//alert(total+"sin descuento");
-			//alert(totalconigv+"CON descuento");
-			update_balance();
-		}
-function update_balance()
-  {
-  //alert ($("#paid").val());
-  var total= parseFloat( $("#paid_total").val());
-  var igv= 0;
-	var totalconigv=(parseFloat($("#paid_total").val())-parseFloat(igv));
-	var due=roundNumber(totalconigv,2);
-	var IGV=roundNumber(igv,2);
-	$("#paid").val(IGV);
-	$("#igv").val(IGV);
-	$("#totalconigv").val(due);
-  $("#totalconigv").val(due);
-  //alert ('===: '+due);
-  //alert(totalconigv);
-  var en_letras=covertirNumLetras(totalconigv)
-	$("#moneda_en_letras").html(en_letras);
-	$("#totalenletras").val(en_letras);
-	$('.due').html(due);
-	GRABAR();
-};
-function update_price(ID)
-{
-  //var ID = $(this).attr('id');
-  var I=ID.split('-');
-  //alert ('id del tr que se manda a grabar->>>'+ID);
-  var row = $(this).parents('.item-row');
-  //alert($("#precio-"+I[1]).val()+'-----------------1');
-  var price = (parseFloat($("#precio-"+I[1]).val())*1);
-  price = roundNumber(price,2);
- //alert(price);
-  isNaN(price) ? $("#total-"+I[1]).html("N/A") : $("#total-"+I[1]).html(price);
-  update_total();
-  grabarDetalle(I[1]);
-};
-function bind(){
-  if ($(".delete").length > 1) $(".delete").show();else $(".delete").hide();
-  $(".cost").blur(function()
-  {
-	//alert("cost");
-	 var ID = $(this).attr("id");
-	 update_price(ID);
-  });
-  $(".qty").blur(function(){var ID = $(this).attr("id");
-	  update_price(ID);
-	 });
-	 /*$(".price").blur(function(){var ID = $(this).attr("id");
-	  update_price(ID);
-	 });*/
-};
-function GRABAR()
-{
-     $.ajax({
-            type:"POST",
-            url:"/<?php echo $module_name?>/ingresos/grabar/1",
-            data:$("#inventarios").serialize(),
-            beforeSend:function(){
-              $("#loading").show();
-          	},
-            success:function(response){
-                $("#loading").hide();
-				$("#id").val(response);
-				//alert(response);
+   function roundNumber(number, decimals) {
+      var newString; // The new rounded number
+      decimals = Number(decimals);
+      if (decimals < 1) {
+         newString = (Math.round(number)).toString();
+      } else {
+         var numString = number.toString();
+         if (numString.lastIndexOf(".") == -1) { // If there is no decimal point
+            numString += "."; // give it one at the end
+         }
+         var cutoff = numString.lastIndexOf(".") + decimals; // The point at which to truncate the number
+         var d1 = Number(numString.substring(cutoff, cutoff + 1)); // The value of the last decimal place that we'll end up with
+         var d2 = Number(numString.substring(cutoff + 1, cutoff + 2)); // The next decimal, after the last one we want
+         if (d2 >= 5) { // Do we need to round up at all? If not, the string will just be truncated
+            if (d1 == 9 && cutoff > 0) { // If the last digit is 9, find a new cutoff point
+               while (cutoff > 0 && (d1 == 9 || isNaN(d1))) {
+                  if (d1 != ".") {
+                     cutoff -= 1;
+                     d1 = Number(numString.substring(cutoff, cutoff + 1));
+                  } else {
+                     cutoff -= 1;
+                  }
+               }
             }
- 
-          	});
- 
-      };
-function grabarDetalle(tr_id) 
-{
-//alert("antes de grabar"+tr_id);
-  var producto_id=0;
-  var concepto=$('#concepto'+tr_id).val();
-  var costo=isNaN($('#precio-'+tr_id).val())? 0 : $('#precio-'+tr_id).val();
-  var cantidad=isNaN($('#cantidad-'+tr_id).val())? 0 : $('#cantidad-'+tr_id).val();
-  var lote=isNaN($('#lote'+tr_id).val())? 0 : $('#lote'+tr_id).val();
-  var empaque=isNaN($('#empaque'+tr_id).val())? 0 : $('#empaque'+tr_id).val();
-  var bobinas=isNaN($('#bobinas'+tr_id).val())? 0 : $('#bobinas'+tr_id).val();
-  var pesoneto=isNaN($('#pesoneto'+tr_id).val())? 0 : $('#pesoneto'+tr_id).val();
-  var pesobruto=isNaN($('#pesobruto'+tr_id).val())? 0 : $('#pesobruto'+tr_id).val();
-  var price = costo;
-  var id_detalle=$('#del-'+tr_id).attr("data-id");
-  var unidadmedida_id=0;
-  var colores_id=0;
-  var total=isNaN(price)? 0 : price;
-//alert('ID del PRODUCTO'+producto_id);
-//alert('id del detalle es 0 cuando es nuevo--->'+id_detalle);
-//alert('id del tr que se graba-->'+tr_id);
-  
-  var dataString ='id_detalle='+id_detalle+'&tesunidadesmedidas_id='+ unidadmedida_id+'&productos_id='+ producto_id+'&cantidad='+cantidad+'&precio='+costo+'&total='+total+'&lote='+lote+'&concepto='+concepto+'&bobinas='+bobinas+'&pesoneto='+pesoneto+'&pesobruto='+pesobruto+'&colores_id='+ colores_id;
-	//alert(dataString);
-	  $.ajax({
-            type:"POST",
-            url:"/<?php echo $module_name?>/ingresos/grabarDetalle/1",
-            data:dataString,
-            beforeSend:function(){
-              $("#loading").show();
+            d1 += 1;
+         }
+         if (d1 == 10) {
+            numString = numString.substring(0, numString.lastIndexOf("."));
+            var roundedNum = Number(numString) + 1;
+            newString = roundedNum.toString() + '.';
+         } else {
+            newString = numString.substring(0, cutoff) + d1.toString();
+         }
+      }
+      if (newString.lastIndexOf(".") == -1) { // Do this again, to the new string
+         newString += ".";
+      }
+      var decs = (newString.substring(newString.lastIndexOf(".") + 1)).length;
+      for (var i = 0; i < decimals - decs; i++) newString += "0";
+      //var newNumber = Number(newString);// make it a number if you like
+      return newString; // Output the result to the form field (change for your purposes)
+   }
+
+   function update_total() {
+      //alert("UPDATE TOTAL");
+      var total = 0.00;
+      $('.cost').each(function(i) {
+         price = $(this).val();
+         ///alert ('precio: '+price+' ->>>>'+i);
+         if (!isNaN(price)) total = parseFloat(total) + parseFloat(price);
+         ///alert ('el total es : '+total+' ->>>>');
+      });
+      total = roundNumber(total, 2);
+      //alert ('el total es : '+total+' ->>>>');
+      if (total > 1500) {
+         var igv = total * 0.10;
+         //alert("es mayor");
+      } else {
+         var igv = 0;
+
+         //alert("es menor");
+      }
+      var totalconigv = (parseFloat(total) - parseFloat(igv));
+      //alert('el igv es: '+igv);
+      $("#paid").val(igv.toFixed(2));
+      $("#igv").val(igv.toFixed(2));
+      $("#totalconigv").val(totalconigv);
+      $('#subtotal').html(total);
+      $('#paid_total').val(total);
+      //alert(total+"sin descuento");
+      //alert(totalconigv+"CON descuento");
+      update_balance();
+   }
+
+   function update_balance() {
+      //alert ($("#paid").val());
+      var total = parseFloat($("#paid_total").val());
+      var igv = 0;
+      var totalconigv = (parseFloat($("#paid_total").val()) - parseFloat(igv));
+      var due = roundNumber(totalconigv, 2);
+      var IGV = roundNumber(igv, 2);
+      $("#paid").val(IGV);
+      $("#igv").val(IGV);
+      $("#totalconigv").val(due);
+      $("#totalconigv").val(due);
+      //alert ('===: '+due);
+      //alert(totalconigv);
+      var en_letras = covertirNumLetras(totalconigv)
+      $("#moneda_en_letras").html(en_letras);
+      $("#totalenletras").val(en_letras);
+      $('.due').html(due);
+      GRABAR();
+   };
+
+   function update_price(ID) {
+      //var ID = $(this).attr('id');
+      var I = ID.split('-');
+      //alert ('id del tr que se manda a grabar->>>'+ID);
+      var row = $(this).parents('.item-row');
+      //alert($("#precio-"+I[1]).val()+'-----------------1');
+      var price = (parseFloat($("#precio-" + I[1]).val()) * 1);
+      price = roundNumber(price, 2);
+      //alert(price);
+      isNaN(price) ? $("#total-" + I[1]).html("N/A") : $("#total-" + I[1]).html(price);
+      update_total();
+      grabarDetalle(I[1]);
+   };
+
+   function bind() {
+      if ($(".delete").length > 1) $(".delete").show();
+      else $(".delete").hide();
+      $(".cost").blur(function() {
+         //alert("cost");
+         var ID = $(this).attr("id");
+         update_price(ID);
+      });
+      $(".qty").blur(function() {
+         var ID = $(this).attr("id");
+         update_price(ID);
+      });
+      /*$(".price").blur(function(){var ID = $(this).attr("id");
+       update_price(ID);
+      });*/
+   };
+
+   function GRABAR() {
+      $.ajax({
+         type: "POST",
+         url: "/<?php echo $module_name ?>/ingresos/grabar/1",
+         data: $("#inventarios").serialize(),
+         beforeSend: function() {
+            $("#loading").show();
+         },
+         success: function(response) {
+            $("#loading").hide();
+            $("#id").val(response);
+            //alert(response);
+         }
+
+      });
+
+   };
+
+   function grabarDetalle(tr_id) {
+      //alert("antes de grabar"+tr_id);
+      var producto_id = 0;
+      var concepto = $('#concepto' + tr_id).val();
+      var costo = isNaN($('#precio-' + tr_id).val()) ? 0 : $('#precio-' + tr_id).val();
+      var cantidad = isNaN($('#cantidad-' + tr_id).val()) ? 0 : $('#cantidad-' + tr_id).val();
+      var lote = isNaN($('#lote' + tr_id).val()) ? 0 : $('#lote' + tr_id).val();
+      var empaque = isNaN($('#empaque' + tr_id).val()) ? 0 : $('#empaque' + tr_id).val();
+      var bobinas = isNaN($('#bobinas' + tr_id).val()) ? 0 : $('#bobinas' + tr_id).val();
+      var pesoneto = isNaN($('#pesoneto' + tr_id).val()) ? 0 : $('#pesoneto' + tr_id).val();
+      var pesobruto = isNaN($('#pesobruto' + tr_id).val()) ? 0 : $('#pesobruto' + tr_id).val();
+      var price = costo;
+      var id_detalle = $('#del-' + tr_id).attr("data-id");
+      var unidadmedida_id = 0;
+      var colores_id = 0;
+      var total = isNaN(price) ? 0 : price;
+      //alert('ID del PRODUCTO'+producto_id);
+      //alert('id del detalle es 0 cuando es nuevo--->'+id_detalle);
+      //alert('id del tr que se graba-->'+tr_id);
+
+      var dataString = 'id_detalle=' + id_detalle + '&tesunidadesmedidas_id=' + unidadmedida_id + '&productos_id=' + producto_id + '&cantidad=' + cantidad + '&precio=' + costo + '&total=' + total + '&lote=' + lote + '&concepto=' + concepto + '&bobinas=' + bobinas + '&pesoneto=' + pesoneto + '&pesobruto=' + pesobruto + '&colores_id=' + colores_id;
+      //alert(dataString);
+      $.ajax({
+         type: "POST",
+         url: "/<?php echo $module_name ?>/ingresos/grabarDetalle/1",
+         data: dataString,
+         beforeSend: function() {
+            $("#loading").show();
+         },
+         success: function(response) {
+            $("#loading").hide();
+            //alert('id del detalle grabado'+response);
+            $('#del-' + tr_id).attr("data-id", response);
+            $('#empaque' + tr_id).attr("data-id", response);
+         }
+
+      });
+
+   }
+
+   function EliminarDetalle(id) {
+      if (id != 0) {
+         $.ajax({
+            type: "POST",
+            url: "/<?php echo $module_name ?>/ingresos/eliminarDetalle/" + id,
+            beforeSend: function() {
+               $("#loading").show();
             },
-            success:function(response){
-                $("#loading").hide();
-				//alert('id del detalle grabado'+response);
-				$('#del-'+tr_id).attr("data-id", response);
-				$('#empaque'+tr_id).attr("data-id", response);
+            success: function(response) {
+               alert('Se elimino de la base de dato');
             }
- 
+
          });
-   
-}function EliminarDetalle(id)
-{
-	if(id!=0){
-	$.ajax({
-            type:"POST",
-            url:"/<?php echo $module_name?>/ingresos/eliminarDetalle/"+id,
-            beforeSend:function(){
-              $("#loading").show();
-            },
-            success:function(response){
-				alert('Se elimino de la base de dato');
-            }
- 
-         });
-	}else
-	{
-		return false;
-	}
-}/*FIN*/
+      } else {
+         return false;
+      }
+   } /*FIN*/
 </script>
 <style type="text/css">
-/*.container {
+   /*.container {
   width: 1124px;
 }*/
-/*.flotante{position:relative; width:350px; margin:0 auto; z-index:99999;} */
-.simbolo
-{
-	position:absolute;
-	float:left;
-	margin-left:-15px !important;
-}
-.table th
-{
-	font-size:12px;
-	text-align:center;
-}
-#items .item-row td{
-	font-size:10px !important;
-	padding-left:15px !important;
-	}
-#items .item-row input[type="text"]{
-	font-size:10px !important;
-	padding:0;
-	}
-#paid
-{
-	width:80% !important;
-}
-#glosa
-{
-	width:99% !important;
-}
-.page ul {
-margin:0 !important;
-}
+   /*.flotante{position:relative; width:350px; margin:0 auto; z-index:99999;} */
+   .simbolo {
+      position: absolute;
+      float: left;
+      margin-left: -15px !important;
+   }
+
+   .table th {
+      font-size: 12px;
+      text-align: center;
+   }
+
+   #items .item-row td {
+      font-size: 10px !important;
+      padding-left: 15px !important;
+   }
+
+   #items .item-row input[type="text"] {
+      font-size: 10px !important;
+      padding: 0;
+   }
+
+   #paid {
+      width: 80% !important;
+   }
+
+   #glosa {
+      width: 99% !important;
+   }
+
+   .page ul {
+      margin: 0 !important;
+   }
 </style>
 <div class="card">
-<h1><?php echo Session::get('DOC_NOMBRE')?> <?php //echo "id--->".Session::get('INVENTARIO_ID')?></h1>
-</div>
+   <div class="card-header">
+      <h3 class="card-title"><?php echo Session::get('DOC_NOMBRE') ?></h3>
+   </div>
 
-<div class="card-body"> 
+   <div class="card-body">
 
-<?php 
-/* ID DE LOS INGRESOS ES INVENTARIO*/
-echo Form::open('','post','id="inventarios"');?>
-    <?php echo Form::hidden('id')?>
-    <?php echo Form::hidden('totalenletras')?>
-	<div class="hoja">
-	<div class="caja3">
-   <table width="99%" class="table table-bordered table-striped">
-     <tr>
-     	<th width="56" align="left" valign="top" class="meta-head">Moneda:</th>
-        <td width="302" align="left" valign="top"><?php echo Form::dbSelect('monedas','nombre',array('tesmonedas','find','aclempresas_id='.Session::get("EMPRESAS_ID")))?></td>
-     	<th align="left" valign="top">Proveedor:</th>
-        <td align="left" valign="top"> <input id="CL" type="text">
-    <?php echo Form::hidden('cliente_id')?></td>
-       </tr>
-      <tr>
-        <th align="left" valign="top">F. de Emision:</th>
-        <td align="left" valign="top"><?php echo Calendar::selector('femision');?></td>
-        <th width="69" align="left" valign="top" class="meta-head">Serie-Número:</th>
-          <td width="255" align="left" valign="top"><?php echo Form::text('serie','size="4"')?>-<?php echo Form::text('numero','size="5"')?></td>
-      </tr>
-      	  <tr>
-        <th width="56" align="left" valign="top" class="meta-head">Cta. Gastos:</th>
-        <td width="302" align="left" valign="top"><?php echo Form::text('cuantagastos')?></td>
-          
-          <th width="69" align="left" valign="top" class="meta-head">Cta. por Pagar:</th>
-          <td width="255" align="left" valign="top"><?php echo Form::text('cuentaporpagar')?></td>
-      </tr>
-      <tr>
-     	<th align="left">Movimiento:</th>
-        <td align="left"><?php echo Form::text('movimiento','size="5"')?></td>
-        <th align="left" class="meta-head">Monto Total:</th>
-        <td align="left"><span class="simbolo"><?php echo $simbolo?></span></span><span class="due"><?php echo number_format($totalconigv+$igv,2,'.','')?></span></td>
-       </tr>
-    </table>
-<div /><div />
-    <div><label>Glosa: </label>
-    
-  <?php 
-  $placeholder='Glosa, Comentario u Observacion del Documento';
-  if(Session::get('DOC_CODIGO')=='09')
-  {
-	  $placeholder='Glosa, Comentario u Observacion del Documento';
-	  //$placeholder="HILOS: 75/34 POL PA. PESM.TEXT.CRUDO, ANCHO: 1.56 m, #HILOS: 12800, METROS: 1500, TOTAL: 325.20, PLEGADORES: 11 Y 113";
-  }
-  if(Session::get('DOC_CODIGO')=='09' || Session::get('DOC_CODIGO')=='01')echo Form::textArea('glosa','placeholder="'.$placeholder.'"');?></div>
-	 <?php echo Form::hidden('totalconigv');?>
-            <?php echo Form::hidden('igv');?>
-        <?php echo Form::close();
-		echo Session::get('DOC_CODIGO')?>
-<table width="28%"id="items">
-		  <tr>
-		      
-              <th width="47%">Concepto</th>
-		      <th width="53%">Precio</th>
-		  </tr>
-          <?php
-			if($DETALLE)
-			{
-				$n=0;
-				$subtotal=0;
-				foreach($detalles as $item){
-						  $n++;
-						  $subtotal=$subtotal+$item->importe;
-					  ?>
-				  <tr id="<?php echo $n?>" class="item-row">
-				   <td>
-						  <div class="delete-wpr">
-						  <?php echo Form::textArea('concepto'.$n,'rows="3" cols="50"',$item->concepto)?>
-						  <a id="del-<?php echo $n?>" class="delete" href="javascript:;" title="Elimar registro" data-id="<?php echo $item->id?>">X</a>
-						  </div>
-					</td>
-                    <td><span class="simbolo"><?php echo $simbolo?></span><?php echo Form::text('precio-'.$n,'size="15" class="cost" placeholder="0.0"',number_format($item->preciounitario,2,'.',''))?></td>
-					  </tr>
-				  
-				  <?php
-					  }/*FIN FOREACH*/
-					if($n==0)
-						{  $n=1; ?>
-					<tr id="1" class="item-row">
-						<td>
-						  <div class="delete-wpr">
-						  <?php echo Form::textArea('concepto'.$n,'rows="3" cols="50"')?>
-						  <a id="del-<?php echo $n?>" class="delete" href="javascript:;" title="Elimar registro" data-id="0">X</a>
-						  </div>
-					</td>
-                    <td><span class="simbolo"><?php echo $simbolo?></span><?php echo Form::text('precio-'.$n,'size="15" class="cost" placeholder="0.0"')?></td>
-				</tr>
-				  <?php
-						}?>
-				  <?php 
-				  }else{
-					 $n=1; ?>
-				  <tr id="1" class="item-row">
-					 <td>
-						  <div class="delete-wpr">
-						  <?php echo Form::textArea('concepto'.$n,'rows="3" cols="50"')?>
-						  <a id="del-<?php echo $n?>" class="delete" href="javascript:;" title="Elimar registro" data-id="0">X</a>
-						  </div>
-					</td>
-                    <td><span class="simbolo"><?php echo $simbolo?></span><?php echo Form::text('precio-'.$n,'size="15" class="cost grabar" placeholder="0.0"')?></td>
-				</tr>
-			<?php }  
-			?>
-            <?php /*?><tr id="hiderow">
+      <?php
+      /* ID DE LOS INGRESOS ES INVENTARIO*/
+      echo Form::open('', 'post', 'id="inventarios"'); ?>
+      <?php echo Form::hidden('id') ?>
+      <?php echo Form::hidden('totalenletras') ?>
+      <div class="hoja">
+         <div class="caja3">
+            <table width="99%" class="table table-bordered table-striped">
+               <tr>
+                  <th width="56" align="left" valign="top" class="meta-head">Moneda:</th>
+                  <td width="302" align="left" valign="top">
+                     <?php echo Form::dbSelect('monedas', 'nombre', array('tesmonedas', 'find', 'aclempresas_id=' . Session::get("EMPRESAS_ID")),NULL,'class="form-control form-control-sm"') ?></td>
+                  <th align="left" valign="top">Proveedor:</th>
+                  <td align="left" valign="top"> <input id="CL" type="text">
+                     <?php echo Form::hidden('cliente_id') ?></td>
+               </tr>
+               <tr>
+                  <th align="left" valign="top">F. de Emision:</th>
+                  <td align="left" valign="top"><?php echo Calendar::selector('femision','class="form-control form-control-sm"'); ?></td>
+                  <th width="69" align="left" valign="top" class="meta-head">Serie-Número:</th>
+                  <td width="255" align="left" valign="top">
+                     <div class="row">
+                        <div class="col-sm-4"><?php echo Form::text('serie', 'size="4" class="form-control form-control-sm"') ?></div>
+                        <div class="col-sm-8"><?php echo Form::text('numero', 'size="5" class="form-control form-control-sm"') ?></div>
+                     </div>
+                  </td>
+               </tr>
+               <tr>
+                  <th width="56" align="left" valign="top" class="meta-head">Cta. Gastos:</th>
+                  <td width="302" align="left" valign="top"><?php echo Form::text('cuantagastos') ?></td>
+
+                  <th width="69" align="left" valign="top" class="meta-head">Cta. por Pagar:</th>
+                  <td width="255" align="left" valign="top"><?php echo Form::text('cuentaporpagar') ?></td>
+               </tr>
+               <tr>
+                  <th align="left">Movimiento:</th>
+                  <td align="left"><?php echo Form::text('movimiento', 'class="form-control form-control-sm"') ?></td>
+                  <th align="left" class="meta-head">Monto Total:</th>
+                  <td align="left"><span class="simbolo"><?php echo $simbolo ?></span></span><span class="due"><?php echo number_format($totalconigv + $igv, 2, '.', '') ?></span></td>
+               </tr>
+            </table>
+
+            <div class="section">
+               <label>Glosa: </label>
+
+               <?php
+               $placeholder = 'Glosa, Comentario u Observacion del Documento';
+               if (Session::get('DOC_CODIGO') == '09') {
+                  $placeholder = 'Glosa, Comentario u Observacion del Documento';
+                  //$placeholder="HILOS: 75/34 POL PA. PESM.TEXT.CRUDO, ANCHO: 1.56 m, #HILOS: 12800, METROS: 1500, TOTAL: 325.20, PLEGADORES: 11 Y 113";
+               }
+               if (Session::get('DOC_CODIGO') == '09' || Session::get('DOC_CODIGO') == '01') echo Form::textArea('glosa', 'placeholder="' . $placeholder . '"'); ?></div>
+            <?php echo Form::hidden('totalconigv'); ?>
+            <?php echo Form::hidden('igv'); ?>
+            <?php echo Form::close();
+            Session::get('DOC_CODIGO') ?>
+            <table class="table table-striped" id="items">
+               <tr>
+
+                  <th>Concepto</th>
+                  <th>Precio</th>
+               </tr>
+               <?php
+               if ($DETALLE) {
+                  $n = 0;
+                  $subtotal = 0;
+                  foreach ($detalles as $item) {
+                     $n++;
+                     $subtotal = $subtotal + $item->importe;
+               ?>
+                     <tr id="<?php echo $n ?>" class="item-row">
+                        <td>
+                           <div class="delete-wpr">
+                              <?php echo Form::textArea('concepto' . $n, ' class="form-control" rows="3" cols="50"', $item->concepto) ?>
+                              <a id="del-<?php echo $n ?>" class="delete" href="javascript:;" title="Elimar registro" data-id="<?php echo $item->id ?>">X</a>
+                           </div>
+                        </td>
+                        <td><span class="simbolo"><?php echo $simbolo ?></span><?php echo Form::text('precio-' . $n, 'size="15" class="cost" placeholder="0.0"', number_format($item->preciounitario, 2, '.', '')) ?></td>
+                     </tr>
+
+                  <?php
+                  }/*FIN FOREACH*/
+                  if ($n == 0) {
+                     $n = 1; ?>
+                     <tr id="1" class="item-row">
+                        <td>
+                           <div class="delete-wpr">
+                              <?php echo Form::textArea('concepto' . $n, 'class="form-control" rows="3" cols="50"') ?>
+                              <a id="del-<?php echo $n ?>" class="delete" href="javascript:;" title="Elimar registro" data-id="0">X</a>
+                           </div>
+                        </td>
+                        <td><span class="simbolo"><?php echo $simbolo ?></span><?php echo Form::text('precio-' . $n, 'size="15" class="cost" placeholder="0.0"') ?></td>
+                     </tr>
+                  <?php
+                  } ?>
+               <?php
+               } else {
+                  $n = 1; ?>
+                  <tr id="1" class="item-row">
+                     <td>
+                        <div class="delete-wpr">
+                           <?php echo Form::textArea('concepto' . $n, 'class="form-control xs" rows="3" cols="50"') ?>
+                           <a id="del-<?php echo $n ?>" class="delete" href="javascript:;" title="Elimar registro" data-id="0">X</a>
+                        </div>
+                     </td>
+                     <td><span class="simbolo"><?php echo $simbolo ?></span><?php echo Form::text('precio-' . $n, 'size="15" class="form-control cost grabar" placeholder="0.0"') ?></td>
+                  </tr>
+               <?php }
+               ?>
+               <?php /*?><tr id="hiderow">
 		    <td colspan="12"><a id="addrow" href="javascript:;" title="Agregar mas registros">Agragar Mas</a></td>
-		  </tr><?php */?>
-  </table>
-          <table class="meta">
-		  <tr>
-		      <td colspan="2" class="blank"> </td>
-		      <td colspan="2" class="total-line"><strong>Sub total: </strong></td>
-		      <td width="10%" class="total-value"><span class="simbolo"><?php echo $simbolo?></span><span id="subtotal"><?php echo number_format($subtotal,2,'.','')?></span></td>
-		  </tr>
-		  <tr>
+		  </tr><?php */ ?>
+            </table>
+            <table class="table -table-bordered table-striped">
+               <tr>
+                  <td colspan="2" class="blank"> </td>
+                  <td colspan="2" class="total-line"><strong>Sub total: </strong></td>
+                  <td width="10%" class="total-value"><span class="simbolo"><?php echo $simbolo ?></span><span id="subtotal"><?php echo number_format($subtotal, 2, '.', '') ?></span></td>
+               </tr>
+               <tr>
 
-		      <td colspan="2" class="blank"> </td>
-		      <td colspan="2" class="total-line"><strong>Total </strong></td>
-		      <td class="total-value"><span class="simbolo"><?php echo $simbolo?></span><?php echo Form::text('paid_total','size="10"',number_format($subtotal,2,'.',''));?></td>
-		  </tr>
-		  <tr>
-		      <td colspan="2" class="blank"> </td>
-		      <td colspan="2" class="total-line balance"><strong>Total Neto: </strong> </td>
-		      <td class="total-value balance"><span class="simbolo"><?php echo $simbolo?></span><span class="due"><?php echo number_format($subtotal-$igv,2,'.','')?></span></td>
-		  </tr>
-      <tr>
-     	<td colspan="5"></td>
-       </tr>
-  </table>
-    <div style="text-align:left; width: 68%; float: left;"id="moneda_en_letras"><?php echo $totalenletras?></div>
-<div class="form-actions">
-    <?php echo Html::linkAction("listado", 'Terminar '.Session::get('DOC_NOMBRE'),'class="btn btn-xs btn-primary grabar_form"') ?>&nbsp;<?php echo Html::linkAction("listado", 'Cancelar ','class="btn btn-xs btn"') ?>
-</div>
-        <div id="loading" style="display:none;"><img src="/img/spin.gif" /></div>
-     <div style="clear:both"></div>
-</div>
+                  <td colspan="2" class="blank"> </td>
+                  <td colspan="2" class="total-line"><strong>Total </strong></td>
+                  <td class="total-value"><span class="simbolo"><?php echo $simbolo ?></span><?php echo Form::text('paid_total', 'size="10"', number_format($subtotal, 2, '.', '')); ?></td>
+               </tr>
+               <tr>
+                  <td colspan="2" class="blank"> </td>
+                  <td colspan="2" class="total-line balance"><strong>Total Neto: </strong> </td>
+                  <td class="total-value balance"><span class="simbolo"><?php echo $simbolo ?></span><span class="due"><?php echo number_format($subtotal - $igv, 2, '.', '') ?></span></td>
+               </tr>
+               <tr>
+                  <td colspan="5"></td>
+               </tr>
+            </table>
+            <div style="text-align:left; width: 68%; float: left;" id="moneda_en_letras"><?php echo $totalenletras ?></div>
+            <div class="form-actions">
+               <?php echo Html::linkAction("listado", 'Terminar ' . Session::get('DOC_NOMBRE'), 'class="btn btn-xs btn-primary grabar_form"') ?>&nbsp;<?php echo Html::linkAction("listado", 'Cancelar ', 'class="btn btn-xs btn"') ?>
+            </div>
+            <div id="loading" style="display:none;"><img src="/img/spin.gif" /></div>
+            <div style="clear:both"></div>
+         </div>
+
+      </div>

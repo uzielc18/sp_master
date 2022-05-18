@@ -4,6 +4,7 @@ class Sp{
 
 public static function cambio(){
 	?>
+	
 	<script type="text/javascript">
     $(document).ready(function()
 	{
@@ -36,14 +37,13 @@ public static function cambio(){
    	<?php
 	$cambios= new Testipocambios();
 	$hoy= date('Y-m-d');
-	
 	if($cambios->exists('fecha="'.$hoy.'"')){
 	$cc=$cambios->find_first('fecha="'.$hoy.'"');
 	$texto='Dolar:';
 	$class='';
 	$id=$cc->id;
 	$code='';
-	$code.='<div id="Cambio"'.$class.'><span>'.$texto.'</span><input id="cambio" type="text" size="5" placeholder="00.00" value="'.$cc->compra.'" data-id="'.$id.'" />
+	$code.='<div id="Cambio"'.$class.' style="text-align: end;padding-right: 1rem;"><span>'.$texto.'</span><input id="cambio" type="text" size="5" placeholder="00.00" value="'.$cc->compra.'" data-id="'.$id.'" />
 	<div id="cargando" style="display:none;"><img src="/img/spin.gif" /></div>
 	</div>';
 	}else

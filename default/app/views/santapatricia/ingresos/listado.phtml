@@ -1,221 +1,230 @@
-<style type="text/css">
-.span_float
-{
-	float:right !important;
-	margin-left:0px;
-	margin-right:-5px;
-}
-</style>
+<div id="mensajes_flash">
+	<?php View::content() ?>
+</div>
 <div class="card">
-<h1><?php echo Session::get('DOC_NOMBRE')?> <span>Documentos ingresados </span></h1>
-</div>
+	<div class="card-header">
+		<h3 class="card-title"> <?php echo Session::get('DOC_NOMBRE') ?>
+			<span style="display: block;font-style: italic;font-size: 0.98rem;">
+				<?php if (Session::get('DOC_ID') == 7) {
+					echo " Solo se muestran " . count($facturas) . ' si ver mas --> Ver todos los pendientes';
+				} ?>
+			</span>
+		</h3>
+		<div class="card-tools">
+			<?php $url = '';
+			if (Session::get('DOC_ID') == 36) $url = "/varios"; ?>
+			<?php echo Html::linkAction(" ", 'Volver ', 'class="btn btn-xs btn-secondary"') ?>
+			<?php echo Html::linkAction("cargaringreso/0" . $url, 'Nueva ' . Session::get('DOC_NOMBRE'), 'class="btn btn-xs btn-primary"') ?>
+			<?php if (Session::get('DOC_ID') == 7) {
+				echo Html::linkAction('pendientes', 'Ver todos los pendientes', 'class="btn btn-xs btn-info"');
+			} ?>
+		</div>
+	</div>
+	<div class="card-body">
+		<?php echo Calendar::getMeses($anio, $meses, $mes_activo) ?>
+		<div class="input-group mb-3">
+			<div class="input-group-prepend">
+				<button type="button" class="btn btn-xs btn-sm">Buscar :</button>
+			</div>
+			<!-- /btn-group -->
+			<input type="search" id="txtBuscar" autofocus="" 
+			placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." 
+			class="form-control form-control-sm input-medium search-query">
 
-<div class="form-actions">
-<?php $url='';
-if(Session::get('DOC_ID')==36)$url="/varios";?>
-<?php echo Html::linkAction("cargaringreso/0".$url, 'Nueva '.Session::get('DOC_NOMBRE'),'class="btn btn-xs btn-primary"') ?>&nbsp;<?php echo Html::linkAction(" ", 'Volver ','class="btn btn-xs"')?>&nbsp;
-<?php if(Session::get('DOC_ID')==7){echo Html::linkAction('pendientes','Ver todos los pendientes','class="btn btn-xs btn-info"');}?>
-</div>
-<div id="mensajes_flash" >        
-    <?php if(Session::get('DOC_ID')==7){echo "Solo se muestran ".count($facturas).' si ver mas --> Ver todos los pendientes';}
-	View::content();?>
-</div>
-<div class="menu">
-<ul>
-<li>
-<a href="javascript:;">
-Año
-<select id="anio">
-	<?php
-for($i=2011;$i<=2020;$i++)
-{
-	$selec='';
-	if($anio==$i){
-	$selec=' selected="selected"';
-	}
-	echo '<option value="'.$i.'" '.$selec.'>'.$i.'</option>';
-}
-?>
-</select>
-</a>
-</li>
-</ul>
-<?php 
-$mes_actual=date('Y-m');
-foreach($meses as $clave => $mes):
-if($anio.'-'.$clave<=$mes_actual){
-$class='';
-if($mes_activo==$clave)$class=' active';
-echo '<ul>';
-echo '<li><a class="enviar'.$class.'" id="mes-'.$mes.'" href="javascript:;" data-id="'.$anio.'-'.$clave.'-01">'.$mes.'</a></li>'; 
-echo '</ul>';
-}
-endforeach;?>
-<div class="clear"></div>
-</div>
-<div class="input-prepend input-append">
-  <span class="add-on">Buscar :</span>
- <input type="search" id="txtBuscar" autofocus="" placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
-</div>
-<div class="card-body">
-<table width="100%" border="00" cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="facturas">
-<caption>Documentos Registrados</caption>
-  <tr align="left">
-  	<th width="17">Nº</th>
-	<th width="75">F. Emisison.</th>
-    <th width="73">No Doc.</th>
-    <th width="80">N/Guia.</th>
-    <th width="193">Proveedor</th>
-    <th width="167">Productos</th>
-    <th width="61" align="right">Sub-total</th>
-    <th width="62" align="right">Igv</th>
-    <th width="96" align="right">Total</th>
-    <th width="98">Acc.</th>
-  </tr>
-<?php $number=0;
-foreach($facturas as $item){ 
-$simbolo="S/. ";
-
-switch ($item->tesmonedas_id)
-{
-	case 1: $simbolo='S/. '; break;
-	case 2: $simbolo='$. '; break;
-	case 4: $simbolo='S/. '; break;
-	case 5: $simbolo='$. '; break;
-	case 0: $simbolo='S/. '; break;
-}
-
-$number++;?>
-  <tr id="<?php echo $item->id?>">
-  	<td height="20"><?php echo $number?></td>
-	<td height="20"><?php echo Sp::formatFecha('%d/%m/%Y',$item->femision)?><?php //echo $item->femision?></td>
-  	<td height="20"><?php echo $item->serie?>-<?php echo $item->numero?></td>
-  	<td height="20"><?php echo $item->numeroguia?></td>
-    <td><?php echo $item->getTesdatos()->razonsocial?></td>
-    <td>
-    <small style="color:#666; font-size:10px !important; font-style:italic; ">
-	<?php
-    $b=0;
-	$n=0;$m=0;
-	$url='';
-	$url_ver='';
-	foreach($item->getTesdetalleingresos() as $det)
-	{
-		$url='';
-		$url_ver='/ver';
-		if(Session::get('DOC_ID')==36){$url="/varios";$url_ver='/varios_ver';}
-		$b++;
-		if($det->tesproductos_id!=0){$n++;
-		echo $det->getTesproductos()->detalle;if(count($item->getTesdetalleingresos())>$n){echo ", ";}
-		}else{
-			echo $det->concepto;
-			}
-	}
-	if($item->estadoingreso=='Registrado')$b=1;
-	?>
-    </small>
-    </td>
-    <td align="right"><?php if($item->totalconigv!='NaN.00' && !empty($item->totalconigv))echo $simbolo.number_format($item->totalconigv-$item->igv,2,'.','');else echo('S/ 00.00');?></td>
-    <td align="right"><?php if($item->igv!='NaN.00' && !empty($item->igv))echo $simbolo.number_format($item->igv,2,'.','');else echo('S/ 00.00')?></td>
-    <td align="right"><?php if($item->totalconigv!='NaN.00' && !empty($item->totalconigv))echo $simbolo.number_format($item->totalconigv,2,'.','');else echo('S/ 00.00')?></td>
-   <td>
-   <?php echo Html::linkAction('cargaringreso/'.$item->id.''.$url_ver,Html::img("figuras/ver.png",'VER','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Visualizar Documento !"','')?>
-	<?php 
-	/* || Auth::get('id')==4 */
-	if($item->estadoingreso=='Editable' || Auth::get('id')==3 || Auth::get('id')==2)echo Html::linkAction('cargaringreso/'.$item->id.''.$url,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Editar Documento de Ingreso !"','')?>
-    <?php if($b==0 & (Auth::get('id')==3 || Auth::get('id')==2))echo Html::linkAction("eliminar/$item->id",Html::img("figuras/eliminar.png",'Eliminar','style="width: 20px;margin-left:1px;margin-right:1px;"'), 'onclick="return confirm(\'¿Está seguro?\')"');?>
-    <?php //echo Html::linkAction("ver/$item->id/$page",Html::img("figuras/ver.png",'Eliminar','style="width: 20px;margin-left:1px;margin-right:1px;"'));?>
-    </td>
-  </tr>
-<?php }?>
-</table>
-<?php if(Session::get('DOC_ID')==7){?>
-<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table table-bordered table-striped">
-<caption>Guias - Generar Factura</caption>
-  <tr align="left">
-  	<th width="17">Nº</th>
-	<th width="109">F. Emision</th>
-    <th width="292">Proveedor</th>
-    <th width="95">Nro. Doc.</th>
-    <th width="204">Referencia</th>
-    <th width="103">Productos</th>
-    <th width="102" align="center">Acciones</th>
-  </tr>
-<?php $number=0;
-foreach($guias as $item){ 
-$simbolo="S/. ";
-
-switch ($item->tesmonedas_id)
-{
-	case 1: $simbolo='S/. '; break;
-	case 2: $simbolo='$. '; break;
-	case 4: $simbolo='S/. '; break;
-	case 5: $simbolo='$. '; break;
-	case 0: $simbolo='S/. '; break;
-}
-
-$number++;?>
-  <tr id="<?php echo $item->id?>">
-  	<td height="20"><?php echo $number?></td>
-  	<td height="20"><?php echo Sp::formatFecha('%d/%m/%Y',$item->femision)?><?php //echo $item->femision?></td>
-  	<td height="20"><?php echo $item->getTesdatos()->razonsocial?></td>
-    <td><?php echo $item->serie?>-<?php echo $item->numero?></td>
-    <td><?php if(!empty($item->numeroguia))echo 'G:'.$item->numeroguia.' - '?><?php if(!empty($item->numerofactura))echo 'F:'.$item->numerofactura.' - '?><?php if(!empty($item->ordencompra))echo 'OC:'.$item->ordencompra.' - '?><?php if(!empty($item->npedido))echo 'P:'.$item->npedido?></td>
-    <td>
-    <small style="color:#666; font-size:10px !important; font-style:italic; ">
-	<?php
-    $b=0;
-	$n=0;$m=0;
-	foreach($item->getTesdetalleingresos() as $det)
-	{
-		$b++;
-		if($det->tesproductos_id!=0){$n++;
-		echo $det->getTesproductos()->nombre;if(count($item->getTesdetalleingresos())>$n){echo ", ";}
-		}else{
-			echo $det->concepto;
-			}
-	}
-	?>
-    </small>
-    </td>
-    
-   <td>
-   <?php echo Html::linkAction('generarfactura/'.$item->id.'/',Html::img("figuras/facturar.png",'VER','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Seleccionar Guia para Registrar Factura !"','')?>
-   
-   <?php echo Html::linkAction('guia_pagado/'.$item->id.'/',Html::img("default/warning.png",'No generar Factura','style="width: 20px;margin-left:1px;margin-right:1px;"'),'title="Haga clik si no es necesario generar FACTURA!!"','')?>
-    </td>
-  </tr>
-<?php }?>
-</table>
-<?Php }?>
-</div>
-<script type="text/javascript">
-$(document).ready(function() {
-	
-	
-
-//hacemos la busqueda en el evento search del control de busqueda
-	$('#txtBuscar').on('search',function(){
-		//le decimos a la funcion que busque en la tabla tblTabla el
-		//valor que contiene el campo actual
-		$.fntBuscarEnTabla($(this).val(),'facturas');
+		</div>
+		<div id="ver_resultado"></div>
 		
-	});
-	
-	$("#anio").change(function(event){
-    	var id = $("#anio").find(':selected').val();
-		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/<?Php echo $action_name?>/'+id;
-     });
-	$(".enviar").click(function()
-	{
-		var fecha = $(this).attr('data-id');
-		var F=fecha.split('-');
-		location.href = '/<?php echo $module_name?>/<?php echo $controller_name?>/<?Php echo $action_name?>/'+F[0]+'/'+F[1];
-	});
-	$(".botonExcel").click(function(event)
-	{
-		$("#datos_a_enviar").val( $("<div>").append( $("#abonos").eq(0).clone()).html());
-		$("#FormularioExportacion").submit();
-	});
-});
-</script>
+		<table class="table table-bordered table-striped" id="facturas">
+			<caption>Documentos Registrados</caption>
+			<tr>
+				<th width="17">Nº</th>
+				<th width="75">F. Emisison.</th>
+				<th width="73">No Doc.</th>
+				<th width="80">N/Guia.</th>
+				<th width="193">Proveedor</th>
+				<th width="167">Productos</th>
+				<th width="61" align="right">Sub-total</th>
+				<th width="62" align="right">Igv</th>
+				<th width="96" align="right">Total</th>
+				<th width="98">Acc.</th>
+			</tr>
+			<?php $number = 0;
+			foreach ($facturas as $item) {
+				$simbolo = "S/. ";
+
+				switch ($item->tesmonedas_id) {
+					case 1:
+						$simbolo = 'S/. ';
+						break;
+					case 2:
+						$simbolo = '$. ';
+						break;
+					case 4:
+						$simbolo = 'S/. ';
+						break;
+					case 5:
+						$simbolo = '$. ';
+						break;
+					case 0:
+						$simbolo = 'S/. ';
+						break;
+				}
+
+				$number++; ?>
+				<tr id="<?php echo $item->id ?>">
+					<td height="20"><?php echo $number ?></td>
+					<td height="20"><?php echo Sp::formatFecha('%d/%m/%Y', $item->femision) ?></td>
+					<td height="20"><?php echo $item->serie ?>-<?php echo $item->numero ?></td>
+					<td height="20"><?php echo $item->numeroguia ?></td>
+					<td><?php echo $item->getTesdatos()->razonsocial ?></td>
+					<td>
+						<small style="color:#666; font-size:10px !important; font-style:italic; ">
+							<?php
+							$b = 0;
+							$n = 0;
+							$m = 0;
+							$url = '';
+							$url_ver = '';
+							foreach ($item->getTesdetalleingresos() as $det) {
+								$url = '';
+								$url_ver = '/ver';
+								if (Session::get('DOC_ID') == 36) {
+									$url = "/varios";
+									$url_ver = '/varios_ver';
+								}
+								$b++;
+								if ($det->tesproductos_id != 0) {
+									$n++;
+									echo $det->getTesproductos()->detalle;
+									if (count($item->getTesdetalleingresos()) > $n) {
+										echo ", ";
+									}
+								} else {
+									echo $det->concepto;
+								}
+							}
+							if ($item->estadoingreso == 'Registrado') $b = 1;
+							?>
+						</small>
+					</td>
+					<td align="right"><?php if ($item->totalconigv != 'NaN.00' && !empty($item->totalconigv)) echo $simbolo . number_format($item->totalconigv - $item->igv, 2, '.', '');
+										else echo ('S/ 00.00'); ?></td>
+					<td align="right"><?php if ($item->igv != 'NaN.00' && !empty($item->igv)) echo $simbolo . number_format($item->igv, 2, '.', '');
+										else echo ('S/ 00.00') ?></td>
+					<td align="right"><?php if ($item->totalconigv != 'NaN.00' && !empty($item->totalconigv)) echo $simbolo . number_format($item->totalconigv, 2, '.', '');
+										else echo ('S/ 00.00') ?></td>
+					<td>
+						<?php echo Html::linkAction('cargaringreso/' . $item->id . '' . $url_ver, Html::img("figuras/ver.png", 'VER', 'style="width: 20px;margin-left:1px;margin-right:1px;"'), 'title="Visualizar Documento !"', '') ?>
+						<?php
+						/* || Auth::get('id')==4 */
+						if ($item->estadoingreso == 'Editable' || Auth::get('id') == 3 || Auth::get('id') == 2) echo Html::linkAction('cargaringreso/' . $item->id . '' . $url, Html::img("figuras/editar.png", 'Editar', 'style="width: 20px;margin-left:1px;margin-right:1px;"'), 'title="Editar Documento de Ingreso !"', '') ?>
+						<?php if ($b == 0 & (Auth::get('id') == 3 || Auth::get('id') == 2)) echo Html::linkAction("eliminar/$item->id", Html::img("figuras/eliminar.png", 'Eliminar', 'style="width: 20px;margin-left:1px;margin-right:1px;"'), 'onclick="return confirm(\'¿Está seguro?\')"'); ?>
+						<?php //echo Html::linkAction("ver/$item->id/$page",Html::img("figuras/ver.png",'Eliminar','style="width: 20px;margin-left:1px;margin-right:1px;"'));
+						?>
+					</td>
+				</tr>
+			<?php } ?>
+		</table>
+		<?php if (Session::get('DOC_ID') == 7) { ?>
+			<table class="table table-bordered table-striped">
+				<caption>Guias - Generar Factura</caption>
+				<tr>
+					<th>Nº</th>
+					<th>F. Emision</th>
+					<th>Proveedor</th>
+					<th>Nro. Doc.</th>
+					<th>Referencia</th>
+					<th>Productos</th>
+					<th>Acciones</th>
+				</tr>
+				<?php $number = 0;
+				foreach ($guias as $item) {
+					$simbolo = "S/. ";
+
+					switch ($item->tesmonedas_id) {
+						case 1:
+							$simbolo = 'S/. ';
+							break;
+						case 2:
+							$simbolo = '$. ';
+							break;
+						case 4:
+							$simbolo = 'S/. ';
+							break;
+						case 5:
+							$simbolo = '$. ';
+							break;
+						case 0:
+							$simbolo = 'S/. ';
+							break;
+					}
+
+					$number++; ?>
+					<tr id="<?php echo $item->id ?>">
+						<td height="20"><?php echo $number ?></td>
+						<td height="20"><?php echo Sp::formatFecha('%d/%m/%Y', $item->femision) ?><?php //echo $item->femision
+																									?></td>
+						<td height="20"><?php echo $item->getTesdatos()->razonsocial ?></td>
+						<td><?php echo $item->serie ?>-<?php echo $item->numero ?></td>
+						<td><?php if (!empty($item->numeroguia)) echo 'G:' . $item->numeroguia . ' - ' ?><?php if (!empty($item->numerofactura)) echo 'F:' . $item->numerofactura . ' - ' ?><?php if (!empty($item->ordencompra)) echo 'OC:' . $item->ordencompra . ' - ' ?><?php if (!empty($item->npedido)) echo 'P:' . $item->npedido ?></td>
+						<td>
+							<small style="color:#666; font-size:10px !important; font-style:italic; ">
+								<?php
+								$b = 0;
+								$n = 0;
+								$m = 0;
+								foreach ($item->getTesdetalleingresos() as $det) {
+									$b++;
+									if ($det->tesproductos_id != 0) {
+										$n++;
+										echo $det->getTesproductos()->nombre;
+										if (count($item->getTesdetalleingresos()) > $n) {
+											echo ", ";
+										}
+									} else {
+										echo $det->concepto;
+									}
+								}
+								?>
+							</small>
+						</td>
+
+						<td>
+							<?php echo Html::linkAction('generarfactura/' . $item->id . '/','<i class="fa fa-arrow-right fa-2x" aria-hidden="true"></i>', 'class="btn btn-xs btn-success" title="Seleccionar Guia para Registrar Factura !"') ?>
+							<?php echo Html::linkAction('guia_pagado/' . $item->id . '/', '<i class="fa fa-exclamation-triangle fa-2x" aria-hidden="true"></i>', 'class="btn btn-xs btn-danger" title="Haga clik si no es necesario generar FACTURA!!"') ?>
+						</td>
+					</tr>
+				<?php } ?>
+			</table>
+		<?Php } ?>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function() {
+
+
+
+			//hacemos la busqueda en el evento search del control de busqueda
+			$('#txtBuscar').on('search', function() {
+				//le decimos a la funcion que busque en la tabla tblTabla el
+				//valor que contiene el campo actual
+				$.fntBuscarEnTabla($(this).val(), 'facturas');
+
+			});
+
+			$("#anio").change(function(event) {
+				var id = $("#anio").find(':selected').val();
+				location.href = '/<?php echo $module_name ?>/<?php echo $controller_name ?>/<?Php echo $action_name ?>/' + id;
+			});
+			$(".enviar").click(function() {
+				var fecha = $(this).attr('data-id');
+				var F = fecha.split('-');
+				location.href = '/<?php echo $module_name ?>/<?php echo $controller_name ?>/<?Php echo $action_name ?>/' + F[0] + '/' + F[1];
+			});
+			$(".botonExcel").click(function(event) {
+				$("#datos_a_enviar").val($("<div>").append($("#abonos").eq(0).clone()).html());
+				$("#FormularioExportacion").submit();
+			});
+		});
+	</script>
+
+</div>

@@ -47,7 +47,7 @@ $code.='$("#addrow").click(function()
 			bind();
   		});';
 /* ------- FIN contenido del tr: ------- */
-$code.='$(".delete").live("click",function()
+$code.='$(".delete").on("click",function()
 		{
 		  var row =$(this).parents(".item-row")
 		  var id=row.find(\'.delete\').attr(\'data-id\');
@@ -568,7 +568,7 @@ $code.='$("#addrow").click(function()
 			bind();
   		});';
 /* ------- FIN contenido del tr: ------- */
-$code.='$(".delete").live("click",function()
+$code.='$(".delete").on("click",function()
 		{
 		  var row =$(this).parents(".item-row")
 		  var id=row.find(\'.delete\').attr(\'data-id\');
@@ -952,7 +952,7 @@ $code.='$("#addrow").click(function()
 			bind();
   		});';
 /* ------- FIN contenido del tr: ------- */
-$code.='$(".delete").live("click",function()
+$code.='$(".delete").on("click",function()
 		{
 		  var row =$(this).parents(".item-row")
 		  var id=row.find(\'.delete\').attr(\'data-id\');
@@ -1369,7 +1369,7 @@ $code.='$("#addrow").click(function()
 			bind();
   		});';
 /* ------- FIN contenido del tr: ------- */
-$code.='$(".delete").live("click",function()
+$code.='$(".delete").on("click",function()
 		{
 		  var row =$(this).parents(".item-row")
 		  var id=row.find(\'.delete\').attr(\'data-id\');
@@ -1734,7 +1734,7 @@ $code.='$("#addrow").click(function()
 			bind();
   		});';
 /* ------- FIN contenido del tr: ------- */
-$code.='$(".delete").live("click",function()
+$code.='$(".delete").on("click",function()
 		{
 		  var row =$(this).parents(".item-row")
 		  var id=row.find(\'.delete\').attr(\'data-id\');
@@ -2267,7 +2267,7 @@ $code.='$("#addrow").click(function()
 			bind();
   		});';
 /* ------- FIN contenido del tr: ------- */
-$code.='$(".delete").live("click",function()
+$code.='$(".delete").on("click",function()
 		{
 		  var row =$(this).parents(".item-row")
 		  var id=row.find(\'.delete\').attr(\'data-id\');
@@ -2670,7 +2670,7 @@ $code.='$("#addrow").click(function()
 			bind();
   		});';
 /* ------- FIN contenido del tr: ------- */
-$code.='$(".delete").live("click",function()
+$code.='$(".delete").on("click",function()
 		{
 		  var row =$(this).parents(".item-row")
 		  var id=row.find(\'.delete\').attr(\'data-id\');
@@ -3267,7 +3267,7 @@ $code.='$("#addrow").click(function()
 			bind();
   		});';
 /* ------- FIN contenido del tr: ------- */
-$code.='$(".delete").live("click",function()
+$code.='$(".delete").on("click",function()
 		{
 		  var row =$(this).parents(".item-row")
 		  var id=row.find(\'.delete\').attr(\'data-id\');

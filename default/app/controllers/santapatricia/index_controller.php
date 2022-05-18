@@ -9,13 +9,7 @@ class IndexController extends AdminController {
     }
     public function index()
 	{
-		
-	}
-	
-    public function bienvenida()
-	{
 		$paneles= new Proproduccion();
-		$enventos= new Eventos();
 		$this->producciones=$paneles->panel_produccion();
 		//$this->ventas=$paneles->panel_ventas();
 		$this->ventas=$paneles->panel_semanal(date("Y-m-d"),7);
@@ -31,13 +25,11 @@ class IndexController extends AdminController {
 		$fecha2 = new DateTime();
 		$fecha2->modify('last day of this month');
 		$f2=$fecha2->format('Y-m-d');
+	}
+	
+    public function bienvenida()
+	{
 		
-		$this->cumples=$enventos->getCumples($f1,$f2);
-		$this->diarios=$enventos->getEventos_diarios($f1,$f2);
-		$this->semanales=$enventos->getEventos_semanal($f1,$f2);
-		$this->mensuales=$enventos->getEventos_mensual($f1,$f2);
-		$this->anuales=$enventos->getEventos_anual($f1,$f2);
-		$this->eventos=$enventos->getEventos($f1,$f2);
     }
 	public function produccion()
 	{

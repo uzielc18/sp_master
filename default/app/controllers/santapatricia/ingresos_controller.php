@@ -355,10 +355,12 @@ public function listado($Y='',$m='')
 	*/
 	public function grabarDetalle($val=0)
 	{
-		View::select('respuesta');
+		try{
+			View::select('respuesta');
 		$this->id=0;
 		if($val!=0)
 		{
+
 			$DET=new Tesdetalleingresos();
 			if(!$DET->exists('id='.$_POST['id_detalle']))
 			{
@@ -487,6 +489,11 @@ public function listado($Y='',$m='')
 				$this->id=0;
 			}
 		}
+
+		}catch(\Exception $e){
+			var_dump($e);
+		}
+		
 		
 	}
 	/*
@@ -617,8 +624,9 @@ public function listado($Y='',$m='')
     }
 	
 	public function producto()
-	{$this->data='';
-	View::template(null);
+	{
+		$this->data=[];
+		View::template(null);
 		$inventario_id=0;
 		if(Session::has('INGRESO_ID'))
 		{
@@ -647,49 +655,50 @@ public function listado($Y='',$m='')
 			}
 			$n=(string)$value->detalle.' ('.$value->codigo.$opcional.')';
 			$name=$this->htmlcode($n);
-			$json = array();
+			$json = []();
 			$json['id'] =$id;
 			$json['name'] = $name;
 			$this->data[] = $json;
 		}
 	}
 	public function medidas()
-	{$this->data='';
+	{
+		$this->data=[];
 		View::select('producto');
 		$q=$_GET['q'];
 		$obj= new Tesunidadesmedidas();
 		$results = $obj->find('conditions: aclempresas_id='.Session::get('EMPRESAS_ID').' and CONCAT_WS(" ",nombre,detalle) like "%'.$q.'%"');
 		foreach ($results as $value)
 		{
-			$json = array();
+			$json = [];
 			$json['id'] =$value->id;
 			$json['name'] = $value->nombre;
 			$this->data[] = $json;
 		}
 	}
 	public function cuentasG()
-	{$this->data='';
+	{$this->data=[];
 		View::select('producto');
 		$q=$_GET['q'];
 		$obj=new Subcuentas();
 		$results = $obj->find('conditions: CONCAT_WS(" ",codigo,descripcion) like "'.$q.'%"');
 		foreach ($results as $value)
 		{
-			$json = array();
+			$json = [];
 			$json['id'] =$value->codigo;
 			$json['name'] = $value->codigo.'<span style="font-size:9px;">('.$value->descripcion.')</span>';
 			$this->data[] = $json;
 		}
 	}
 	public function cuentasP()
-	{$this->data='';
+	{$this->data=[];
 		View::select('producto');
 		$q=$_GET['q'];
 		$obj=new Subcuentas();
 		$results = $obj->find('conditions: CONCAT_WS(" ",codigo,descripcion) like "'.$q.'%"');
 		foreach ($results as $value)
 		{
-			$json = array();
+			$json = [];
 			$json['id'] =$value->codigo;
 			$json['name'] = $value->codigo.'<span style="font-size:9px;">('.$value->descripcion.')</span>';
 			$this->data[] = $json;
@@ -697,19 +706,26 @@ public function listado($Y='',$m='')
 	}
 	
 	public function buscarcliente() 
-	{$this->data='';
-		$q=$_GET['q'];
-		$obj = new Tesdatos();
-		$results = $obj->find('columns:id,codigo,razonsocial,ruc,departamento,provincia,distrito,pais,direccion','conditions: testipodatos_id="1" and CONCAT_WS(" ",codigo,razonsocial,ruc,pais) like "%'.$q.'%" AND aclempresas_id='.Session::get('EMPRESAS_ID'));
-		foreach ($results as $value)
-		{
-			$id=$value->id;
-			$name=$value->razonsocial."\n ruc: ".$value->ruc." \n(".$value->departamento.' - '.$value->provincia.' - '.$value->distrito.' - '.$value->direccion.')';
-			$json = array();
-			$json['id'] =$id;
-			$json['name'] = $name;
-			$this->data[] = $json;
+	{
+		try{
+			$this->data=[];
+			$q=$_GET['q'];
+			$obj = new Tesdatos();
+			$results = $obj->find('columns:id,codigo,razonsocial,ruc,departamento,provincia,distrito,pais,direccion','conditions: testipodatos_id="1" and CONCAT_WS(" ",codigo,razonsocial,ruc,pais) like "%'.$q.'%" AND aclempresas_id='.Session::get('EMPRESAS_ID'));
+			foreach ($results as $value)
+			{
+				$id=$value->id;
+				$name=$value->razonsocial."\n ruc: ".$value->ruc." \n(".$value->departamento.' - '.$value->provincia.' - '.$value->distrito.' - '.$value->direccion.')';
+				$json = [];
+				$json['id'] =$id;
+				$json['name'] = $name;
+				$this->data[] = $json;
+			}
+		}catch(\Exception $e){
+			var_dump($e);
+			exit();
 		}
+		
     }
 	
 	private function htmlcode($text)
@@ -737,7 +753,7 @@ public function listado($Y='',$m='')
 	}
 	
 	public function colores()
-	{$this->data='';
+	{$this->data=[];
 		View::select('producto');
 		$q=strtoupper($_GET['q']);
 		$obj= new Tescolores();
@@ -745,7 +761,7 @@ public function listado($Y='',$m='')
 		//$results = $obj->find();
 		foreach ($results as $value)
 		{
-			$json = array();
+			$json = []();
 			$json['id'] =$value->id;
 			$json['name'] = $value->nombre.' ';
 			$this->data[] = $json;
@@ -756,7 +772,7 @@ public function listado($Y='',$m='')
 	*/
 	public function guiadelafactura()
 	{
-		$this->data='';
+		$this->data=[];
 		View::select('producto');
 		$q=$_GET['q'];
 		$obj= new Tesingresos();
@@ -767,7 +783,7 @@ public function listado($Y='',$m='')
 		#valida la existencia de dicho serie-numero en otro ingreso anterior
 		*/
 			if(!$obj->exists('numeroguia="'.$value->serie.'-'.$value->numero.'"')){
-			$json = array();
+			$json = [];
 			$json['id'] =$value->serie.'-'.$value->numero;
 			$json['name'] = $value->serie.'-'.$value->numero;
 			$this->data[] = $json;
@@ -1074,14 +1090,14 @@ public function guia_pagado($id)
 /*buscar doc*/
 public function buscardoc()
 {
-	$this->data='';
+	$this->data=[];
 		View::select('producto');
 		$q=$_GET['q'];
 		$obj= new Tesingresos();
 		$results = $obj->find('conditions: aclempresas_id='.Session::get('EMPRESAS_ID').' AND CONCAT_WS("-",serie,numero,totalconigv,npedido) like "'.$q.'%"');
 		foreach ($results as $value)
 		{
-			$json = array();
+			$json = []();
 			$json['id'] =$value->id;
 			$json['name'] = $value->serie.'-'.$value->numero.' T: '.$value->totalconigv.' Pedido: '.$value->npedido;
 			$this->data[] = $json;
@@ -1090,6 +1106,3 @@ public function buscardoc()
 
 
 }
-
-
-?>

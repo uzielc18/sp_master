@@ -1,234 +1,267 @@
 <?php
-$simbolo="S/. ";
+$simbolo = "S/. ";
 
-switch ($ingreso->tesmonedas_id)
-{
-	case 1: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES'; break;
-	case 2: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
-	case 4: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
-	case 5: $simbolo='$. ';$moneda_letras='DOLARES AMERICANOS';  break;
-	case 0: $simbolo='S/. ';$moneda_letras='NUEVOS SOLES';  break;
+switch ($ingreso->tesmonedas_id) {
+	case 1:
+		$simbolo = 'S/. ';
+		$moneda_letras = 'NUEVOS SOLES';
+		break;
+	case 2:
+		$simbolo = '$. ';
+		$moneda_letras = 'DOLARES AMERICANOS';
+		break;
+	case 4:
+		$simbolo = 'S/. ';
+		$moneda_letras = 'NUEVOS SOLES';
+		break;
+	case 5:
+		$simbolo = '$. ';
+		$moneda_letras = 'DOLARES AMERICANOS';
+		break;
+	case 0:
+		$simbolo = 'S/. ';
+		$moneda_letras = 'NUEVOS SOLES';
+		break;
 }
 
-$id=$ingreso->id;
-		$numero=$ingreso->numero;
-		$glosa=$ingreso->glosa;
-		$serie=$ingreso->serie;
-		$numero=$ingreso->numero;
-		$codigo=$ingreso->codigo;//fvencimiento
-		$femision=$ingreso->femision;
-		$fvencimiento=$ingreso->fvencimiento;
-		$monedas=$ingreso->tesmonedas_id;
-		$monedas_nombre=$ingreso->getTesmonedas()->nombre;
-		$cliente_id=$ingreso->tesdatos_id;
-		/*nombre del cliente*/
-		$nombre=$ingreso->getTesdatos()->razonsocial." ruc: ".$ingreso->getTesdatos()->ruc." (".$ingreso->getTesdatos()->departamento.' - '.$ingreso->getTesdatos()->provincia.' - '.$ingreso->getTesdatos()->distrito.' - '.$ingreso->getTesdatos()->direccion.')';
-		/**/
-		$totalconigv=$ingreso->totalconigv;
-		$igv=$ingreso->igv;
-		$paid=$ingreso->igv;
-		$fregistro=$ingreso->fregistro;
-		$npedido=$ingreso->npedido;
-		$numeroguia=$ingreso->numeroguia;
-		$numerofactura=$ingreso->numerofactura;
-		$ordendecompra=$ingreso->ordendecompra;
-		$finiciotraslado=$ingreso->finiciotraslado;
-		$movimiento=$ingreso->movimiento;
-		$cuantagastos=$ingreso->cuantagastos;
-		$cuentaporpagar=$ingreso->cuentaporpagar;
-		$totalenletras=$ingreso->totalenletras;
-		
-		$subt=$totalconigv-$igv;
-		$codigo=$ingreso->codigo;
-		
+$id = $ingreso->id;
+$numero = $ingreso->numero;
+$glosa = $ingreso->glosa;
+$serie = $ingreso->serie;
+$numero = $ingreso->numero;
+$codigo = $ingreso->codigo; //fvencimiento
+$femision = $ingreso->femision;
+$fvencimiento = $ingreso->fvencimiento;
+$monedas = $ingreso->tesmonedas_id;
+$monedas_nombre = $ingreso->getTesmonedas()->nombre;
+$cliente_id = $ingreso->tesdatos_id;
+/*nombre del cliente*/
+$nombre = $ingreso->getTesdatos()->razonsocial . " ruc: " . $ingreso->getTesdatos()->ruc . " (" . $ingreso->getTesdatos()->departamento . ' - ' . $ingreso->getTesdatos()->provincia . ' - ' . $ingreso->getTesdatos()->distrito . ' - ' . $ingreso->getTesdatos()->direccion . ')';
+/**/
+$totalconigv = $ingreso->totalconigv;
+$igv = $ingreso->igv;
+$paid = $ingreso->igv;
+$fregistro = $ingreso->fregistro;
+$npedido = $ingreso->npedido;
+$numeroguia = $ingreso->numeroguia;
+$numerofactura = $ingreso->numerofactura;
+$ordendecompra = $ingreso->ordendecompra;
+$finiciotraslado = $ingreso->finiciotraslado;
+$movimiento = $ingreso->movimiento;
+$cuantagastos = $ingreso->cuantagastos;
+$cuentaporpagar = $ingreso->cuentaporpagar;
+$totalenletras = $ingreso->totalenletras;
+
+$subt = $totalconigv - $igv;
+$codigo = $ingreso->codigo;
+
 View::content();
 ?>
 
-<?php //echo $simbolo.$totalconigv.$igv.$cliente_id.$nombre.$cuantagastos.$cuantagastos_name.$cuentaporpagar.$cuentaporpagar_name.$module_name?>
+<?php //echo $simbolo.$totalconigv.$igv.$cliente_id.$nombre.$cuantagastos.$cuantagastos_name.$cuentaporpagar.$cuentaporpagar_name.$module_name
+?>
 
 <style type="text/css">
-/*.container {
+	/*.container {
   width: 1124px;
 }*/
-/*.flotante{position:relative; width:350px; margin:0 auto; z-index:99999;} */
-.simbolo
-{
-	position:absolute;
-	float:left;
-	margin-left:-15px !important;
-}
-.table th
-{
-	font-size:12px;
-	text-align:center;
-}
-#items .item-row td{
-	font-size:10px !important;
-	padding-left:15px !important;
+	/*.flotante{position:relative; width:350px; margin:0 auto; z-index:99999;} */
+	.simbolo {
+		position: absolute;
+		float: left;
+		margin-left: -15px !important;
 	}
-#items .item-row input[type="text"]{
-	font-size:10px !important;
-	padding:0;
+
+	.table th {
+		font-size: 12px;
+		text-align: center;
 	}
-#paid
-{
-	width:80% !important;
-}
-#glosa
-{
-	width:99% !important;
-}
-.page ul {
-margin:0 !important;
-}
+
+	#items .item-row td {
+		font-size: 10px !important;
+		padding-left: 15px !important;
+	}
+
+	#items .item-row input[type="text"] {
+		font-size: 10px !important;
+		padding: 0;
+	}
+
+	#paid {
+		width: 80% !important;
+	}
+
+	#glosa {
+		width: 99% !important;
+	}
+
+	.page ul {
+		margin: 0 !important;
+	}
 </style>
 <div class="card">
-<h1><?php echo Session::get('DOC_NOMBRE')?> 
-	<?php //echo "id--->".Session::get('INVENTARIO_ID')?>
-!</h1>
+	<div class="card-header">
+	<h3 class="card-title"><?php echo Session::get('DOC_NOMBRE') ?></h3>
+	</div>
+	
+<div class="card-body">
+	<table class="table table-bordered table-striped">
+		<thead>
+			<tr><th colspan="2">Datos de la Factura</th></tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Moneda:</td>
+				<td><?php echo $monedas_nombre ?></td>
+			</tr>
+			<tr>
+				<td>F. Emision:</td>
+				<td><?php echo Sp::formatFecha('%d / %m / %Y', $femision) ?><?php //echo $femision;
+																									?></td>
+			</tr>
+			<?php if (!empty($ingreso->cuentaporpagar)) { ?><tr>
+					<td>Serie-Nro:</td>
+					<td><?php echo $serie ?>-<?php echo $numero ?></td>
+
+				</tr><?php } ?>
+			<tr>
+				<td>Proveedor:</td>
+				<td><?php echo $nombre ?></td>
+			</tr>
+		</tbody>
+	</table>
+	<br />
+	<table  class="table table-bordered table-striped" id="items">
+
+		<?php $q = 0;
+		foreach ($detalles  as $item) {
+
+			$importe = $item->importe;
+			if ($q == 0) { ?>
+				<thead>
+					<tr>
+						<th>Codigo
+							<?Php //echo $item->id
+							?>
+						</th>
+						<th>Producto</th>
+						<th>Medida</th>
+						<th>Lote</th>
+						<?php if (!empty($item->empaque)) { ?> <th>Empaque</th><?php } ?>
+						<?php if (!empty($item->bobinas)) { ?> <th>Bobinas</th><?php } ?>
+						<?php if (!empty($item->pesoneto)) { ?> <th>P/N</th><?php } ?>
+						<?php if (!empty($item->pesibruto)) { ?> <th>P/B></th><?php } ?>
+						<?php if (!empty($item->preciounitario)) { ?> <th>Costo Unit</th><?php } ?>
+						<th>Cantidad</th>
+						<th>Precio</th>
+					</tr>
+				</thead>
+			<?php }
+			$q++;
+			?>
+			<tbody>
+				<tr id="1">
+					<td align="left">
+						<?php if ($item->tesproductos_id != 0) echo $item->getTesproductos()->codigo . ' ';
+						else {
+							echo "Sin/Codigo";
+						} ?>
+					</td>
+					<td class="item-name"><?php if ($item->tesproductos_id != 0) echo $item->getTesproductos()->nombre;
+											else echo $item->concepto; ?>
+					</td>
+					<td><?php if ($item->tesunidadesmedidas_id != 0) echo $item->getTesunidadesmedidas()->nombre;
+						else echo "---"; ?></td>
+					<td> <?php echo $item->lote ?></td>
+					<?php if (!empty($item->empaque)) { ?> <td> <?php echo $item->empaque ?></td><?php } ?>
+					<?php if (!empty($item->bobinas)) { ?> <td> <?php echo $item->bobinas ?></td><?php } ?>
+					<?php if (!empty($item->pesoneto)) { ?> <td> <?php echo $item->pesoneto ?></td><?php } ?>
+					<?php if (!empty($item->pesobruto)) { ?> <td> <?php echo $item->pesobruto ?></td><?php } ?>
+					<?php if (!empty($item->preciounitario)) { ?> <td><span class="simbolo"><?php echo $simbolo ?></span><?php echo $item->preciounitario ?></td><?php } ?>
+					<td><?php echo $item->cantidad ?></td>
+					<td align="left"><span id="total-1" class="price">
+							<span class="simbolo"><?php echo $simbolo ?></span>
+							<?php /*echo $item->importe;*/ $importe = 0;
+							if (!empty($item->importe) && $item->importe != 'null') $importe = $item->importe;
+							echo number_format($importe, 2, '.', '') ?></span></td>
+				</tr>
+			<?php } ?>
+			</tbody>
+	</table>
+	<table class="table table table-striped table-sm">
+		<tbody>
+			<tr>
+				<td colspan="2" class="blank"> </td>
+				<td colspan="2" class="total-line"><strong>Sub Total : </strong></td>
+				<td width="15%" class="total-value"><span class="simbolo"><?Php echo $simbolo ?></span><span id="subtotal"><?Php echo number_format($totalconigv - $ingreso->igv, 2, '.', '') ?></span></td>
+			</tr>
+			<tr>
+				<td colspan="2" class="blank"> </td>
+				<td colspan="2" class="total-line"><strong><?php if ($ingreso->getTesdocumentos()->codigo == '02') echo "Retencion";
+															else echo "IGV"; ?>: </strong></td>
+
+				<td width="15%" class="total-value"><span class="simbolo"><?Php echo $simbolo ?></span><span><?Php echo number_format($ingreso->igv, 2, '.', '') ?></span></td>
+			</tr>
+			<tr>
+				<td colspan="2" class="blank"> </td>
+				<td colspan="2" class="total-line balance"><strong>Total a Pagar : </strong> </td>
+				<td class="total-value balance"><span class="simbolo"><?Php echo $simbolo ?></span><span class="due"><?Php echo number_format($totalconigv, 2, '.', '') ?></span></td>
+			</tr>
+			<tr>
+				<td colspan="5"></td>
+			</tr>
+		</tbody>
+	</table>
+	<div style="text-align:left; width: 68%; float: left;" id="moneda_en_letras"><?php echo $totalenletras ?></div>
+	<div class="form-actions">
+
+		<?php if ($ingreso->estadoingreso == 'Editable') { ?>
+			<?php echo Form::open() ?>
+			<?php echo Form::hidden('ingreso.id') ?>
+			<?php echo Form::hidden('ingreso.aclusuarios_id') ?>
+			<?php echo Form::hidden('ingreso.tesmonedas_id') ?>
+			<?php echo Form::hidden('ingreso.tesdatos_id') ?>
+			<?php echo Form::hidden('ingreso.tesdocumentos_id') ?>
+			<?php echo Form::hidden('ingreso.estadoingreso', '', 'Pendiente') ?>
+			<?php if (Session::get('DOC_CODIGO') == '09') { ?>
+
+				<label><?php echo Form::radio('ingreso.almacen', '1', 'class="rr"'); ?> Almacen </label>
+				<label><?php echo Form::radio('ingreso.almacen', '2', 'class="rr"'); ?> Urdido </label>
+				<label><?php echo Form::radio('ingreso.almacen', '3', 'class="rr"'); ?> Chenille </label>
+				<label><?php echo Form::radio('ingreso.almacen', '4', 'class="rr"'); ?> Devolucion </label>
+				<label><?php echo Form::radio('ingreso.almacen', '5', 'class="rr"'); ?> Otros </label>
+				<label>Auto Salida* <?php echo Form::select('ingreso.autosalida', array("" => "No", "1" => "Si")) ?><small style="font-style:italic;">La guia no llega a nuestra Empresa</small></label>
+				<script>
+					$(document).ready(function() {
+						$('.rr').click(function() {
+
+							var id = $("input[name='ingreso[almacen]']:checked").val();
+							if (id == 2) {
+								var str = "";
+								$("#ingreso_autosalida option").each(function() {
+									$(this).removeAttr("selected");
+									var id = $(this).val();
+									str += id;
+									if (id == 1) {
+										$(this).attr("selected", "selected");
+									}
+								});
+								//alert(str);
+							} else {
+								$("#ingreso_autosalida option").each(function() {
+									$(this).removeAttr("selected");
+								});
+							}
+						});
+					});
+				</script>
+			<?php } ?>
+			<?php echo Html::linkAction("crear", 'Editar ', 'class="btn btn-xs btn-secondary"') ?>&nbsp;<?php echo Form::submit('Terminar ', 'class="btn btn-xs btn-primary"') ?>
+			<?php echo Form::close(); ?>
+
+			<?php } else { ?><?php echo Html::linkAction("listado", 'Listado', 'class="btn btn-xs btn-secondary"') ?><?php } ?>
+	</div>
+	<div id="loading" style="display:none;"><img src="/img/spin.gif" /></div>
+	<div style="clear:both"></div>
 </div>
-
-<div class="card-body"> 
-	<table width="75%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped">
-    <tbody>
-    <tr>
-     	<th width="74" align="left" valign="top">Moneda:</th>
-        <th align="left" valign="top"><?php echo $monedas_nombre?></th>
-     	</tr>
-      <tr>
-        <th align="left" valign="top">F. Emision:</th>
-        <th align="left" valign="top"><?php echo Sp::formatFecha('%d / %m / %Y',$femision)?><?php //echo $femision;?></th>
-        </tr>
-      <?php if(!empty($ingreso->cuentaporpagar)){?><tr>
-        <th width="74" align="left" valign="top">Serie-Nro:</th>
-        <th align="left" valign="top"><?php echo $serie?>-<?php echo $numero?></th>
-          
-          </tr><?php }?>
-      <tr>
-        <th width="74" align="left">Proveedor:</th>
-        <th align="left"><?php echo $nombre?></th>
-        </tr>
-        </tbody>
-    </table>
-		<br />
-  <table width="75%" border="0" align="center" cellpadding="0" cellspacing="0" class="table-bordered table-striped" id="items">
-		  
-   <?php $q=0;foreach($detalles  as $item){
-
-	$importe=$item->importe;
-	 if($q==0){?>
-   <thead>
-   <tr>
-   		<th width="9%" align="left">Codigo
-		      	<?Php //echo $item->id?>
-	      	</th>
-		      <th width="14%" align="left">Producto</th>
-		      <th width="9%" align="left">Medida</th>
-              <th width="8%" align="left">Lote</th>
-		     <?php  if(!empty($item->empaque)){ ?> <th width="11%" align="left">Empaque</th><?php }?>
-		     <?php  if(!empty($item->bobinas)){ ?> <th width="10%" align="left">Bobinas</th><?php }?>
-             <?php  if(!empty($item->pesoneto)){ ?> <th width="6%" align="left">P/N</th><?php }?>
-		     <?php  if(!empty($item->pesibruto)){ ?> <th width="5%" align="left">P/B></th><?php }?>
-		     <?php   if(!empty($item->preciounitario)){ ?>  <th width="10%" align="left">Costo Unit</th><?php }?>
-		      <th width="10%" align="left">Cantidad</th>
-		      <th width="8%" align="left">Precio</th>
-		  </tr>
-     </thead>
-     <?php }
-	 $q++;
-	 ?>
-     <tbody>
-            <tr id="1">
-				   <td align="left">
-					<?php if($item->tesproductos_id!=0)echo $item->getTesproductos()->codigo.' ';else{echo "Sin/Codigo";}?>  
-				</td>
-					  <td class="item-name"><?php if($item->tesproductos_id!=0)echo $item->getTesproductos()->nombre; else echo $item->concepto;?>  
-					  </td>
-					  <td><?php if($item->tesunidadesmedidas_id!=0)echo $item->getTesunidadesmedidas()->nombre; else echo "---";?></td>
-					  <td> <?php echo $item->lote?></td>
-					 	<?php  if(!empty($item->empaque)){ ?> <td> <?php echo $item->empaque?></td><?php }?>
-						<?php  if(!empty($item->bobinas)){ ?>  <td> <?php echo $item->bobinas?></td><?php }?>
-						<?php  if(!empty($item->pesoneto)){ ?>  <td> <?php echo $item->pesoneto?></td><?php }?>
-						<?php  if(!empty($item->pesobruto)){ ?>  <td> <?php echo $item->pesobruto?></td><?php }?>
-						<?php  if(!empty($item->preciounitario)){ ?>  <td><span class="simbolo"><?php echo $simbolo?></span><?php echo $item->preciounitario?></td><?php }?>
-					  <td><?php echo $item->cantidad?></td>
-					  <td align="left"><span id="total-1" class="price">
-					  <span class="simbolo"><?php echo $simbolo?></span>
-					  <?php /*echo $item->importe;*/ $importe=0; if(!empty($item->importe) && $item->importe!='null')$importe=$item->importe;echo number_format($importe,2,'.','')?></span></td>
-		    </tr>
-		<?php }?>
-  </tbody>
-  </table>
-  <table width="75%" border="0" align="center" cellpadding="0" cellspacing="0">
-		  <tbody><tr>
-		      <td colspan="2" class="blank"> </td>
-		      <td colspan="2" class="total-line"><strong>Sub Total : </strong></td>
-		      <td width="15%" class="total-value"><span class="simbolo"><?Php echo $simbolo?></span><span id="subtotal"><?Php echo number_format($totalconigv-$ingreso->igv,2,'.','')?></span></td>
-		  </tr>
-		  <tr>
-		      <td colspan="2" class="blank"> </td>
-		      <td colspan="2" class="total-line"><strong><?php if($ingreso->getTesdocumentos()->codigo=='02')echo "Retencion"; else echo "IGV";?>: </strong></td>
-
-		      <td width="15%" class="total-value"><span class="simbolo"><?Php echo $simbolo?></span><span><?Php echo number_format($ingreso->igv,2,'.','')?></span></td>
-		  </tr>
-		  <tr>
-		      <td colspan="2" class="blank"> </td>
-		      <td colspan="2" class="total-line balance"><strong>Total a Pagar : </strong> </td>
-		      <td class="total-value balance"><span class="simbolo"><?Php echo $simbolo?></span><span class="due"><?Php echo number_format($totalconigv,2,'.','')?></span></td>
-		  </tr>
-			      <tr>
-     	<td colspan="5"></td>
-       </tr>
-  </tbody></table>
-  <div style="text-align:left; width: 68%; float: left;"id="moneda_en_letras"><?php echo $totalenletras?></div>
-  <div class="form-actions">
-
-<?php if($ingreso->estadoingreso=='Editable'){?>
-<?php echo Form::open()?>
-<?php echo Form::hidden('ingreso.id')?>
-<?php echo Form::hidden('ingreso.aclusuarios_id')?>
-<?php echo Form::hidden('ingreso.tesmonedas_id')?>
-<?php echo Form::hidden('ingreso.tesdatos_id')?>
-<?php echo Form::hidden('ingreso.tesdocumentos_id')?>
-<?php echo Form::hidden('ingreso.estadoingreso','','Pendiente')?>
-<?php if(Session::get('DOC_CODIGO')=='09'){?>
-
-<label><?php echo Form::radio('ingreso.almacen','1','class="rr"');?> Almacen </label>
-<label><?php echo Form::radio('ingreso.almacen','2','class="rr"');?> Urdido </label>
-<label><?php echo Form::radio('ingreso.almacen','3','class="rr"');?> Chenille </label>
-<label><?php echo Form::radio('ingreso.almacen','4','class="rr"');?> Devolucion </label>
-<label><?php echo Form::radio('ingreso.almacen','5','class="rr"');?> Otros </label>
-<label>Auto Salida* <?php echo Form::select('ingreso.autosalida',array(""=>"No","1"=>"Si"))?><small style="font-style:italic;">La guia no llega a nuestra Empresa</small></label>
-<script>
-$(document).ready(function(){
-	$('.rr').click(function(){
-		
-		var id=$("input[name='ingreso[almacen]']:checked").val();
-		if(id==2){
-			var str = "";
-			$("#ingreso_autosalida option").each(function () {
-				$(this).removeAttr("selected");
-              var id=$(this).val();
-			  str += id;
-			  if(id==1){ $(this).attr("selected","selected"); }
-              });
-			  //alert(str);
-			}else
-			{
-			$("#ingreso_autosalida option").each(function () {
-				$(this).removeAttr("selected");
-              });
-			}
-		});
-});
-</script>
-<?php }?>
-<?php echo Html::linkAction("crear", 'Editar ','class="btn btn-xs btn-secondary"') ?>&nbsp;<?php echo Form::submit('Terminar ','class="btn btn-xs btn-primary"') ?>
-<?php echo Form::close();?>
-
-<?php }else{?><?php echo Html::linkAction("listado", 'Listado','class="btn btn-xs btn-secondary"') ?><?php }?>
 </div>
-  <div id="loading" style="display:none;"><img src="/img/spin.gif" /></div>
-  <div style="clear:both"></div>
-</div>
-

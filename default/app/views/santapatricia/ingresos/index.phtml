@@ -1,30 +1,48 @@
 <div class="card">
-<h1>Registrar Documentos (Proveedores)</h1>
-</div>
-<div class="card-body">
-<ul class="tres_columnas">
-<?php foreach($documentos as $doc):
-$a=strlen($doc->nombre);
-if($a>30)
-{
-	$nombre=substr($doc->nombre, 0, 30).'... ';
-}else
-{
-	$nombre=$doc->nombre;
-}
-?>
-<li class="columnas orange">
-  <h3><?php echo $doc->nombre?></h3>
-  <span class="icono_grande"></span>
-  <div class="infomarcion">
-  <?php echo $nombre?> del mes: <br />
-  Pendientes: <br />
-  Canceladas: <br />
-	<div class="clear"></div>
+  <div class="card-header">
+    <h3 class="card-title">Registrar Documentos (Proveedores)</h3>
   </div>
-  <?php echo Html::linkAction('cargar/'.$doc->id,'Ingresar','')?>
-</li>
-<?php endforeach;?>
-</ul>
-<div class="clear"></div>
+  <div class="card-body">
+
+    <div class="row row-cols-3 row-cols-md-4 mb-4 text-center">
+      <?php 
+      $ico[7]='fa-shopping-bag';
+      $ico[15]='fa-cubes';
+      $ico[34]='fa-sticky-note';
+      $ico[36]='fa-puzzle-piece';
+      $ico[18]='fa-list-alt';
+      $ico[35]='fa-columns';
+      $ico[8]='fa-id-card';
+      $ico[13]='fa-shopping-bag';
+      $ico[14]='fa-shopping-bag';
+      $ico[20]='fa-id-badge';
+      foreach ($documentos as $doc) :
+        $a = strlen($doc->nombre);
+        if ($a > 30) {
+          $nombre = substr($doc->nombre, 0, 30) . '... ';
+        } else {
+          $nombre = $doc->nombre;
+        }
+      ?>
+        <div class="col">
+          <div class="card mb-4 rounded-3 shadow-sm">
+            <div class="card-header py-3">
+              <h4 class="my-0 fw-normal"><i class="fa <?php echo $ico[$doc->id]?>" aria-hidden="true"></i><?php echo $doc->nombre ?></h4>
+            </div>
+            <div class="card-body">
+
+              <ul class="list-unstyled mt-3 mb-4">
+                <li><?php echo $nombre ?> del mes: <br /></li>
+                <li> Pendientes:</li>
+                <li> Canceladas:</li>
+              </ul>
+
+
+              <?php echo Html::linkAction('cargar/' . $doc->id, 'Ingresar', 'class="w-100 btn btn-lg btn-outline-primary"') ?>
+            </div>
+          </div>
+        </div>
+      <?php endforeach; ?>
+    </div>
+  </div>
 </div>
