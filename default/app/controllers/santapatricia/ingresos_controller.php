@@ -368,7 +368,6 @@ public function listado($Y='',$m='')
 			}else{
 				$detalle= $DET->find_first((int)$_POST['id_detalle']);
 			}
-			
 			$detalle->tesingresos_id=Session::get('INGRESO_ID');
 			if(isset($_POST['tesunidadesmedidas_id']))$detalle->tesunidadesmedidas_id=$_POST['tesunidadesmedidas_id'];
 			if(isset($_POST['colores_id']))$detalle->tescolores_id=$_POST['colores_id'];
