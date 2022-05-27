@@ -30,9 +30,16 @@ class Flash {
      * @param string $text 	Mensaje a mostrar
      */
     public static function show($name, $text) {
+        $icon=$name;
         if (isset($_SERVER['SERVER_SOFTWARE'])) {
-            echo '<div class="', $name, ' alert flash" data-alert="alert" data-dismiss="alert">
-                <a class="close" data-dismiss="alert"  href="#">×</a>', $text, '</div>', PHP_EOL;
+            echo '<script type="text/javascript">
+            $.toast({
+                heading: \''.strtoupper($name).'\',
+                text: \''.$text.'.\',
+                showHideTransition: \'slide\',
+                icon: \''.$icon.'\',
+                position: \'top-right\', 
+            });</script>', PHP_EOL;
         } else {
             echo $name, ': ', strip_tags($text), PHP_EOL;
         }
@@ -44,7 +51,7 @@ class Flash {
      * @param string $text
      */
     public static function error($text) {
-        return self::show('alert-error error', $text);
+        return self::show('error', $text);
     }
 
     /**
@@ -53,7 +60,7 @@ class Flash {
      * @param string $text
      */
     public static function warning($text) {
-        return self::show('alert-warning warning', $text);
+        return self::show('warning', $text);
     }
 
     /**
@@ -62,7 +69,7 @@ class Flash {
      * @param string $text
      */
     public static function info($text) {
-        return self::show('alert-info info', $text);
+        return self::show('info', $text);
     }
 
     /**
@@ -71,7 +78,7 @@ class Flash {
      * @param string $text
      */
     public static function valid($text) {
-        return self::show('alert-valid alert-success valid', $text);
+        return self::show('success', $text);
     }
 
     /**
@@ -82,7 +89,7 @@ class Flash {
      * @deprecated  ahora Flah::info()
      */
     public static function notice($text) {
-        return self::show('alert-info info', $text);
+        return self::show('info', $text);
     }
 
     /**
@@ -93,7 +100,7 @@ class Flash {
      * @deprecated  ahora Flash::valid()
      */
     public static function success($text) {
-        return self::show('alert-valid alert-success valid', $text);
+        return self::show('success', $text);
     }
 
 }

@@ -16,6 +16,7 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="/dist/css/adminlte.min.css">
   <link rel="stylesheet" href="/css/token-input.css">
+  <link rel="stylesheet" href="/toast/jquery.toast.min.css">
   <style type="text/css">
     .navbar-expand .navbar-nav .nav-link{
       padding-left: 0.5rem !important;
@@ -31,11 +32,15 @@
       font-size: .8rem !important;
     }
   </style>
+  
+
+  <script src="/plugins/jquery/jquery.min.js"></script>
+  
+  <script src="/toast/jquery.toast.min.js"></script>
 </head>
 
 <body class="hold-transition sidebar-mini sidebar-collapse">
 
-  <script src="/plugins/jquery/jquery.min.js"></script>
   <!-- Site wrapper -->
   <div class="wrapper">
     <?php View::partial('head_admin') ?>
@@ -84,6 +89,8 @@
   echo Tag::js('jquery/pickadate');
   echo Tag::js('jquery/jquery.tokeninput');
   ?>
+  
+  <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
   <!-- Bootstrap 4 -->
   <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
   <!-- Select2 -->

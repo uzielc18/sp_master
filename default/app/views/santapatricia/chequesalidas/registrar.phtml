@@ -1,12 +1,14 @@
 <div class="card">
-    <h1><em>Cheques Emitidos<span><?php //echo Auth::get('nombres')?></span></em></h1>
+  <div class="card-header">
+    <h3 class="card-title">Cheques Emitidos</h3>
+
+    <div class="card-tools">
+    <?php echo Menu::menuCheques_emitidos();?>
+    </div>
+  </div>
 </div>
 <div id="mensajes_flash" >        
     <?php View::content() ?>
-</div>
-
-<div class="form-actions">
-<?php echo Menu::menuCheques_emitidos();?>
 </div>
 <div class="card-body">
 <div id="ver_resultado"></div>

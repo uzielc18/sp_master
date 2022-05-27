@@ -358,12 +358,21 @@ $("select#repor").change(function(){
 	}
 	public static function menuCheques()
 	{
+		
+		$action=Router::get('action');
 		$code = "";
-
-		$code .= ' ' . Html::linkAction('sinregistrar', 'Recepcionados', 'class="btn"');
-		$code .= ' ' . Html::linkAction('pendientes', 'En Cartera', 'class="btn"');
-		$code .= ' ' . Html::linkAction('extornados', 'Extornados', 'class="btn"');
-		$code .= ' ' . Html::linkAction('index', 'Listado por Mes', 'class="btn"');
+		if ($action == 'sinregistrar') $class = ' btn-primary';
+		$code .= ' ' . Html::linkAction('sinregistrar', 'Recepcionados', 'class="btn '.$class.' btn-xs "');
+		$class = '';
+		if ($action == 'pendientes') $class = ' btn-primary';
+		$code .= ' ' . Html::linkAction('pendientes', 'En Cartera', 'class="btn '.$class.' btn-xs "');
+		$class = '';
+		if ($action == 'extornados') $class = ' btn-primary';
+		$code .= ' ' . Html::linkAction('extornados', 'Extornados', 'class="btn '.$class.' btn-xs "');
+		$class = '';
+		if ($action == 'index') $class = ' btn-primary';
+		$code .= ' ' . Html::linkAction('index', 'Listado por Mes', 'class="btn '.$class.' btn-xs "');
+		$class = '';
 
 
 
@@ -371,11 +380,23 @@ $("select#repor").change(function(){
 	}
 	public static function menuCheques_emitidos()
 	{
+		$action=Router::get('action');
 		$code = "";
-		$code .= ' ' . Html::linkAction('index', 'Listado por Mes', 'class="btn"');
-		$code .= ' ' . Html::linkAction('sinregistrar', 'Cheques Emitidos', 'class="btn"');
-		$code .= ' ' . Html::linkAction('pendientes', 'Cheques Pendientes de Cobro', 'class="btn"');
-		$code .= ' ' . Html::linkAction('chequesanulados', 'Cheques Anulados', 'class="btn"');
+		if ($action == 'index') $class = ' btn-primary';
+		$code .= ' ' . Html::linkAction('index', 'Listado por Mes', 'class="btn '.$class.' btn-xs "');
+		$class = '';
+		
+		if ($action == 'sinregistrar') $class = ' btn-primary';
+		$code .= ' ' . Html::linkAction('sinregistrar', 'Cheques Emitidos', 'class="btn'.$class.' btn-xs "');
+		$class = '';
+		
+		if ($action == 'pendientes') $class = ' btn-primary';
+		$code .= ' ' . Html::linkAction('pendientes', 'Cheques Pendientes de Cobro', 'class="btn'.$class.' btn-xs "');
+		$class = '';
+		
+		if ($action == 'chequesanulados') $class = ' btn-primary';
+		$code .= ' ' . Html::linkAction('chequesanulados', 'Cheques Anulados', 'class="btn'.$class.' btn-xs "');
+		$class = '';
 
 
 
@@ -384,15 +405,14 @@ $("select#repor").change(function(){
 	/*Menu de eficiencia*/
 	public static function efe($action = '')
 	{
-
 		$code = '';
 		$code .= '';
 		$class = '';
 		if ($action == 'index') $class = 'btn-success';
-		$code .= Html::linkAction("", 'Por tejedor!', 'class="btn btn-xs ' . $class . '"');
+		$code .= Html::linkAction("", 'Por tejedor!', 'class="btn ' . $class . '  btn-xs"');
 		$class = '';
 		if ($action == 'maquinas') $class = 'btn-success';
-		$code .= Html::linkAction("maquinas", 'Por maquinas!', 'class="btn btn-xs ' . $class . '"');
+		$code .= Html::linkAction("maquinas", 'Por maquinas!', 'class="btn ' . $class . ' btn-xs "');
 		$class = '';
 		if ($action == 'turnos') $class = 'btn-success';
 		$code .= Html::linkAction("turnos", 'Por turnos!', 'class="btn btn-xs ' . $class . '"');

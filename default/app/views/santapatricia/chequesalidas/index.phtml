@@ -1,57 +1,25 @@
+<?php View::content() ?>
 <div class="card">
-    <h1>Cheques SP Listador por Mes!<span><?php //echo Auth::get('nombres')?></span></h1>
-</div>
-<div id="mensajes_flash" >        
-    <?php View::content() ?>
-</div>
-
-<div class="form-actions" id="active">
-<?php echo Menu::menuCheques_emitidos();?>
-</div>
-
-<div class="menu">
-<ul>
-<li>
-<a href="javascript:;">Año 
-<select id="anio">
-<?php
-for($i=2011;$i<=2020;$i++)
-{
-	$selec='';
-	if($anio==$i){
-	$selec=' selected="selected"';
-	}
-	echo '<option value="'.$i.'" '.$selec.'>'.$i.'</option>';
-}
-?>
-</select>
-</a>
-</li>
-</ul> 
-<?php 
-$mes_actual=date('Y-m');
-foreach($meses as $clave => $mes):
-if($anio.'-'.$clave<=$mes_actual){
-$class='';
-if($mes_activo==$clave)$class=' active';
-echo '<ul>';
-echo '<li><a class="enviar'.$class.'" id="mes-'.$mes.'" href="javascript:;" data-id="'.$anio.'-'.$clave.'-01">'.$mes.'</a></li>'; 
-echo '</ul>';
-}
-endforeach;?>
-</div>
+	<div class="card-header">
+		<h3 class="card-title">Cheques SP Listador por Mes!<span><?php //echo Auth::get('nombres')?></span></h3>
+		<div class="card-tools">
+			<?php echo Menu::menuCheques_emitidos();?>
+		</div>
+	</div>
+	
+<div class="card-body">
+<?php echo Calendar::getMeses($anio, $meses, $mes_activo) ?>
 <div class="clear"></div>
 <div class="input-prepend input-append">
   <span class="add-on">Buscar :</span>
- <input type="search" id="txtBuscar" autofocus="" placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="span7 input-medium search-query">
+ <input type="search" id="txtBuscar" autofocus="" placeholder="Digite el texto que desea encontrar y presione ENTER. Para cancelar la tecla ESCAPE." class="form-control input-medium search-query">
 </div>
 <?php echo Sp::imprimir('Abonos Adelanto - ','P');?> 
 <div id="ver_resultado"></div>
-<div class="card-body">
-<table width="99%" border="0" cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="exportar_excel">
+<table class="table table-bordered table-striped" id="exportar_excel">
 <caption>Cheques del Mes!</caption>
   <tr>
-  	<th width="17" align="left">Nº></th>
+  	<th width="17" align="left">Nº</th>
   	<th width="63" align="left">F. Emision.</th>
     <th width="196" align="left">Destino</th>
     <th width="91" align="left">Número Doc.</th>
@@ -105,3 +73,6 @@ $(document).ready(function() {
 	});
 });
 </script>
+
+
+</div>

@@ -1,100 +1,118 @@
-
+<div id="mensajes_flash">
+  <?php View::content() ?>
+</div>
 <div class="card">
-    <h3>Cheques Emitidos <span> Registrar fecha de Cobro!<?php //echo Auth::get('nombres')?></span></h3>
-</div>
-<div id="mensajes_flash" >        
-    <?php View::content() ?>
-</div>
-<div class="row">
-  <div class="">
-    <?php echo Form::open(NULL,'POST','class="form-horizontal"'); ?>  
-
-          <?php echo Form::hidden('cheques.id'); ?>
-      <div class="control-group">
-        <label class="control-label"> <strong>Observacion:</strong></label>
-        <div class="controls">
-          <?php echo Form::textArea('cheques.observacion'); ?>
-        </div>
-      </div>
-      <div class="control-group">
-        <label class="control-label"><strong>Número de Cheque:</strong></label>
-        <div class="controls">
-          <?php echo Form::text('cheques.numerodecheque'); ?>
-          </div>
-      </div>
-      <div class="control-group">
-        <label class="control-label"><strong>Banco:</strong></label>
-        <div class="controls">
-          <?php echo Form::dbSelect('cheques.tesbancos_id','nombre',array('tesbancos','getBancos')); ?>
-        </div>
-      </div>
-      <div class="control-group">
-        <label class="control-label"><strong>Monedas:</strong></label>
-        <div class="controls">
-          <?php echo Form::dbSelect('cheques.moneda','nombre',array('tesmonedas','getMonedas')); ?>
-        </div>
-      </div>
-      <div class="control-group">
-        <label class="control-label"><strong>Fecha del cheque:</strong></label>
-        <div class="controls">
-          <?php echo Calendar::text('cheques.fecha_cobro'); ?>
-        </div>
-      </div>
-      <div class="control-group">
-        <label class="control-label"><strong>Monto:</strong></label>
-        <div class="controls">
-          <?php echo Form::text('cheques.monto','class="qty" size="6"'); ?>
-        </div>
-      </div>
-      <div class="control-group">
-        <div class="controls">
-          <button type="submit" class="btn btn-xs btn-primary">Registrar</button>
-        </div>
-      </div>
-    </form>
+  <div class="card-header">
+    <h3 class="card-title">Cheques Emitidos Registrar fecha de Cobro!</h3>
+    <div class="card-tools" id="active">
+      <?php echo Menu::menuCheques_emitidos(); ?>
+    </div>
   </div>
-</div>
-<div class="form-actions" id="active">
-<?php echo Menu::menuCheques_emitidos();?>
-</div><?php echo Sp::imprimir('Abonos Adelanto - ','P');?> 
-<div class="card-body">
-<div id="ver_resultado"></div>
-<table width="99%" border="0" cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="exportar_excel">
-<caption>Cheques Anulados</caption>
-  <tr>
-  	<th width="17">Nº</th>
-  	<th width="70">F. Emision.</th>
-    <th width="231">Observacion</th>
-    <th width="40">Banco </th>
-    <th width="103">Número</th>
-    <th width="87">Total</th>
-    <th width="156">Accion</th>
-  </tr>
-<?php $number=0;
-foreach($cheques_anulados as $item){ 
-$simbolo="S/. ";
 
-switch ($item->moneda)
-{
-	case 1: $simbolo='S/. '; break;
-	case 2: $simbolo='$. '; break;
-	case 4: $simbolo='S/. '; break;
-	case 5: $simbolo='$. '; break;
-	case 0: $simbolo='S/. '; break;
-}
+  <div class="card-body">
+    <div class="row">
+      <div class="col-sm-4">
+        <?php echo Form::open(NULL, 'POST', 'class="form-horizontal"'); ?>
 
-$number++;?>
-  <tr id="<?php echo $item->id?>">
-  	<td height="20"><?php echo $number?></td>
-  	<td height="20"><?php echo Sp::formatFecha('%d/%m/%Y',$item->fecha_cobro)?></td>
-  	<td height="20"><?php echo $item->observacion?></td>
-    <td><?php echo $item->getTesbancos()->abr;?></td>
-    <td><?php echo $item->numerodecheque;?></td>
-    
-    <td><?php if($item->monto!='NaN.00' && !empty($item->monto))echo $simbolo.number_format($item->monto,2,'.','');else echo('S/ 00.00')?></td>
-    <td><?php echo Html::linkAction('chequesanulados/'.$item->id,Html::img("figuras/editar.png",'Editar','style="width: 20px;margin-left:1px;margin-right:1px;"'));?></td>
-  </tr>
-<?php }?>
-</table>
+        <?php echo Form::hidden('cheques.id'); ?>
+        <div class="form-group">
+          <label class="form-label"> <strong>Observacion:</strong></label>
+          <div class="controls">
+            <?php echo Form::textArea('cheques.observacion','class="form-control"'); ?>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label"><strong>Número de Cheque:</strong></label>
+          <div class="forms">
+            <?php echo Form::text('cheques.numerodecheque','class="form-control"'); ?>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label"><strong>Banco:</strong></label>
+          <div class="forms">
+            <?php echo Form::dbSelect('cheques.tesbancos_id', 'nombre', array('tesbancos', 'getBancos'),'Seleccione','class="form-control"'); ?>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label"><strong>Monedas:</strong></label>
+          <div class="forms">
+            <?php echo Form::dbSelect('cheques.moneda', 'nombre', array('tesmonedas', 'getMonedas'),'Seleccione','class="form-control"'); ?>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label"><strong>Fecha del cheque:</strong></label>
+          <div class="forms">
+            <?php echo Calendar::text('cheques.fecha_cobro','class="form-control"'); ?>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label"><strong>Monto:</strong></label>
+          <div class="forms">
+            <?php echo Form::text('cheques.monto', 'class="form-control qty"'); ?>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="forms">
+            <button type="submit" class="btn btn-xs btn-primary">Registrar</button>
+          </div>
+        </div>
+        </form>
+      </div>
+    <?php //echo Sp::imprimir('Abonos Adelanto - ', 'P'); ?>
+    <div class="col-md-8">
+
+    <div id="ver_resultado"></div>
+    <table class="table table-bordered table-striped" id="exportar_excel">
+      <caption>Cheques Anulados</caption>
+      <tr>
+        <th width="17">Nº</th>
+        <th width="70">F. Emision.</th>
+        <th width="231">Observacion</th>
+        <th width="40">Banco </th>
+        <th width="103">Número</th>
+        <th width="87">Total</th>
+        <th width="156">Accion</th>
+      </tr>
+      <?php $number = 0;
+      foreach ($cheques_anulados as $item) {
+        $simbolo = "S/. ";
+
+        switch ($item->moneda) {
+          case 1:
+            $simbolo = 'S/. ';
+            break;
+          case 2:
+            $simbolo = '$. ';
+            break;
+          case 4:
+            $simbolo = 'S/. ';
+            break;
+          case 5:
+            $simbolo = '$. ';
+            break;
+          case 0:
+            $simbolo = 'S/. ';
+            break;
+        }
+
+        $number++; ?>
+        <tr id="<?php echo $item->id ?>">
+          <td height="20"><?php echo $number ?></td>
+          <td height="20"><?php echo Sp::formatFecha('%d/%m/%Y', $item->fecha_cobro) ?></td>
+          <td height="20"><?php echo $item->observacion ?></td>
+          <td><?php echo $item->getTesbancos()->abr; ?></td>
+          <td><?php echo $item->numerodecheque; ?></td>
+
+          <td><?php if ($item->monto != 'NaN.00' && !empty($item->monto)) echo $simbolo . number_format($item->monto, 2, '.', '');
+              else echo ('S/ 00.00') ?></td>
+          <td><?php echo Html::linkAction('chequesanulados/' . $item->id, Html::img("figuras/editar.png", 'Editar', 'style="width: 20px;margin-left:1px;margin-right:1px;"')); ?></td>
+        </tr>
+      <?php } ?>
+    </table>
+    </div>
+    </div>
+
+
+  </div>
 
 </div>

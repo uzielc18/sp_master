@@ -1,67 +1,81 @@
-
+<?php View::content() ?>
 <div class="card">
-    <h1>Cheques Emitidos <span> Registrar fecha de Cobro!<?php //echo Auth::get('nombres')?></span></h1>
-</div>
-<div id="mensajes_flash" >        
-    <?php View::content() ?>
-</div>
-
-<div class="form-actions" id="active">
-<?php echo Menu::menuCheques_emitidos();?>
-</div>
-<ul>
- <?php
-$n=0; 
-foreach($cuentas as $cuenta):
-$n++;
-echo "<li>".$n.".- ";
-echo $cuenta->numero." ";
-echo $cuenta->getTesbancos()->nombre." ";
-echo $cuenta->detalle;
-echo " Numero de cheque que sigue: <b>".$SAL->generarNumerocheque($cuenta->id)."</b>";
-echo "</li>";
-endforeach;
-?>
-</ul>
+  <div class="card-header">
+    <h3 class="card-title">Cheques Emitidos Registrar fecha de Cobro!</h3>
+    <div class="card-tools">
+      <?php echo Menu::menuCheques_emitidos(); ?>
+    </div>
+  </div>
 <div class="card-body">
-<div id="ver_resultado"></div>
-<table width="99%" border="0" cellpadding="0" cellspacing="0" class="table table-bordered table-striped" id="exportar_excel">
-<caption>Cheques del Mes!</caption>
-  <tr>
-  	<th width="17">Nº</th>
-  	<th width="70">F. Emision.</th>
-    <th width="231">Cliente</th>
-    <th width="40">Banco </th>
-    <th width="209">Cuenta</th>
-    <th width="103">Número Doc.</th>
-    <th width="87">Total</th>
-    <th width="156">Accion</th>
-  </tr>
-<?php $number=0;
-foreach($cheques as $item){ 
-$simbolo="S/. ";
+  
+<ul>
+  <?php
+  $n = 0;
+  foreach ($cuentas as $cuenta) :
+    $n++;
+    echo "<li>" . $n . ".- ";
+    echo $cuenta->numero . " ";
+    echo $cuenta->getTesbancos()->nombre . " ";
+    echo $cuenta->detalle;
+    echo " Numero de cheque que sigue: <b>" . $SAL->generarNumerocheque($cuenta->id) . "</b>";
+    echo "</li>";
+  endforeach;
+  ?>
+</ul>
+  <div id="ver_resultado"></div>
+  <table class="table table-bordered table-striped" id="exportar_excel">
+    <caption>Cheques del Mes!</caption>
+    <tr>
+      <th width="17">Nº</th>
+      <th width="70">F. Emision.</th>
+      <th width="231">Cliente</th>
+      <th width="40">Banco </th>
+      <th width="209">Cuenta</th>
+      <th width="103">Número Doc.</th>
+      <th width="87">Total</th>
+      <th width="156">Accion</th>
+    </tr>
+    <?php $number = 0;
+    foreach ($cheques as $item) {
+      $simbolo = "S/. ";
 
-switch ($item->tesmonedas_id)
-{
-	case 1: $simbolo='S/. '; break;
-	case 2: $simbolo='$. '; break;
-	case 4: $simbolo='S/. '; break;
-	case 5: $simbolo='$. '; break;
-	case 0: $simbolo='S/. '; break;
-}
+      switch ($item->tesmonedas_id) {
+        case 1:
+          $simbolo = 'S/. ';
+          break;
+        case 2:
+          $simbolo = '$. ';
+          break;
+        case 4:
+          $simbolo = 'S/. ';
+          break;
+        case 5:
+          $simbolo = '$. ';
+          break;
+        case 0:
+          $simbolo = 'S/. ';
+          break;
+      }
 
-$number++;?>
-  <tr id="<?php echo $item->id?>">
-  	<td height="20"><?php echo $number?></td>
-  	<td height="20"><?php echo Sp::formatFecha('%d/%m/%Y',$item->femision)?></td>
-  	<td height="20"><?php if($item->tesdatos_id!=0){echo $item->getTesdatos()->razonsocial;}else{echo "Interno"; /*$item->tesdatos_id;*/}?></td>
-    <td><?php echo $item->getTescuentascorrientes()->getTesbancos()->abr;?></td>
-    <td><?php echo $item->getTescuentascorrientes()->numero;?></td>
-    <td><?php if(!empty($item->serie))echo $item->serie.'-';?><?php echo $item->numero?> </td>
-    <td><?php if($item->totalconigv!='NaN.00' && !empty($item->totalconigv))echo $simbolo.number_format($item->totalconigv,2,'.','');else echo('S/ 00.00')?></td>
-    <td><?php echo Html::linkAction('registrar/'.$item->id,'Ingresar fecha de Cobro','class="btn btn-xs"');?></td>
-  </tr>
-<?php }?>
-</table>
+      $number++; ?>
+      <tr id="<?php echo $item->id ?>">
+        <td height="20"><?php echo $number ?></td>
+        <td height="20"><?php echo Sp::formatFecha('%d/%m/%Y', $item->femision) ?></td>
+        <td height="20"><?php if ($item->tesdatos_id != 0) {
+                          echo $item->getTesdatos()->razonsocial;
+                        } else {
+                          echo "Interno"; /*$item->tesdatos_id;*/
+                        } ?></td>
+        <td><?php echo $item->getTescuentascorrientes()->getTesbancos()->abr; ?></td>
+        <td><?php echo $item->getTescuentascorrientes()->numero; ?></td>
+        <td><?php if (!empty($item->serie)) echo $item->serie . '-'; ?><?php echo $item->numero ?> </td>
+        <td><?php if ($item->totalconigv != 'NaN.00' && !empty($item->totalconigv)) echo $simbolo . number_format($item->totalconigv, 2, '.', '');
+            else echo ('S/ 00.00') ?></td>
+        <td><?php echo Html::linkAction('registrar/' . $item->id, 'Ingresar fecha de Cobro', 'class="btn btn-secondary btn-xs"'); ?></td>
+      </tr>
+    <?php } ?>
+  </table>
+
+</div>
 
 </div>

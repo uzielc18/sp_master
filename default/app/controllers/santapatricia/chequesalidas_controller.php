@@ -11,7 +11,7 @@ class ChequesalidasController extends AdminController
     }
 	public function index($Y='',$m='')
 	{
-		
+		//Flash::valid('listado');
 		$anio=$this->anio=Session::get('ANIO');
 		if($Y!='')$anio=$this->anio=$Y;
 		$mes_activo=$this->mes_activo=date('m');
